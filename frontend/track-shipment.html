@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Shipment - Pixel Logistics</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/notifications.css">
+  <link rel="stylesheet" href="css/track-shipment.css">
+</head>
+<body>
+  
+  <!-- Close Button -->
+  <button class="tracking-close-btn" onclick="window.location.href='index.html'" title="Close and return to dashboard">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+
+  <div class="tracking-fullscreen-container">
+
+      <!-- Tracking Container -->
+      <div class="tracking-container">
+        <!-- Left Panel - Order List -->
+        <div class="orders-panel">
+          <div class="panel-header">
+            <h3>Active Shipments</h3>
+            <span class="shipment-count" id="shipmentCount">0</span>
+          </div>
+          <div class="orders-list" id="ordersList">
+            <!-- Order cards will be dynamically inserted here -->
+          </div>
+        </div>
+
+        <!-- Right Panel - Map -->
+        <div class="map-panel">
+          <div id="map"></div>
+          <div class="map-controls">
+            <button class="map-control-btn" onclick="centerMap()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </button>
+            <button class="map-control-btn" onclick="toggleTraffic()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Side Panel for Order Details -->
+  <div class="side-panel" id="sidePanel">
+    <div class="side-panel-header">
+      <h3>Shipment Details</h3>
+      <button class="close-panel" onclick="closeSidePanel()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="side-panel-content" id="sidePanelContent">
+      <!-- Details will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/track-shipment-leaflet.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/notifications.js"></script>
+</body>
+</html>
