@@ -6,201 +6,312 @@
     <title>Pixel Logistics - Enterprise Warehouse Management System</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/landing.css">
-    <link rel="stylesheet" href="css/shipment-tracking.css">
-    <link rel="stylesheet" href="css/shipping-hero.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="landing-body">
   
-  <!-- Header (Same as Dashboard) -->
-  <header class="header">
-    <div class="header-container">
-      <div class="logo">
+  <!-- Navigation Header -->
+  <nav class="landing-nav">
+    <div class="nav-container">
+      <div class="nav-logo">
         <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
           <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
           <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
           <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
-          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
         </svg>
-        <div>
-          <div class="logo-text">Pixel Logistics</div>
-          <div class="logo-subtitle">Warehouse Management System</div>
-        </div>
+        <span class="logo-text">Pixel<span class="logo-thin">Logistics</span></span>
       </div>
       
-      <div style="flex: 1;"></div>
-      
-      <!-- Search Trigger Button -->
-      <button class="search-trigger" onclick="openSearch()" aria-label="Search">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"></circle>
-          <path d="m21 21-4.35-4.35"></path>
-        </svg>
-        <span>Search</span>
-        <kbd class="search-kbd-compact">⌘K</kbd>
-      </button>
-      
-      <!-- Theme Toggle Button -->
-      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
-        <svg class="theme-icon theme-icon-light" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="12" cy="12" r="5"></circle>
-          <line x1="12" y1="1" x2="12" y2="3"></line>
-          <line x1="12" y1="21" x2="12" y2="23"></line>
-          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-          <line x1="1" y1="12" x2="3" y2="12"></line>
-          <line x1="21" y1="12" x2="23" y2="12"></line>
-          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-        </svg>
-        <svg class="theme-icon theme-icon-dark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-        </svg>
-      </button>
-      
-      <!-- Global Search Modal -->
-      <div class="search-modal" id="searchModal" style="display: none;">
-        <div class="search-modal-overlay" onclick="closeSearch()"></div>
-        <div class="search-modal-content">
-          <div class="search-input-wrapper">
-            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"></circle>
-              <path d="m21 21-4.35-4.35"></path>
-            </svg>
-            <input type="text" class="search-input" id="globalSearchInput" placeholder="Search warehouse..." autocomplete="off">
-            <button class="search-close" onclick="closeSearch()">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-          </div>
-          <div class="search-suggestions" id="searchSuggestions"></div>
-        </div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#solutions">Solutions</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#contact">Contact</a>
       </div>
       
-      <div class="user-menu">
-        <div class="user-info">
-          <div class="user-name">Guest User</div>
-          <div class="user-role">Visitor</div>
-        </div>
-        <div class="user-avatar">G</div>
+      <div class="nav-actions">
+        <button class="btn-secondary" onclick="window.location.href='login.html'">Sign In</button>
+        <button class="btn-primary" onclick="window.location.href='login.html'">Get Started</button>
       </div>
     </div>
-  </header>
+  </nav>
 
-  <!-- Sidebar (Same as Dashboard) -->
-  <aside class="sidebar">
-    <nav class="sidebar-nav">
-      <a href="landing.html" class="nav-item active">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-          <polyline points="9 22 9 12 15 12 15 22"></polyline>
-        </svg>
-        <span>Home</span>
-      </a>
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <svg width="12" height="12" viewBox="0 0 12 12">
+            <circle cx="6" cy="6" r="6" fill="#00D084"/>
+            <circle cx="6" cy="6" r="3" fill="white"/>
+          </svg>
+          <span>Trusted by 3,000+ businesses</span>
+        </div>
+        
+        <h1 class="hero-title">Warehouse intelligence that grows with your scale</h1>
+        
+        <p class="hero-description">
+          Support your business with seamless receiving, powerful integrations, and cash flow management tools that accelerate your operations.
+        </p>
+        
+        <div class="hero-cta">
+          <input type="email" class="email-input" placeholder="Your business email" />
+          <button class="btn-cta" onclick="window.location.href='login.html'">Get Started →</button>
+        </div>
+        
+        <div class="hero-partners">
+          <span class="partners-label">Integrations</span>
+          <div class="partner-logos">
+            <div class="partner-logo">Oracle</div>
+            <div class="partner-logo">SAP</div>
+            <div class="partner-logo">NetSuite</div>
+          </div>
+        </div>
+      </div>
       
-      <a href="index.html" class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="9" y1="3" x2="9" y2="21"></line>
-        </svg>
-        <span>Dashboard</span>
-      </a>
-      
-      <div class="nav-separator"></div>
-      <div class="nav-section-title">OPERATIONS</div>
-      
-      <a href="receiving.html" class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M16 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path>
-          <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path>
-          <path d="M7 21h10"></path>
-          <path d="M12 3v18"></path>
-          <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path>
-        </svg>
-        <span>Receiving</span>
-      </a>
-      
-      <a href="inventory.html" class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-          <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-          <line x1="12" y1="22.08" x2="12" y2="12"></line>
-        </svg>
-        <span>Inventory</span>
-      </a>
-      
-      <a href="orders.html" class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <path d="M16 10a4 4 0 0 1-8 0"></path>
-        </svg>
-        <span>Orders</span>
-      </a>
-      
-      <a href="shipping.html" class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="1" y="3" width="15" height="13"></rect>
-          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-          <circle cx="5.5" cy="18.5" r="2.5"></circle>
-          <circle cx="18.5" cy="18.5" r="2.5"></circle>
-        </svg>
-        <span>Shipping</span>
-      </a>
-      
-      <div class="nav-separator"></div>
-      <div class="nav-section-title">ACCOUNT</div>
-      
-      <a href="login.html" class="nav-item">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-          <polyline points="10 17 15 12 10 7"></polyline>
-          <line x1="15" y1="12" x2="3" y2="12"></line>
-        </svg>
-        <span>Sign In</span>
-      </a>
-    </nav>
-  </aside>
-
-  <!-- Main Content Area -->
-  <main class="main-content">
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-banner">
-            <div class="banner-grid"></div>
-            <div class="pixel-animation">
-                <div class="pixel-box" style="top: 10%; left: 5%; animation-delay: 0s;"></div>
-                <div class="pixel-box" style="top: 20%; left: 85%; animation-delay: 0.5s;"></div>
-                <div class="pixel-box" style="top: 60%; left: 10%; animation-delay: 1s;"></div>
-                <div class="pixel-box" style="top: 75%; left: 90%; animation-delay: 1.5s;"></div>
-                <div class="pixel-box" style="top: 40%; left: 92%; animation-delay: 2s;"></div>
-                <div class="pixel-box" style="top: 85%; left: 15%; animation-delay: 2.5s;"></div>
+      <div class="hero-visual">
+        <div class="dashboard-preview">
+          <div class="preview-card">
+            <div class="card-header">
+              <div class="card-icon">📦</div>
+              <div class="card-badge success">Active</div>
             </div>
-            <div class="banner-content">
-                <div class="banner-badge">
-                    <span class="badge-dot"></span>
-                    <span>Powered by Advanced Analytics</span>
-                </div>
-                <h1 class="banner-title">Next-Generation<br>Warehouse Intelligence</h1>
-                <p class="banner-subtitle">Pixel-perfect precision for modern supply chains. Real-time visibility, automated workflows, and predictive analytics unified in one platform.</p>
-                <div class="banner-stats">
-                    <div class="banner-stat">
-                        <div class="stat-value">99.9<span>%</span></div>
-                        <div class="stat-label">Accuracy</div>
-                    </div>
-                    <div class="banner-stat">
-                        <div class="stat-value">50<span>%</span></div>
-                        <div class="stat-label">Faster</div>
-                    </div>
-                    <div class="banner-stat">
-                        <div class="stat-value">24<span>/7</span></div>
+            <div class="card-amount">$1,876,680</div>
+            <div class="card-label">Total Inventory Value</div>
+            <div class="card-chart">
+              <div class="chart-bar" style="height: 40%"></div>
+              <div class="chart-bar" style="height: 65%"></div>
+              <div class="chart-bar" style="height: 45%"></div>
+              <div class="chart-bar" style="height: 80%"></div>
+              <div class="chart-bar" style="height: 70%"></div>
+              <div class="chart-bar" style="height: 90%"></div>
+            </div>
+          </div>
+          
+          <div class="preview-card small">
+            <div class="card-label">Processing</div>
+            <div class="card-amount">847</div>
+            <div class="card-sublabel">Active Orders</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section" id="features">
+    <div class="section-container">
+      <div class="section-header">
+        <span class="section-badge">FUTURE FORWARD</span>
+        <h2 class="section-title">Experience that grows with your scale</h2>
+        <p class="section-subtitle">Designed to balance scalability, speed and total cost of ownership.</p>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 7h18M3 12h18M3 17h18"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">Real-time Tracking</h3>
+          <p class="feature-desc">Create a birds-eye view of your entire warehouse with real-time location tracking and instant updates.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"></rect>
+              <path d="M9 3v18M15 3v18"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">Multi-Warehouse</h3>
+          <p class="feature-desc">Manage inventory across multiple locations with consolidated dashboards and centralized control.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v20M2 12h20"></path>
+            </svg>
+          </div>
+          <h3 class="feature-title">Enterprise Security</h3>
+          <p class="feature-desc">Bank-level encryption, role-based access control, and comprehensive audit trails ensure your data stays secure.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="section-container">
+      <div class="section-header centered">
+        <span class="section-badge">WE'VE HELPED</span>
+        <h2 class="section-title">Powering innovative supply chains</h2>
+        <p class="section-subtitle">Transform warehouse operations with proven efficiency.</p>
+      </div>
+      
+      <div class="stats-grid">
+        <div class="stat-item">
+          <div class="stat-number">24%</div>
+          <div class="stat-label">Reduced costs</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">180K</div>
+          <div class="stat-label">Orders processed daily</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">10+</div>
+          <div class="stat-label">Years of expertise</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Solutions Section -->
+  <section class="solutions-section" id="solutions">
+    <div class="section-container">
+      <div class="solutions-card maximize">
+        <div class="solutions-content">
+          <h2 class="solutions-title">Maximize returns with intelligent automation</h2>
+          <p class="solutions-desc">AI-powered workflows that optimize space utilization, reduce picking time, and eliminate errors.</p>
+          
+          <div class="solutions-features">
+            <div class="solution-feature">
+              <div class="feature-number">1</div>
+              <div class="feature-text">
+                <h4>Optimize space</h4>
+                <p>Intelligent slotting and dynamic putaway strategies maximize your warehouse capacity.</p>
+              </div>
+            </div>
+            <div class="solution-feature">
+              <div class="feature-number">2</div>
+              <div class="feature-text">
+                <h4>Automate workflows</h4>
+                <p>From receiving to shipping, automate repetitive tasks and eliminate manual errors.</p>
+              </div>
+            </div>
+            <div class="solution-feature">
+              <div class="feature-number">3</div>
+              <div class="feature-text">
+                <h4>Track performance</h4>
+                <p>Real-time dashboards and KPIs keep you informed of every metric that matters.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section -->
+  <section class="pricing-section" id="pricing">
+    <div class="section-container">
+      <div class="section-header centered">
+        <h2 class="section-title">Simple, transparent pricing</h2>
+      </div>
+      
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <div class="pricing-header">
+            <h3 class="pricing-name">Starter</h3>
+            <div class="pricing-price">$299<span>/month</span></div>
+          </div>
+          <ul class="pricing-features">
+            <li>Up to 10 users</li>
+            <li>50K transactions/month</li>
+            <li>Basic reporting</li>
+            <li>Email support</li>
+          </ul>
+          <button class="pricing-btn" onclick="window.location.href='login.html'">Start Free Trial →</button>
+        </div>
+        
+        <div class="pricing-card premium">
+          <div class="pricing-badge">Most Popular</div>
+          <div class="pricing-header">
+            <h3 class="pricing-name">Professional</h3>
+            <div class="pricing-price">$799<span>/month</span></div>
+          </div>
+          <ul class="pricing-features">
+            <li>Up to 50 users</li>
+            <li>500K transactions/month</li>
+            <li>Advanced analytics</li>
+            <li>Priority support</li>
+            <li>API access</li>
+          </ul>
+          <button class="pricing-btn primary" onclick="window.location.href='login.html'">Start Free Trial →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-container">
+      <h2 class="cta-title">Ready to transform your warehouse operations?</h2>
+      <p class="cta-subtitle">Join 3,000+ businesses already using Pixel Logistics</p>
+      <div class="cta-buttons">
+        <button class="btn-cta-large" onclick="window.location.href='login.html'">Get Started Now</button>
+        <button class="btn-secondary-large" onclick="window.location.href='index.html'">View Demo →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-logo">
+            <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+              <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+              <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+              <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+            </svg>
+            <span>Pixel Logistics</span>
+          </div>
+        </div>
+        
+        <div class="footer-col">
+          <h4>Product</h4>
+          <a href="#features">Features</a>
+          <a href="#solutions">Solutions</a>
+          <a href="#pricing">Pricing</a>
+        </div>
+        
+        <div class="footer-col">
+          <h4>Company</h4>
+          <a href="#about">About</a>
+          <a href="#careers">Careers</a>
+          <a href="#contact" id="contact">Contact</a>
+        </div>
+        
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="#privacy">Privacy</a>
+          <a href="#terms">Terms</a>
+          <a href="#security">Security</a>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2024 Pixel Logistics. All rights reserved.</p>
+        <div class="footer-social">
+          <a href="#" aria-label="Twitter">𝕏</a>
+          <a href="#" aria-label="LinkedIn">in</a>
+          <a href="#" aria-label="GitHub">⚡</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/theme.js"></script>
+</body>
+</html>
                         <div class="stat-label">Real-time</div>
                     </div>
                     <div class="banner-stat">
