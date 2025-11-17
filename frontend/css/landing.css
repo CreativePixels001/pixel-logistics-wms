@@ -38,22 +38,21 @@ body {
 }
 
 /* ===================================
-   Navigation
+   Landing Page Styles (With Sidebar Layout)
    =================================== */
 
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: var(--white);
-    border-bottom: 1px solid var(--border-color);
-    z-index: 1000;
-    transition: all 0.3s ease;
+/* Remove old navbar styles - using header from styles.css */
+
+/* Adjust landing content for sidebar layout */
+.landing-page {
+    margin-left: 0;
+    padding-top: 0;
 }
 
-.navbar.scrolled {
-    box-shadow: var(--shadow-sm);
+/* Hero section adjustments for sidebar layout */
+.hero {
+    margin-top: 0;
+    padding-top: 2rem;
 }
 
 .nav-container {
