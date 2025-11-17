@@ -12,6 +12,13 @@
 </head>
 <body class="landing-body">
   
+  <!-- Parallax Background Elements -->
+  <div class="parallax-bg">
+    <div class="parallax-layer layer-1"></div>
+    <div class="parallax-layer layer-2"></div>
+    <div class="parallax-layer layer-3"></div>
+  </div>
+
   <!-- Navigation Header -->
   <nav class="landing-nav">
     <div class="nav-container">
@@ -49,15 +56,233 @@
           Real-time visibility, automated workflows, and intelligent analytics for modern supply chains.
         </p>
         
-        <div class="hero-cta slide-up-delay-2">
-          <button class="btn-cta" onclick="window.location.href='login.html'">
-            Get Started
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M6 12l4-4-4-4"/>
+        <!-- Focused Launch Button -->
+        <div class="launch-cta slide-up-delay-2">
+          <button class="btn-launch" onclick="window.location.href='login.html'">
+            <span class="launch-text">Launch Platform</span>
+            <span class="launch-price">Only $1</span>
+            <svg class="launch-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
             </svg>
           </button>
-          <button class="btn-demo" onclick="window.location.href='index.html'">View Demo</button>
+          <p class="launch-subtext">Start your warehouse transformation today</p>
         </div>
+        
+        <div class="hero-stats slide-up-delay-3">
+          <div class="stat-item">
+            <div class="stat-number">99.9%</div>
+            <div class="stat-label">Accuracy</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-number">3K+</div>
+            <div class="stat-label">Businesses</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <div class="stat-number">24/7</div>
+            <div class="stat-label">Support</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="hero-visual parallax-element" data-speed="0.3">
+        <div class="visual-grid">
+          <!-- Card 1 -->
+          <div class="visual-card card-1">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>
+            </svg>
+            <div class="card-text">Real-time<br/>Inventory</div>
+          </div>
+          
+          <!-- Card 2 -->
+          <div class="visual-card card-2">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            </svg>
+            <div class="card-text">Smart<br/>Automation</div>
+          </div>
+          
+          <!-- Card 3 -->
+          <div class="visual-card card-3">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 3v18h18"/>
+              <path d="M18 17l-4-4-4 4-4-8"/>
+            </svg>
+            <div class="card-text">Advanced<br/>Analytics</div>
+          </div>
+          
+          <!-- Card 4 -->
+          <div class="visual-card card-4">
+            <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <div class="card-text">Enterprise<br/>Security</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section with Scroll Animation -->
+  <section class="features-section scroll-reveal">
+    <div class="section-container">
+      <div class="section-header parallax-element" data-speed="0.1">
+        <h2 class="section-title">Everything you need</h2>
+        <p class="section-subtitle">Powerful features for complete warehouse control</p>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card scroll-fade" data-delay="0">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M16 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/>
+              <path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/>
+              <path d="M7 21h10M12 3v18"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Inbound Operations</h3>
+          <p class="feature-desc">Streamline receiving, putaway, and cross-docking</p>
+        </div>
+        
+        <div class="feature-card scroll-fade" data-delay="200">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+              <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Inventory Control</h3>
+          <p class="feature-desc">Real-time tracking and cycle counting</p>
+        </div>
+        
+        <div class="feature-card scroll-fade" data-delay="400">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13"/>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+              <circle cx="5.5" cy="18.5" r="2.5"/>
+              <circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+          </div>
+          <h3 class="feature-title">Outbound Shipping</h3>
+          <p class="feature-desc">Efficient picking, packing, and dispatch</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section with Parallax -->
+  <section class="pricing-section scroll-reveal parallax-element" data-speed="0.2">
+    <div class="pricing-container">
+      <div class="pricing-content scroll-fade" data-delay="0">
+        <div class="pricing-badge">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 1v14M1 8h14"/>
+          </svg>
+          <span>Special Launch Offer</span>
+        </div>
+        <h2 class="pricing-title">Get Started for Just $1</h2>
+        <p class="pricing-subtitle">Full access to all enterprise features</p>
+        
+        <div class="pricing-details">
+          <div class="price-tag">
+            <span class="currency">$</span>
+            <span class="amount">1</span>
+            <span class="period">/month</span>
+          </div>
+          
+          <ul class="pricing-features">
+            <li>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                <path d="M6 10l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span>Complete WMS Platform</span>
+            </li>
+            <li>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                <path d="M6 10l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span>Unlimited Users</span>
+            </li>
+            <li>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                <path d="M6 10l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span>Real-time Analytics</span>
+            </li>
+            <li>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                <path d="M6 10l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span>24/7 Support</span>
+            </li>
+            <li>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="2"/>
+                <path d="M6 10l3 3 5-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span>Free Updates</span>
+            </li>
+          </ul>
+          
+          <button class="btn-pricing" onclick="window.location.href='login.html'">
+            Start Your Journey
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M7 15l5-5-5-5"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section scroll-reveal">
+    <div class="cta-container scroll-fade" data-delay="0">
+      <h2 class="cta-title">Ready to transform your warehouse?</h2>
+      <p class="cta-subtitle">Join thousands of businesses optimizing operations with Pixel Logistics</p>
+      <div class="cta-buttons">
+        <button class="btn-cta-large" onclick="window.location.href='login.html'">
+          Get Started Now
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 15l5-5-5-5"/>
+          </svg>
+        </button>
+      </div>
+      <p class="cta-note">No credit card required • Cancel anytime</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div class="footer-container">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+            <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+            <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+            <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          </svg>
+          <span>Pixel Logistics</span>
+        </div>
+        <p class="footer-text">&copy; 2024 Pixel Logistics. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/landing-scroll.js"></script>
+</body>
+</html>
         
         <div class="hero-stats slide-up-delay-3">
           <div class="stat-item">
@@ -204,735 +429,4 @@
 </body>
 </html>
 
-    <!-- Shipping Stats Hero Section -->
-    <section class="shipping-hero">
-        <div class="shipping-parallax-bg">
-            <div class="parallax-text" data-speed="0.5">LOGISTICS</div>
-        </div>
-        <div class="container">
-            <div class="shipping-grid">
-                <div class="shipping-info">
-                    <div class="info-badge">Global Reach</div>
-                    <h2 class="shipping-title">Ship Smarter,<br>Deliver Faster</h2>
-                    <p class="shipping-description">
-                        Optimize every mile with AI-powered route planning and real-time tracking across your entire distribution network.
-                    </p>
-                </div>
-                <div class="shipping-stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-card-value">24/7</div>
-                        <div class="stat-card-label">Real-time Tracking</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-value">98.5%</div>
-                        <div class="stat-card-label">On-time Delivery</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-value">40%</div>
-                        <div class="stat-card-label">Cost Reduction</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-card-value">50+</div>
-                        <div class="stat-card-label">Carrier Integrations</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- System Capabilities Section -->
-    <section id="capabilities" class="capabilities">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-label">Platform Capabilities</div>
-                <h2>Comprehensive Performance Metrics</h2>
-                <p>Real-time analytics and operational insights powered by advanced data intelligence</p>
-            </div>
-            
-            <div class="metrics-dashboard">
-                <div class="metric-box">
-                    <div class="metric-icon"><i class="fas fa-chart-line"></i></div>
-                    <div class="metric-value" data-value="99.9">0</div>
-                    <div class="metric-unit">%</div>
-                    <div class="metric-label">Inventory Accuracy</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-icon"><i class="fas fa-tachometer-alt"></i></div>
-                    <div class="metric-value" data-value="45">0</div>
-                    <div class="metric-unit">%</div>
-                    <div class="metric-label">Efficiency Improvement</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-icon"><i class="fas fa-boxes"></i></div>
-                    <div class="metric-value" data-value="1000000">0</div>
-                    <div class="metric-unit">+</div>
-                    <div class="metric-label">Daily Transactions</div>
-                </div>
-                <div class="metric-box">
-                    <div class="metric-icon"><i class="fas fa-clock"></i></div>
-                    <div class="metric-value" data-value="0.8">0</div>
-                    <div class="metric-unit">s</div>
-                    <div class="metric-label">Response Time</div>
-                </div>
-            </div>
-
-            <div class="charts-grid">
-                <div class="chart-container">
-                    <h3>Operational Efficiency Trends</h3>
-                    <canvas id="efficiencyChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>Order Fulfillment Rate</h3>
-                    <canvas id="fulfillmentChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>Module Utilization</h3>
-                    <canvas id="modulesChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>Cost Reduction Analysis</h3>
-                    <canvas id="costChart"></canvas>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Live Shipment Tracking Section -->
-    <section class="shipment-tracking">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-label">Real-time Tracking</div>
-                <h2>Live Shipment Intelligence</h2>
-                <p>Monitor orders in real-time with AI-powered route optimization and predictive delivery analytics</p>
-            </div>
-
-            <div class="tracking-layout">
-                <div class="tracking-map">
-                    <div class="map-container" id="shipmentMap">
-                        <div class="map-overlay">
-                            <div class="map-grid"></div>
-                            <div class="warehouse-marker" style="top: 20%; left: 15%;">
-                                <div class="marker-icon"><i class="fas fa-warehouse"></i></div>
-                                <div class="marker-label">Distribution Center</div>
-                                <div class="pulse-ring"></div>
-                            </div>
-                            
-                            <!-- Moving delivery vehicles -->
-                            <div class="vehicle-marker" data-route="1" style="top: 25%; left: 20%;">
-                                <i class="fas fa-truck"></i>
-                            </div>
-                            <div class="vehicle-marker" data-route="2" style="top: 45%; left: 35%;">
-                                <i class="fas fa-truck"></i>
-                            </div>
-                            <div class="vehicle-marker" data-route="3" style="top: 60%; left: 55%;">
-                                <i class="fas fa-truck"></i>
-                            </div>
-                            
-                            <!-- Delivery points -->
-                            <div class="delivery-point delivered" style="top: 30%; left: 65%;">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span class="point-label">Delivered</span>
-                            </div>
-                            <div class="delivery-point in-transit" style="top: 70%; left: 75%;">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span class="point-label">In Transit</span>
-                            </div>
-                            <div class="delivery-point pending" style="top: 50%; left: 85%;">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span class="point-label">Scheduled</span>
-                            </div>
-                            
-                            <!-- Animated routes -->
-                            <svg class="route-lines" width="100%" height="100%">
-                                <path class="route-line" d="M 15% 20% Q 40% 30%, 65% 30%" stroke="#000" stroke-width="2" stroke-dasharray="5,5" fill="none" opacity="0.3">
-                                    <animate attributeName="stroke-dashoffset" from="0" to="-10" dur="1s" repeatCount="indefinite"/>
-                                </path>
-                                <path class="route-line" d="M 15% 20% Q 45% 50%, 75% 70%" stroke="#000" stroke-width="2" stroke-dasharray="5,5" fill="none" opacity="0.3">
-                                    <animate attributeName="stroke-dashoffset" from="0" to="-10" dur="1s" repeatCount="indefinite"/>
-                                </path>
-                                <path class="route-line" d="M 15% 20% Q 50% 30%, 85% 50%" stroke="#000" stroke-width="2" stroke-dasharray="5,5" fill="none" opacity="0.3">
-                                    <animate attributeName="stroke-dashoffset" from="0" to="-10" dur="1s" repeatCount="indefinite"/>
-                                </path>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="map-legend">
-                        <div class="legend-item">
-                            <div class="legend-icon warehouse"><i class="fas fa-warehouse"></i></div>
-                            <span>Warehouse</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-icon vehicle"><i class="fas fa-truck"></i></div>
-                            <span>Active Vehicles (3)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-icon delivered"></div>
-                            <span>Delivered</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-icon in-transit"></div>
-                            <span>In Transit</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tracking-panel">
-                    <div class="panel-header">
-                        <h3>Active Shipments</h3>
-                        <div class="live-indicator">
-                            <span class="live-dot"></span>
-                            <span>Live Updates</span>
-                        </div>
-                    </div>
-
-                    <div class="shipment-list">
-                        <div class="shipment-card active">
-                            <div class="shipment-header">
-                                <div class="shipment-id">
-                                    <i class="fas fa-barcode"></i>
-                                    <span>SHP-2025-001</span>
-                                </div>
-                                <div class="shipment-status in-transit">
-                                    <i class="fas fa-truck"></i>
-                                    In Transit
-                                </div>
-                            </div>
-                            <div class="shipment-details">
-                                <div class="detail-row">
-                                    <span class="detail-label">Destination</span>
-                                    <span class="detail-value">San Francisco, CA</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">ETA</span>
-                                    <span class="detail-value">2 hours 15 min</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Progress</span>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 65%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="shipment-card">
-                            <div class="shipment-header">
-                                <div class="shipment-id">
-                                    <i class="fas fa-barcode"></i>
-                                    <span>SHP-2025-002</span>
-                                </div>
-                                <div class="shipment-status delivered">
-                                    <i class="fas fa-check-circle"></i>
-                                    Delivered
-                                </div>
-                            </div>
-                            <div class="shipment-details">
-                                <div class="detail-row">
-                                    <span class="detail-label">Destination</span>
-                                    <span class="detail-value">Los Angeles, CA</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Completed</span>
-                                    <span class="detail-value">15 min ago</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Progress</span>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill complete" style="width: 100%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="shipment-card">
-                            <div class="shipment-header">
-                                <div class="shipment-id">
-                                    <i class="fas fa-barcode"></i>
-                                    <span>SHP-2025-003</span>
-                                </div>
-                                <div class="shipment-status scheduled">
-                                    <i class="fas fa-clock"></i>
-                                    Scheduled
-                                </div>
-                            </div>
-                            <div class="shipment-details">
-                                <div class="detail-row">
-                                    <span class="detail-label">Destination</span>
-                                    <span class="detail-value">Sacramento, CA</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Departure</span>
-                                    <span class="detail-value">In 45 min</span>
-                                </div>
-                                <div class="detail-row">
-                                    <span class="detail-label">Progress</span>
-                                    <div class="progress-bar">
-                                        <div class="progress-fill" style="width: 10%;"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="tracking-stats">
-                        <div class="stat-item">
-                            <div class="stat-icon"><i class="fas fa-shipping-fast"></i></div>
-                            <div class="stat-info">
-                                <div class="stat-value">24</div>
-                                <div class="stat-label">Active Routes</div>
-                            </div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-icon"><i class="fas fa-route"></i></div>
-                            <div class="stat-info">
-                                <div class="stat-value">1,247</div>
-                                <div class="stat-label">Miles Today</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="features">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-label">Core Modules</div>
-                <h2>End-to-End Warehouse Operations</h2>
-                <p>Comprehensive modules covering every aspect of modern warehouse management</p>
-            </div>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-number">01</div>
-                    <h3>Inbound Operations</h3>
-                    <p>ASN Receipt • Inspection • Put-away • LPN Management</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-number">02</div>
-                    <h3>Outbound Operations</h3>
-                    <p>Order Processing • Wave Picking • Packing • Shipping</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-number">03</div>
-                    <h3>Inventory Control</h3>
-                    <p>Real-time Tracking • Cycle Count • Lot Traceability</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-number">04</div>
-                    <h3>Quality Management</h3>
-                    <p>Inspection Plans • AQL Sampling • Disposition</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-number">05</div>
-                    <h3>Analytics & Reporting</h3>
-                    <p>Live Dashboards • Custom Reports • KPI Tracking</p>
-                </div>
-
-                <div class="feature-card">
-                    <div class="feature-number">06</div>
-                    <h3>Optimization</h3>
-                    <p>Slotting • Labor Management • Yard & Dock</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Modules Section -->
-    <section id="modules" class="modules">
-        <div class="container">
-            <div class="section-header">
-                <div class="section-label">Advanced Features</div>
-                <h2>Complete Module Suite</h2>
-                <p>End-to-end warehouse management capabilities in one unified platform</p>
-            </div>
-
-            <div class="modules-grid">
-                <div class="module-card">
-                    <div class="module-icon">
-                        <i class="fas fa-truck-loading"></i>
-                    </div>
-                    <h3>Inbound Operations</h3>
-                    <p>Streamline receiving, inspection, and put-away processes</p>
-                    <div class="module-features">
-                        <span>ASN Receipt</span>
-                        <span>Quality Inspection</span>
-                        <span>Smart Put-away</span>
-                        <span>LPN Management</span>
-                    </div>
-                </div>
-
-                <div class="module-card">
-                    <div class="module-icon">
-                        <i class="fas fa-shipping-fast"></i>
-                    </div>
-                    <h3>Outbound Operations</h3>
-                    <p>Optimize order fulfillment and shipping workflows</p>
-                    <div class="module-features">
-                        <span>Order Management</span>
-                        <span>Wave Picking</span>
-                        <span>Packing</span>
-                        <span>Ship Confirm</span>
-                    </div>
-                </div>
-
-                <div class="module-card">
-                    <div class="module-icon">
-                        <i class="fas fa-boxes"></i>
-                    </div>
-                    <h3>Inventory Control</h3>
-                    <p>Real-time visibility and control over all inventory</p>
-                    <div class="module-features">
-                        <span>Real-time Tracking</span>
-                        <span>Cycle Counting</span>
-                        <span>Lot Control</span>
-                        <span>Transfers</span>
-                    </div>
-                </div>
-
-                <div class="module-card">
-                    <div class="module-icon">
-                        <i class="fas fa-clipboard-check"></i>
-                    </div>
-                    <h3>Quality Management</h3>
-                    <p>Ensure product quality with comprehensive QC tools</p>
-                    <div class="module-features">
-                        <span>Inspection Plans</span>
-                        <span>AQL Sampling</span>
-                        <span>Disposition</span>
-                        <span>Traceability</span>
-                    </div>
-                </div>
-
-                <div class="module-card">
-                    <div class="module-icon">
-                        <i class="fas fa-chart-pie"></i>
-                    </div>
-                    <h3>Advanced Analytics</h3>
-                    <p>Powerful insights and reporting capabilities</p>
-                    <div class="module-features">
-                        <span>Live Dashboards</span>
-                        <span>Custom Reports</span>
-                        <span>KPI Tracking</span>
-                        <span>Trend Analysis</span>
-                    </div>
-                </div>
-
-                <div class="module-card">
-                    <div class="module-icon">
-                        <i class="fas fa-warehouse"></i>
-                    </div>
-                    <h3>Warehouse Optimization</h3>
-                    <p>Maximize efficiency with smart optimization tools</p>
-                    <div class="module-features">
-                        <span>Slotting</span>
-                        <span>Labor Management</span>
-                        <span>Yard Management</span>
-                        <span>Dock Scheduling</span>
-                    </div>
-                </div>
-
-                <div class="module-card">
-                    <div class="module-icon">
-                        <i class="fas fa-tasks"></i>
-                    </div>
-                    <h3>Task Management</h3>
-                    <p>Coordinate and track all warehouse activities</p>
-                    <div class="module-features">
-                        <span>Task Assignment</span>
-                        <span>Priority Management</span>
-                        <span>Performance Tracking</span>
-                        <span>Resource Allocation</span>
-                    </div>
-                </div>
-
-                <div class="module-card">
-                    <div class="module-icon">
-                        <i class="fas fa-barcode"></i>
-                    </div>
-                    <h3>Barcode & RFID</h3>
-                    <p>Camera-based scanning without expensive hardware</p>
-                    <div class="module-features">
-                        <span>QR Codes</span>
-                        <span>Barcode Scanning</span>
-                        <span>Label Printing</span>
-                        <span>Mobile Scanning</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Benefits Section -->
-    <section id="benefits" class="benefits">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-badge">Business Impact</span>
-                <h2>Measurable Results That Matter</h2>
-                <p>Join hundreds of warehouses that transformed their operations</p>
-            </div>
-
-            <div class="benefits-container">
-                <div class="benefits-content">
-                    <div class="benefit-item">
-                        <div class="benefit-icon">
-                            <i class="fas fa-tachometer-alt"></i>
-                        </div>
-                        <div class="benefit-text">
-                            <h3>40% Increase in Operational Efficiency</h3>
-                            <p>Automate manual processes and eliminate bottlenecks with intelligent workflows and real-time task management.</p>
-                        </div>
-                    </div>
-
-                    <div class="benefit-item">
-                        <div class="benefit-icon">
-                            <i class="fas fa-dollar-sign"></i>
-                        </div>
-                        <div class="benefit-text">
-                            <h3>30% Reduction in Operating Costs</h3>
-                            <p>Optimize labor utilization, reduce errors, and minimize inventory carrying costs with smart warehouse management.</p>
-                        </div>
-                    </div>
-
-                    <div class="benefit-item">
-                        <div class="benefit-icon">
-                            <i class="fas fa-bullseye"></i>
-                        </div>
-                        <div class="benefit-text">
-                            <h3>99.9% Inventory Accuracy</h3>
-                            <p>Eliminate stockouts and overstocking with real-time inventory tracking and automated cycle counting.</p>
-                        </div>
-                    </div>
-
-                    <div class="benefit-item">
-                        <div class="benefit-icon">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                        <div class="benefit-text">
-                            <h3>50% Faster Order Fulfillment</h3>
-                            <p>Speed up picking, packing, and shipping with optimized workflows and mobile-first design.</p>
-                        </div>
-                    </div>
-
-                    <div class="benefit-item">
-                        <div class="benefit-icon">
-                            <i class="fas fa-smile"></i>
-                        </div>
-                        <div class="benefit-text">
-                            <h3>95% Customer Satisfaction Rate</h3>
-                            <p>Deliver on your promises with accurate inventory, faster shipping, and fewer errors.</p>
-                        </div>
-                    </div>
-
-                    <div class="benefit-item">
-                        <div class="benefit-icon">
-                            <i class="fas fa-rocket"></i>
-                        </div>
-                        <div class="benefit-text">
-                            <h3>6-Week Implementation</h3>
-                            <p>Get up and running quickly with our cloud-based platform and expert implementation team.</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="benefits-visual">
-                    <div class="metric-card">
-                        <div class="metric-value">1M+</div>
-                        <div class="metric-label">Transactions/Day</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value">500+</div>
-                        <div class="metric-label">Warehouses Powered</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value">50+</div>
-                        <div class="metric-label">Countries</div>
-                    </div>
-                    <div class="metric-card">
-                        <div class="metric-value">4.9/5</div>
-                        <div class="metric-label">Customer Rating</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="cta-container">
-            <div class="cta-content">
-                <div class="cta-label">Ready to Transform?</div>
-                <h2>Experience Pixel Logistics</h2>
-                <p>Access the full-featured demo environment with all modules enabled</p>
-                <a href="login.html" class="btn btn-primary btn-large">
-                    <span>Launch Demo Platform</span>
-                    <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-            <div class="cta-visual">
-                <div class="visual-grid">
-                    <div class="visual-box"></div>
-                    <div class="visual-box"></div>
-                    <div class="visual-box"></div>
-                    <div class="visual-box active"></div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-badge">Get in Touch</span>
-                <h2>Let's Discuss Your Warehouse Needs</h2>
-                <p>Our team is ready to help you optimize your operations</p>
-            </div>
-
-            <div class="contact-container">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <h4>Email</h4>
-                            <p>sales@pixellogistics.com</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-phone"></i>
-                        <div>
-                            <h4>Phone</h4>
-                            <p>+1 (800) 555-0123</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <h4>Office</h4>
-                            <p>123 Supply Chain Drive<br>Logistics Park, CA 94105</p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-clock"></i>
-                        <div>
-                            <h4>Business Hours</h4>
-                            <p>Monday - Friday: 9:00 AM - 6:00 PM PST</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="contact-form">
-                    <form id="contactForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Full Name *</label>
-                                <input type="text" required placeholder="John Smith">
-                            </div>
-                            <div class="form-group">
-                                <label>Email *</label>
-                                <input type="email" required placeholder="john@company.com">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label>Company</label>
-                                <input type="text" placeholder="Your Company">
-                            </div>
-                            <div class="form-group">
-                                <label>Phone</label>
-                                <input type="tel" placeholder="+1 (555) 000-0000">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Message *</label>
-                            <textarea rows="4" required placeholder="Tell us about your warehouse requirements..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">
-                            <i class="fas fa-paper-plane"></i>
-                            Send Message
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <div class="footer-logo">
-                        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="4" y="4" width="12" height="12" fill="#ffffff"/>
-                            <rect x="4" y="20" width="12" height="12" fill="#ffffff"/>
-                            <rect x="20" y="4" width="12" height="12" fill="#ffffff"/>
-                            <rect x="20" y="20" width="12" height="12" fill="#666666"/>
-                            <rect x="24" y="24" width="4" height="4" fill="#000000"/>
-                        </svg>
-                        <span>Pixel <span style="font-weight: 400;">Logistics</span></span>
-                    </div>
-                    <p>Next-generation warehouse management for modern supply chains.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Product</h4>
-                    <ul>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#modules">Modules</a></li>
-                        <li><a href="login.html">Live Demo</a></li>
-                        <li><a href="#">Pricing</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Company</h4>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Case Studies</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Careers</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Support</h4>
-                    <ul>
-                        <li><a href="#">Documentation</a></li>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#contact">Contact</a></li>
-                        <li><a href="#">System Status</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; 2025 Pixel Logistics by Deloitte. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Cookie Policy</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    </main><!-- End of main-content -->
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    <script src="js/theme.js"></script>
-    <script src="js/landing.js"></script>
-</body>
-</html>
+    
