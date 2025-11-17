@@ -11,10 +11,17 @@
 [build.environment]
   NODE_VERSION = "18"
 
-# Redirect all requests to index.html for SPA routing
+# Redirect root to landing page
+[[redirects]]
+  from = "/"
+  to = "/landing.html"
+  status = 200
+  force = true
+
+# Redirect all other requests to landing page for SPA routing
 [[redirects]]
   from = "/*"
-  to = "/index.html"
+  to = "/landing.html"
   status = 200
   force = false
 
