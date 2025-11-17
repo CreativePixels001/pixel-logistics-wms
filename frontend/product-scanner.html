@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Product Scanner - Pixel Logistics</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/mobile-app.css">
+</head>
+<body>
+  <div class="mobile-wrapper">
+    <div class="mobile-device">
+      <!-- Mobile Notch -->
+      <div class="mobile-notch">
+        <div class="notch-cutout">
+          <div class="notch-camera"></div>
+        </div>
+      </div>
+
+      <!-- Mobile Screen -->
+      <div class="mobile-screen">
+        <!-- Status Bar -->
+        <div class="mobile-status-bar">
+          <div class="status-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+          </div>
+          <div class="status-right">
+            <span>9:41 AM</span>
+            <i class="fas fa-battery-three-quarters"></i>
+          </div>
+        </div>
+
+        <!-- Mobile Header -->
+        <div class="mobile-header">
+          <a href="index.html" class="mobile-logo">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <rect width="24" height="24" rx="4" fill="#000"/>
+              <path d="M8 6h8M8 12h8M8 18h5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>WMS</span>
+          </a>
+          <div class="mobile-header-title">
+            <i class="fas fa-barcode"></i> Product Scanner
+          </div>
+          <button class="burger-menu-btn" onclick="toggleMobileMenu()">
+            <div class="burger-icon">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu-overlay" onclick="toggleMobileMenu()"></div>
+
+        <!-- Slide-out Menu -->
+        <div class="mobile-slide-menu">
+          <div class="mobile-menu-header">
+            <div style="font-weight: 700; font-size: 18px;">Menu</div>
+            <button class="mobile-menu-close" onclick="toggleMobileMenu()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="mobile-menu-items">
+            <a href="index.html" class="mobile-menu-item">
+              <i class="fas fa-home"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="mobile-receiving-new.html" class="mobile-menu-item">
+              <i class="fas fa-inbox"></i>
+              <span>Mobile Receiving</span>
+            </a>
+            <a href="mobile-picking-new.html" class="mobile-menu-item">
+              <i class="fas fa-hand-holding-box"></i>
+              <span>Mobile Picking</span>
+            </a>
+            <a href="mobile-count-new.html" class="mobile-menu-item">
+              <i class="fas fa-clipboard-list"></i>
+              <span>Mobile Cycle Count</span>
+            </a>
+            <div class="mobile-menu-divider"></div>
+            <a href="product-scanner.html" class="mobile-menu-item active">
+              <i class="fas fa-barcode"></i>
+              <span>Product Scanner</span>
+            </a>
+            <a href="notification-settings.html" class="mobile-menu-item">
+              <i class="fas fa-bell"></i>
+              <span>Notification Settings</span>
+            </a>
+            <div class="mobile-menu-divider"></div>
+            <a href="index.html" class="mobile-menu-item">
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </a>
+            <a href="index.html" class="mobile-menu-item">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile Content -->
+        <div class="mobile-content">
+          <!-- Scanner Card -->
+          <div class="mobile-card" style="text-align: center; padding: 32px 20px;">
+            <div style="width: 120px; height: 120px; margin: 0 auto 20px; background: #000; border-radius: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);">
+              <i class="fas fa-qrcode" style="font-size: 64px; color: white;"></i>
+            </div>
+            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px; color: #111827;">Scan Product</h3>
+            <p style="font-size: 14px; color: #6b7280; margin-bottom: 24px;">Point camera at barcode or QR code</p>
+            <button class="mobile-btn mobile-btn-primary" onclick="startScanning()" style="max-width: 280px; margin: 0 auto;">
+              <i class="fas fa-camera"></i> Start Scanning
+            </button>
+            <button class="mobile-btn mobile-btn-outline" onclick="manualEntry()" style="max-width: 280px; margin: 0 auto;">
+              <i class="fas fa-keyboard"></i> Manual Entry
+            </button>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="mobile-stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <div class="mobile-stat-card">
+              <div class="mobile-stat-value" id="todayCount">0</div>
+              <div class="mobile-stat-label">Today</div>
+            </div>
+            <div class="mobile-stat-card">
+              <div class="mobile-stat-value" id="totalScans">0</div>
+              <div class="mobile-stat-label">Total Scans</div>
+            </div>
+            <div class="mobile-stat-card">
+              <div class="mobile-stat-value" id="uniqueItems">0</div>
+              <div class="mobile-stat-label">Unique</div>
+            </div>
+          </div>
+
+          <!-- Scan History -->
+          <div class="mobile-card">
+            <div class="mobile-card-header">Scan History</div>
+            <div id="scanHistory">
+              <!-- Demo items will be loaded here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="mobile-bottom-nav">
+          <button class="bottom-nav-item" onclick="window.location.href='index.html'">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+          </button>
+          <button class="bottom-nav-item" onclick="window.location.href='notification-settings.html'">
+            <i class="fas fa-bell"></i>
+            <span>Notifications</span>
+          </button>
+          <button class="bottom-nav-item active">
+            <i class="fas fa-barcode"></i>
+            <span>Scanner</span>
+          </button>
+          <button class="bottom-nav-item" onclick="window.location.href='index.html'">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Demo scan history data
+    const demoScans = [
+      {
+        sku: 'SKU-7890-XL',
+        name: 'Wireless Bluetooth Headphones',
+        barcode: '7234567890123',
+        location: 'A-12-03',
+        qty: 45,
+        time: '2 min ago',
+        type: 'QR Code'
+      },
+      {
+        sku: 'SKU-4561-BLK',
+        name: 'Premium Laptop Backpack',
+        barcode: '8901234567890',
+        location: 'B-08-15',
+        qty: 28,
+        time: '5 min ago',
+        type: 'Barcode'
+      },
+      {
+        sku: 'SKU-1234-WHT',
+        name: 'USB-C Charging Cable 2m',
+        barcode: '4567890123456',
+        location: 'A-10-02',
+        qty: 120,
+        time: '12 min ago',
+        type: 'Barcode'
+      },
+      {
+        sku: 'SKU-5678-RED',
+        name: 'Portable Power Bank 20000mAh',
+        barcode: '1234567890123',
+        location: 'C-05-08',
+        qty: 67,
+        time: '18 min ago',
+        type: 'QR Code'
+      },
+      {
+        sku: 'SKU-9012-BLU',
+        name: 'Mechanical Gaming Keyboard',
+        barcode: '5678901234567',
+        location: 'B-15-22',
+        qty: 34,
+        time: '25 min ago',
+        type: 'Barcode'
+      },
+      {
+        sku: 'SKU-3456-GRN',
+        name: 'Wireless Mouse RGB',
+        barcode: '9012345678901',
+        location: 'A-18-05',
+        qty: 89,
+        time: '32 min ago',
+        type: 'Barcode'
+      },
+      {
+        sku: 'SKU-7891-SLV',
+        name: 'Smartphone Stand Aluminum',
+        barcode: '2345678901234',
+        location: 'C-12-14',
+        qty: 156,
+        time: '45 min ago',
+        type: 'QR Code'
+      },
+      {
+        sku: 'SKU-2345-BLK',
+        name: 'HD Webcam 1080p',
+        barcode: '6789012345678',
+        location: 'B-20-09',
+        qty: 42,
+        time: '1 hr ago',
+        type: 'Barcode'
+      }
+    ];
+
+    // Load scan history
+    function loadScanHistory() {
+      const historyContainer = document.getElementById('scanHistory');
+      
+      if (demoScans.length === 0) {
+        historyContainer.innerHTML = `
+          <div style="text-align: center; padding: 40px 20px; color: #9ca3af;">
+            <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 12px; opacity: 0.5;"></i>
+            <p style="font-size: 14px; font-weight: 500;">No scan history yet</p>
+            <p style="font-size: 13px; margin-top: 4px;">Start scanning products to see history</p>
+          </div>
+        `;
+        return;
+      }
+
+      historyContainer.innerHTML = demoScans.map(scan => `
+        <div class="mobile-list-item" onclick="viewScanDetails('${scan.sku}')">
+          <div class="mobile-list-icon black">
+            <i class="fas fa-${scan.type === 'QR Code' ? 'qrcode' : 'barcode'}"></i>
+          </div>
+          <div class="mobile-list-content">
+            <div class="mobile-list-title">${scan.sku} • ${scan.name}</div>
+            <div class="mobile-list-subtitle">
+              ${scan.location} • Qty: ${scan.qty} • ${scan.time}
+            </div>
+          </div>
+          <i class="fas fa-chevron-right mobile-list-arrow"></i>
+        </div>
+      `).join('');
+
+      updateStats();
+    }
+
+    // Update statistics
+    function updateStats() {
+      document.getElementById('todayCount').textContent = demoScans.length;
+      document.getElementById('totalScans').textContent = demoScans.length;
+      document.getElementById('uniqueItems').textContent = demoScans.length;
+    }
+
+    // Start scanning
+    function startScanning() {
+      // Simulate camera opening
+      const result = confirm('📱 Camera Access Required\n\nThis will open your device camera to scan barcodes and QR codes.\n\nIn production, this would activate the camera scanner.');
+      
+      if (result) {
+        // Simulate a successful scan
+        setTimeout(() => {
+          const randomScan = demoScans[Math.floor(Math.random() * demoScans.length)];
+          alert(`✅ Scan Successful!\n\nProduct: ${randomScan.name}\nSKU: ${randomScan.sku}\nLocation: ${randomScan.location}\nQuantity: ${randomScan.qty}\n\nAdded to scan history.`);
+        }, 1000);
+      }
+    }
+
+    // Manual entry
+    function manualEntry() {
+      const code = prompt('Enter Barcode or SKU:');
+      if (code) {
+        const foundScan = demoScans.find(s => 
+          s.barcode === code || s.sku.toLowerCase() === code.toLowerCase()
+        );
+        
+        if (foundScan) {
+          alert(`✅ Product Found!\n\nProduct: ${foundScan.name}\nSKU: ${foundScan.sku}\nLocation: ${foundScan.location}\nQuantity: ${foundScan.qty}`);
+        } else {
+          alert('❌ Product not found in database.\n\nPlease check the code and try again.');
+        }
+      }
+    }
+
+    // View scan details
+    function viewScanDetails(sku) {
+      const scan = demoScans.find(s => s.sku === sku);
+      if (scan) {
+        alert(`📦 Product Details\n\n` +
+              `Product: ${scan.name}\n` +
+              `SKU: ${scan.sku}\n` +
+              `Barcode: ${scan.barcode}\n` +
+              `Location: ${scan.location}\n` +
+              `Quantity: ${scan.qty}\n` +
+              `Type: ${scan.type}\n` +
+              `Scanned: ${scan.time}`);
+      }
+    }
+
+    // Clear history
+    function clearHistory() {
+      const confirm_clear = confirm('Are you sure you want to clear all scan history?');
+      if (confirm_clear) {
+        demoScans.length = 0;
+        loadScanHistory();
+        alert('✅ Scan history cleared');
+      }
+    }
+
+    // Initialize
+    loadScanHistory();
+
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+      const overlay = document.querySelector('.mobile-menu-overlay');
+      const menu = document.querySelector('.mobile-slide-menu');
+      const burger = document.querySelector('.burger-menu-btn');
+      
+      overlay.classList.toggle('active');
+      menu.classList.toggle('active');
+      burger.classList.toggle('active');
+      
+      if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+  </script>
+</body>
+</html>

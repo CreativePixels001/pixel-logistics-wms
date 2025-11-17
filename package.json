@@ -1,0 +1,36 @@
+{
+  "name": "dlt-wms-portal",
+  "version": "2.0.0",
+  "description": "Warehouse Management System - Optimized Frontend",
+  "scripts": {
+    "build": "./build.sh",
+    "build:js": "terser frontend/js/**/*.js --compress --mangle --output frontend/dist/bundle.min.js",
+    "build:css": "cssnano frontend/css/**/*.css frontend/dist/styles.min.css",
+    "serve": "python3 -m http.server 8000 --directory frontend",
+    "lighthouse": "lighthouse http://localhost:8000/index.html --view",
+    "test:performance": "npm run serve & sleep 2 && npm run lighthouse"
+  },
+  "devDependencies": {
+    "terser": "^5.31.0",
+    "cssnano": "^6.1.0",
+    "cssnano-cli": "^1.0.5",
+    "lighthouse": "^11.7.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-org/dlt-wms.git"
+  },
+  "keywords": [
+    "warehouse",
+    "wms",
+    "logistics",
+    "inventory",
+    "dashboard"
+  ],
+  "author": "DLT Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

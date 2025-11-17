@@ -143,8 +143,8 @@ function initKeyboardNavigation() {
 // Fullscreen Toggle
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-            console.log('Fullscreen request failed:', err);
+        document.documentElement.requestFullscreen().catch(() => {
+            // Fullscreen not supported or denied
         });
     } else {
         if (document.exitFullscreen) {
@@ -234,7 +234,6 @@ document.addEventListener('mousemove', () => {
 function trackSlideView(slideNumber) {
     // Implement analytics tracking here
     // Example: gtag('event', 'slide_view', { slide_number: slideNumber });
-    console.log('Slide viewed:', slideNumber);
 }
 
 // Export functions for global access

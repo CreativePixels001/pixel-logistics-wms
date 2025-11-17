@@ -13,13 +13,9 @@ let activityTimer = null;
 
 // Initialize dashboard on load
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🎯 Initializing Advanced Analytics Dashboard...');
-    
     initializeCharts();
     startRealTimeUpdates();
     simulateActivityFeed();
-    
-    console.log('✅ Dashboard initialized successfully');
 });
 
 // ===================================
@@ -60,6 +56,12 @@ function initializeCharts() {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                animation: {
+                    duration: 750,
+                    easing: 'easeInOutQuart'
+                },
+                parsing: false,
+                normalized: true,
                 plugins: {
                     legend: {
                         display: true,
@@ -74,6 +76,10 @@ function initializeCharts() {
                         bodyColor: '#fff',
                         padding: 12,
                         cornerRadius: 8
+                    },
+                    decimation: {
+                        enabled: true,
+                        algorithm: 'lttb'
                     }
                 },
                 scales: {
@@ -573,7 +579,6 @@ function updateDashboard() {
     const timeRange = document.getElementById('timeRangeFilter').value;
     const warehouse = document.getElementById('warehouseFilter').value;
     
-    console.log('Updating dashboard with:', { timeRange, warehouse });
     refreshDashboard();
 }
 
@@ -587,7 +592,6 @@ function exportDashboard() {
 
 function showNotification(message, type = 'info') {
     // Simple notification - can be enhanced with a proper notification system
-    console.log(`[${type.toUpperCase()}] ${message}`);
 }
 
 // Cleanup on page unload

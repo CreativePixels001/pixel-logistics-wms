@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Notification Settings - Pixel Logistics</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/mobile-app.css">
+</head>
+<body>
+  <div class="mobile-wrapper">
+    <div class="mobile-device">
+      <!-- Mobile Notch -->
+      <div class="mobile-notch">
+        <div class="notch-cutout">
+          <div class="notch-camera"></div>
+        </div>
+      </div>
+
+      <!-- Mobile Screen -->
+      <div class="mobile-screen">
+        <!-- Status Bar -->
+        <div class="mobile-status-bar">
+          <div class="status-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+          </div>
+          <div class="status-right">
+            <span>9:41 AM</span>
+            <i class="fas fa-battery-three-quarters"></i>
+          </div>
+        </div>
+
+        <!-- Mobile Header -->
+        <div class="mobile-header">
+          <a href="index.html" class="mobile-logo">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <rect width="24" height="24" rx="4" fill="#000"/>
+              <path d="M8 6h8M8 12h8M8 18h5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>WMS</span>
+          </a>
+          <div class="mobile-header-title">
+            <i class="fas fa-bell"></i> Notification Settings
+          </div>
+          <button class="burger-menu-btn" onclick="toggleMobileMenu()">
+            <div class="burger-icon">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu-overlay" onclick="toggleMobileMenu()"></div>
+
+        <!-- Slide-out Menu -->
+        <div class="mobile-slide-menu">
+          <div class="mobile-menu-header">
+            <div style="font-weight: 700; font-size: 18px;">Menu</div>
+            <button class="mobile-menu-close" onclick="toggleMobileMenu()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="mobile-menu-items">
+            <a href="index.html" class="mobile-menu-item">
+              <i class="fas fa-home"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="mobile-receiving-new.html" class="mobile-menu-item">
+              <i class="fas fa-inbox"></i>
+              <span>Mobile Receiving</span>
+            </a>
+            <a href="mobile-picking-new.html" class="mobile-menu-item">
+              <i class="fas fa-hand-holding-box"></i>
+              <span>Mobile Picking</span>
+            </a>
+            <a href="mobile-count-new.html" class="mobile-menu-item">
+              <i class="fas fa-clipboard-list"></i>
+              <span>Mobile Cycle Count</span>
+            </a>
+            <div class="mobile-menu-divider"></div>
+            <a href="product-scanner.html" class="mobile-menu-item">
+              <i class="fas fa-barcode"></i>
+              <span>Product Scanner</span>
+            </a>
+            <a href="notification-settings.html" class="mobile-menu-item active">
+              <i class="fas fa-bell"></i>
+              <span>Notification Settings</span>
+            </a>
+            <div class="mobile-menu-divider"></div>
+            <a href="index.html" class="mobile-menu-item">
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </a>
+            <a href="index.html" class="mobile-menu-item">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile Content -->
+        <div class="mobile-content">
+          <!-- Notification Settings Card -->
+          <div class="mobile-card">
+            <div class="mobile-card-header">Push Notifications</div>
+            
+            <div class="mobile-list-item">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-bell"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Enable Notifications</div>
+                <div class="mobile-list-subtitle">Receive push notifications</div>
+              </div>
+              <label class="mobile-toggle">
+                <input type="checkbox" checked onchange="toggleNotification(this, 'main')">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="mobile-list-item">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-box"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Order Updates</div>
+                <div class="mobile-list-subtitle">New orders & status changes</div>
+              </div>
+              <label class="mobile-toggle">
+                <input type="checkbox" checked onchange="toggleNotification(this, 'orders')">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="mobile-list-item">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-truck"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Shipment Alerts</div>
+                <div class="mobile-list-subtitle">Receiving & shipping updates</div>
+              </div>
+              <label class="mobile-toggle">
+                <input type="checkbox" checked onchange="toggleNotification(this, 'shipments')">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="mobile-list-item">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Stock Alerts</div>
+                <div class="mobile-list-subtitle">Low stock & reorder notifications</div>
+              </div>
+              <label class="mobile-toggle">
+                <input type="checkbox" checked onchange="toggleNotification(this, 'stock')">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Notification Demo Card -->
+          <div class="mobile-card">
+            <div class="mobile-card-header">Test Notifications</div>
+            
+            <div class="mobile-list-item" onclick="sendTestNotification('success')">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Success Notification</div>
+                <div class="mobile-list-subtitle">Send test success message</div>
+              </div>
+              <i class="fas fa-chevron-right mobile-list-arrow"></i>
+            </div>
+
+            <div class="mobile-list-item" onclick="sendTestNotification('warning')">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Warning Notification</div>
+                <div class="mobile-list-subtitle">Send test warning message</div>
+              </div>
+              <i class="fas fa-chevron-right mobile-list-arrow"></i>
+            </div>
+
+            <div class="mobile-list-item" onclick="sendTestNotification('error')">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-play-circle"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Error Notification</div>
+                <div class="mobile-list-subtitle">Send test error message</div>
+              </div>
+              <i class="fas fa-chevron-right mobile-list-arrow"></i>
+            </div>
+          </div>
+
+          <!-- Sound & Vibration Settings -->
+          <div class="mobile-card">
+            <div class="mobile-card-header">Sound & Vibration</div>
+            
+            <div class="mobile-list-item">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-volume-up"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Sound</div>
+                <div class="mobile-list-subtitle">Play notification sounds</div>
+              </div>
+              <label class="mobile-toggle">
+                <input type="checkbox" checked onchange="toggleSound(this)">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+
+            <div class="mobile-list-item">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-mobile-alt"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Vibration</div>
+                <div class="mobile-list-subtitle">Vibrate on notifications</div>
+              </div>
+              <label class="mobile-toggle">
+                <input type="checkbox" checked onchange="toggleVibration(this)">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="mobile-bottom-nav">
+          <button class="bottom-nav-item" onclick="window.location.href='index.html'">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+          </button>
+          <button class="bottom-nav-item active">
+            <i class="fas fa-bell"></i>
+            <span>Notifications</span>
+          </button>
+          <button class="bottom-nav-item" onclick="window.location.href='product-scanner.html'">
+            <i class="fas fa-barcode"></i>
+            <span>Scanner</span>
+          </button>
+          <button class="bottom-nav-item" onclick="window.location.href='index.html'">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Container -->
+  <div id="notification-container" style="position: fixed; top: 20px; right: 20px; z-index: 10000;"></div>
+
+  <script>
+    // Settings state
+    let settings = {
+      main: true,
+      orders: true,
+      shipments: true,
+      stock: true,
+      sound: true,
+      vibration: true
+    };
+
+    // Load saved settings
+    function loadSettings() {
+      const saved = localStorage.getItem('notificationSettings');
+      if (saved) {
+        settings = JSON.parse(saved);
+        updateToggles();
+      }
+    }
+
+    // Update toggle states
+    function updateToggles() {
+      document.querySelectorAll('.mobile-toggle input').forEach((toggle, index) => {
+        const keys = ['main', 'orders', 'shipments', 'stock', 'sound', 'vibration'];
+        if (keys[index]) {
+          toggle.checked = settings[keys[index]];
+        }
+      });
+    }
+
+    // Save settings
+    function saveSettings() {
+      localStorage.setItem('notificationSettings', JSON.stringify(settings));
+    }
+
+    // Toggle notification
+    function toggleNotification(toggle, type) {
+      settings[type] = toggle.checked;
+      saveSettings();
+      showToast(
+        toggle.checked ? 'Enabled' : 'Disabled',
+        `${type.charAt(0).toUpperCase() + type.slice(1)} notifications ${toggle.checked ? 'enabled' : 'disabled'}`,
+        toggle.checked ? 'success' : 'info'
+      );
+    }
+
+    // Toggle sound
+    function toggleSound(toggle) {
+      settings.sound = toggle.checked;
+      saveSettings();
+      showToast(
+        toggle.checked ? 'Sound On' : 'Sound Off',
+        `Notification sounds ${toggle.checked ? 'enabled' : 'disabled'}`,
+        'info'
+      );
+    }
+
+    // Toggle vibration
+    function toggleVibration(toggle) {
+      settings.vibration = toggle.checked;
+      saveSettings();
+      if (toggle.checked && navigator.vibrate) {
+        navigator.vibrate(200);
+      }
+      showToast(
+        toggle.checked ? 'Vibration On' : 'Vibration Off',
+        `Vibration ${toggle.checked ? 'enabled' : 'disabled'}`,
+        'info'
+      );
+    }
+
+    // Send test notification
+    function sendTestNotification(type) {
+      const messages = {
+        success: { title: 'Order Completed', message: 'Pick list #PL-12345 completed successfully' },
+        warning: { title: 'Low Stock Alert', message: 'SKU-7890 is running low (5 units remaining)' },
+        error: { title: 'Error', message: 'Failed to scan barcode. Please try again.' }
+      };
+
+      if (settings.vibration && navigator.vibrate) {
+        navigator.vibrate(200);
+      }
+
+      showToast(messages[type].title, messages[type].message, type);
+    }
+
+    // Show toast notification
+    function showToast(title, message, type = 'info') {
+      const container = document.getElementById('notification-container');
+      const toast = document.createElement('div');
+      
+      const colors = {
+        success: '#10b981',
+        error: '#ef4444',
+        warning: '#f59e0b',
+        info: '#3b82f6'
+      };
+
+      const icons = {
+        success: 'fa-check-circle',
+        error: 'fa-times-circle',
+        warning: 'fa-exclamation-triangle',
+        info: 'fa-info-circle'
+      };
+
+      toast.style.cssText = `
+        background: white;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        min-width: 300px;
+        max-width: 400px;
+        display: flex;
+        gap: 12px;
+        align-items: start;
+        animation: slideInRight 0.3s ease-out;
+        border-left: 4px solid ${colors[type]};
+      `;
+
+      toast.innerHTML = `
+        <i class="fas ${icons[type]}" style="color: ${colors[type]}; font-size: 20px; margin-top: 2px;"></i>
+        <div style="flex: 1;">
+          <div style="font-weight: 600; color: #1a1a1a; margin-bottom: 4px;">${title}</div>
+          <div style="font-size: 14px; color: #666;">${message}</div>
+        </div>
+        <button onclick="this.parentElement.remove()" style="background: none; border: none; color: #999; cursor: pointer; font-size: 18px; padding: 0;">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => toast.remove(), 300);
+      }, 4000);
+    }
+
+    // Add animations
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOutRight {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Initialize
+    loadSettings();
+
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+      const overlay = document.querySelector('.mobile-menu-overlay');
+      const menu = document.querySelector('.mobile-slide-menu');
+      const burger = document.querySelector('.burger-menu-btn');
+      
+      overlay.classList.toggle('active');
+      menu.classList.toggle('active');
+      burger.classList.toggle('active');
+      
+      // Prevent body scroll when menu is open
+      if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+  </script>
+</body>
+</html>

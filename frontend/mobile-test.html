@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Responsiveness Test</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .test-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin-bottom: 30px;
+      color: #111;
+    }
+    .test-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      background: #f9fafb;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    h2 {
+      margin-bottom: 15px;
+      color: #111;
+      font-size: 18px;
+    }
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+    .test-card {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    .test-link {
+      display: block;
+      padding: 12px 20px;
+      background: #000;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      text-align: center;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+    }
+    .test-link:hover {
+      background: #333;
+      transform: translateY(-2px);
+    }
+    .viewport-info {
+      padding: 15px;
+      background: #111;
+      color: white;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-family: monospace;
+    }
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+    .status.pass { background: #e5e5e5; color: #000; }
+    .breakpoint {
+      padding: 10px;
+      margin: 5px 0;
+      background: white;
+      border-radius: 6px;
+      border-left: 3px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <div class="test-container">
+    <h1>📱 Mobile Portal Responsiveness Test</h1>
+    
+    <div class="viewport-info">
+      <div><strong>Current Viewport:</strong> <span id="viewport-width"></span> x <span id="viewport-height"></span></div>
+      <div><strong>Device Type:</strong> <span id="device-type"></span></div>
+      <div><strong>Orientation:</strong> <span id="orientation"></span></div>
+    </div>
+
+    <div class="test-section">
+      <h2>🎯 Responsive Breakpoints <span class="status pass">CONFIGURED</span></h2>
+      <div class="breakpoint">
+        <strong>Mobile:</strong> < 768px → Full width, no device frame
+      </div>
+      <div class="breakpoint">
+        <strong>Tablet:</strong> 768px - 992px → 60% width
+      </div>
+      <div class="breakpoint">
+        <strong>Desktop:</strong> 992px - 1200px → 50% width
+      </div>
+      <div class="breakpoint">
+        <strong>Large Desktop:</strong> > 1200px → 40% width
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>🔍 Test Mobile Screens</h2>
+      <div class="test-grid">
+        <div class="test-card">
+          <h3 style="margin-bottom: 10px;">Notification Settings</h3>
+          <a href="notification-settings.html" class="test-link" target="_blank">Open Screen</a>
+        </div>
+        <div class="test-card">
+          <h3 style="margin-bottom: 10px;">Product Scanner</h3>
+          <a href="product-scanner.html" class="test-link" target="_blank">Open Screen</a>
+        </div>
+        <div class="test-card">
+          <h3 style="margin-bottom: 10px;">Mobile Receiving</h3>
+          <a href="mobile-receiving-new.html" class="test-link" target="_blank">Open Screen</a>
+        </div>
+        <div class="test-card">
+          <h3 style="margin-bottom: 10px;">Mobile Picking</h3>
+          <a href="mobile-picking-new.html" class="test-link" target="_blank">Open Screen</a>
+        </div>
+        <div class="test-card">
+          <h3 style="margin-bottom: 10px;">Mobile Cycle Count</h3>
+          <a href="mobile-count-new.html" class="test-link" target="_blank">Open Screen</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>✅ Font Family Test <span class="status pass">MATCHED</span></h2>
+      <p style="margin-bottom: 10px; color: #666;">All mobile screens now use:</p>
+      <code style="display: block; padding: 10px; background: white; border-radius: 6px; font-family: monospace;">
+        -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif
+      </code>
+      <p style="margin-top: 10px; font-size: 14px; color: #666;">
+        This matches the main dashboard font family exactly.
+      </p>
+    </div>
+
+    <div class="test-section">
+      <h2>📊 Responsiveness Checklist</h2>
+      <div style="display: grid; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 20px;">✅</span>
+          <span>Meta viewport tag configured</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 20px;">✅</span>
+          <span>Flexible grid layouts (40% → 100%)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 20px;">✅</span>
+          <span>Touch-friendly button sizes (44px min)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 20px;">✅</span>
+          <span>Readable font sizes (13px - 28px)</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 20px;">✅</span>
+          <span>Mobile-first design approach</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 20px;">✅</span>
+          <span>Optimized for iOS and Android</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-section">
+      <h2>🧪 How to Test</h2>
+      <ol style="margin-left: 20px; line-height: 1.8; color: #666;">
+        <li>Open any mobile screen link above</li>
+        <li>Open browser DevTools (F12 or Cmd+Option+I)</li>
+        <li>Click the device toolbar icon (Cmd+Shift+M)</li>
+        <li>Test different devices:
+          <ul style="margin: 10px 0 0 20px;">
+            <li>iPhone 14 Pro (393 x 852)</li>
+            <li>iPhone SE (375 x 667)</li>
+            <li>iPad Mini (768 x 1024)</li>
+            <li>Samsung Galaxy S20 (360 x 800)</li>
+          </ul>
+        </li>
+        <li>Test both portrait and landscape orientations</li>
+        <li>Verify bottom navigation is accessible</li>
+        <li>Check that all text is readable</li>
+        <li>Ensure buttons are easily tappable</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    function updateViewportInfo() {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      document.getElementById('viewport-width').textContent = width;
+      document.getElementById('viewport-height').textContent = height;
+      
+      let deviceType = 'Desktop';
+      if (width < 768) deviceType = 'Mobile';
+      else if (width < 992) deviceType = 'Tablet';
+      else if (width < 1200) deviceType = 'Desktop';
+      else deviceType = 'Large Desktop';
+      
+      document.getElementById('device-type').textContent = deviceType;
+      document.getElementById('orientation').textContent = width > height ? 'Landscape' : 'Portrait';
+    }
+    
+    updateViewportInfo();
+    window.addEventListener('resize', updateViewportInfo);
+  </script>
+</body>
+</html>

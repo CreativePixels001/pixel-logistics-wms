@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Mobile Picking - Pixel Logistics</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/mobile-app.css">
+</head>
+<body>
+  <div class="mobile-wrapper">
+    <div class="mobile-device">
+      <!-- Mobile Notch -->
+      <div class="mobile-notch">
+        <div class="notch-cutout">
+          <div class="notch-camera"></div>
+        </div>
+      </div>
+
+      <!-- Mobile Screen -->
+      <div class="mobile-screen">
+        <!-- Status Bar -->
+        <div class="mobile-status-bar">
+          <div class="status-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+          </div>
+          <div class="status-right">
+            <span>9:41 AM</span>
+            <i class="fas fa-battery-three-quarters"></i>
+          </div>
+        </div>
+
+        <!-- Mobile Header -->
+        <div class="mobile-header">
+          <a href="index.html" class="mobile-logo">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <rect width="24" height="24" rx="4" fill="#000"/>
+              <path d="M8 6h8M8 12h8M8 18h5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>WMS</span>
+          </a>
+          <div class="mobile-header-title">
+            <i class="fas fa-hand-holding-box"></i> Mobile Picking
+          </div>
+          <button class="mobile-header-action" onclick="showScanner()">
+            <i class="fas fa-qrcode"></i> Scan
+          </button>
+          <button class="burger-menu-btn" onclick="toggleMobileMenu()">
+            <div class="burger-icon">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu-overlay" onclick="toggleMobileMenu()"></div>
+
+        <!-- Slide-out Menu -->
+        <div class="mobile-slide-menu">
+          <div class="mobile-menu-header">
+            <div style="font-weight: 700; font-size: 18px;">Menu</div>
+            <button class="mobile-menu-close" onclick="toggleMobileMenu()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="mobile-menu-items">
+            <a href="index.html" class="mobile-menu-item">
+              <i class="fas fa-home"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="mobile-receiving-new.html" class="mobile-menu-item">
+              <i class="fas fa-inbox"></i>
+              <span>Mobile Receiving</span>
+            </a>
+            <a href="mobile-picking-new.html" class="mobile-menu-item active">
+              <i class="fas fa-hand-holding-box"></i>
+              <span>Mobile Picking</span>
+            </a>
+            <a href="mobile-count-new.html" class="mobile-menu-item">
+              <i class="fas fa-clipboard-list"></i>
+              <span>Mobile Cycle Count</span>
+            </a>
+            <div class="mobile-menu-divider"></div>
+            <a href="product-scanner.html" class="mobile-menu-item">
+              <i class="fas fa-barcode"></i>
+              <span>Product Scanner</span>
+            </a>
+            <a href="notification-settings.html" class="mobile-menu-item">
+              <i class="fas fa-bell"></i>
+              <span>Notification Settings</span>
+            </a>
+            <div class="mobile-menu-divider"></div>
+            <a href="index.html" class="mobile-menu-item">
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </a>
+            <a href="index.html" class="mobile-menu-item">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile Content -->
+        <div class="mobile-content">
+          <!-- Stats Grid -->
+          <div class="mobile-stats-grid">
+            <div class="mobile-stat-card">
+              <div class="mobile-stat-value">18</div>
+              <div class="mobile-stat-label">Picked</div>
+            </div>
+            <div class="mobile-stat-card">
+              <div class="mobile-stat-value">5</div>
+              <div class="mobile-stat-label">Pending</div>
+            </div>
+            <div class="mobile-stat-card">
+              <div class="mobile-stat-value">99.5%</div>
+              <div class="mobile-stat-label">Accuracy</div>
+            </div>
+            <div class="mobile-stat-card">
+              <div class="mobile-stat-value">2.3m</div>
+              <div class="mobile-stat-label">Avg Time</div>
+            </div>
+          </div>
+
+          <!-- Active Pick Lists -->
+          <div class="mobile-card">
+            <div class="mobile-card-header">Active Pick Lists</div>
+            
+            <div class="mobile-list-item" onclick="openPickList('PL-001')">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-list-check"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Pick List #PL-12345</div>
+                <div class="mobile-list-subtitle">12 items • Zone A • Priority</div>
+              </div>
+              <span class="mobile-badge badge-warning">Active</span>
+            </div>
+
+            <div class="mobile-list-item" onclick="openPickList('PL-002')">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-box-open"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Pick List #PL-12346</div>
+                <div class="mobile-list-subtitle">8 items • Zone B • Standard</div>
+              </div>
+              <span class="mobile-badge badge-info">New</span>
+            </div>
+
+            <div class="mobile-list-item" onclick="openPickList('PL-003')">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-clipboard-check"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Pick List #PL-12344</div>
+                <div class="mobile-list-subtitle">15 items • Zone C • Completed</div>
+              </div>
+              <span class="mobile-badge badge-success">Done</span>
+            </div>
+          </div>
+
+          <!-- Current Pick Task -->
+          <div class="mobile-card" style="border-left: 4px solid #000;">
+            <div class="mobile-card-header">Current Task</div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+              <div>
+                <div style="font-size: 18px; font-weight: 700; color: #1a1a1a;">SKU-7890-XL</div>
+                <div style="font-size: 13px; color: #666;">Product Name - Size XL</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 24px; font-weight: 700; color: #000;">12</div>
+                <div style="font-size: 12px; color: #666;">Qty Needed</div>
+              </div>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                <span style="font-size: 13px; color: #666;">Location:</span>
+                <span style="font-size: 14px; font-weight: 600; color: #1a1a1a;">A-12-03</span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="font-size: 13px; color: #666;">Bin:</span>
+                <span style="font-size: 14px; font-weight: 600; color: #1a1a1a;">BIN-456</span>
+              </div>
+            </div>
+
+            <button class="mobile-btn mobile-btn-primary" onclick="confirmPick()">
+              <i class="fas fa-check"></i> Confirm Pick
+            </button>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="mobile-card">
+            <div class="mobile-card-header">Quick Actions</div>
+            
+            <button class="mobile-btn mobile-btn-outline" onclick="skipItem()">
+              <i class="fas fa-forward"></i> Skip Item
+            </button>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="mobile-bottom-nav">
+          <button class="bottom-nav-item" onclick="window.location.href='index.html'">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+          </button>
+          <button class="bottom-nav-item" onclick="window.location.href='mobile-receiving-new.html'">
+            <i class="fas fa-inbox"></i>
+            <span>Receiving</span>
+          </button>
+          <button class="bottom-nav-item" onclick="window.location.href='product-scanner.html'">
+            <i class="fas fa-barcode"></i>
+            <span>Scanner</span>
+          </button>
+          <button class="bottom-nav-item active">
+            <i class="fas fa-hand-holding-box"></i>
+            <span>Picking</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openPickList(id) {
+      alert(`Opening pick list: ${id}\n\nThis will navigate to the detailed pick list screen with item-by-item picking guidance.`);
+    }
+
+    function showScanner() {
+      alert('📱 Scanner Activated\n\nIn production, this would activate the device camera for barcode/QR scanning to verify location and item.');
+    }
+
+    function confirmPick() {
+      const confirmed = confirm('Confirm picking 12 units of SKU-7890-XL from location A-12-03?');
+      if (confirmed) {
+        alert('✅ Pick Confirmed!\n\nMoving to next item in pick list.');
+      }
+    }
+
+    function skipItem() {
+      const reason = prompt('Reason for skipping:\n1. Out of stock\n2. Cannot locate\n3. Damaged\n4. Other\n\nEnter number (1-4):');
+      if (reason) {
+        alert('⏭️ Item Skipped\n\nMoving to next item. Skipped item will be flagged for review.');
+      }
+    }
+
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+      const overlay = document.querySelector('.mobile-menu-overlay');
+      const menu = document.querySelector('.mobile-slide-menu');
+      const burger = document.querySelector('.burger-menu-btn');
+      
+      overlay.classList.toggle('active');
+      menu.classList.toggle('active');
+      burger.classList.toggle('active');
+      
+      if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+  </script>
+</body>
+</html>

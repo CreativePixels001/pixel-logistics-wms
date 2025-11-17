@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Mobile Cycle Count - Pixel Logistics</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/mobile-app.css">
+</head>
+<body>
+  <div class="mobile-wrapper">
+    <div class="mobile-device">
+      <!-- Mobile Notch -->
+      <div class="mobile-notch">
+        <div class="notch-cutout">
+          <div class="notch-camera"></div>
+        </div>
+      </div>
+
+      <!-- Mobile Screen -->
+      <div class="mobile-screen">
+        <!-- Status Bar -->
+        <div class="mobile-status-bar">
+          <div class="status-left">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+          </div>
+          <div class="status-right">
+            <span>9:41 AM</span>
+            <i class="fas fa-battery-three-quarters"></i>
+          </div>
+        </div>
+
+        <!-- Mobile Header -->
+        <div class="mobile-header">
+          <a href="index.html" class="mobile-logo">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <rect width="24" height="24" rx="4" fill="#000"/>
+              <path d="M8 6h8M8 12h8M8 18h5" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>WMS</span>
+          </a>
+          <div class="mobile-header-title">
+            <i class="fas fa-clipboard-list"></i> Cycle Count
+          </div>
+          <button class="mobile-header-action" onclick="showScanner()">
+            <i class="fas fa-qrcode"></i> Scan
+          </button>
+          <button class="burger-menu-btn" onclick="toggleMobileMenu()">
+            <div class="burger-icon">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </button>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="mobile-menu-overlay" onclick="toggleMobileMenu()"></div>
+
+        <!-- Slide-out Menu -->
+        <div class="mobile-slide-menu">
+          <div class="mobile-menu-header">
+            <div style="font-weight: 700; font-size: 18px;">Menu</div>
+            <button class="mobile-menu-close" onclick="toggleMobileMenu()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="mobile-menu-items">
+            <a href="index.html" class="mobile-menu-item">
+              <i class="fas fa-home"></i>
+              <span>Dashboard</span>
+            </a>
+            <a href="mobile-receiving-new.html" class="mobile-menu-item">
+              <i class="fas fa-inbox"></i>
+              <span>Mobile Receiving</span>
+            </a>
+            <a href="mobile-picking-new.html" class="mobile-menu-item">
+              <i class="fas fa-hand-holding-box"></i>
+              <span>Mobile Picking</span>
+            </a>
+            <a href="mobile-count-new.html" class="mobile-menu-item active">
+              <i class="fas fa-clipboard-list"></i>
+              <span>Mobile Cycle Count</span>
+            </a>
+            <div class="mobile-menu-divider"></div>
+            <a href="product-scanner.html" class="mobile-menu-item">
+              <i class="fas fa-barcode"></i>
+              <span>Product Scanner</span>
+            </a>
+            <a href="notification-settings.html" class="mobile-menu-item">
+              <i class="fas fa-bell"></i>
+              <span>Notification Settings</span>
+            </a>
+            <div class="mobile-menu-divider"></div>
+            <a href="index.html" class="mobile-menu-item">
+              <i class="fas fa-cog"></i>
+              <span>Settings</span>
+            </a>
+            <a href="index.html" class="mobile-menu-item">
+              <i class="fas fa-sign-out-alt"></i>
+              <span>Logout</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Mobile Content -->
+        <div class="mobile-content">
+          <!-- Stats Grid -->
+          <div class="mobile-stats-grid">
+            <div class="mobile-stat-card">
+              <div class="mobile-stat-value">42</div>
+              <div class="mobile-stat-label">Counted</div>
+            </div>
+            <div class="mobile-stat-card">
+              <div class="mobile-stat-value">8</div>
+              <div class="mobile-stat-label">Remaining</div>
+            </div>
+            <div class="mobile-stat-card">
+              <div class="mobile-stat-value">97%</div>
+              <div class="mobile-stat-label">Accuracy</div>
+            </div>
+            <div class="mobile-stat-card">
+              <div class="mobile-stat-value">2</div>
+              <div class="mobile-stat-label">Variances</div>
+            </div>
+          </div>
+
+          <!-- Active Count Tasks -->
+          <div class="mobile-card">
+            <div class="mobile-card-header">Active Count Tasks</div>
+            
+            <div class="mobile-list-item" onclick="openCountTask('CC-001')">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-clipboard-check"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Zone A Cycle Count</div>
+                <div class="mobile-list-subtitle">24 locations • 156 SKUs</div>
+              </div>
+              <span class="mobile-badge badge-warning">In Progress</span>
+            </div>
+
+            <div class="mobile-list-item" onclick="openCountTask('CC-002')">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-box-archive"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">High Value Items</div>
+                <div class="mobile-list-subtitle">12 locations • 48 SKUs</div>
+              </div>
+              <span class="mobile-badge badge-info">New</span>
+            </div>
+
+            <div class="mobile-list-item" onclick="openCountTask('CC-003')">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-warehouse"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">Zone B Spot Check</div>
+                <div class="mobile-list-subtitle">8 locations • 32 SKUs</div>
+              </div>
+              <span class="mobile-badge badge-success">Completed</span>
+            </div>
+          </div>
+
+          <!-- Current Count Location -->
+          <div class="mobile-card" style="border-left: 4px solid #000;">
+            <div class="mobile-card-header">Current Location</div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <div>
+                <div style="font-size: 24px; font-weight: 700; color: #1a1a1a;">A-12-05</div>
+                <div style="font-size: 13px; color: #666;">Bin: BIN-789</div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 14px; font-weight: 600; color: #000;">Zone A</div>
+                <div style="font-size: 12px; color: #666;">Row 12, Bay 5</div>
+              </div>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+              <div style="font-size: 13px; color: #666; margin-bottom: 4px;">Expected SKU:</div>
+              <div style="font-size: 16px; font-weight: 600; color: #1a1a1a; margin-bottom: 8px;">SKU-4561-BLK</div>
+              <div style="display: flex; justify-content: space-between;">
+                <div>
+                  <div style="font-size: 12px; color: #666;">System Qty:</div>
+                  <div style="font-size: 18px; font-weight: 700; color: #1a1a1a;">45</div>
+                </div>
+                <div style="text-align: right;">
+                  <div style="font-size: 12px; color: #666;">Last Count:</div>
+                  <div style="font-size: 13px; font-weight: 600; color: #666;">3 days ago</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="mobile-input-group">
+              <label class="mobile-input-label">Physical Count</label>
+              <input type="number" class="mobile-input" id="countInput" placeholder="Enter count..." value="45">
+            </div>
+
+            <button class="mobile-btn mobile-btn-primary" onclick="submitCount()">
+              <i class="fas fa-check"></i> Submit Count
+            </button>
+          </div>
+
+          <!-- Variances Found -->
+          <div class="mobile-card">
+            <div class="mobile-card-header">Recent Variances</div>
+            
+            <div class="mobile-list-item">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">SKU-1234-WHT • A-10-02</div>
+                <div class="mobile-list-subtitle">Expected: 30 • Found: 28 (-2)</div>
+              </div>
+            </div>
+
+            <div class="mobile-list-item">
+              <div class="mobile-list-icon black">
+                <i class="fas fa-exclamation-triangle"></i>
+              </div>
+              <div class="mobile-list-content">
+                <div class="mobile-list-title">SKU-5678-RED • A-08-04</div>
+                <div class="mobile-list-subtitle">Expected: 15 • Found: 16 (+1)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="mobile-bottom-nav">
+          <button class="bottom-nav-item" onclick="window.location.href='index.html'">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+          </button>
+          <button class="bottom-nav-item" onclick="window.location.href='mobile-receiving-new.html'">
+            <i class="fas fa-inbox"></i>
+            <span>Receiving</span>
+          </button>
+          <button class="bottom-nav-item" onclick="window.location.href='product-scanner.html'">
+            <i class="fas fa-barcode"></i>
+            <span>Scanner</span>
+          </button>
+          <button class="bottom-nav-item active">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Count</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openCountTask(id) {
+      alert(`Opening count task: ${id}\n\nThis will navigate to the detailed count task screen with location-by-location counting.`);
+    }
+
+    function showScanner() {
+      alert('📱 Scanner Activated\n\nIn production, this would activate the device camera for barcode/QR scanning to verify location and SKU.');
+    }
+
+    function submitCount() {
+      const input = document.getElementById('countInput');
+      const counted = parseInt(input.value);
+      const expected = 45;
+      
+      if (isNaN(counted)) {
+        alert('❌ Please enter a valid count');
+        return;
+      }
+
+      const variance = counted - expected;
+      
+      if (variance === 0) {
+        alert('✅ Count Matched!\n\nNo variance detected. Moving to next location.');
+      } else {
+        const confirm_variance = confirm(`⚠️ Variance Detected!\n\nExpected: ${expected}\nCounted: ${counted}\nVariance: ${variance > 0 ? '+' : ''}${variance}\n\nDo you want to recount?`);
+        
+        if (!confirm_variance) {
+          const reason = prompt('Enter reason for variance:\n(e.g., damaged, misplaced, etc.)');
+          if (reason) {
+            alert('✅ Variance Recorded\n\nVariance logged with reason. Moving to next location.');
+          }
+        }
+      }
+    }
+
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+      const overlay = document.querySelector('.mobile-menu-overlay');
+      const menu = document.querySelector('.mobile-slide-menu');
+      const burger = document.querySelector('.burger-menu-btn');
+      
+      overlay.classList.toggle('active');
+      menu.classList.toggle('active');
+      burger.classList.toggle('active');
+      
+      if (menu.classList.contains('active')) {
+        document.body.style.overflow = 'hidden';
+      } else {
+        document.body.style.overflow = '';
+      }
+    }
+  </script>
+</body>
+</html>

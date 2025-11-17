@@ -7,7 +7,7 @@ class EnhancedDataTable {
     constructor(containerId, options = {}) {
         this.container = document.getElementById(containerId);
         if (!this.container) {
-            console.error(`Container ${containerId} not found`);
+            // Container not found - silent fail
             return;
         }
 
