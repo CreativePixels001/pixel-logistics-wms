@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Logistics WMS - Product Deck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/product-deck.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="deck-nav">
+        <div class="nav-brand">
+            <svg class="brand-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+                <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+                <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+                <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+            </svg>
+            <span>Pixel Logistics</span>
+        </div>
+        <div class="nav-controls">
+            <button class="btn-icon" onclick="toggleFullscreen()" title="Fullscreen">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+                </svg>
+            </button>
+            <button class="btn-icon" onclick="downloadDeck()" title="Download PDF">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7 10 12 15 17 10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+            </button>
+            <button class="btn-primary" onclick="window.location.href='login.html'">Get Started</button>
+        </div>
+    </nav>
+
+    <!-- Slide Container -->
+    <div class="deck-container">
+        <!-- Slide 1: Cover -->
+        <section class="slide active" data-slide="1">
+            <div class="slide-content slide-center">
+                <div class="cover-content">
+                    <h1 class="cover-title">Pixel Logistics WMS</h1>
+                    <p class="cover-tagline">Smart Warehouse Management. Simplified.</p>
+                    <p class="cover-subtitle">Enterprise-grade logistics platform for modern supply chains</p>
+                    <button class="btn-large" onclick="nextSlide()">
+                        <span>Explore Platform</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 2: The Challenge -->
+        <section class="slide" data-slide="2">
+            <div class="slide-content">
+                <h2 class="slide-title">Traditional Warehouse Management is Broken</h2>
+                <div class="challenge-grid">
+                    <div class="challenge-card">
+                        <svg class="challenge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <polyline points="5 12 12 19 19 12"/>
+                        </svg>
+                        <div class="challenge-stat">23%</div>
+                        <div class="challenge-label">Average Picking Errors</div>
+                        <div class="challenge-desc">Costing millions annually</div>
+                    </div>
+                    <div class="challenge-card">
+                        <svg class="challenge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <div class="challenge-stat">45%</div>
+                        <div class="challenge-label">Time Wasted</div>
+                        <div class="challenge-desc">On manual processes</div>
+                    </div>
+                    <div class="challenge-card">
+                        <svg class="challenge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                        </svg>
+                        <div class="challenge-stat">0%</div>
+                        <div class="challenge-label">Real-time Visibility</div>
+                        <div class="challenge-desc">Blind spots everywhere</div>
+                    </div>
+                    <div class="challenge-card">
+                        <svg class="challenge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        <div class="challenge-stat">$1.75M</div>
+                        <div class="challenge-label">Average Annual Loss</div>
+                        <div class="challenge-desc">Due to inefficiencies</div>
+                    </div>
+                </div>
+                <div class="slide-footer">
+                    <strong>$165 billion</strong> lost annually due to warehouse inefficiencies worldwide
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3: The Solution -->
+        <section class="slide" data-slide="3">
+            <div class="slide-content">
+                <h2 class="slide-title">Built for Modern Operations</h2>
+                <div class="solution-hero">
+                    <p class="solution-tagline">A complete, cloud-based warehouse management system that combines powerful enterprise features with consumer-grade simplicity.</p>
+                </div>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        <div class="benefit-text">
+                            <div class="benefit-stat">99.9%</div>
+                            <div class="benefit-label">Inventory Accuracy</div>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                        </svg>
+                        <div class="benefit-text">
+                            <div class="benefit-stat">3x Faster</div>
+                            <div class="benefit-label">Operations</div>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                            <line x1="12" y1="18" x2="12.01" y2="18"/>
+                        </svg>
+                        <div class="benefit-text">
+                            <div class="benefit-stat">Mobile-First</div>
+                            <div class="benefit-label">Design</div>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <div class="benefit-text">
+                            <div class="benefit-stat">AI-Powered</div>
+                            <div class="benefit-label">Insights</div>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        <div class="benefit-text">
+                            <div class="benefit-stat">Enterprise</div>
+                            <div class="benefit-label">Security</div>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <svg class="benefit-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        <div class="benefit-text">
+                            <div class="benefit-stat">$1/month</div>
+                            <div class="benefit-label">Starting Price</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4: Platform Overview -->
+        <section class="slide" data-slide="4">
+            <div class="slide-content">
+                <h2 class="slide-title">End-to-End Warehouse Operations Management</h2>
+                <div class="modules-grid">
+                    <div class="module-card">
+                        <div class="module-header">
+                            <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 16l-4-4-4 4M20 12v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8M2 8l10-6 10 6"/>
+                            </svg>
+                            <h3>Inbound Operations</h3>
+                        </div>
+                        <ul class="module-features">
+                            <li>ASN & Receipt Management</li>
+                            <li>Quality Inspection</li>
+                            <li>Putaway Optimization</li>
+                            <li>Cross-docking</li>
+                        </ul>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-header">
+                            <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                <path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>
+                            </svg>
+                            <h3>Inventory Control</h3>
+                        </div>
+                        <ul class="module-features">
+                            <li>Real-time Tracking</li>
+                            <li>Cycle Counting</li>
+                            <li>ABC Analysis</li>
+                            <li>Lot & Serial Traceability</li>
+                        </ul>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-header">
+                            <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="3" width="15" height="13"/>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                                <circle cx="5.5" cy="18.5" r="2.5"/>
+                                <circle cx="18.5" cy="18.5" r="2.5"/>
+                            </svg>
+                            <h3>Outbound Fulfillment</h3>
+                        </div>
+                        <ul class="module-features">
+                            <li>Order Management</li>
+                            <li>Wave & Batch Picking</li>
+                            <li>Packing & Kitting</li>
+                            <li>Shipping Integration</li>
+                        </ul>
+                    </div>
+                    <div class="module-card">
+                        <div class="module-header">
+                            <svg class="module-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 3v18h18"/>
+                                <path d="M18 17l-4-4-4 4-4-8"/>
+                            </svg>
+                            <h3>Advanced Features</h3>
+                        </div>
+                        <ul class="module-features">
+                            <li>Analytics & Reporting</li>
+                            <li>Labor Management</li>
+                            <li>Yard & Dock Scheduling</li>
+                            <li>Returns Processing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5: Intelligent Receiving -->
+        <section class="slide" data-slide="5">
+            <div class="slide-content">
+                <h2 class="slide-title">Streamline Your Inbound Operations</h2>
+                <div class="feature-showcase">
+                    <div class="feature-visual">
+                        <svg class="feature-large-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M16 16l-4-4-4 4M20 12v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8M2 8l10-6 10 6"/>
+                        </svg>
+                    </div>
+                    <div class="feature-details">
+                        <div class="feature-list">
+                            <div class="feature-point">
+                                <svg class="point-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                                </svg>
+                                <div>
+                                    <div class="point-title">ASN Processing</div>
+                                    <div class="point-desc">Pre-receive shipments and auto-validate against POs</div>
+                                </div>
+                            </div>
+                            <div class="feature-point">
+                                <svg class="point-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                                    <polyline points="21 15 16 10 5 21"/>
+                                </svg>
+                                <div>
+                                    <div class="point-title">Photo Documentation</div>
+                                    <div class="point-desc">Capture damage or discrepancies instantly</div>
+                                </div>
+                            </div>
+                            <div class="feature-point">
+                                <svg class="point-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M2 9a3 3 0 0 1 0-6h18a3 3 0 0 1 0 6M2 9v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9"/>
+                                </svg>
+                                <div>
+                                    <div class="point-title">Smart LPN Generation</div>
+                                    <div class="point-desc">Automatic license plate numbering</div>
+                                </div>
+                            </div>
+                            <div class="feature-point">
+                                <svg class="point-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 11 12 14 22 4"/>
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                                </svg>
+                                <div>
+                                    <div class="point-title">Quality Gates</div>
+                                    <div class="point-desc">Configurable inspection workflows</div>
+                                </div>
+                            </div>
+                            <div class="feature-point">
+                                <svg class="point-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                                    <line x1="12" y1="18" x2="12.01" y2="18"/>
+                                </svg>
+                                <div>
+                                    <div class="point-title">Mobile Receiving</div>
+                                    <div class="point-desc">Scan and receive directly from the dock</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="impact-stats">
+                            <div class="impact-item">
+                                <div class="impact-number">65%</div>
+                                <div class="impact-label">Faster receiving</div>
+                            </div>
+                            <div class="impact-divider"></div>
+                            <div class="impact-item">
+                                <div class="impact-number">90%</div>
+                                <div class="impact-label">Error reduction</div>
+                            </div>
+                            <div class="impact-divider"></div>
+                            <div class="impact-item">
+                                <div class="impact-number">100%</div>
+                                <div class="impact-label">Traceability</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6: Optimized Picking -->
+        <section class="slide" data-slide="6">
+            <div class="slide-content">
+                <h2 class="slide-title">Maximize Order Fulfillment Efficiency</h2>
+                <div class="picking-strategies">
+                    <div class="strategy-card">
+                        <svg class="strategy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        <h4>Directed Picking</h4>
+                        <p>System-optimized pick paths</p>
+                    </div>
+                    <div class="strategy-card">
+                        <svg class="strategy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        <h4>Batch Picking</h4>
+                        <p>Multiple orders simultaneously</p>
+                    </div>
+                    <div class="strategy-card">
+                        <svg class="strategy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        <h4>Zone Picking</h4>
+                        <p>Territory-based efficiency</p>
+                    </div>
+                    <div class="strategy-card">
+                        <svg class="strategy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        <h4>Wave Management</h4>
+                        <p>Strategic order grouping</p>
+                    </div>
+                </div>
+                <div class="impact-banner">
+                    <div class="banner-stat">
+                        <div class="banner-number">3x</div>
+                        <div class="banner-label">Pick Rate Increase</div>
+                    </div>
+                    <div class="banner-stat">
+                        <div class="banner-number">40%</div>
+                        <div class="banner-label">Travel Time Reduction</div>
+                    </div>
+                    <div class="banner-stat">
+                        <div class="banner-number">99.8%</div>
+                        <div class="banner-label">Picking Accuracy</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7: Analytics -->
+        <section class="slide" data-slide="7">
+            <div class="slide-content">
+                <h2 class="slide-title">Data-Driven Decision Making</h2>
+                <div class="analytics-layout">
+                    <div class="analytics-dashboard">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="20" x2="18" y2="10"/>
+                                    <line x1="12" y1="20" x2="12" y2="4"/>
+                                    <line x1="6" y1="20" x2="6" y2="14"/>
+                                </svg>
+                                <span>Live KPI Monitoring</span>
+                            </div>
+                            <p>Real-time visibility into all warehouse metrics</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                                    <polyline points="17 6 23 6 23 12"/>
+                                </svg>
+                                <span>Trend Analysis</span>
+                            </div>
+                            <p>Historical performance tracking and insights</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="8" x2="12" y2="12"/>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                </svg>
+                                <span>Exception Alerts</span>
+                            </div>
+                            <p>Proactive issue detection and notifications</p>
+                        </div>
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                                <span>Custom Reports</span>
+                            </div>
+                            <p>Build reports exactly the way you need them</p>
+                        </div>
+                    </div>
+                    <div class="metrics-list">
+                        <h4>Key Metrics Tracked</h4>
+                        <div class="metric-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>Order fulfillment rates</span>
+                        </div>
+                        <div class="metric-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>Inventory turnover</span>
+                        </div>
+                        <div class="metric-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>Labor productivity</span>
+                        </div>
+                        <div class="metric-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>Space utilization</span>
+                        </div>
+                        <div class="metric-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>Accuracy rates</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8: Pricing -->
+        <section class="slide" data-slide="8">
+            <div class="slide-content">
+                <h2 class="slide-title">Simple, Transparent Pricing</h2>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <div class="plan-name">Starter</div>
+                            <div class="plan-price">
+                                <span class="price-amount">$1</span>
+                                <span class="price-period">/month</span>
+                            </div>
+                        </div>
+                        <ul class="plan-features">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Up to 1,000 orders/month
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                2 users
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Basic features
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Email support
+                            </li>
+                        </ul>
+                        <div class="plan-footer">Perfect for startups</div>
+                    </div>
+
+                    <div class="pricing-card featured">
+                        <div class="featured-badge">Most Popular</div>
+                        <div class="pricing-header">
+                            <div class="plan-name">Professional</div>
+                            <div class="plan-price">
+                                <span class="price-amount">$499</span>
+                                <span class="price-period">/month</span>
+                            </div>
+                        </div>
+                        <ul class="plan-features">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Up to 10,000 orders/month
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                10 users
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                All features unlocked
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Priority support
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Advanced analytics
+                            </li>
+                        </ul>
+                        <div class="plan-footer">Perfect for growing businesses</div>
+                    </div>
+
+                    <div class="pricing-card">
+                        <div class="pricing-header">
+                            <div class="plan-name">Enterprise</div>
+                            <div class="plan-price">
+                                <span class="price-amount">Custom</span>
+                            </div>
+                        </div>
+                        <ul class="plan-features">
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Unlimited orders
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Unlimited users
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                White-label options
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Dedicated manager
+                            </li>
+                            <li>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Custom integrations
+                            </li>
+                        </ul>
+                        <div class="plan-footer">Perfect for large operations</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Call to Action -->
+        <section class="slide" data-slide="9">
+            <div class="slide-content slide-center">
+                <div class="cta-content">
+                    <h2 class="cta-title">Ready to Transform Your Warehouse?</h2>
+                    <p class="cta-subtitle">Join 3,000+ businesses already optimizing their operations</p>
+                    
+                    <div class="cta-steps">
+                        <div class="cta-step">
+                            <div class="step-number">1</div>
+                            <div class="step-text">Schedule a Demo</div>
+                        </div>
+                        <div class="step-arrow">→</div>
+                        <div class="cta-step">
+                            <div class="step-number">2</div>
+                            <div class="step-text">Free Assessment</div>
+                        </div>
+                        <div class="step-arrow">→</div>
+                        <div class="cta-step">
+                            <div class="step-number">3</div>
+                            <div class="step-text">Start Pilot</div>
+                        </div>
+                    </div>
+
+                    <div class="cta-buttons">
+                        <button class="btn-cta-primary" onclick="window.location.href='login.html'">
+                            <span>Start Free Trial</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+                        <button class="btn-cta-secondary" onclick="alert('Contact: demo@pixellogistics.com')">
+                            Schedule Demo
+                        </button>
+                    </div>
+
+                    <div class="cta-offer">
+                        <p><strong>Special Offer:</strong> 50% off first 6 months + Free setup ($5,000 value)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Progress Indicator -->
+    <div class="slide-progress">
+        <div class="progress-dots">
+            <span class="dot active" onclick="goToSlide(1)"></span>
+            <span class="dot" onclick="goToSlide(2)"></span>
+            <span class="dot" onclick="goToSlide(3)"></span>
+            <span class="dot" onclick="goToSlide(4)"></span>
+            <span class="dot" onclick="goToSlide(5)"></span>
+            <span class="dot" onclick="goToSlide(6)"></span>
+            <span class="dot" onclick="goToSlide(7)"></span>
+            <span class="dot" onclick="goToSlide(8)"></span>
+            <span class="dot" onclick="goToSlide(9)"></span>
+        </div>
+        <div class="progress-count">
+            <span id="currentSlide">1</span> / 9
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <button class="nav-arrow nav-prev" onclick="prevSlide()" title="Previous">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+    </button>
+    <button class="nav-arrow nav-next" onclick="nextSlide()" title="Next">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+    </button>
+
+    <script src="js/product-deck.js"></script>
+</body>
+</html>
