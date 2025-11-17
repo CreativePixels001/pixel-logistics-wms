@@ -1,0 +1,588 @@
+/**
+ * Mobile Scanner Styles - Phase 10B
+ * Full-screen mobile interface with modern and RF themes
+ */
+
+/* Mobile Scanner Container */
+.mobile-scanner-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Modern Theme */
+.modern-theme {
+  background: #000;
+}
+
+/* Mobile Scanner Header (Modern) */
+.mobile-scanner-header {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  gap: 16px;
+}
+
+.mobile-back-btn,
+.mobile-theme-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mobile-back-btn:active,
+.mobile-theme-btn:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.mobile-scanner-title {
+  flex: 1;
+  color: white;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+/* Mobile Camera View */
+.mobile-camera-view {
+  flex: 1;
+  position: relative;
+  background: #000;
+}
+
+.mobile-scanner-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mobile-scanner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.mobile-scanner-frame {
+  width: 280px;
+  height: 200px;
+  position: relative;
+}
+
+.frame-corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #00ff00;
+}
+
+.frame-corner-tl {
+  top: 0;
+  left: 0;
+  border-right: none;
+  border-bottom: none;
+}
+
+.frame-corner-tr {
+  top: 0;
+  right: 0;
+  border-left: none;
+  border-bottom: none;
+}
+
+.frame-corner-bl {
+  bottom: 0;
+  left: 0;
+  border-right: none;
+  border-top: none;
+}
+
+.frame-corner-br {
+  bottom: 0;
+  right: 0;
+  border-left: none;
+  border-top: none;
+}
+
+.mobile-scanner-hint {
+  color: white;
+  margin-top: 32px;
+  font-size: 16px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 12px 24px;
+  border-radius: 24px;
+  font-weight: 500;
+}
+
+/* Flashlight Button */
+.mobile-flashlight-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: white;
+  pointer-events: auto;
+}
+
+.mobile-flashlight-btn:active {
+  transform: scale(0.9);
+}
+
+.mobile-flashlight-btn.active {
+  background: rgba(255, 255, 0, 0.3);
+  box-shadow: 0 0 20px rgba(255, 255, 0, 0.5);
+}
+
+/* Manual Entry Section */
+.mobile-manual-section {
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.mobile-input-group {
+  display: flex;
+  gap: 12px;
+}
+
+.mobile-manual-input {
+  flex: 1;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: white;
+  font-size: 16px;
+  font-family: monospace;
+}
+
+.mobile-manual-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mobile-manual-input:focus {
+  outline: none;
+  border-color: #00ff00;
+  box-shadow: 0 0 0 3px rgba(0, 255, 0, 0.2);
+}
+
+.mobile-submit-btn {
+  width: 56px;
+  height: 56px;
+  background: #00ff00;
+  border: none;
+  border-radius: 12px;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mobile-submit-btn:active {
+  transform: scale(0.95);
+}
+
+/* Quick Actions */
+.mobile-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mobile-action-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mobile-action-btn:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.mobile-action-btn svg {
+  flex-shrink: 0;
+}
+
+/* RF Theme */
+.rf-theme {
+  background: #000;
+  font-family: 'Courier New', monospace;
+}
+
+/* RF Header */
+.rf-scanner-header {
+  background: #1a3d1a;
+  border-bottom: 2px solid #00ff00;
+}
+
+.rf-status-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background: #0d1f0d;
+  color: #00ff00;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.rf-signal::before {
+  content: '📶 ';
+}
+
+.rf-battery::before {
+  content: '🔋 ';
+}
+
+.rf-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  color: #00ff00;
+}
+
+.rf-title {
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+
+.rf-exit-btn {
+  background: #003300;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: bold;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.rf-exit-btn:active {
+  background: #00ff00;
+  color: #000;
+}
+
+/* RF Display Screen */
+.rf-display-screen {
+  flex: 1;
+  background: #0a0a0a;
+  border: 4px solid #1a3d1a;
+  margin: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.rf-screen-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #000;
+  color: #00ff00;
+  padding: 16px;
+}
+
+.rf-prompt {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px;
+  background: #0d1f0d;
+  border: 2px solid #00ff00;
+  border-radius: 4px;
+  letter-spacing: 1px;
+  animation: rfBlink 2s infinite;
+}
+
+@keyframes rfBlink {
+  0%, 49%, 100% { opacity: 1; }
+  50%, 99% { opacity: 0.5; }
+}
+
+.rf-scanner-area {
+  flex: 1;
+  position: relative;
+  margin: 16px 0;
+  border: 2px solid #00ff00;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.rf-scanner-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.8) contrast(1.2);
+}
+
+.rf-scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #00ff00;
+  box-shadow: 0 0 10px #00ff00;
+  animation: rfScanLine 2s linear infinite;
+}
+
+@keyframes rfScanLine {
+  0% { top: 0; }
+  100% { top: 100%; }
+}
+
+.rf-last-scan {
+  text-align: center;
+  font-size: 14px;
+  padding: 8px;
+  background: #0d1f0d;
+  border-radius: 4px;
+  font-family: monospace;
+}
+
+/* RF Function Keys */
+.rf-function-keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 16px;
+  background: #0d1f0d;
+}
+
+.rf-fkey {
+  background: #1a3d1a;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  padding: 12px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: inherit;
+  transition: all 0.1s;
+}
+
+.rf-fkey:active {
+  background: #00ff00;
+  color: #000;
+  transform: scale(0.95);
+}
+
+.rf-fkey small {
+  display: block;
+  font-size: 10px;
+  margin-top: 4px;
+  opacity: 0.8;
+}
+
+/* RF Numeric Keypad */
+.rf-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 16px 16px;
+  background: #0d1f0d;
+}
+
+.rf-key {
+  background: #003300;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  padding: 20px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: inherit;
+  transition: all 0.1s;
+}
+
+.rf-key:active {
+  background: #00ff00;
+  color: #000;
+  transform: scale(0.95);
+}
+
+.rf-key-wide {
+  grid-column: span 2;
+  font-size: 14px;
+}
+
+/* RF Manual Input */
+.rf-manual-input {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #000;
+  border: 4px solid #00ff00;
+  border-radius: 8px;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 0 40px rgba(0, 255, 0, 0.3);
+  z-index: 10001;
+}
+
+.rf-input-field {
+  width: 100%;
+  background: #0d1f0d;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  padding: 16px;
+  font-size: 18px;
+  font-family: 'Courier New', monospace;
+  border-radius: 4px;
+  margin-bottom: 16px;
+}
+
+.rf-input-field:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.rf-input-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.rf-input-btn {
+  background: #1a3d1a;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  padding: 14px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  font-family: inherit;
+  transition: all 0.1s;
+}
+
+.rf-input-btn:active {
+  background: #00ff00;
+  color: #000;
+}
+
+.rf-input-btn-primary {
+  background: #003300;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 480px) {
+  .mobile-scanner-frame {
+    width: 240px;
+    height: 180px;
+  }
+
+  .frame-corner {
+    width: 30px;
+    height: 30px;
+    border-width: 3px;
+  }
+
+  .mobile-scanner-hint {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .mobile-quick-actions {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .rf-keypad {
+    gap: 6px;
+  }
+
+  .rf-key {
+    padding: 16px;
+    font-size: 18px;
+  }
+}
+
+/* Landscape Mode */
+@media (orientation: landscape) {
+  .mobile-camera-view {
+    flex: 2;
+  }
+
+  .mobile-quick-actions {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .mobile-action-btn {
+    padding: 12px 6px;
+    font-size: 11px;
+  }
+}
+
+/* Safe Area (iOS Notch) */
+@supports (padding: max(0px)) {
+  .mobile-scanner-header {
+    padding-top: max(16px, env(safe-area-inset-top));
+  }
+
+  .mobile-quick-actions {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+
+  .rf-keypad {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}

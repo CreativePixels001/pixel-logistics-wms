@@ -1,0 +1,515 @@
+/**
+ * Barcode Scanner & QR Generator Styles - Phase 10A
+ * Modern scanner interface with camera view and manual entry
+ */
+
+/* Scanner Modal */
+.scanner-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease;
+}
+
+.scanner-modal {
+  background: var(--color-white);
+  border-radius: 16px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: slideUp 0.3s ease;
+}
+
+.scanner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-grey-light);
+}
+
+.scanner-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.scanner-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.scanner-close-btn:hover {
+  background: var(--color-grey-lightest);
+}
+
+.scanner-content {
+  padding: var(--spacing-lg);
+  max-height: calc(90vh - 100px);
+  overflow-y: auto;
+}
+
+/* Camera View */
+.scanner-camera-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: var(--spacing-lg);
+}
+
+.scanner-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scanner-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.scanner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.scanner-frame {
+  width: 280px;
+  height: 200px;
+  border: 3px solid rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+  position: relative;
+}
+
+.scanner-frame::before,
+.scanner-frame::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #00ff00;
+}
+
+.scanner-frame::before {
+  top: -4px;
+  left: -4px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.scanner-frame::after {
+  bottom: -4px;
+  right: -4px;
+  border-left: none;
+  border-top: none;
+}
+
+.scanner-hint {
+  color: white;
+  margin-top: var(--spacing-lg);
+  font-size: 14px;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+/* Manual Entry */
+.scanner-manual-entry {
+  background: var(--color-grey-lightest);
+  border-radius: 12px;
+  padding: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.manual-entry-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: var(--spacing-sm);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.manual-entry-group {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.manual-barcode-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid var(--color-grey-light);
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: monospace;
+}
+
+.manual-barcode-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Scan History */
+.scanner-history h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+}
+
+.scan-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.scan-history-item {
+  background: var(--color-grey-lightest);
+  border: 1px solid var(--color-grey-light);
+  border-radius: 8px;
+  padding: 12px;
+  transition: all 0.2s;
+  animation: slideInLeft 0.3s ease;
+}
+
+.scan-history-item:hover {
+  background: var(--color-grey-light);
+  transform: translateX(4px);
+}
+
+.scan-value {
+  font-family: monospace;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 4px;
+}
+
+.scan-meta {
+  display: flex;
+  gap: var(--spacing-sm);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.scan-format {
+  text-transform: uppercase;
+  background: var(--color-primary);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.scan-time {
+  padding: 2px 8px;
+}
+
+.no-scans {
+  text-align: center;
+  color: var(--color-text-secondary);
+  padding: var(--spacing-lg);
+  font-style: italic;
+}
+
+/* QR Code Generator Modal */
+.qr-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease;
+}
+
+.qr-modal {
+  background: var(--color-white);
+  border-radius: 16px;
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  animation: slideUp 0.3s ease;
+}
+
+.qr-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--spacing-lg);
+  border-bottom: 1px solid var(--color-grey-light);
+}
+
+.qr-modal-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.qr-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.qr-close-btn:hover {
+  background: var(--color-grey-lightest);
+}
+
+.qr-modal-content {
+  padding: var(--spacing-lg);
+  max-height: calc(90vh - 100px);
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+.qr-form-section h3,
+.qr-preview-section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: var(--spacing-md);
+}
+
+.qr-actions {
+  margin-top: var(--spacing-lg);
+}
+
+.qr-actions .btn {
+  width: 100%;
+}
+
+/* QR Preview */
+.qr-preview-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.qr-preview-container {
+  width: 100%;
+  background: var(--color-grey-lightest);
+  border: 2px dashed var(--color-grey-light);
+  border-radius: 12px;
+  padding: var(--spacing-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  margin-bottom: var(--spacing-md);
+}
+
+.qr-preview-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.qr-download-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  width: 100%;
+}
+
+.qr-download-actions .btn {
+  flex: 1;
+}
+
+/* Scanner/QR Button in Pages */
+.scanner-trigger-btn,
+.qr-trigger-btn {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  z-index: 1000;
+}
+
+.scanner-trigger-btn:hover,
+.qr-trigger-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+}
+
+.scanner-trigger-btn:active,
+.qr-trigger-btn:active {
+  transform: scale(0.95);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Dark Theme Support */
+body.dark-theme .scanner-modal,
+body.dark-theme .qr-modal {
+  background: #1f2937;
+}
+
+body.dark-theme .scanner-header,
+body.dark-theme .qr-modal-header {
+  border-bottom-color: #374151;
+}
+
+body.dark-theme .scanner-header h2,
+body.dark-theme .qr-modal-header h2 {
+  color: #f9fafb;
+}
+
+body.dark-theme .scanner-close-btn:hover,
+body.dark-theme .qr-close-btn:hover {
+  background: #374151;
+}
+
+body.dark-theme .scanner-manual-entry {
+  background: #374151;
+}
+
+body.dark-theme .manual-barcode-input {
+  background: #1f2937;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+body.dark-theme .scan-history-item {
+  background: #374151;
+  border-color: #4b5563;
+}
+
+body.dark-theme .scan-history-item:hover {
+  background: #4b5563;
+}
+
+body.dark-theme .scan-value {
+  color: #f9fafb;
+}
+
+body.dark-theme .qr-preview-container {
+  background: #374151;
+  border-color: #4b5563;
+}
+
+body.dark-theme .qr-form-section h3,
+body.dark-theme .qr-preview-section h3 {
+  color: #f9fafb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .scanner-modal,
+  .qr-modal {
+    max-width: 95%;
+    width: 95%;
+  }
+
+  .qr-modal-content {
+    grid-template-columns: 1fr;
+  }
+
+  .scanner-frame {
+    width: 220px;
+    height: 160px;
+  }
+
+  .scanner-trigger-btn,
+  .qr-trigger-btn {
+    bottom: 16px;
+    right: 16px;
+    width: 50px;
+    height: 50px;
+  }
+
+  .qr-download-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .manual-entry-group {
+    flex-direction: column;
+  }
+
+  .manual-barcode-input {
+    width: 100%;
+  }
+}

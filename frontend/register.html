@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Pixel Logistics</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-page">
+  <div class="auth-container">
+    <!-- Left Panel - Branding -->
+    <div class="auth-panel auth-brand">
+      <div class="brand-content">
+        <div class="brand-logo">
+          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+        </div>
+        <h1 class="brand-title">Deloitte WMS</h1>
+        <p class="brand-subtitle">Warehouse Management System</p>
+        <div class="brand-features">
+          <div class="feature-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Secure User Management</span>
+          </div>
+          <div class="feature-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Role-Based Access Control</span>
+          </div>
+          <div class="feature-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Multi-Warehouse Support</span>
+          </div>
+          <div class="feature-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Audit Trail & Compliance</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel - Registration Form -->
+    <div class="auth-panel auth-form-panel">
+      <div class="auth-form-container">
+        <div class="auth-header">
+          <h2 class="auth-title">Create Account</h2>
+          <p class="auth-description">Register for warehouse system access</p>
+        </div>
+
+        <form id="registerForm" class="auth-form">
+          <!-- Error/Success Message -->
+          <div id="errorMessage" class="auth-error"></div>
+          <div id="successMessage" class="auth-success"></div>
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <label for="fullName">Full Name <span class="required">*</span></label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <input 
+                type="text" 
+                id="fullName" 
+                name="fullName" 
+                class="form-control" 
+                placeholder="Enter your full name"
+                required
+              >
+            </div>
+          </div>
+
+          <!-- Email & Username Row -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email Address <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <input 
+                  type="email" 
+                  id="email" 
+                  name="email" 
+                  class="form-control" 
+                  placeholder="your.email@company.com"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="username">Username <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="8.5" cy="7" r="4"></circle>
+                  <polyline points="17 11 19 13 23 9"></polyline>
+                </svg>
+                <input 
+                  type="text" 
+                  id="username" 
+                  name="username" 
+                  class="form-control" 
+                  placeholder="Choose username"
+                  required
+                  minlength="4"
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Password & Confirm Password Row -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">Password <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <input 
+                  type="password" 
+                  id="password" 
+                  name="password" 
+                  class="form-control" 
+                  placeholder="Create password"
+                  required
+                  minlength="6"
+                  oninput="checkPasswordStrength()"
+                >
+              </div>
+              <div id="passwordStrength" class="password-strength"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <input 
+                  type="password" 
+                  id="confirmPassword" 
+                  name="confirmPassword" 
+                  class="form-control" 
+                  placeholder="Confirm password"
+                  required
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- Role & Warehouse Row -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="role">Role <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <select id="role" name="role" class="form-control" required>
+                  <option value="">Select Role</option>
+                  <option value="warehouse_manager">Warehouse Manager</option>
+                  <option value="supervisor">Supervisor</option>
+                  <option value="warehouse_worker">Warehouse Worker</option>
+                  <option value="quality_inspector">Quality Inspector</option>
+                  <option value="inventory_analyst">Inventory Analyst</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="warehouse">Warehouse <span class="required">*</span></label>
+              <div class="input-wrapper">
+                <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                  <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                </svg>
+                <select id="warehouse" name="warehouse" class="form-control" required>
+                  <option value="">Select Warehouse</option>
+                  <option value="WH-001">WH-001 - Main Distribution Center</option>
+                  <option value="WH-002">WH-002 - East Coast Facility</option>
+                  <option value="WH-003">WH-003 - West Coast Facility</option>
+                  <option value="WH-004">WH-004 - Midwest Regional</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Terms & Conditions -->
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="terms" name="terms" required>
+              <span>I agree to the <a href="#" class="auth-link">Terms & Conditions</a> and <a href="#" class="auth-link">Privacy Policy</a></span>
+            </label>
+          </div>
+
+          <!-- Register Button -->
+          <button type="submit" class="btn-auth btn-primary" id="registerBtn">
+            <span class="btn-text">Create Account</span>
+            <span class="btn-loader" style="display: none;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+            </span>
+          </button>
+        </form>
+
+        <!-- Login Link -->
+        <div class="auth-footer">
+          <p>Already have an account? <a href="login.html" class="auth-link">Sign In</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>

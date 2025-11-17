@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Function Test - Pixel Logistics</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/notifications.css">
+</head>
+<body>
+  <div style="padding: 40px;">
+    <h1>Testing All onclick Functions</h1>
+    
+    <div style="margin: 20px 0;">
+      <h2>Create Receipt Functions</h2>
+      <button class="btn btn-primary" onclick="testSaveReceipt()">Test saveReceipt()</button>
+      <button class="btn btn-outline" onclick="testCancelReceipt()">Test cancelReceipt()</button>
+      <button class="btn btn-secondary" onclick="testAddReceiptLine()">Test addReceiptLine()</button>
+    </div>
+    
+    <div style="margin: 20px 0;">
+      <h2>Yard Management Functions</h2>
+      <button class="btn btn-primary" onclick="testYardFunctions()">Test Yard Functions</button>
+    </div>
+    
+    <div style="margin: 20px 0;">
+      <h2>Dock Scheduling Functions</h2>
+      <button class="btn btn-primary" onclick="testDockFunctions()">Test Dock Functions</button>
+    </div>
+    
+    <div id="results" style="margin-top: 30px; padding: 20px; border: 1px solid #ccc; background: #f5f5f5;">
+      <h3>Results:</h3>
+      <pre id="output"></pre>
+    </div>
+  </div>
+
+  <script src="js/theme.js"></script>
+  <script src="js/notifications.js"></script>
+  
+  <script>
+    let output = document.getElementById('output');
+    
+    function log(msg) {
+      output.textContent += msg + '\n';
+      console.log(msg);
+    }
+    
+    function testSaveReceipt() {
+      log('Testing saveReceipt() from create-receipt.html...');
+      try {
+        if (typeof saveReceipt === 'function') {
+          log('✅ saveReceipt() is defined');
+        } else {
+          log('❌ saveReceipt() is NOT defined');
+        }
+      } catch(e) {
+        log('❌ Error: ' + e.message);
+      }
+    }
+    
+    function testCancelReceipt() {
+      log('Testing cancelReceipt() from create-receipt.html...');
+      try {
+        if (typeof cancelReceipt === 'function') {
+          log('✅ cancelReceipt() is defined');
+        } else {
+          log('❌ cancelReceipt() is NOT defined');
+        }
+      } catch(e) {
+        log('❌ Error: ' + e.message);
+      }
+    }
+    
+    function testAddReceiptLine() {
+      log('Testing addReceiptLine() from create-receipt.html...');
+      try {
+        if (typeof addReceiptLine === 'function') {
+          log('✅ addReceiptLine() is defined');
+        } else {
+          log('❌ addReceiptLine() is NOT defined');
+        }
+      } catch(e) {
+        log('❌ Error: ' + e.message);
+      }
+    }
+    
+    function testYardFunctions() {
+      log('Testing yard management functions...');
+      const yardFuncs = ['openCheckInModal', 'submitCheckIn', 'openMoveModal', 'confirmMove', 'filterTrailers', 'refreshYard'];
+      yardFuncs.forEach(func => {
+        log(`Checking ${func}: ` + (typeof window[func] === 'function' ? '✅' : '❌'));
+      });
+    }
+    
+    function testDockFunctions() {
+      log('Testing dock scheduling functions...');
+      const dockFuncs = ['openAppointmentModal', 'submitAppointment', 'exportSchedule', 'changeDate', 'filterAppointments'];
+      dockFuncs.forEach(func => {
+        log(`Checking ${func}: ` + (typeof window[func] === 'function' ? '✅' : '❌'));
+      });
+    }
+    
+    // Test notification system
+    log('Testing notification system...');
+    if (typeof notify !== 'undefined') {
+      log('✅ notify object is defined');
+      log('  - notify.success: ' + (typeof notify.success === 'function' ? '✅' : '❌'));
+      log('  - notify.error: ' + (typeof notify.error === 'function' ? '✅' : '❌'));
+      log('  - notify.loading: ' + (typeof notify.loading === 'function' ? '✅' : '❌'));
+    } else {
+      log('❌ notify object is NOT defined');
+    }
+  </script>
+</body>
+</html>

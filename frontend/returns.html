@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pixel Logistics - Returns Processing">
+  <title>Pixel Logistics - Returns</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Warehouse Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <!-- Theme Toggle Button -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <!-- Global Search -->
+      <div class="search-container" id="searchContainer">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" class="search-input" id="globalSearchInput" placeholder="Search warehouse..." autocomplete="off" readonly>
+          <kbd class="search-kbd">⌘K</kbd>
+          <button class="search-close" onclick="closeSearch()">&times;</button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">Admin User</div>
+          <div class="user-role">Warehouse Manager</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">AK</div>
+        <div class="user-dropdown">
+          <button class="dropdown-item" onclick="viewProfile()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </button>
+          <button class="dropdown-item" onclick="changePassword()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Change Password
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="logout()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="layout">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Main Menu</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="index.html" class="sidebar-link active">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="user-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span>User Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="access-control.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <span>Access Control</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="receiving.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                  <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
+                  <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Receipt Processing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="asn-receipt.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </span>
+              <span>ASN Receipt</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="putaway.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Put-away</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Outbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="orders.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </span>
+              <span>Orders</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="picking.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              <span>Picking</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="packing.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+              </span>
+              <span>Packing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="shipping.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+              </span>
+              <span>Shipping</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inventory Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="lpn-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>LPN Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inventory.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="20" x2="12" y2="10"></line>
+                  <line x1="18" y1="20" x2="18" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+              </span>
+              <span>Inventory Visibility</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Quality Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="quality-inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Quality Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="cycle-count.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </span>
+              <span>Cycle Count</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Value-Added Services</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="kitting.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Kitting & Assembly</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="labeling.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>Labeling</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="crossdock.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+              <span>Cross-Docking</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Warehouse Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="replenishment.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+              </span>
+              <span>Replenishment</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="task-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="9" x2="15" y2="9"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+              </span>
+              <span>Task Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Returns & Reports</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="returns.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 14 4 9 9 4"></polyline>
+                  <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+                </svg>
+              </span>
+              <span>Returns</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="reports.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+              </span>
+              <span>Reports & Analytics</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <span class="breadcrumb-item">Dashboard</span>
+        <span class="breadcrumb-item active">Returns Processing</span>
+      </div>
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Returns Processing</h1>
+          <p class="page-subtitle">LPN-based returns, RMA processing, and return-to-supplier workflow</p>
+        </div>
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+          <button class="btn btn-secondary" onclick="openUploadSidebar()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Upload
+          </button>
+          <button class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print RMA
+          </button>
+          <button class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Process Return
+          </button>
+        </div>
+      </div>
+
+      <!-- Return Type Selection -->
+      <div class="card mb-xl">
+        <div class="card-header">
+          <h3 class="card-title">Select Return Type</h3>
+        </div>
+        <div class="card-body">
+          <div class="grid grid-cols-3">
+            <div class="stat-card" onclick="selectReturnType('rma')" style="cursor: pointer;">
+              <div class="stat-label">RMA Return</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </div>
+              <div class="stat-change">Return with RMA authorization</div>
+            </div>
+            
+            <div class="stat-card" onclick="selectReturnType('supplier')" style="cursor: pointer;">
+              <div class="stat-label">Return to Supplier</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+              <div class="stat-change">Send defective items to supplier</div>
+            </div>
+            
+            <div class="stat-card" onclick="selectReturnType('lpn')" style="cursor: pointer;">
+              <div class="stat-label">LPN-based Return</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </div>
+              <div class="stat-change">Return entire LPN</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Return Processing Form -->
+      <div class="card mb-xl" id="returnForm" style="display: none;">
+        <div class="card-header">
+          <h3 class="card-title" id="returnFormTitle">Process Return</h3>
+        </div>
+        <div class="card-body">
+          <form id="returnFormElement">
+            
+            <!-- Return Header -->
+            <div class="mb-xl">
+              <h4 class="mb-md">Return Information</h4>
+              <div class="grid grid-cols-3">
+                <div class="form-group" id="rmaField" style="display: none;">
+                  <label class="form-label form-label-required">RMA Number</label>
+                  <input type="text" class="form-input" id="rmaNumber" placeholder="Enter RMA number">
+                </div>
+                <div class="form-group">
+                  <label class="form-label form-label-required">Reason Code</label>
+                  <select class="form-input" id="returnReason" required>
+                    <option value="">Select reason</option>
+                    <option value="defective">Defective</option>
+                    <option value="damaged">Damaged in Transit</option>
+                    <option value="wrong-item">Wrong Item Received</option>
+                    <option value="excess">Excess Quantity</option>
+                    <option value="quality">Quality Issue</option>
+                    <option value="expired">Expired</option>
+                    <option value="customer-request">Customer Request</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Original Receipt</label>
+                  <input type="text" class="form-input" id="originalReceipt" placeholder="Receipt number if available">
+                </div>
+              </div>
+            </div>
+
+            <!-- LPN/Item Details -->
+            <div class="mb-xl">
+              <h4 class="mb-md">Material Details</h4>
+              <div class="grid grid-cols-2 mb-md">
+                <div class="form-group">
+                  <label class="form-label form-label-required">LPN Number</label>
+                  <input type="text" class="form-input" id="returnLPN" placeholder="Scan LPN" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Item Number</label>
+                  <input type="text" class="form-input" id="returnItem" placeholder="Auto-populated" readonly style="background-color: var(--color-grey-lightest);">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3">
+                <div class="form-group">
+                  <label class="form-label form-label-required">Return Quantity</label>
+                  <input type="number" class="form-input" id="returnQuantity" placeholder="Quantity to return" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Available Quantity</label>
+                  <input type="text" class="form-input" id="availableQuantity" readonly style="background-color: var(--color-grey-lightest);">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">UOM</label>
+                  <input type="text" class="form-input" id="returnUOM" readonly style="background-color: var(--color-grey-lightest);">
+                </div>
+              </div>
+            </div>
+
+            <!-- Disposition -->
+            <div class="mb-xl">
+              <h4 class="mb-md">Disposition</h4>
+              <div class="grid grid-cols-2">
+                <div class="form-group">
+                  <label class="form-label form-label-required">Disposition Action</label>
+                  <select class="form-input" id="disposition" required>
+                    <option value="">Select disposition</option>
+                    <option value="restock">Restock to Inventory</option>
+                    <option value="rework">Send to Rework</option>
+                    <option value="scrap">Scrap</option>
+                    <option value="return-supplier">Return to Supplier</option>
+                    <option value="credit">Credit Only</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Destination Location</label>
+                  <input type="text" class="form-input" id="returnLocation" placeholder="Location for returned material">
+                </div>
+              </div>
+            </div>
+
+            <!-- Supplier Details (for return to supplier) -->
+            <div class="mb-xl" id="supplierSection" style="display: none;">
+              <h4 class="mb-md">Supplier Information</h4>
+              <div class="grid grid-cols-3">
+                <div class="form-group">
+                  <label class="form-label form-label-required">Supplier Name</label>
+                  <input type="text" class="form-input" id="supplierName" placeholder="Supplier name">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Supplier Contact</label>
+                  <input type="text" class="form-input" id="supplierContact" placeholder="Contact person">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Carrier</label>
+                  <input type="text" class="form-input" id="returnCarrier" placeholder="Shipping carrier">
+                </div>
+              </div>
+            </div>
+
+            <!-- Notes & Attachments -->
+            <div class="mb-xl">
+              <h4 class="mb-md">Additional Information</h4>
+              <div class="form-group">
+                <label class="form-label form-label-required">Return Notes</label>
+                <textarea class="form-input" id="returnNotes" rows="4" placeholder="Detailed notes about the return..." required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Attachments</label>
+                <input type="file" class="form-input" id="returnAttachments" multiple>
+                <div class="text-grey text-sm">Photos, documents, or other supporting files</div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-between">
+              <button type="button" class="btn btn-outline" onclick="cancelReturn()">Cancel</button>
+              <div class="flex gap-md">
+                <button type="button" class="btn btn-secondary" onclick="saveReturnDraft()">Save Draft</button>
+                <button type="submit" class="btn btn-primary">Process Return</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Open Returns -->
+      <div class="card">
+        <div class="card-header flex justify-between items-center">
+          <h3 class="card-title mb-0">Open Returns</h3>
+          <span class="badge badge-primary">12 Active</span>
+        </div>
+        <div class="card-body">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Return #</th>
+                  <th>RMA/Type</th>
+                  <th>LPN</th>
+                  <th>Item</th>
+                  <th>Quantity</th>
+                  <th>Reason</th>
+                  <th>Disposition</th>
+                  <th>Created Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="openReturns">
+                <tr>
+                  <td><strong>RTN-2025-001</strong></td>
+                  <td>RMA-5678</td>
+                  <td>LPN-1001</td>
+                  <td>ITM-5678</td>
+                  <td>50 EA</td>
+                  <td>Defective</td>
+                  <td>Return to Supplier</td>
+                  <td>2025-11-09</td>
+                  <td><span class="badge badge-outline">Pending Approval</span></td>
+                </tr>
+                <tr>
+                  <td><strong>RTN-2025-002</strong></td>
+                  <td>Direct Return</td>
+                  <td>LPN-1002</td>
+                  <td>ITM-5679</td>
+                  <td>25 EA</td>
+                  <td>Damaged</td>
+                  <td>Scrap</td>
+                  <td>2025-11-08</td>
+                  <td><span class="badge badge-primary">Approved</span></td>
+                </tr>
+                <tr>
+                  <td><strong>RTN-2025-003</strong></td>
+                  <td>RMA-5679</td>
+                  <td>LPN-1003</td>
+                  <td>ITM-5680</td>
+                  <td>100 EA</td>
+                  <td>Quality Issue</td>
+                  <td>Rework</td>
+                  <td>2025-11-07</td>
+                  <td><span class="badge badge-primary">In Process</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="searchOverlay"></div>
+
+  <!-- Upload Sidebar -->
+  <div class="upload-sidebar-overlay" id="uploadOverlay"></div>
+  <div class="upload-sidebar" id="uploadSidebar">
+    <div class="upload-header">
+      <div class="upload-title">Upload Files</div>
+      <button class="upload-close" onclick="closeUploadSidebar()">&times;</button>
+    </div>
+    <div class="upload-body">
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+        </div>
+        <div class="upload-text">Click to upload or drag and drop</div>
+        <div class="upload-hint">CSV, XLSX, PDF (Max 10MB)</div>
+      </div>
+      <input type="file" id="fileInput" class="file-input-hidden" multiple accept=".csv,.xlsx,.xls,.pdf">
+      <div class="file-list">
+        <div class="file-list-title">Selected Files</div>
+        <div id="fileList">
+          <p style="text-align: center; color: var(--color-grey); padding: var(--spacing-lg);">No files selected</p>
+        </div>
+      </div>
+    </div>
+    <div class="upload-footer">
+      <button class="btn btn-secondary" style="flex: 1;" onclick="cancelUpload()">Cancel</button>
+      <button class="btn btn-primary" style="flex: 1;" onclick="uploadFiles()">Upload Files</button>
+    </div>
+  </div>
+
+  <!-- Performance & Security Utilities -->
+  <script src="js/performance-utils.js"></script>
+  <script src="js/security-utils.js"></script>
+
+  <script src="js/auth.js"></script>
+  <script src="js/sidebar.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/common-header.js"></script>
+  <script src="js/returns.js"></script>
+
+  <script>
+    function toggleUserMenu() {
+      document.querySelector('.user-dropdown').classList.toggle('show');
+    }
+
+    function viewProfile() {
+      alert('Profile management coming soon!');
+    }
+
+    function changePassword() {
+      alert('Change password coming soon!');
+    }
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.user-menu')) {
+        document.querySelector('.user-dropdown')?.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

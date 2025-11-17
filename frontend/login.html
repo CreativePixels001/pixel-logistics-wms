@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Pixel Logistics</title>
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/auth.css">
+</head>
+<body class="auth-page">
+  <div class="auth-container-new">
+    <!-- Login Form Container -->
+    <div class="login-form-wrapper">
+      <div class="auth-form-container">
+        <div class="auth-header">
+          <div class="brand-mark">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+              <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+              <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            </svg>
+          </div>
+          <h2 class="auth-title">Welcome Back</h2>
+          <p class="auth-description">Sign in to continue to Deloitte WMS</p>
+        </div>
+
+        <form id="loginForm" class="auth-form">
+          <!-- Error Message -->
+          <div id="errorMessage" class="auth-error"></div>
+
+          <!-- Username Field -->
+          <div class="form-group">
+            <label for="username">Username or Email</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <input 
+                type="text" 
+                id="username" 
+                name="username" 
+                class="form-control" 
+                placeholder="Enter your username or email"
+                required
+                autocomplete="username"
+              >
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                class="form-control" 
+                placeholder="Enter your password"
+                required
+                autocomplete="current-password"
+              >
+              <button type="button" class="toggle-password" onclick="togglePassword()">
+                <svg id="showIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg id="hideIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Me & Forgot Password -->
+          <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox" id="rememberMe" name="rememberMe">
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="forgot-password" onclick="showForgotPassword(); return false;">Forgot password?</a>
+          </div>
+
+          <!-- Login Button -->
+          <button type="submit" class="btn-auth btn-primary" id="loginBtn">
+            <span class="btn-text">Sign In</span>
+            <span class="btn-loader" style="display: none;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+            </span>
+          </button>
+        </form>
+
+        <!-- Demo Credentials -->
+        <div class="demo-credentials">
+          <div class="demo-title">Demo Credentials</div>
+          <div class="demo-users">
+            <div class="demo-user" onclick="fillCredentials('admin', 'admin123')">
+              <strong>Admin:</strong> admin / admin123
+            </div>
+            <div class="demo-user" onclick="fillCredentials('manager', 'manager123')">
+              <strong>Manager:</strong> manager / manager123
+            </div>
+            <div class="demo-user" onclick="fillCredentials('worker', 'worker123')">
+              <strong>Worker:</strong> worker / worker123
+            </div>
+          </div>
+        </div>
+
+        <!-- Register Link -->
+        <div class="auth-footer">
+          <p>Don't have an account? <a href="register.html" class="auth-link">Create Account</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="login-footer">
+    <div class="footer-content">
+      <p>&copy; 2025 Deloitte. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>

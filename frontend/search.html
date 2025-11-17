@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search - WMS</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Full-screen search page specific styles */
+        body.search-page {
+            background-color: #000000;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .search-page-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: var(--spacing-xxl);
+        }
+
+        .search-page-close {
+            position: fixed;
+            top: var(--spacing-xl);
+            right: var(--spacing-xl);
+            width: 48px;
+            height: 48px;
+            background: none;
+            border: none;
+            color: var(--color-white);
+            font-size: 2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+            z-index: 1000;
+        }
+
+        .search-page-close:hover {
+            color: var(--color-grey-light);
+            transform: rotate(90deg);
+        }
+
+        .search-page-input-container {
+            width: 100%;
+            max-width: 1200px;
+            margin-top: 20vh;
+        }
+
+        .search-page-input {
+            width: 100%;
+            padding: var(--spacing-xl) 0;
+            font-size: 2.5rem;
+            border: none;
+            border-bottom: 3px solid var(--color-white);
+            background-color: transparent;
+            color: var(--color-white);
+            text-align: left;
+            outline: none;
+        }
+
+        .search-page-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-page-suggestions {
+            width: 100%;
+            max-width: 1200px;
+            margin-top: var(--spacing-xxl);
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .search-page-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .search-page-section-title {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: var(--spacing-lg) 0 var(--spacing-sm) 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .search-page-item {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .search-page-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--color-white);
+        }
+
+        .search-page-item-icon {
+            width: 24px;
+            height: 24px;
+            color: rgba(255, 255, 255, 0.6);
+            flex-shrink: 0;
+        }
+
+        .search-page-item-content {
+            flex: 1;
+        }
+
+        .search-page-item-title {
+            color: var(--color-white);
+            font-size: var(--font-size-lg);
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .search-page-item-description {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: var(--font-size-sm);
+        }
+
+        .search-page-highlight {
+            background-color: rgba(255, 215, 0, 0.3);
+            color: #FFD700;
+            padding: 0 2px;
+        }
+
+        .quick-access-page-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-lg);
+            width: 100%;
+        }
+
+        .quick-access-page-item {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-xxl);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            text-align: center;
+        }
+
+        .quick-access-page-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--color-white);
+        }
+
+        .quick-access-page-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto var(--spacing-sm);
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .quick-access-page-item:hover .quick-access-page-icon {
+            color: var(--color-white);
+        }
+
+        .quick-access-page-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--color-white);
+            margin-bottom: 0.25rem;
+        }
+
+        .quick-access-page-desc {
+            font-size: var(--font-size-sm);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 768px) {
+            .quick-access-page-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-page-input {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="search-page">
+    <div class="search-page-container">
+        <button class="search-page-close" onclick="window.history.back()">&times;</button>
+        
+        <div class="search-page-input-container">
+            <input type="text" class="search-page-input" id="searchPageInput" placeholder="Search warehouse..." autofocus>
+        </div>
+
+        <div class="search-page-suggestions" id="searchPageSuggestions"></div>
+    </div>
+
+    <script src="js/search-page.js"></script>
+
+  <script>
+    function toggleUserMenu() {
+      document.querySelector('.user-dropdown').classList.toggle('show');
+    }
+
+    function viewProfile() {
+      alert('Profile management coming soon!');
+    }
+
+    function changePassword() {
+      alert('Change password coming soon!');
+    }
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.user-menu')) {
+        document.querySelector('.user-dropdown')?.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

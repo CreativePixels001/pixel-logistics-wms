@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pixel Logistics - Location Management">
+  <title>Pixel Logistics - Location Management</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/scanner-qr.css">
+  <style>
+    /* Warehouse Map Container */
+    .warehouse-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr 320px;
+      gap: var(--spacing-md);
+      height: calc(100vh - 200px);
+    }
+    
+    /* Left Sidebar - Operations Panel */
+    .operations-panel {
+      background: var(--color-white);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .panel-header {
+      padding: 14px 16px 8px 16px;
+      border-bottom: 1px solid var(--color-grey-lighter);
+      position: sticky;
+      top: 0;
+      background: var(--color-white);
+      z-index: 10;
+    }
+    
+    .panel-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+    
+    .panel-subtitle {
+      font-size: 11px;
+      color: var(--color-grey);
+      margin-bottom: 8px;
+    }
+    
+    /* Statistics Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      padding: 12px 16px;
+    }
+    
+    .stat-card {
+      background: var(--color-grey-lightest);
+      padding: 10px 12px;
+      border-radius: 6px;
+      border: 1px solid var(--color-grey-lighter);
+    }
+    
+    .stat-card-value {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    
+    .stat-card-label {
+      font-size: 10px;
+      color: var(--color-grey);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .stat-card.success .stat-card-value {
+      color: #1f2937;
+    }
+    
+    .stat-card.warning .stat-card-value {
+      color: #4b5563;
+    }
+    
+    .stat-card.primary .stat-card-value {
+      color: #000;
+    }
+    
+    .location-selector {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm);
+      background: var(--color-grey-lightest);
+      border-radius: 6px;
+      margin-top: var(--spacing-md);
+    }
+    
+    .location-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--color-white);
+      flex-shrink: 0;
+    }
+    
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: var(--spacing-xs);
+      padding: var(--spacing-md);
+      background: var(--color-white);
+      border-bottom: 1px solid var(--color-grey-lighter);
+    }
+    
+    .tab {
+      flex: 1;
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: var(--color-grey-lightest);
+      border: 1px solid var(--color-grey-lighter);
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: var(--font-size-sm);
+      color: var(--color-grey);
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+    
+    .tab.active {
+      background: var(--color-primary);
+      color: var(--color-white);
+      border-color: var(--color-primary);
+    }
+    
+    .tab:hover:not(.active) {
+      background: var(--color-grey-lighter);
+      color: var(--color-black);
+    }
+    
+    /* Zone List */
+    .zones-list {
+      padding: var(--spacing-md);
+      flex: 1;
+      overflow-y: auto;
+    }
+    
+    .zone-item {
+      background: var(--color-white);
+      border: 1px solid var(--color-grey-lighter);
+      border-radius: 6px;
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .zone-item:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    }
+    
+    .zone-item.active {
+      border-color: var(--color-primary);
+      border-width: 2px;
+      padding: calc(var(--spacing-md) - 1px);
+    }
+    
+    .zone-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .zone-name {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+    
+    .zone-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .zone-badge.picking { background: #e5e7eb; color: #1f2937; border: 1px solid #9ca3af; }
+    .zone-badge.storage { background: #f3f4f6; color: #374151; border: 1px solid #d1d5db; }
+    .zone-badge.staging { background: #000; color: #fff; border: 1px solid #000; }
+    .zone-badge.shipping { background: #4b5563; color: #fff; border: 1px solid #374151; }
+    
+    .zone-details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-sm);
+      padding-top: var(--spacing-sm);
+      border-top: 1px solid var(--color-grey-lightest);
+      font-size: var(--font-size-sm);
+    }
+    
+    .zone-detail {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .zone-detail-label {
+      font-size: 11px;
+      color: var(--color-grey);
+      margin-bottom: 2px;
+    }
+    
+    .zone-detail-value {
+      font-weight: 600;
+      color: var(--color-black);
+    }
+    
+    .zone-utilization {
+      margin-top: var(--spacing-sm);
+    }
+    
+    .utilization-bar {
+      height: 6px;
+      background: var(--color-grey-lightest);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    
+    .utilization-fill {
+      height: 100%;
+      background: var(--color-primary);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+    
+    .utilization-fill.high { background: #1f2937; }
+    .utilization-fill.medium { background: #4b5563; }
+    .utilization-fill.low { background: #9ca3af; }
+    
+    /* Warehouse Map */
+    .warehouse-map {
+      background: var(--color-white);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: var(--spacing-lg);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .map-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-lg);
+    }
+    
+    .map-title {
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+    }
+    
+    .map-controls {
+      display: flex;
+      gap: var(--spacing-sm);
+      align-items: center;
+    }
+    
+    .control-btn {
+      width: 36px;
+      height: 36px;
+      background: var(--color-grey-lightest);
+      border: 1px solid var(--color-grey-lighter);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .control-btn:hover {
+      background: var(--color-grey-lighter);
+      border-color: var(--color-grey);
+    }
+    
+    .control-btn.active {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: var(--color-white);
+    }
+    
+    .view-toggle {
+      display: flex;
+      gap: var(--spacing-xs);
+      background: var(--color-grey-lightest);
+      padding: 4px;
+      border-radius: 6px;
+    }
+    
+    /* Map Canvas */
+    .map-canvas {
+      position: relative;
+      background: #f8f9fa;
+      border: 1px solid var(--color-grey-lighter);
+      border-radius: 8px;
+      overflow: auto;
+      height: calc(100% - 80px);
+    }
+    
+    .warehouse-grid {
+      position: relative;
+      padding: var(--spacing-xl);
+      min-width: 1200px;
+      min-height: 700px;
+    }
+    
+    /* Warehouse Zones */
+    .zone {
+      position: absolute;
+      border: 2px solid var(--color-grey-light);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      flex-direction: column;
+      padding: var(--spacing-sm);
+    }
+    
+    .zone-picking {
+      border-color: #93c5fd;
+      background: rgba(147, 197, 253, 0.1);
+    }
+    
+    .zone-storage {
+      border-color: #86efac;
+      background: rgba(134, 239, 172, 0.1);
+    }
+    
+    .zone-staging {
+      border-color: #fbbf24;
+      background: rgba(251, 191, 36, 0.1);
+    }
+    
+    .rack {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, 12px);
+      gap: 2px;
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .bin {
+      width: 12px;
+      height: 12px;
+      background: #93c5fd;
+      border-radius: 1px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .bin.occupied {
+      background: #3b82f6;
+    }
+    
+    .bin.reserved {
+      background: #fbbf24;
+    }
+    
+    .bin.empty {
+      background: #e5e7eb;
+    }
+    
+    .bin.selected {
+      background: var(--color-primary);
+      box-shadow: 0 0 0 2px white, 0 0 0 4px var(--color-primary);
+    }
+    
+    .bin:hover {
+      transform: scale(1.2);
+      z-index: 10;
+    }
+    
+    /* Warehouse Zones in Map */
+    .zone-rect {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .zone-rect:hover {
+      stroke-width: 3;
+      filter: brightness(0.95);
+    }
+    
+    .zone-label {
+      font-size: 14px;
+      font-weight: 600;
+      pointer-events: none;
+    }
+    
+    /* Rack Rows */
+    .rack-row {
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .rack-row:hover {
+      stroke-width: 2.5;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+      transform: scale(1.1);
+    }
+    
+    .rack-row:active {
+      transform: scale(0.95);
+    }
+    
+    /* Location Labels */
+    .location-label {
+      position: absolute;
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--color-grey);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    
+    /* Map Legend */
+    .map-legend {
+      position: absolute;
+      bottom: var(--spacing-lg);
+      left: var(--spacing-lg);
+      background: var(--color-white);
+      padding: var(--spacing-md);
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      font-size: var(--font-size-sm);
+    }
+    
+    .legend-title {
+      font-weight: 600;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .legend-color {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+    }
+    
+    /* Info Panel (Modal) */
+    .info-panel {
+      position: absolute;
+      top: 80px;
+      right: var(--spacing-lg);
+      width: 300px;
+      background: var(--color-white);
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      padding: var(--spacing-lg);
+      display: none;
+      z-index: 200;
+    }
+    
+    .info-panel.visible {
+      display: block;
+      animation: slideInRight 0.3s ease-out;
+    }
+    
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+    
+    .info-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 1px solid var(--color-grey-lighter);
+    }
+    
+    .info-title {
+      font-weight: 600;
+      font-size: var(--font-size-lg);
+    }
+    
+    .info-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--color-grey);
+      padding: 0;
+      width: 24px;
+      height: 24px;
+    }
+    
+    .info-close:hover {
+      color: var(--color-black);
+    }
+    
+    .info-section {
+      margin-bottom: var(--spacing-md);
+    }
+    
+    .info-label {
+      font-size: var(--font-size-sm);
+      color: var(--color-grey);
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .info-value {
+      font-weight: 600;
+    }
+    
+    /* Badge Styles for Info Panel */
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: var(--font-size-xs);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    
+    .badge-dark {
+      background: #1f2937;
+      color: #fff;
+    }
+    
+    .badge-light {
+      background: #f3f4f6;
+      color: #374151;
+      border: 1px solid #d1d5db;
+    }
+    
+    .badge-primary {
+      background: #000;
+      color: #fff;
+    }
+    
+    /* Scale Indicator */
+    .scale-indicator {
+      position: absolute;
+      bottom: var(--spacing-lg);
+      right: var(--spacing-lg);
+      background: var(--color-white);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: 6px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      gap: var(--spacing-md);
+      align-items: center;
+      font-size: var(--font-size-sm);
+    }
+    
+    .scale-bar {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+    
+    .scale-line {
+      width: 50px;
+      height: 2px;
+      background: var(--color-black);
+      position: relative;
+    }
+    
+    .scale-line::before,
+    .scale-line::after {
+      content: '';
+      position: absolute;
+      width: 2px;
+      height: 8px;
+      background: var(--color-black);
+      top: -3px;
+    }
+    
+    .scale-line::before {
+      left: 0;
+    }
+    
+    .scale-line::after {
+      right: 0;
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Warehouse Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <!-- Global Search -->
+      <div class="search-container" id="searchContainer">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" class="search-input" id="globalSearchInput" placeholder="Search warehouse..." autocomplete="off" readonly>
+          <kbd class="search-kbd">⌘K</kbd>
+          <button class="search-close" onclick="closeSearch()">&times;</button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">Admin User</div>
+          <div class="user-role">Warehouse Manager</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">AK</div>
+        <div class="user-dropdown">
+          <button class="dropdown-item" onclick="viewProfile()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </button>
+          <button class="dropdown-item" onclick="changePassword()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Change Password
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="logout()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="layout">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Main Menu</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="index.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="receiving.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                  <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
+                  <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Receipt Processing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="asn-receipt.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </span>
+              <span>ASN Receipt</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="putaway.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Put-away</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Outbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="orders.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </span>
+              <span>Orders</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="picking.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              <span>Picking</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="packing.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+              </span>
+              <span>Packing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="shipping.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+              </span>
+              <span>Shipping</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inventory Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="lpn-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>LPN Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inventory.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="20" x2="12" y2="10"></line>
+                  <line x1="18" y1="20" x2="18" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+              </span>
+              <span>Inventory Visibility</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link active">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Quality Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="quality-inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Quality Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="cycle-count.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </span>
+              <span>Cycle Count</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Value-Added Services</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="kitting.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Kitting & Assembly</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="labeling.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>Labeling</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="crossdock.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+              <span>Cross-Docking</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Warehouse Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="replenishment.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+              </span>
+              <span>Replenishment</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="task-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="9" x2="15" y2="9"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+              </span>
+              <span>Task Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Returns & Reports</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="returns.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 14 4 9 9 4"></polyline>
+                  <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+                </svg>
+              </span>
+              <span>Returns</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="reports.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+              </span>
+              <span>Reports & Analytics</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <span class="breadcrumb-item">Dashboard</span>
+        <span class="breadcrumb-item">Warehouse Operations</span>
+        <span class="breadcrumb-item active">Location Management</span>
+      </div>
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Location Management</h1>
+          <p class="page-subtitle">Real-time warehouse floor visualization and location tracking</p>
+        </div>
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+          <button class="btn btn-secondary" onclick="openLocationQRGenerator()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            Generate Location QR
+          </button>
+          <button class="btn btn-secondary" onclick="openUploadSidebar()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Upload
+          </button>
+          <button class="btn btn-secondary" onclick="exportLocationData()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export
+          </button>
+          <button class="btn btn-secondary" onclick="printWarehouseMap()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print
+          </button>
+          <button class="btn btn-primary" onclick="optimizeLocations()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M12 1v6m0 6v6m4.22-13.22l-4.24 4.24m0 5.96l4.24 4.24M1 12h6m6 0h6m-13.22-4.22l4.24 4.24m0-5.96l4.24-4.24"></path>
+            </svg>
+            Optimize Layout
+          </button>
+          <button class="btn btn-secondary" style="padding: 10px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="1"></circle>
+              <circle cx="12" cy="5" r="1"></circle>
+              <circle cx="19" cy="12" r="1"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Warehouse Layout -->
+    <div class="warehouse-layout">
+      
+      <!-- Left Panel - Operations -->
+      <div class="operations-panel">
+        <div class="panel-header">
+          <div class="panel-title">Production Hall 2</div>
+          <div class="panel-subtitle">Zone monitoring</div>
+          
+          <!-- Statistics Grid -->
+          <div class="stats-grid">
+            <div class="stat-card success">
+              <div class="stat-card-value">87%</div>
+              <div class="stat-card-label">Capacity</div>
+            </div>
+            <div class="stat-card primary">
+              <div class="stat-card-value">156</div>
+              <div class="stat-card-label">Active Tasks</div>
+            </div>
+            <div class="stat-card warning">
+              <div class="stat-card-value">12</div>
+              <div class="stat-card-label">Alerts</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-card-value">24</div>
+              <div class="stat-card-label">Zones</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tabs">
+          <button class="tab active">Zones</button>
+          <button class="tab">Activity</button>
+          <button class="tab">Alerts</button>
+        </div>
+        
+        <div class="zones-list">
+          <!-- Zone Item 1 - Receiving -->
+          <div class="zone-item active" onclick="selectZone('RCV-A')">
+            <div class="zone-header">
+              <div class="zone-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+                RCV-A
+              </div>
+              <span class="zone-badge staging">Receiving</span>
+            </div>
+            <div class="zone-details">
+              <div class="zone-detail">
+                <div class="zone-detail-label">Locations</div>
+                <div class="zone-detail-value">48</div>
+              </div>
+              <div class="zone-detail">
+                <div class="zone-detail-label">Occupied</div>
+                <div class="zone-detail-value">32</div>
+              </div>
+              <div class="zone-detail">
+                <div class="zone-detail-label">Tasks</div>
+                <div class="zone-detail-value">8</div>
+              </div>
+            </div>
+            <div class="zone-utilization">
+              <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px;">
+                <span style="color: var(--color-grey);">Utilization</span>
+                <span style="font-weight: 600;">67%</span>
+              </div>
+              <div class="utilization-bar">
+                <div class="utilization-fill medium" style="width: 67%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Zone Item 2 - Picking A -->
+          <div class="zone-item" onclick="selectZone('PCK-A')">
+            <div class="zone-header">
+              <div class="zone-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                </svg>
+                PCK-A
+              </div>
+              <span class="zone-badge picking">Picking</span>
+            </div>
+            <div class="zone-details">
+              <div class="zone-detail">
+                <div class="zone-detail-label">Locations</div>
+                <div class="zone-detail-value">240</div>
+              </div>
+              <div class="zone-detail">
+                <div class="zone-detail-label">Occupied</div>
+                <div class="zone-detail-value">218</div>
+              </div>
+              <div class="zone-detail">
+                <div class="zone-detail-label">Tasks</div>
+                <div class="zone-detail-value">24</div>
+              </div>
+            </div>
+            <div class="zone-utilization">
+              <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px;">
+                <span style="color: var(--color-grey);">Utilization</span>
+                <span style="font-weight: 600;">91%</span>
+              </div>
+              <div class="utilization-bar">
+                <div class="utilization-fill high" style="width: 91%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Zone Item 3 - Storage A -->
+          <div class="zone-item" onclick="selectZone('STR-A')">
+            <div class="zone-header">
+              <div class="zone-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                </svg>
+                STR-A
+              </div>
+              <span class="zone-badge storage">Storage</span>
+            </div>
+            <div class="zone-details">
+              <div class="zone-detail">
+                <div class="zone-detail-label">Locations</div>
+                <div class="zone-detail-value">480</div>
+              </div>
+              <div class="zone-detail">
+                <div class="zone-detail-label">Occupied</div>
+                <div class="zone-detail-value">412</div>
+              </div>
+              <div class="zone-detail">
+                <div class="zone-detail-label">Tasks</div>
+                <div class="zone-detail-value">16</div>
+              </div>
+            </div>
+            <div class="zone-utilization">
+              <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px;">
+                <span style="color: var(--color-grey);">Utilization</span>
+                <span style="font-weight: 600;">86%</span>
+              </div>
+              <div class="utilization-bar">
+                <div class="utilization-fill medium" style="width: 86%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Zone Item 4 - Storage B -->
+          <div class="zone-item" onclick="selectZone('STR-B')">
+            <div class="zone-header">
+              <div class="zone-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                </svg>
+                STR-B
+              </div>
+              <span class="zone-badge storage">Storage</span>
+            </div>
+            <div class="zone-details">
+              <div class="zone-detail">
+                <div class="zone-detail-label">Locations</div>
+                <div class="zone-detail-value">480</div>
+              </div>
+              <div class="zone-detail">
+                <div class="zone-detail-label">Occupied</div>
+                <div class="zone-detail-value">356</div>
+              </div>
+              <div class="zone-detail">
+                <div class="zone-detail-label">Tasks</div>
+                <div class="zone-detail-value">12</div>
+              </div>
+            </div>
+            <div class="zone-utilization">
+              <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px;">
+                <span style="color: var(--color-grey);">Utilization</span>
+                <span style="font-weight: 600;">74%</span>
+              </div>
+              <div class="utilization-bar">
+                <div class="utilization-fill medium" style="width: 74%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Zone Item 5 - Shipping -->
+          <div class="zone-item" onclick="selectZone('SHP-A')">
+            <div class="zone-header">
+              <div class="zone-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                </svg>
+                SHP-A
+              </div>
+              <span class="zone-badge shipping">Shipping</span>
+            </div>
+            <div class="zone-details">
+              <div class="zone-detail">
+                <div class="zone-detail-label">Locations</div>
+                <div class="zone-detail-value">36</div>
+              </div>
+              <div class="zone-detail">
+                <div class="zone-detail-label">Occupied</div>
+                <div class="zone-detail-value">18</div>
+              </div>
+              <div class="zone-detail">
+                <div class="zone-detail-label">Tasks</div>
+                <div class="zone-detail-value">6</div>
+              </div>
+            </div>
+            <div class="zone-utilization">
+              <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px;">
+                <span style="color: var(--color-grey);">Utilization</span>
+                <span style="font-weight: 600;">50%</span>
+              </div>
+              <div class="utilization-bar">
+                <div class="utilization-fill low" style="width: 50%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Zone Item 6 - Picking B -->
+          <div class="zone-item" onclick="selectZone('PCK-B')">
+            <div class="zone-header">
+              <div class="zone-name">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                </svg>
+                PCK-B
+              </div>
+              <span class="zone-badge picking">Picking</span>
+            </div>
+            <div class="zone-details">
+              <div class="zone-detail">
+                <div class="zone-detail-label">Locations</div>
+                <div class="zone-detail-value">240</div>
+              </div>
+              <div class="zone-detail">
+                <div class="zone-detail-label">Occupied</div>
+                <div class="zone-detail-value">189</div>
+              </div>
+              <div class="zone-detail">
+                <div class="zone-detail-label">Tasks</div>
+                <div class="zone-detail-value">18</div>
+              </div>
+            </div>
+            <div class="zone-utilization">
+              <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 2px;">
+                <span style="color: var(--color-grey);">Utilization</span>
+                <span style="font-weight: 600;">79%</span>
+              </div>
+              <div class="utilization-bar">
+                <div class="utilization-fill medium" style="width: 79%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel - Warehouse Map -->
+      <div class="warehouse-map">
+        <div class="map-header">
+          <div>
+            <div class="map-title">Warehouse Floor Map</div>
+            <div style="color: var(--color-grey); font-size: var(--font-size-sm); margin-top: 4px;">Interactive rack visualization</div>
+          </div>
+          <div class="map-controls">
+            <div class="view-toggle">
+              <button class="control-btn active">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </button>
+              <button class="control-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+              </button>
+            </div>
+            <button class="control-btn" onclick="toggleLive()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+            <button class="control-btn" onclick="zoomIn()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <line x1="11" y1="8" x2="11" y2="14"></line>
+                <line x1="8" y1="11" x2="14" y2="11"></line>
+              </svg>
+            </button>
+            <button class="control-btn" onclick="zoomOut()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <line x1="8" y1="11" x2="14" y2="11"></line>
+              </svg>
+            </button>
+            <button class="control-btn" onclick="toggleFullscreen()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div class="map-canvas" id="mapCanvas">
+          <svg class="warehouse-grid" id="warehouseGrid" viewBox="0 0 1400 750" style="background: #fafafa;">
+          <svg class="warehouse-grid" id="warehouseGrid" viewBox="0 0 1400 750" style="background: #fafafa;">
+            
+            <!-- Grid Lines (subtle) -->
+            <defs>
+              <pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e5e7eb" stroke-width="0.5"/>
+              </pattern>
+              <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+                <rect width="100" height="100" fill="url(#smallGrid)"/>
+                <path d="M 100 0 L 0 0 0 100" fill="none" stroke="#d1d5db" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="1400" height="750" fill="url(#grid)"/>
+            
+            <!-- Receiving Zone RCV-A -->
+            <g class="zone-rect" onclick="selectZone('RCV-A')">
+              <rect x="40" y="40" width="200" height="180" fill="white" stroke="#000" stroke-width="2" rx="4"/>
+              <text x="140" y="28" text-anchor="middle" class="zone-label" fill="#000" font-size="13">RCV-A</text>
+              
+              <!-- Dock Doors -->
+              <rect x="50" y="50" width="35" height="25" fill="#f5f5f5" stroke="#666" stroke-width="1.5" rx="2"/>
+              <text x="67" y="67" text-anchor="middle" font-size="9" fill="#666">D1</text>
+              
+              <rect x="95" y="50" width="35" height="25" fill="#f5f5f5" stroke="#666" stroke-width="1.5" rx="2"/>
+              <text x="112" y="67" text-anchor="middle" font-size="9" fill="#666">D2</text>
+              
+              <rect x="140" y="50" width="35" height="25" fill="#f5f5f5" stroke="#666" stroke-width="1.5" rx="2"/>
+              <text x="157" y="67" text-anchor="middle" font-size="9" fill="#666">D3</text>
+              
+              <rect x="185" y="50" width="35" height="25" fill="#f5f5f5" stroke="#666" stroke-width="1.5" rx="2"/>
+              <text x="202" y="67" text-anchor="middle" font-size="9" fill="#666">D4</text>
+              
+              <!-- Staging Pallets -->
+              <g transform="translate(55, 95)">
+                <rect x="0" y="0" width="18" height="18" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-01', event)"/>
+                <rect x="23" y="0" width="18" height="18" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-02', event)"/>
+                <rect x="46" y="0" width="18" height="18" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-03', event)"/>
+                <rect x="69" y="0" width="18" height="18" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-04', event)"/>
+                <rect x="92" y="0" width="18" height="18" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-05', event)"/>
+                
+                <rect x="0" y="23" width="18" height="18" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-06', event)"/>
+                <rect x="23" y="23" width="18" height="18" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-07', event)"/>
+                <rect x="46" y="23" width="18" height="18" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-08', event)"/>
+                <rect x="69" y="23" width="18" height="18" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-09', event)"/>
+                <rect x="92" y="23" width="18" height="18" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-10', event)"/>
+                
+                <rect x="0" y="46" width="18" height="18" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-11', event)"/>
+                <rect x="23" y="46" width="18" height="18" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-12', event)"/>
+                <rect x="46" y="46" width="18" height="18" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-13', event)"/>
+                <rect x="69" y="46" width="18" height="18" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-14', event)"/>
+                <rect x="92" y="46" width="18" height="18" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('RCV-A-15', event)"/>
+              </g>
+            </g>
+            
+            <!-- Picking Zone PCK-A -->
+            <g class="zone-rect" onclick="selectZone('PCK-A')">
+              <rect x="270" y="40" width="450" height="180" fill="white" stroke="#000" stroke-width="2" rx="4"/>
+              <text x="495" y="28" text-anchor="middle" class="zone-label" fill="#000" font-size="13">PCK-A</text>
+              
+              <!-- Aisle 1 -->
+              <g transform="translate(285, 55)">
+                <text x="6" y="-5" text-anchor="middle" font-size="10" fill="#666">A1</text>
+                <rect x="0" y="0" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A1-01', event)"/>
+                <rect x="0" y="17" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A1-02', event)"/>
+                <rect x="0" y="34" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A1-03', event)"/>
+                <rect x="0" y="51" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A1-04', event)"/>
+                <rect x="0" y="68" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A1-05', event)"/>
+                <rect x="0" y="85" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A1-06', event)"/>
+                <rect x="0" y="102" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A1-07', event)"/>
+                <rect x="0" y="119" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A1-08', event)"/>
+                <rect x="0" y="136" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A1-09', event)"/>
+              </g>
+              
+              <!-- Aisle 2 -->
+              <g transform="translate(335, 55)">
+                <text x="6" y="-5" text-anchor="middle" font-size="10" fill="#666">A2</text>
+                <rect x="0" y="0" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A2-01', event)"/>
+                <rect x="0" y="17" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A2-02', event)"/>
+                <rect x="0" y="34" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A2-03', event)"/>
+                <rect x="0" y="51" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A2-04', event)"/>
+                <rect x="0" y="68" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A2-05', event)"/>
+                <rect x="0" y="85" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A2-06', event)"/>
+                <rect x="0" y="102" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A2-07', event)"/>
+                <rect x="0" y="119" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A2-08', event)"/>
+                <rect x="0" y="136" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A2-09', event)"/>
+              </g>
+              
+              <!-- Aisle 3 -->
+              <g transform="translate(385, 55)">
+                <text x="6" y="-5" text-anchor="middle" font-size="10" fill="#666">A3</text>
+                <rect x="0" y="0" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A3-01', event)"/>
+                <rect x="0" y="17" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A3-02', event)"/>
+                <rect x="0" y="34" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A3-03', event)"/>
+                <rect x="0" y="51" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A3-04', event)"/>
+                <rect x="0" y="68" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A3-05', event)"/>
+                <rect x="0" y="85" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A3-06', event)"/>
+                <rect x="0" y="102" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A3-07', event)"/>
+                <rect x="0" y="119" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A3-08', event)"/>
+                <rect x="0" y="136" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A3-09', event)"/>
+              </g>
+              
+              <!-- Aisle 4 -->
+              <g transform="translate(435, 55)">
+                <text x="6" y="-5" text-anchor="middle" font-size="10" fill="#666">A4</text>
+                <rect x="0" y="0" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A4-01', event)"/>
+                <rect x="0" y="17" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A4-02', event)"/>
+                <rect x="0" y="34" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A4-03', event)"/>
+                <rect x="0" y="51" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A4-04', event)"/>
+                <rect x="0" y="68" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A4-05', event)"/>
+                <rect x="0" y="85" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A4-06', event)"/>
+                <rect x="0" y="102" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A4-07', event)"/>
+                <rect x="0" y="119" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A4-08', event)"/>
+                <rect x="0" y="136" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A4-09', event)"/>
+              </g>
+              
+              <!-- Aisle 5 -->
+              <g transform="translate(485, 55)">
+                <text x="6" y="-5" text-anchor="middle" font-size="10" fill="#666">A5</text>
+                <rect x="0" y="0" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A5-01', event)"/>
+                <rect x="0" y="17" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A5-02', event)"/>
+                <rect x="0" y="34" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A5-03', event)"/>
+                <rect x="0" y="51" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A5-04', event)"/>
+                <rect x="0" y="68" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A5-05', event)"/>
+                <rect x="0" y="85" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A5-06', event)"/>
+                <rect x="0" y="102" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A5-07', event)"/>
+                <rect x="0" y="119" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A5-08', event)"/>
+                <rect x="0" y="136" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A5-09', event)"/>
+              </g>
+              
+              <!-- More aisles can be added -->
+              <g transform="translate(535, 55)">
+                <text x="6" y="-5" text-anchor="middle" font-size="10" fill="#666">A6</text>
+                <rect x="0" y="0" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A6-01', event)"/>
+                <rect x="0" y="17" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A6-02', event)"/>
+                <rect x="0" y="34" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A6-03', event)"/>
+                <rect x="0" y="51" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A6-04', event)"/>
+                <rect x="0" y="68" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A6-05', event)"/>
+                <rect x="0" y="85" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A6-06', event)"/>
+                <rect x="0" y="102" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A6-07', event)"/>
+                <rect x="0" y="119" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A6-08', event)"/>
+                <rect x="0" y="136" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-A-A6-09', event)"/>
+              </g>
+            </g>
+            
+            <!-- Storage Zone STR-A -->
+            <g class="zone-rect" onclick="selectZone('STR-A')">
+              <rect x="750" y="40" width="600" height="180" fill="white" stroke="#000" stroke-width="2" rx="4"/>
+              <text x="1050" y="28" text-anchor="middle" class="zone-label" fill="#000" font-size="13">STR-A</text>
+              
+              <!-- Dense Storage Racks in rows -->
+              <g transform="translate(765, 55)">
+                <!-- Row 1 -->
+                <rect x="0" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-01', event)"/>
+                <rect x="14" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-02', event)"/>
+                <rect x="28" y="0" width="12" height="12" fill="#fff" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-03', event)"/>
+                <rect x="42" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-04', event)"/>
+                <rect x="56" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-05', event)"/>
+                <rect x="70" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-06', event)"/>
+                <rect x="84" y="0" width="12" height="12" fill="#fff" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-07', event)"/>
+                <rect x="98" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-08', event)"/>
+                <rect x="112" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-09', event)"/>
+                <rect x="126" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-10', event)"/>
+                
+                <!-- Row 2 -->
+                <rect x="0" y="14" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-11', event)"/>
+                <rect x="14" y="14" width="12" height="12" fill="#fff" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-12', event)"/>
+                <rect x="28" y="14" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-13', event)"/>
+                <rect x="42" y="14" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-14', event)"/>
+                <rect x="56" y="14" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-15', event)"/>
+                <rect x="70" y="14" width="12" height="12" fill="#fff" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-16', event)"/>
+                <rect x="84" y="14" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-17', event)"/>
+                <rect x="98" y="14" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-18', event)"/>
+                <rect x="112" y="14" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-19', event)"/>
+                <rect x="126" y="14" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-20', event)"/>
+                
+                <!-- Row 3 -->
+                <rect x="0" y="28" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-21', event)"/>
+                <rect x="14" y="28" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-22', event)"/>
+                <rect x="28" y="28" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-23', event)"/>
+                <rect x="42" y="28" width="12" height="12" fill="#fff" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-24', event)"/>
+                <rect x="56" y="28" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-25', event)"/>
+                <rect x="70" y="28" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-26', event)"/>
+                <rect x="84" y="28" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-27', event)"/>
+                <rect x="98" y="28" width="12" height="12" fill="#fff" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-28', event)"/>
+                <rect x="112" y="28" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-29', event)"/>
+                <rect x="126" y="28" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-A-30', event)"/>
+              </g>
+            </g>
+            
+            <!-- Picking Zone PCK-B -->
+            <g class="zone-rect" onclick="selectZone('PCK-B')">
+              <rect x="40" y="250" width="450" height="180" fill="white" stroke="#000" stroke-width="2" rx="4"/>
+              <text x="265" y="238" text-anchor="middle" class="zone-label" fill="#000" font-size="13">PCK-B</text>
+              
+              <!-- Similar structure to PCK-A with 6 aisles -->
+              <g transform="translate(55, 265)">
+                <text x="6" y="-5" text-anchor="middle" font-size="10" fill="#666">B1</text>
+                <rect x="0" y="0" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-B-B1-01', event)"/>
+                <rect x="0" y="17" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-B-B1-02', event)"/>
+                <rect x="0" y="34" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-B-B1-03', event)"/>
+                <rect x="0" y="51" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-B-B1-04', event)"/>
+                <rect x="0" y="68" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-B-B1-05', event)"/>
+                <rect x="0" y="85" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-B-B1-06', event)"/>
+                <rect x="0" y="102" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-B-B1-07', event)"/>
+                <rect x="0" y="119" width="14" height="14" fill="#333" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-B-B1-08', event)"/>
+                <rect x="0" y="136" width="14" height="14" fill="#fff" stroke="#000" stroke-width="1" rx="1" class="rack-row" onclick="showLocationInfo('PCK-B-B1-09', event)"/>
+              </g>
+            </g>
+            
+            <!-- Storage Zone STR-B -->
+            <g class="zone-rect" onclick="selectZone('STR-B')">
+              <rect x="520" y="250" width="550" height="180" fill="white" stroke="#000" stroke-width="2" rx="4"/>
+              <text x="795" y="238" text-anchor="middle" class="zone-label" fill="#000" font-size="13">STR-B</text>
+              
+              <!-- Dense storage similar to STR-A -->
+              <g transform="translate(535, 265)">
+                <rect x="0" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-B-01', event)"/>
+                <rect x="14" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-B-02', event)"/>
+                <rect x="28" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-B-03', event)"/>
+                <rect x="42" y="0" width="12" height="12" fill="#fff" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-B-04', event)"/>
+                <rect x="56" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-B-05', event)"/>
+                <rect x="70" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-B-06', event)"/>
+                <rect x="84" y="0" width="12" height="12" fill="#333" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-B-07', event)"/>
+                <rect x="98" y="0" width="12" height="12" fill="#fff" stroke="#000" stroke-width="0.8" rx="1" class="rack-row" onclick="showLocationInfo('STR-B-08', event)"/>
+              </g>
+            </g>
+            
+            <!-- Shipping Zone SHP-A -->
+            <g class="zone-rect" onclick="selectZone('SHP-A')">
+              <rect x="1100" y="250" width="260" height="180" fill="white" stroke="#000" stroke-width="2" rx="4"/>
+              <text x="1230" y="238" text-anchor="middle" class="zone-label" fill="#000" font-size="13">SHP-A</text>
+              
+              <!-- Shipping Lanes -->
+              <rect x="1115" y="265" width="40" height="55" fill="#f5f5f5" stroke="#666" stroke-width="1.5" rx="2"/>
+              <text x="1135" y="296" text-anchor="middle" font-size="10" fill="#666">L1</text>
+              
+              <rect x="1165" y="265" width="40" height="55" fill="#f5f5f5" stroke="#666" stroke-width="1.5" rx="2"/>
+              <text x="1185" y="296" text-anchor="middle" font-size="10" fill="#666">L2</text>
+              
+              <rect x="1215" y="265" width="40" height="55" fill="#f5f5f5" stroke="#666" stroke-width="1.5" rx="2"/>
+              <text x="1235" y="296" text-anchor="middle" font-size="10" fill="#666">L3</text>
+              
+              <rect x="1265" y="265" width="40" height="55" fill="#f5f5f5" stroke="#666" stroke-width="1.5" rx="2"/>
+              <text x="1285" y="296" text-anchor="middle" font-size="10" fill="#666">L4</text>
+              
+              <rect x="1115" y="330" width="40" height="55" fill="#f5f5f5" stroke="#666" stroke-width="1.5" rx="2"/>
+              <text x="1135" y="361" text-anchor="middle" font-size="10" fill="#666">L5</text>
+              
+              <rect x="1165" y="330" width="40" height="55" fill="#f5f5f5" stroke="#666" stroke-width="1.5" rx="1" class="rack-row" onclick="showLocationInfo('SHP-A-L6', event)"/>
+              <text x="1185" y="361" text-anchor="middle" font-size="10" fill="#666">L6</text>
+            </g>
+            
+            <!-- Aisle Paths -->
+            <line x1="260" y1="50" x2="260" y2="220" stroke="#d1d5db" stroke-width="15" opacity="0.4"/>
+            <line x1="730" y1="50" x2="730" y2="220" stroke="#d1d5db" stroke-width="15" opacity="0.4"/>
+            <line x1="50" y1="240" x2="1350" y2="240" stroke="#d1d5db" stroke-width="15" opacity="0.4"/>
+            <line x1="500" y1="260" x2="500" y2="420" stroke="#d1d5db" stroke-width="15" opacity="0.4"/>
+            <line x1="1080" y1="260" x2="1080" y2="420" stroke="#d1d5db" stroke-width="15" opacity="0.4"/>
+            
+          </svg>
+        </div>
+        
+        <!-- Map Legend -->
+        <div class="map-legend">
+          <div class="legend-title">Legend</div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #333; border: 1px solid #000;"></div>
+            <span>Occupied</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #fff; border: 1px solid #000;"></div>
+            <span>Empty</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-color" style="background: #f5f5f5; border: 1px solid #666;"></div>
+            <span>Dock/Lane</span>
+          </div>
+        </div>
+        
+        <!-- Scale Indicator -->
+        <div class="scale-indicator">
+          <div class="scale-bar">
+            <div class="scale-line"></div>
+            <span>10 m</span>
+          </div>
+          <div class="scale-bar">
+            <div class="scale-line"></div>
+            <span>50 ft</span>
+          </div>
+          <button class="control-btn" style="margin-left: var(--spacing-xs);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"></rect>
+              <rect x="14" y="3" width="7" height="7"></rect>
+              <rect x="14" y="14" width="7" height="7"></rect>
+              <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+          </button>
+          <button class="control-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Info Panel (Vehicle/Location Details) -->
+        <div class="info-panel" id="infoPanel">
+          <div class="info-header">
+            <div class="info-title" id="infoTitle">AGV-489</div>
+            <button class="info-close" onclick="closeInfoPanel()">&times;</button>
+          </div>
+          <div class="info-section">
+            <div class="info-label">Status</div>
+            <div class="info-value">
+              <span class="badge badge-primary">Moving</span>
+            </div>
+          </div>
+          <div class="info-section">
+            <div class="info-label">Current Mission</div>
+            <div class="info-value">345333478</div>
+          </div>
+          <div class="info-section">
+            <div class="info-label">Route</div>
+            <div class="info-value">PR80240 → HS030171</div>
+          </div>
+          <div class="info-section">
+            <div class="info-label">Load</div>
+            <div class="info-value">5 pallets (250kg)</div>
+          </div>
+          <div class="info-section">
+            <div class="info-label">Progress</div>
+            <div class="info-value">1/4 stops completed</div>
+            <div class="progress-bar-container mt-xs">
+              <div class="progress-bar" style="width: 32%;"></div>
+            </div>
+          </div>
+          <div class="info-section">
+            <div class="info-label">Battery</div>
+            <div class="info-value">87%</div>
+          </div>
+          <button class="btn btn-primary btn-block mt-md">Track Vehicle</button>
+        </div>
+      </div>
+
+      <!-- Third Panel - Real-time Monitoring -->
+      <div class="operations-panel">
+        <div class="panel-header">
+          <div class="panel-title">Production Hall 2</div>
+          <div class="panel-subtitle">Real-time floor visualization</div>
+        </div>
+        
+        <div class="tabs">
+          <button class="tab active">Activity</button>
+          <button class="tab">Alerts</button>
+          <button class="tab">Tasks</button>
+        </div>
+        
+        <div class="zones-list">
+          <!-- Recent Activity -->
+          <div style="padding: var(--spacing-md); border-bottom: 1px solid var(--color-grey-lighter);">
+            <div style="font-size: var(--font-size-sm); font-weight: 600; margin-bottom: var(--spacing-sm);">Recent Activity</div>
+            
+            <div style="display: flex; flex-direction: column; gap: var(--spacing-sm);">
+              <div style="display: flex; align-items: start; gap: var(--spacing-sm); padding: var(--spacing-sm); background: var(--color-grey-lightest); border-radius: 4px;">
+                <div style="width: 32px; height: 32px; background: #1f2937; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; flex-shrink: 0;">PUT</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="font-size: var(--font-size-sm); font-weight: 600; margin-bottom: 2px;">STR-A-28</div>
+                  <div style="font-size: 11px; color: var(--color-grey);">LPN8847392 • 2 min ago</div>
+                </div>
+              </div>
+              
+              <div style="display: flex; align-items: start; gap: var(--spacing-sm); padding: var(--spacing-sm); background: var(--color-grey-lightest); border-radius: 4px;">
+                <div style="width: 32px; height: 32px; background: #4b5563; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; flex-shrink: 0;">PCK</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="font-size: var(--font-size-sm); font-weight: 600; margin-bottom: 2px;">PCK-A-A3-04</div>
+                  <div style="font-size: 11px; color: var(--color-grey);">SKU445821 • 5 min ago</div>
+                </div>
+              </div>
+              
+              <div style="display: flex; align-items: start; gap: var(--spacing-sm); padding: var(--spacing-sm); background: var(--color-grey-lightest); border-radius: 4px;">
+                <div style="width: 32px; height: 32px; background: #1f2937; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; flex-shrink: 0;">RCV</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="font-size: var(--font-size-sm); font-weight: 600; margin-bottom: 2px;">RCV-A-03</div>
+                  <div style="font-size: 11px; color: var(--color-grey);">LPN8847401 • 8 min ago</div>
+                </div>
+              </div>
+              
+              <div style="display: flex; align-items: start; gap: var(--spacing-sm); padding: var(--spacing-sm); background: var(--color-grey-lightest); border-radius: 4px;">
+                <div style="width: 32px; height: 32px; background: #4b5563; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; flex-shrink: 0;">MOV</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="font-size: var(--font-size-sm); font-weight: 600; margin-bottom: 2px;">STR-B-04 → PCK-B-B1-05</div>
+                  <div style="font-size: 11px; color: var(--color-grey);">LPN8847399 • 12 min ago</div>
+                </div>
+              </div>
+              
+              <div style="display: flex; align-items: start; gap: var(--spacing-sm); padding: var(--spacing-sm); background: var(--color-grey-lightest); border-radius: 4px;">
+                <div style="width: 32px; height: 32px; background: #1f2937; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; flex-shrink: 0;">SHP</div>
+                <div style="flex: 1; min-width: 0;">
+                  <div style="font-size: var(--font-size-sm); font-weight: 600; margin-bottom: 2px;">SHP-A-L6</div>
+                  <div style="font-size: 11px; color: var(--color-grey);">Order #45821 • 15 min ago</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Performance Metrics -->
+          <div style="padding: var(--spacing-md);">
+            <div style="font-size: var(--font-size-sm); font-weight: 600; margin-bottom: var(--spacing-sm);">Performance Metrics</div>
+            
+            <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+              <div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span style="font-size: 11px; color: var(--color-grey);">Tasks/Hour</span>
+                  <span style="font-size: 11px; font-weight: 600;">28</span>
+                </div>
+                <div class="utilization-bar">
+                  <div class="utilization-fill medium" style="width: 70%;"></div>
+                </div>
+              </div>
+              
+              <div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span style="font-size: 11px; color: var(--color-grey);">Accuracy</span>
+                  <span style="font-size: 11px; font-weight: 600;">99.2%</span>
+                </div>
+                <div class="utilization-bar">
+                  <div class="utilization-fill high" style="width: 99%;"></div>
+                </div>
+              </div>
+              
+              <div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span style="font-size: 11px; color: var(--color-grey);">Cycle Time</span>
+                  <span style="font-size: 11px; font-weight: 600;">4.2 min</span>
+                </div>
+                <div class="utilization-bar">
+                  <div class="utilization-fill low" style="width: 45%;"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+
+    </main>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="searchOverlay"></div>
+
+  <!-- Upload Sidebar -->
+  <div class="upload-sidebar-overlay" id="uploadOverlay"></div>
+  <div class="upload-sidebar" id="uploadSidebar">
+    <div class="upload-header">
+      <div class="upload-title">Upload Files</div>
+      <button class="upload-close" onclick="closeUploadSidebar()">&times;</button>
+    </div>
+    
+    <div class="upload-body">
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+        </div>
+        <div class="upload-text">Click to upload or drag and drop</div>
+        <div class="upload-hint">CSV, XLSX, PDF (Max 10MB)</div>
+      </div>
+      
+      <input type="file" id="fileInput" class="file-input-hidden" multiple accept=".csv,.xlsx,.xls,.pdf">
+      
+      <div class="file-list">
+        <div class="file-list-title">Selected Files</div>
+        <div id="fileList">
+          <p style="text-align: center; color: var(--color-grey); padding: var(--spacing-lg);">No files selected</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="upload-footer">
+      <button class="btn btn-secondary" style="flex: 1;" onclick="cancelUpload()">Cancel</button>
+      <button class="btn btn-primary" style="flex: 1;" onclick="uploadFiles()">Upload Files</button>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/sidebar.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/common-header.js"></script>
+  <script src="js/location-management.js"></script>
+
+  <script>
+    function toggleUserMenu() {
+      document.querySelector('.user-dropdown').classList.toggle('show');
+    }
+
+    function viewProfile() {
+      alert('Profile management coming soon!');
+    }
+
+    function changePassword() {
+      alert('Change password coming soon!');
+    }
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.user-menu')) {
+        document.querySelector('.user-dropdown')?.classList.remove('show');
+      }
+    });
+
+    // QR Code Generator Integration for Location Management
+    function openLocationQRGenerator() {
+      // Open QR generator for location
+      const qrGen = new QRCodeGeneratorUI();
+      qrGen.open('LOCATION', {
+        locationCode: '',
+        zone: '',
+        aisle: '',
+        locationType: 'STORAGE'
+      });
+    }
+  </script>
+  <script src="js/barcode-scanner.js"></script>
+  <script src="js/qr-generator.js"></script>
+</body>
+</html>

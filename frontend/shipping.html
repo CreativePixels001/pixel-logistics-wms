@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pixel Logistics - Shipping Operations">
+  <title>Pixel Logistics - Shipping</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/enhanced-table.css">
+  <link rel="stylesheet" href="css/notifications.css">
+  <link rel="stylesheet" href="css/scanner-qr.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Warehouse Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <!-- Theme Toggle Button -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <!-- Global Search -->
+      <div class="search-container" id="searchContainer">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" class="search-input" id="globalSearchInput" placeholder="Search warehouse..." autocomplete="off" readonly>
+          <kbd class="search-kbd">⌘K</kbd>
+          <button class="search-close" onclick="closeSearch()">&times;</button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">Admin User</div>
+          <div class="user-role">Warehouse Manager</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">AK</div>
+        <div class="user-dropdown">
+          <button class="dropdown-item" onclick="viewProfile()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </button>
+          <button class="dropdown-item" onclick="changePassword()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Change Password
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="logout()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="layout">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Main Menu</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="index.html" class="sidebar-link active">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="user-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span>User Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="access-control.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <span>Access Control</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="receiving.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                  <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
+                  <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Receipt Processing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="asn-receipt.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </span>
+              <span>ASN Receipt</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="putaway.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Put-away</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Outbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="orders.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </span>
+              <span>Orders</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="picking.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              <span>Picking</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="packing.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+              </span>
+              <span>Packing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="shipping.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+              </span>
+              <span>Shipping</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inventory Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="lpn-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>LPN Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inventory.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="20" x2="12" y2="10"></line>
+                  <line x1="18" y1="20" x2="18" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+              </span>
+              <span>Inventory Visibility</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Quality Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="quality-inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Quality Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="cycle-count.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </span>
+              <span>Cycle Count</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Value-Added Services</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="kitting.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Kitting & Assembly</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="labeling.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>Labeling</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="crossdock.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+              <span>Cross-Docking</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Warehouse Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="replenishment.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+              </span>
+              <span>Replenishment</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="task-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="9" x2="15" y2="9"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+              </span>
+              <span>Task Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Returns & Reports</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="returns.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 14 4 9 9 4"></polyline>
+                  <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+                </svg>
+              </span>
+              <span>Returns</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="reports.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+              </span>
+              <span>Reports & Analytics</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <span class="breadcrumb-item">Dashboard</span>
+        <span class="breadcrumb-item active">Shipping</span>
+      </div>
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Shipping Operations</h1>
+          <p class="page-subtitle">Ship confirm, manifest creation, and BOL generation</p>
+        </div>
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+          <button class="btn btn-primary" onclick="openTrackingPanel()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Track Shipment
+          </button>
+          <button class="btn btn-secondary" onclick="openUploadSidebar()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Upload
+          </button>
+          <button class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print BOL
+          </button>
+          <button class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <rect x="1" y="3" width="15" height="13"></rect>
+              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+              <circle cx="5.5" cy="18.5" r="2.5"></circle>
+              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+            </svg>
+            Ship Confirm
+          </button>
+        </div>
+      </div>
+
+      <!-- Shipping Overview -->
+      <div class="grid grid-cols-4 mb-xl">
+        <div class="stat-card">
+          <div class="stat-label">Ready to Ship</div>
+          <div class="stat-value">24</div>
+          <div class="stat-change">Orders</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Shipped Today</div>
+          <div class="stat-value">127</div>
+          <div class="stat-change">+18% vs yesterday</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Total Cartons</div>
+          <div class="stat-value">385</div>
+          <div class="stat-change">Ready for pickup</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Open Manifests</div>
+          <div class="stat-value">3</div>
+          <div class="stat-change">Awaiting carrier</div>
+        </div>
+      </div>
+
+      <!-- Ship Confirm -->
+      <div class="card mb-xl">
+        <div class="card-header">
+          <h3 class="card-title">Ship Confirm</h3>
+        </div>
+        <div class="card-body">
+          <form id="shipConfirmForm">
+            
+            <!-- Order/Shipment Identification -->
+            <div class="mb-xl">
+              <h4 class="mb-md">Shipment Identification</h4>
+              <div class="grid grid-cols-3">
+                <div class="form-group">
+                  <label class="form-label form-label-required">Scan Order/Shipment</label>
+                  <input type="text" class="form-input" id="shipOrderNum" placeholder="Scan order or shipment number" required autofocus>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Customer</label>
+                  <input type="text" class="form-input" id="shipCustomer" readonly style="background-color: var(--color-grey-lightest);">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Ship-To</label>
+                  <input type="text" class="form-input" id="shipTo" readonly style="background-color: var(--color-grey-lightest);">
+                </div>
+              </div>
+            </div>
+
+            <!-- Shipment Details -->
+            <div class="mb-xl" id="shipmentDetails" style="display: none;">
+              <h4 class="mb-md">Shipment Details</h4>
+              <div class="grid grid-cols-4 mb-lg">
+                <div>
+                  <div class="stat-label">Total Cartons</div>
+                  <div class="font-bold" style="font-size: var(--font-size-xl);" id="shipCartons">0</div>
+                </div>
+                <div>
+                  <div class="stat-label">Total Weight</div>
+                  <div class="font-bold" style="font-size: var(--font-size-xl);" id="shipWeight">0 lbs</div>
+                </div>
+                <div>
+                  <div class="stat-label">Total Volume</div>
+                  <div class="font-bold" style="font-size: var(--font-size-xl);" id="shipVolume">0 cu.ft</div>
+                </div>
+                <div>
+                  <div class="stat-label">Carrier</div>
+                  <div class="font-bold" style="font-size: var(--font-size-xl);" id="shipCarrier">-</div>
+                </div>
+              </div>
+
+              <!-- Carton List -->
+              <div class="table-container mb-lg">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>
+                        <input type="checkbox" id="selectAllCartons" onchange="toggleAllCartons(this.checked)">
+                      </th>
+                      <th>Carton</th>
+                      <th>Tracking</th>
+                      <th>Weight</th>
+                      <th>Dimensions</th>
+                      <th>Stage Location</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="shipmentCartonsTable">
+                    <!-- Populated dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Carrier Information -->
+            <div class="mb-xl" id="carrierInfo" style="display: none;">
+              <h4 class="mb-md">Carrier Information</h4>
+              <div class="grid grid-cols-3">
+                <div class="form-group">
+                  <label class="form-label form-label-required">Carrier</label>
+                  <select class="form-input" id="carrierSelect" required>
+                    <option value="">Select carrier</option>
+                    <option value="fedex-express">FedEx Express</option>
+                    <option value="fedex-ground">FedEx Ground</option>
+                    <option value="ups-ground">UPS Ground</option>
+                    <option value="ups-air">UPS Next Day Air</option>
+                    <option value="usps">USPS Priority</option>
+                    <option value="dhl">DHL</option>
+                    <option value="ltl">LTL Freight</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label form-label-required">Service Level</label>
+                  <select class="form-input" id="serviceLevel" required>
+                    <option value="">Select service</option>
+                    <option value="overnight">Overnight</option>
+                    <option value="2-day">2-Day</option>
+                    <option value="3-day">3-Day</option>
+                    <option value="ground">Ground</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">PRO/BOL Number</label>
+                  <input type="text" class="form-input" id="proBOL" placeholder="Enter PRO or BOL number">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3">
+                <div class="form-group">
+                  <label class="form-label">Trailer Number</label>
+                  <input type="text" class="form-input" id="trailerNum" placeholder="Enter trailer number">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Seal Number</label>
+                  <input type="text" class="form-input" id="sealNum" placeholder="Enter seal number">
+                </div>
+                <div class="form-group">
+                  <label class="form-label form-label-required">Ship Date</label>
+                  <input type="date" class="form-input" id="shipDate" required>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-between" id="shipActions" style="display: none;">
+              <button type="button" class="btn btn-outline" onclick="cancelShip()">Cancel</button>
+              <div class="flex gap-md">
+                <button type="button" class="btn btn-secondary" onclick="printBOL()">Print BOL</button>
+                <button type="button" class="btn btn-secondary" onclick="createManifest()">Create Manifest</button>
+                <button type="submit" class="btn btn-primary">Ship Confirm</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Active Manifests -->
+      <div class="card mb-xl">
+        <div class="card-header flex justify-between items-center">
+          <h3 class="card-title mb-0">Active Manifests</h3>
+          <button class="btn btn-sm btn-primary" onclick="newManifest()">New Manifest</button>
+        </div>
+        <div class="card-body">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Manifest ID</th>
+                  <th>Carrier</th>
+                  <th>Orders</th>
+                  <th>Cartons</th>
+                  <th>Weight</th>
+                  <th>Created</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="manifestsTable">
+                <tr>
+                  <td><strong>MAN-2025-001</strong></td>
+                  <td>FedEx Express</td>
+                  <td>15</td>
+                  <td>42</td>
+                  <td>1,248 lbs</td>
+                  <td>2025-01-15 08:30 AM</td>
+                  <td><span class="badge badge-primary">Open</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-primary" onclick="closeManifest('MAN-2025-001')">Close</button>
+                    <button class="btn btn-sm btn-outline" onclick="printManifest('MAN-2025-001')">Print</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>MAN-2025-002</strong></td>
+                  <td>UPS Ground</td>
+                  <td>22</td>
+                  <td>68</td>
+                  <td>2,156 lbs</td>
+                  <td>2025-01-15 09:15 AM</td>
+                  <td><span class="badge badge-primary">Open</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-primary" onclick="closeManifest('MAN-2025-002')">Close</button>
+                    <button class="btn btn-sm btn-outline" onclick="printManifest('MAN-2025-002')">Print</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipped Orders -->
+      <div class="card">
+        <div class="card-header flex justify-between items-center">
+          <h3 class="card-title mb-0">Shipped Orders (Today)</h3>
+          <span class="badge badge-primary">127 Orders</span>
+        </div>
+        <div class="card-body">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Customer</th>
+                  <th>Carrier</th>
+                  <th>Cartons</th>
+                  <th>Weight</th>
+                  <th>BOL</th>
+                  <th>Shipped Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="shippedOrdersTable">
+                <tr>
+                  <td><strong>SO-2025-1001</strong></td>
+                  <td>Acme Corp</td>
+                  <td>FedEx Express</td>
+                  <td>3</td>
+                  <td>68.5 lbs</td>
+                  <td>BOL-12345</td>
+                  <td>2025-01-15 10:45 AM</td>
+                  <td><span class="badge badge-primary">Shipped</span></td>
+                </tr>
+                <tr>
+                  <td><strong>SO-2025-1002</strong></td>
+                  <td>Global Inc</td>
+                  <td>UPS Ground</td>
+                  <td>2</td>
+                  <td>45.2 lbs</td>
+                  <td>BOL-12346</td>
+                  <td>2025-01-15 11:20 AM</td>
+                  <td><span class="badge badge-primary">Shipped</span></td>
+                </tr>
+                <tr>
+                  <td><strong>SO-2025-1003</strong></td>
+                  <td>Tech Solutions</td>
+                  <td>FedEx Ground</td>
+                  <td>1</td>
+                  <td>22.8 lbs</td>
+                  <td>BOL-12347</td>
+                  <td>2025-01-15 11:55 AM</td>
+                  <td><span class="badge badge-primary">Shipped</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="searchOverlay"></div>
+
+  <!-- Upload Sidebar -->
+  <div class="upload-sidebar-overlay" id="uploadOverlay"></div>
+  <div class="upload-sidebar" id="uploadSidebar">
+    <div class="upload-header">
+      <div class="upload-title">Upload Files</div>
+      <button class="upload-close" onclick="closeUploadSidebar()">&times;</button>
+    </div>
+    <div class="upload-body">
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+        </div>
+        <div class="upload-text">Click to upload or drag and drop</div>
+        <div class="upload-hint">CSV, XLSX, PDF (Max 10MB)</div>
+      </div>
+      <input type="file" id="fileInput" class="file-input-hidden" multiple accept=".csv,.xlsx,.xls,.pdf">
+      <div class="file-list">
+        <div class="file-list-title">Selected Files</div>
+        <div id="fileList">
+          <p style="text-align: center; color: var(--color-grey); padding: var(--spacing-lg);">No files selected</p>
+        </div>
+      </div>
+    </div>
+    <div class="upload-footer">
+      <button class="btn btn-secondary" style="flex: 1;" onclick="cancelUpload()">Cancel</button>
+      <button class="btn btn-primary" style="flex: 1;" onclick="uploadFiles()">Upload Files</button>
+    </div>
+  </div>
+
+  <!-- Tracking Panel Sidebar (40% width, slides from right) -->
+  <div id="trackingPanel" class="tracking-panel">
+    <div class="tracking-header">
+      <h3>Shipment Tracking</h3>
+      <button class="tracking-close" onclick="closeTrackingPanel()">&times;</button>
+    </div>
+    
+    <div class="tracking-content">
+      <!-- Shipment Summary -->
+      <div class="tracking-section">
+        <div class="tracking-status-badge">
+          <span class="status-indicator status-in-transit"></span>
+          <span>In Transit - Ocean Freight</span>
+        </div>
+        <div class="tracking-route">
+          <div class="tracking-location">
+            <div class="tracking-location-icon origin">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="10" r="3"></circle>
+                <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"></path>
+              </svg>
+            </div>
+            <div>
+              <div class="tracking-label">Origin</div>
+              <div class="tracking-city">MUM - Mumbai</div>
+              <div class="tracking-port">NHAVA Port</div>
+            </div>
+          </div>
+          <div class="tracking-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 45%;"></div>
+            </div>
+            <div class="progress-text">45% Complete • 12 Days Remaining</div>
+          </div>
+          <div class="tracking-location">
+            <div class="tracking-location-icon destination">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+            </div>
+            <div>
+              <div class="tracking-label">Destination</div>
+              <div class="tracking-city">DAC - Dhaka</div>
+              <div class="tracking-port">Dhaka Port</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- India Map -->
+      <div class="tracking-section">
+        <div class="tracking-section-title">
+          <span>Live Route Tracking</span>
+          <span class="live-indicator">● LIVE</span>
+        </div>
+        <div class="tracking-map">
+          <svg width="100%" height="320" viewBox="0 0 450 320" style="background: var(--bg-secondary); border-radius: var(--radius-md);">
+            <!-- Grid background -->
+            <defs>
+              <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+                <path d="M 30 0 L 0 0 0 30" fill="none" stroke="var(--border-color)" stroke-width="0.5" opacity="0.2"/>
+              </pattern>
+              <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style="stop-color:var(--color-primary);stop-opacity:1" />
+                <stop offset="100%" style="stop-color:var(--color-primary);stop-opacity:0.3" />
+              </linearGradient>
+            </defs>
+            <rect width="450" height="320" fill="url(#grid)" />
+            
+            <!-- India Outline (simplified) -->
+            <path d="M 170 60 L 180 70 L 200 65 L 210 75 L 220 85 L 230 105 L 240 130 L 245 155 L 250 180 L 245 200 L 240 220 L 230 235 L 210 240 L 190 235 L 170 220 L 160 200 L 155 180 L 150 160 L 148 140 L 150 120 L 155 100 L 160 80 L 170 65 Z" 
+                  fill="none" stroke="var(--border-color)" stroke-width="2" opacity="0.4"/>
+            
+            <!-- Route line with gradient -->
+            <path d="M 170 200 Q 210 170, 250 150 Q 290 135, 360 125" 
+                  fill="none" stroke="url(#routeGradient)" stroke-width="3.5" stroke-dasharray="8,5" opacity="0.8"/>
+            
+            <!-- Progress overlay on route -->
+            <path d="M 170 200 Q 190 185, 210 175" 
+                  fill="none" stroke="var(--color-primary)" stroke-width="4" opacity="1"/>
+            
+            <!-- Cities markers -->
+            <g id="mumbai">
+              <circle cx="170" cy="200" r="10" fill="var(--color-primary)" stroke="var(--bg-primary)" stroke-width="3"/>
+              <circle cx="170" cy="200" r="16" fill="none" stroke="var(--color-primary)" stroke-width="1" opacity="0.3">
+                <animate attributeName="r" values="16;20;16" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.3;0;0.3" dur="2s" repeatCount="indefinite"/>
+              </circle>
+              <text x="170" y="225" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text-primary)">Mumbai</text>
+              <text x="170" y="240" text-anchor="middle" font-size="9" fill="var(--text-secondary)">Aug 20, 10:15 AM</text>
+            </g>
+            
+            <g id="delhi">
+              <circle cx="200" cy="115" r="7" fill="var(--bg-tertiary)" stroke="var(--color-primary)" stroke-width="2" opacity="0.6"/>
+              <text x="200" y="105" text-anchor="middle" font-size="10" font-weight="500" fill="var(--text-secondary)" opacity="0.7">Delhi</text>
+            </g>
+            
+            <g id="kolkata">
+              <circle cx="250" cy="150" r="7" fill="var(--bg-tertiary)" stroke="var(--color-primary)" stroke-width="2" opacity="0.6"/>
+              <text x="250" y="140" text-anchor="middle" font-size="10" font-weight="500" fill="var(--text-secondary)" opacity="0.7">Kolkata</text>
+            </g>
+            
+            <!-- Current position - Moving truck with animation -->
+            <g id="currentPosition" transform="translate(220, 172)">
+              <circle cx="0" cy="0" r="12" fill="var(--color-primary)" opacity="0.2">
+                <animate attributeName="r" values="12;18;12" dur="1.5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.2;0;0.2" dur="1.5s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="0" cy="0" r="8" fill="var(--color-primary)"/>
+              <g transform="translate(-8, -5)">
+                <rect x="0" y="0" width="16" height="10" fill="var(--bg-primary)" rx="2"/>
+                <circle cx="4" cy="11" r="2" fill="var(--color-primary)"/>
+                <circle cx="12" cy="11" r="2" fill="var(--color-primary)"/>
+                <rect x="2" y="2" width="6" height="6" fill="var(--color-primary)" opacity="0.3"/>
+              </g>
+              <text x="0" y="-20" text-anchor="middle" font-size="10" font-weight="700" fill="var(--color-primary)">Current Location</text>
+              <text x="0" y="-8" text-anchor="middle" font-size="8" fill="var(--text-secondary)">Bay of Bengal</text>
+            </g>
+            
+            <!-- Destination (Bangladesh) -->
+            <g id="dhaka">
+              <circle cx="360" cy="125" r="10" fill="var(--bg-tertiary)" stroke="var(--color-primary)" stroke-width="3"/>
+              <text x="360" y="115" text-anchor="middle" font-size="12" font-weight="600" fill="var(--text-primary)">Dhaka</text>
+              <text x="360" y="145" text-anchor="middle" font-size="9" fill="var(--text-secondary)">ETA: Sep 1, 2024</text>
+            </g>
+            
+            <!-- Distance markers -->
+            <text x="290" y="180" text-anchor="middle" font-size="9" font-weight="600" fill="var(--color-grey)" opacity="0.7">~1,850 km</text>
+          </svg>
+        </div>
+        <div class="map-legend">
+          <div class="legend-item">
+            <div class="legend-marker completed"></div>
+            <span>Completed</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-marker in-progress"></div>
+            <span>In Progress</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-marker pending"></div>
+            <span>Pending</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipment Status -->
+      <div class="tracking-section">
+        <div class="tracking-section-title">Shipment Status</div>
+        <div class="tracking-timeline">
+          <div class="timeline-item completed">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Shipment Created</div>
+              <div class="timeline-date">August 15, 2024 - 09:30 AM</div>
+              <div class="timeline-location">Mumbai, Maharashtra</div>
+            </div>
+          </div>
+          <div class="timeline-item completed">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Picked Up</div>
+              <div class="timeline-date">August 20, 2024 - 10:15 AM</div>
+              <div class="timeline-location">NHAVA Port, Mumbai</div>
+            </div>
+          </div>
+          <div class="timeline-item active">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">In Transit - Ocean Freight</div>
+              <div class="timeline-date">August 21, 2024 - Ongoing</div>
+              <div class="timeline-location">Bay of Bengal</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Arrival at Port</div>
+              <div class="timeline-date">Estimated: September 1, 2024</div>
+              <div class="timeline-location">Dhaka Port, Bangladesh</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Out for Delivery</div>
+              <div class="timeline-date">Estimated: September 2, 2024</div>
+              <div class="timeline-location">Dhaka City</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-marker"></div>
+            <div class="timeline-content">
+              <div class="timeline-title">Delivered</div>
+              <div class="timeline-date">Estimated: September 3, 2024</div>
+              <div class="timeline-location">Final Destination</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipment Details -->
+      <div class="tracking-section">
+        <div class="tracking-section-title">Shipment Details</div>
+        <div class="tracking-details">
+          <div class="detail-row">
+            <span class="detail-label">Tracking Number</span>
+            <span class="detail-value">SHI-354788</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Shipper ID</span>
+            <span class="detail-value">LG-48576245</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Shipper Name</span>
+            <span class="detail-value">Gary Stewart</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Goods Type</span>
+            <span class="detail-value">Dry Goods</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Quantity</span>
+            <span class="detail-value">50 Pallets</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Weight</span>
+            <span class="detail-value">10,000 kg</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Transport Mode</span>
+            <span class="detail-value">Truck → Ocean → Truck</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">ETA</span>
+            <span class="detail-value">22 Days</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="tracking-section">
+        <button class="btn btn-primary" style="width: 100%;" onclick="downloadPOD()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Download Proof of Delivery
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="trackingOverlay" class="tracking-overlay"></div>
+
+  <style>
+    /* Tracking Panel Styles */
+    .tracking-panel {
+      position: fixed;
+      top: 0;
+      right: -40%;
+      width: 40%;
+      height: 100vh;
+      background: var(--color-white);
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
+      z-index: 1001;
+      transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tracking-panel.active {
+      right: 0;
+    }
+
+    body.dark-theme .tracking-panel {
+      background: var(--color-grey-dark);
+      box-shadow: -4px 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .tracking-header {
+      padding: var(--spacing-lg) var(--spacing-xl);
+      border-bottom: 2px solid var(--color-grey-lightest);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-secondary);
+    }
+
+    .tracking-header h3 {
+      font-size: var(--font-size-xl);
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .tracking-close {
+      background: none;
+      border: none;
+      font-size: 32px;
+      cursor: pointer;
+      color: var(--color-grey);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-fast);
+    }
+
+    .tracking-close:hover {
+      background: var(--color-grey-lightest);
+      color: var(--color-primary);
+    }
+
+    .tracking-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--spacing-lg);
+    }
+
+    .tracking-section {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .tracking-section-title {
+      font-size: var(--font-size-sm);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--color-grey);
+      margin-bottom: var(--spacing-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .live-indicator {
+      font-size: 10px;
+      color: #00ff00;
+      font-weight: 700;
+      letter-spacing: 1px;
+      animation: blink 2s infinite;
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0.3; }
+    }
+
+    .tracking-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: var(--color-primary);
+      color: var(--bg-primary);
+      border-radius: var(--radius-md);
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .status-in-transit {
+      background: #ffff00;
+      box-shadow: 0 0 8px #ffff00;
+      animation: pulse-indicator 1.5s infinite;
+    }
+
+    @keyframes pulse-indicator {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.2); }
+    }
+
+    .tracking-route {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+      padding: var(--spacing-lg);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .tracking-progress {
+      width: 100%;
+      padding: 0 var(--spacing-md);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--color-grey-lighter);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: var(--spacing-xs);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-grey-dark) 100%);
+      border-radius: 10px;
+      transition: width 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .progress-text {
+      font-size: 11px;
+      color: var(--color-grey);
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .tracking-location {
+      flex: 1;
+      display: flex;
+      gap: var(--spacing-sm);
+      align-items: flex-start;
+    }
+
+    .tracking-location-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--color-primary);
+      color: var(--bg-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .tracking-location-icon.origin {
+      background: var(--color-primary);
+    }
+
+    .tracking-location-icon.destination {
+      background: var(--color-grey-dark);
+    }
+
+    .map-legend {
+      display: flex;
+      gap: var(--spacing-lg);
+      justify-content: center;
+      padding: var(--spacing-md);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      margin-top: var(--spacing-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      font-size: var(--font-size-xs);
+      color: var(--color-grey);
+    }
+
+    .legend-marker {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--color-primary);
+    }
+
+    .legend-marker.completed {
+      background: var(--color-primary);
+    }
+
+    .legend-marker.in-progress {
+      background: var(--color-primary);
+      animation: pulse 2s infinite;
+    }
+
+    .legend-marker.pending {
+      background: transparent;
+      opacity: 0.5;
+    }
+
+    .tracking-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--color-grey);
+      letter-spacing: 0.5px;
+    }
+
+    .tracking-city {
+      font-size: var(--font-size-base);
+      font-weight: 700;
+      margin: 2px 0;
+    }
+
+    .tracking-port {
+      font-size: var(--font-size-xs);
+      color: var(--color-grey);
+    }
+
+    .tracking-map {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .tracking-timeline {
+      position: relative;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 32px;
+      padding-bottom: var(--spacing-lg);
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 24px;
+      bottom: -8px;
+      width: 2px;
+      background: var(--color-grey-lighter);
+    }
+
+    .timeline-item:last-child::before {
+      display: none;
+    }
+
+    .timeline-marker {
+      position: absolute;
+      left: 0;
+      top: 4px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 3px solid var(--color-grey-lighter);
+      background: var(--bg-primary);
+    }
+
+    .timeline-item.completed .timeline-marker {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+
+    .timeline-item.active .timeline-marker {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.3); }
+      50% { box-shadow: 0 0 0 8px rgba(0, 0, 0, 0); }
+    }
+
+    .timeline-content {
+      padding-top: 2px;
+    }
+
+    .timeline-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .timeline-item.completed .timeline-title {
+      color: var(--color-primary);
+    }
+
+    .timeline-item.active .timeline-title {
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+
+    .timeline-date {
+      font-size: var(--font-size-xs);
+      color: var(--color-grey);
+      margin-bottom: 2px;
+    }
+
+    .timeline-location {
+      font-size: var(--font-size-xs);
+      color: var(--color-grey-light);
+    }
+
+    .tracking-details {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      padding: var(--spacing-md);
+    }
+
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: var(--spacing-sm) 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .detail-row:first-child {
+      padding-top: 0;
+    }
+
+    .detail-label {
+      font-size: var(--font-size-sm);
+      color: var(--color-grey);
+      font-weight: 500;
+    }
+
+    .detail-value {
+      font-size: var(--font-size-sm);
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .tracking-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-base);
+    }
+
+    .tracking-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .tracking-panel {
+        width: 50%;
+        right: -50%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .tracking-panel {
+        width: 100%;
+        right: -100%;
+      }
+    }
+  </style>
+
+  <!-- Performance & Security Utilities -->
+  <script src="js/performance-utils.js"></script>
+  <script src="js/security-utils.js"></script>
+
+  <script src="js/auth.js"></script>
+  <script src="js/sidebar.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/common-header.js"></script>
+  <script src="js/shipping.js"></script>
+
+  <script>
+    // Tracking Panel Functions
+    function openTrackingPanel() {
+      const panel = document.getElementById('trackingPanel');
+      const overlay = document.getElementById('trackingOverlay');
+      
+      if (panel && overlay) {
+        panel.classList.add('active');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+    }
+
+    function closeTrackingPanel() {
+      const panel = document.getElementById('trackingPanel');
+      const overlay = document.getElementById('trackingOverlay');
+      
+      if (panel && overlay) {
+        panel.classList.remove('active');
+        overlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function downloadPOD() {
+      alert('Downloading Proof of Delivery document...\n\nShipment: SHI-354788\nOrigin: Mumbai, India\nDestination: Dhaka, Bangladesh');
+    }
+
+    // Close on overlay click
+    document.getElementById('trackingOverlay')?.addEventListener('click', closeTrackingPanel);
+
+    // Close on escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeTrackingPanel();
+      }
+    });
+
+    function toggleUserMenu() {
+      document.querySelector('.user-dropdown').classList.toggle('show');
+    }
+
+    function viewProfile() {
+      if (window.notify) notify.info('Profile management coming soon!');
+    }
+
+    function changePassword() {
+      if (window.notify) notify.info('Change password coming soon!');
+    }
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.user-menu')) {
+        document.querySelector('.user-dropdown')?.classList.remove('show');
+      }
+    });
+  </script>
+
+  <!-- Notifications System -->
+  <script src="js/notifications.js"></script>
+
+  <!-- Scanner & QR Integration -->
+  <script src="js/barcode-scanner.js"></script>
+  <script src="js/qr-generator.js"></script>
+  <script src="js/scan-integration.js"></script>
+</body>
+</html>

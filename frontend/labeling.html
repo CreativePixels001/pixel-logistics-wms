@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pixel Logistics - Labeling & Relabeling">
+  <title>Pixel Logistics - Labeling & Relabeling</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Modal Overlay */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+    }
+    
+    .modal {
+      background: var(--color-white);
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      max-width: 800px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: modalSlideIn 0.3s ease-out;
+    }
+    
+    @keyframes modalSlideIn {
+      from {
+        transform: translateY(-50px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+    
+    .modal-header {
+      padding: var(--spacing-lg);
+      border-bottom: 1px solid var(--color-grey-lighter);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .modal-title {
+      font-size: var(--font-size-xl);
+      font-weight: 600;
+      margin: 0;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: var(--font-size-xxl);
+      cursor: pointer;
+      color: var(--color-grey);
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-close:hover {
+      color: var(--color-black);
+    }
+    
+    .modal-body {
+      padding: var(--spacing-lg);
+    }
+    
+    .modal-footer {
+      padding: var(--spacing-lg);
+      border-top: 1px solid var(--color-grey-lighter);
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--spacing-md);
+    }
+    
+    /* Drag & Drop Zone */
+    .dropzone {
+      border: 2px dashed var(--color-grey-light);
+      border-radius: 8px;
+      padding: var(--spacing-xl);
+      text-align: center;
+      background-color: var(--color-grey-lightest);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--color-black);
+      background-color: var(--color-grey-lighter);
+    }
+    
+    .dropzone-icon {
+      font-size: 48px;
+      margin-bottom: var(--spacing-md);
+      color: var(--color-grey);
+    }
+    
+    .dropzone-text {
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      margin-bottom: var(--spacing-xs);
+    }
+    
+    .dropzone-subtext {
+      font-size: var(--font-size-sm);
+      color: var(--color-grey);
+    }
+    
+    /* Filter Panel */
+    .filter-panel {
+      background-color: var(--color-grey-lightest);
+      border-radius: 8px;
+      padding: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    
+    .filter-panel.active {
+      max-height: 500px;
+    }
+    
+    .filter-toggle {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+    }
+    
+    /* Label Preview */
+    .label-preview {
+      border: 2px solid var(--color-grey-light);
+      border-radius: 4px;
+      padding: var(--spacing-md);
+      background: var(--color-white);
+      font-family: monospace;
+      min-height: 200px;
+    }
+    
+    .barcode-preview {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: var(--spacing-md);
+      background: var(--color-white);
+    }
+    
+    .barcode-bars {
+      display: flex;
+      gap: 2px;
+      margin-bottom: var(--spacing-sm);
+    }
+    
+    .barcode-bar {
+      width: 3px;
+      height: 60px;
+      background: var(--color-black);
+    }
+    
+    .barcode-number {
+      font-family: monospace;
+      font-size: var(--font-size-sm);
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Warehouse Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <!-- Theme Toggle Button -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <!-- Global Search -->
+      <div class="search-container" id="searchContainer">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" class="search-input" id="globalSearchInput" placeholder="Search warehouse..." autocomplete="off" readonly>
+          <kbd class="search-kbd">⌘K</kbd>
+          <button class="search-close" onclick="closeSearch()">&times;</button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">Admin User</div>
+          <div class="user-role">Warehouse Manager</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">AK</div>
+        <div class="user-dropdown">
+          <button class="dropdown-item" onclick="viewProfile()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </button>
+          <button class="dropdown-item" onclick="changePassword()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Change Password
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="logout()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="layout">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Main Menu</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="index.html" class="sidebar-link active">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="user-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span>User Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="access-control.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <span>Access Control</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="receiving.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                  <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
+                  <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Receipt Processing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="asn-receipt.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </span>
+              <span>ASN Receipt</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="putaway.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Put-away</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Outbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="orders.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </span>
+              <span>Orders</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="picking.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              <span>Picking</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="packing.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+              </span>
+              <span>Packing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="shipping.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+              </span>
+              <span>Shipping</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inventory Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="lpn-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>LPN Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inventory.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="20" x2="12" y2="10"></line>
+                  <line x1="18" y1="20" x2="18" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+              </span>
+              <span>Inventory Visibility</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Quality Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="quality-inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Quality Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="cycle-count.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </span>
+              <span>Cycle Count</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Value-Added Services</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="kitting.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Kitting & Assembly</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="labeling.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>Labeling</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="crossdock.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+              <span>Cross-Docking</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Warehouse Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="replenishment.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+              </span>
+              <span>Replenishment</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="task-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="9" x2="15" y2="9"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+              </span>
+              <span>Task Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Returns & Reports</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="returns.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 14 4 9 9 4"></polyline>
+                  <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+                </svg>
+              </span>
+              <span>Returns</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="reports.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+              </span>
+              <span>Reports & Analytics</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <span class="breadcrumb-item">Dashboard</span>
+        <span class="breadcrumb-item">Value-Added Services</span>
+        <span class="breadcrumb-item active">Labeling & Relabeling</span>
+      </div>
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Labeling & Relabeling Operations</h1>
+          <p class="page-subtitle">Print labels, manage compliance labeling, and handle relabeling workflows</p>
+        </div>
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+          <button class="btn btn-secondary" onclick="openUploadSidebar()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Upload
+          </button>
+          <button class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export
+          </button>
+          <button class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print Batch
+          </button>
+        </div>
+      </div>
+
+      <!-- Labeling Overview -->
+      <div class="grid grid-cols-4 mb-xl">
+        <div class="stat-card">
+          <div class="stat-label">Labels Printed Today</div>
+          <div class="stat-value">1,248</div>
+          <div class="stat-change">+18% vs yesterday</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Relabel</div>
+          <div class="stat-value">34</div>
+          <div class="stat-change">Items requiring relabel</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active Printers</div>
+          <div class="stat-value">12</div>
+          <div class="stat-change">3 offline</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Label Templates</div>
+          <div class="stat-value">47</div>
+          <div class="stat-change">Available templates</div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card mb-xl">
+        <div class="card-header">
+          <h3 class="card-title">Quick Actions</h3>
+        </div>
+        <div class="card-body">
+          <div class="grid grid-cols-4">
+            <button class="stat-card" onclick="openModal('printLabelModal')" style="cursor: pointer; border: 2px solid var(--color-grey-lighter);">
+              <div class="stat-label">Print Label</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                  <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                  <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+              </div>
+              <div class="stat-change">Single or batch print</div>
+            </button>
+            
+            <button class="stat-card" onclick="openModal('relabelModal')" style="cursor: pointer; border: 2px solid var(--color-grey-lighter);">
+              <div class="stat-label">Relabel Item</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </div>
+              <div class="stat-change">Replace damaged labels</div>
+            </button>
+            
+            <button class="stat-card" onclick="openModal('batchUploadModal')" style="cursor: pointer; border: 2px solid var(--color-grey-lighter);">
+              <div class="stat-label">Batch Upload</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+              </div>
+              <div class="stat-change">Upload CSV/Excel data</div>
+            </button>
+            
+            <button class="stat-card" onclick="openModal('templateModal')" style="cursor: pointer; border: 2px solid var(--color-grey-lighter);">
+              <div class="stat-label">Manage Templates</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </div>
+              <div class="stat-change">Create & edit templates</div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter Toggle -->
+      <div class="mb-md">
+        <div class="filter-toggle" onclick="toggleFilters()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+          </svg>
+          <span id="filterToggleText">Show Filters</span>
+        </div>
+      </div>
+
+      <!-- Filter Panel -->
+      <div class="filter-panel" id="filterPanel">
+        <div class="grid grid-cols-4">
+          <div class="form-group">
+            <label class="form-label">Label Type</label>
+            <select class="form-input" id="filterLabelType" onchange="applyFilters()">
+              <option value="">All Types</option>
+              <option value="product">Product Label</option>
+              <option value="shipping">Shipping Label</option>
+              <option value="barcode">Barcode Only</option>
+              <option value="compliance">Compliance Label</option>
+              <option value="lpn">LPN Label</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Status</label>
+            <select class="form-input" id="filterStatus" onchange="applyFilters()">
+              <option value="">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="printed">Printed</option>
+              <option value="applied">Applied</option>
+              <option value="relabel-required">Relabel Required</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Date Range</label>
+            <select class="form-input" id="filterDate" onchange="applyFilters()">
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="custom">Custom Range</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Printer</label>
+            <select class="form-input" id="filterPrinter" onchange="applyFilters()">
+              <option value="">All Printers</option>
+              <option value="LABEL-01">Label Printer 01</option>
+              <option value="LABEL-02">Label Printer 02</option>
+              <option value="ZEBRA-01">Zebra ZT410</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex justify-end gap-md mt-md">
+          <button class="btn btn-outline" onclick="clearFilters()">Clear Filters</button>
+          <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+        </div>
+      </div>
+
+      <!-- Recent Label Jobs -->
+      <div class="card">
+        <div class="card-header flex justify-between items-center">
+          <h3 class="card-title mb-0">Recent Label Jobs</h3>
+          <span class="badge badge-primary">156 Jobs Today</span>
+        </div>
+        <div class="card-body">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Job ID</th>
+                  <th>Label Type</th>
+                  <th>Item/LPN</th>
+                  <th>Quantity</th>
+                  <th>Template</th>
+                  <th>Printer</th>
+                  <th>Created By</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="labelJobsTable">
+                <tr>
+                  <td><strong>LBL-2025-001</strong></td>
+                  <td>Product Label</td>
+                  <td>ITM-5678</td>
+                  <td>50</td>
+                  <td>Standard Product</td>
+                  <td>LABEL-01</td>
+                  <td>John Smith</td>
+                  <td>10:45 AM</td>
+                  <td><span class="badge badge-primary">Printed</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-outline" onclick="reprintLabel('LBL-2025-001')">Reprint</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>LBL-2025-002</strong></td>
+                  <td>Shipping Label</td>
+                  <td>SHIP-089</td>
+                  <td>12</td>
+                  <td>UPS Shipping</td>
+                  <td>ZEBRA-01</td>
+                  <td>Maria Garcia</td>
+                  <td>10:52 AM</td>
+                  <td><span class="badge badge-primary">Printed</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-outline" onclick="reprintLabel('LBL-2025-002')">Reprint</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>LBL-2025-003</strong></td>
+                  <td>LPN Label</td>
+                  <td>LPN-1234</td>
+                  <td>1</td>
+                  <td>Standard LPN</td>
+                  <td>LABEL-02</td>
+                  <td>Robert Johnson</td>
+                  <td>11:05 AM</td>
+                  <td><span class="badge badge-outline">Pending</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-primary" onclick="printLabel('LBL-2025-003')">Print</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Print Label Modal -->
+  <div class="modal-overlay" id="printLabelModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Print Label</h2>
+        <button class="modal-close" onclick="closeModal('printLabelModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="printLabelForm">
+          <div class="grid grid-cols-2 mb-lg">
+            <div class="form-group">
+              <label class="form-label form-label-required">Label Type</label>
+              <select class="form-input" id="labelType" required onchange="updateTemplates()">
+                <option value="">Select label type</option>
+                <option value="product">Product Label</option>
+                <option value="shipping">Shipping Label</option>
+                <option value="barcode">Barcode Only</option>
+                <option value="compliance">Compliance Label</option>
+                <option value="lpn">LPN Label</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label form-label-required">Template</label>
+              <select class="form-input" id="labelTemplate" required>
+                <option value="">Select template</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 mb-lg">
+            <div class="form-group">
+              <label class="form-label form-label-required">Item/LPN Number</label>
+              <input type="text" class="form-input" id="printItemLPN" placeholder="Scan item or LPN" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label form-label-required">Quantity</label>
+              <input type="number" class="form-input" id="printQty" placeholder="Number of labels" value="1" min="1" required>
+            </div>
+          </div>
+
+          <div class="form-group mb-lg">
+            <label class="form-label form-label-required">Printer</label>
+            <select class="form-input" id="printer" required>
+              <option value="">Select printer</option>
+              <option value="LABEL-01">Label Printer 01 (Receiving)</option>
+              <option value="LABEL-02">Label Printer 02 (Shipping)</option>
+              <option value="ZEBRA-01">Zebra ZT410 (Assembly)</option>
+              <option value="ZEBRA-02">Zebra ZT410 (Packing)</option>
+            </select>
+          </div>
+
+          <div class="label-preview mb-lg" id="labelPreview">
+            <div style="text-align: center; color: var(--color-grey);">
+              Label preview will appear here
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('printLabelModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitPrintLabel()">Print Label</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Relabel Modal -->
+  <div class="modal-overlay" id="relabelModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Relabel Item</h2>
+        <button class="modal-close" onclick="closeModal('relabelModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="relabelForm">
+          <div class="form-group mb-lg">
+            <label class="form-label form-label-required">Scan Current Label/LPN</label>
+            <input type="text" class="form-input" id="relabelLPN" placeholder="Scan existing label" required>
+          </div>
+
+          <div class="form-group mb-lg">
+            <label class="form-label form-label-required">Relabel Reason</label>
+            <select class="form-input" id="relabelReason" required>
+              <option value="">Select reason</option>
+              <option value="damaged">Label Damaged</option>
+              <option value="incorrect">Incorrect Information</option>
+              <option value="faded">Faded/Unreadable</option>
+              <option value="missing">Missing Label</option>
+              <option value="compliance">Compliance Update</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group mb-lg">
+            <label class="form-label">Comments</label>
+            <textarea class="form-input" id="relabelComments" rows="3" placeholder="Additional details (optional)"></textarea>
+          </div>
+
+          <div class="grid grid-cols-2">
+            <div class="form-group">
+              <label class="form-label form-label-required">New Label Template</label>
+              <select class="form-input" id="relabelTemplate" required>
+                <option value="">Select template</option>
+                <option value="standard">Standard Product</option>
+                <option value="compliance">Compliance Label</option>
+                <option value="retail">Retail Label</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label form-label-required">Printer</label>
+              <select class="form-input" id="relabelPrinter" required>
+                <option value="">Select printer</option>
+                <option value="LABEL-01">Label Printer 01</option>
+                <option value="LABEL-02">Label Printer 02</option>
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('relabelModal')">Cancel</button>
+        <button class="btn btn-primary" onclick="submitRelabel()">Print New Label</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Batch Upload Modal -->
+  <div class="modal-overlay" id="batchUploadModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title">Batch Label Upload</h2>
+        <button class="modal-close" onclick="closeModal('batchUploadModal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-lg">
+          <p class="mb-md">Upload a CSV or Excel file containing label data. The file should include: Item Number, Quantity, Label Type, Template.</p>
+          <a href="#" class="btn btn-outline btn-sm" onclick="downloadTemplate()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Download Template
+          </a>
+        </div>
+
+        <div class="dropzone" id="dropzone">
+          <div class="dropzone-icon">📁</div>
+          <div class="dropzone-text">Drag & Drop File Here</div>
+          <div class="dropzone-subtext">or click to browse</div>
+          <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" style="display: none;">
+        </div>
+
+        <div id="uploadStatus" style="margin-top: var(--spacing-lg); display: none;">
+          <div class="card" style="background-color: var(--color-grey-lightest);">
+            <div class="card-body">
+              <div class="flex items-center justify-between mb-sm">
+                <div class="font-semibold" id="fileName">file.csv</div>
+                <button class="btn btn-sm btn-outline" onclick="clearUpload()">Remove</button>
+              </div>
+              <div class="text-grey" id="fileSize">0 KB</div>
+              <div class="mt-md">
+                <div class="progress-bar" style="width: 100%; height: 8px; background-color: var(--color-grey-lighter); border-radius: 4px; overflow: hidden;">
+                  <div id="uploadProgress" style="width: 0%; height: 100%; background-color: var(--color-primary); transition: width 0.3s ease;"></div>
+                </div>
+                <div class="mt-xs text-grey" id="uploadText">Ready to process</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('batchUploadModal')">Cancel</button>
+        <button class="btn btn-primary" id="processUploadBtn" onclick="processUpload()" disabled>Process Upload</button>
+      </div>
+    </main>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="searchOverlay"></div>
+
+  <!-- Upload Sidebar -->
+  <div class="upload-sidebar-overlay" id="uploadOverlay"></div>
+  <div class="upload-sidebar" id="uploadSidebar">
+    <div class="upload-header">
+      <div class="upload-title">Upload Files</div>
+      <button class="upload-close" onclick="closeUploadSidebar()">&times;</button>
+    </div>
+    <div class="upload-body">
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+        </div>
+        <div class="upload-text">Click to upload or drag and drop</div>
+        <div class="upload-hint">CSV, XLSX, PDF (Max 10MB)</div>
+      </div>
+      <input type="file" id="fileInput" class="file-input-hidden" multiple accept=".csv,.xlsx,.xls,.pdf">
+      <div class="file-list">
+        <div class="file-list-title">Selected Files</div>
+        <div id="fileList">
+          <p style="text-align: center; color: var(--color-grey); padding: var(--spacing-lg);">No files selected</p>
+        </div>
+      </div>
+    </div>
+    <div class="upload-footer">
+      <button class="btn btn-secondary" style="flex: 1;" onclick="cancelUpload()">Cancel</button>
+      <button class="btn btn-primary" style="flex: 1;" onclick="uploadFiles()">Upload Files</button>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/sidebar.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/common-header.js"></script>
+  <script src="js/labeling.js"></script>
+
+  <script>
+    function toggleUserMenu() {
+      document.querySelector('.user-dropdown').classList.toggle('show');
+    }
+
+    function viewProfile() {
+      alert('Profile management coming soon!');
+    }
+
+    function changePassword() {
+      alert('Change password coming soon!');
+    }
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.user-menu')) {
+        document.querySelector('.user-dropdown')?.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

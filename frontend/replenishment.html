@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pixel Logistics - Replenishment">
+  <title>Pixel Logistics - Replenishment</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Warehouse Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <!-- Theme Toggle Button -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <!-- Global Search -->
+      <div class="search-container" id="searchContainer">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" class="search-input" id="globalSearchInput" placeholder="Search warehouse..." autocomplete="off" readonly>
+          <kbd class="search-kbd">⌘K</kbd>
+          <button class="search-close" onclick="closeSearch()">&times;</button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">Admin User</div>
+          <div class="user-role">Warehouse Manager</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">AK</div>
+        <div class="user-dropdown">
+          <button class="dropdown-item" onclick="viewProfile()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </button>
+          <button class="dropdown-item" onclick="changePassword()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Change Password
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="logout()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="layout">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Main Menu</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="index.html" class="sidebar-link active">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="user-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span>User Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="access-control.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <span>Access Control</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="receiving.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                  <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
+                  <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Receipt Processing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="asn-receipt.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </span>
+              <span>ASN Receipt</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="putaway.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Put-away</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Outbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="orders.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </span>
+              <span>Orders</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="picking.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              <span>Picking</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="packing.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+              </span>
+              <span>Packing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="shipping.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+              </span>
+              <span>Shipping</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inventory Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="lpn-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>LPN Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inventory.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="20" x2="12" y2="10"></line>
+                  <line x1="18" y1="20" x2="18" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+              </span>
+              <span>Inventory Visibility</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Quality Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="quality-inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Quality Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="cycle-count.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </span>
+              <span>Cycle Count</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Value-Added Services</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="kitting.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Kitting & Assembly</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="labeling.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>Labeling</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="crossdock.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+              <span>Cross-Docking</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Warehouse Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="replenishment.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+              </span>
+              <span>Replenishment</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="task-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="9" x2="15" y2="9"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+              </span>
+              <span>Task Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Returns & Reports</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="returns.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 14 4 9 9 4"></polyline>
+                  <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+                </svg>
+              </span>
+              <span>Returns</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="reports.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+              </span>
+              <span>Reports & Analytics</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <span class="breadcrumb-item">Dashboard</span>
+        <span class="breadcrumb-item active">Replenishment</span>
+      </div>
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Inventory Replenishment</h1>
+          <p class="page-subtitle">Manage min/max replenishment, pick face optimization, and demand forecasting</p>
+        </div>
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+          <button class="btn btn-secondary" onclick="openUploadSidebar()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Upload
+          </button>
+          <button class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export
+          </button>
+          <button class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            Generate Tasks
+          </button>
+        </div>
+      </div>
+
+      <!-- Replenishment Overview -->
+      <div class="grid grid-cols-4 mb-xl">
+        <div class="stat-card">
+          <div class="stat-label">Items Below Min</div>
+          <div class="stat-value">23</div>
+          <div class="stat-change">Needs replenishment</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pending Tasks</div>
+          <div class="stat-value">18</div>
+          <div class="stat-change">Open replen tasks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Completed Today</div>
+          <div class="stat-value">42</div>
+          <div class="stat-change">+8% vs yesterday</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Pick Face Fill</div>
+          <div class="stat-value">87%</div>
+          <div class="stat-change">Average across zones</div>
+        </div>
+      </div>
+
+      <!-- Replenishment Strategy -->
+      <div class="card mb-xl">
+        <div class="card-header">
+          <h3 class="card-title">Generate Replenishment Tasks</h3>
+        </div>
+        <div class="card-body">
+          <div class="grid grid-cols-4 mb-lg">
+            <div class="stat-card" onclick="selectReplenType('minmax')" style="cursor: pointer;">
+              <div class="stat-label">Min/Max Replen</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <line x1="12" y1="20" x2="12" y2="10"></line>
+                  <line x1="18" y1="20" x2="18" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+              </div>
+              <div class="stat-change">Maintain min/max levels</div>
+            </div>
+            
+            <div class="stat-card" onclick="selectReplenType('demand')" style="cursor: pointer;">
+              <div class="stat-label">Demand-Based</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </div>
+              <div class="stat-change">Based on order demand</div>
+            </div>
+            
+            <div class="stat-card" onclick="selectReplenType('pickface')" style="cursor: pointer;">
+              <div class="stat-label">Pick Face Replen</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+              </div>
+              <div class="stat-change">Optimize pick locations</div>
+            </div>
+            
+            <div class="stat-card" onclick="selectReplenType('bulk')" style="cursor: pointer;">
+              <div class="stat-label">Bulk Replen</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+              </div>
+              <div class="stat-change">Reserve to bulk moves</div>
+            </div>
+          </div>
+
+          <!-- Replenishment Planning Form -->
+          <form id="replenPlanForm" style="display: none;">
+            <div class="mb-xl">
+              <h4 class="mb-md" id="replenTypeTitle">Min/Max Replenishment</h4>
+              
+              <div class="grid grid-cols-3">
+                <div class="form-group">
+                  <label class="form-label">Zone</label>
+                  <select class="form-input" id="replenZone">
+                    <option value="">All Zones</option>
+                    <option value="A">Zone A (Fast Moving)</option>
+                    <option value="B">Zone B (Medium Moving)</option>
+                    <option value="C">Zone C (Slow Moving)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Item Number</label>
+                  <input type="text" class="form-input" id="replenItem" placeholder="Specific item (optional)">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">ABC Class</label>
+                  <select class="form-input" id="replenABC">
+                    <option value="">All Classes</option>
+                    <option value="A">Class A (High Value)</option>
+                    <option value="B">Class B (Medium Value)</option>
+                    <option value="C">Class C (Low Value)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3">
+                <div class="form-group">
+                  <label class="form-label">Min Threshold %</label>
+                  <input type="number" class="form-input" id="minThreshold" placeholder="e.g., 20" value="20">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Max Capacity %</label>
+                  <input type="number" class="form-input" id="maxCapacity" placeholder="e.g., 95" value="95">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Priority</label>
+                  <select class="form-input" id="replenPriority">
+                    <option value="high">High</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="low">Low</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex justify-end gap-md">
+              <button type="button" class="btn btn-outline" onclick="cancelReplenPlan()">Cancel</button>
+              <button type="submit" class="btn btn-primary">Generate Tasks</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Execute Replenishment -->
+      <div class="card mb-xl" id="replenExecuteCard" style="display: none;">
+        <div class="card-header">
+          <h3 class="card-title">Execute Replenishment</h3>
+        </div>
+        <div class="card-body">
+          <form id="replenExecuteForm">
+            
+            <!-- Task Identification -->
+            <div class="mb-xl">
+              <h4 class="mb-md">Replenishment Task</h4>
+              <div class="grid grid-cols-3">
+                <div class="form-group">
+                  <label class="form-label form-label-required">Scan Task ID</label>
+                  <input type="text" class="form-input" id="replenTaskID" placeholder="Scan replen task" required autofocus>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Task Type</label>
+                  <input type="text" class="form-input" id="taskType" readonly style="background-color: var(--color-grey-lightest);">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Priority</label>
+                  <input type="text" class="form-input" id="taskPriority" readonly style="background-color: var(--color-grey-lightest);">
+                </div>
+              </div>
+            </div>
+
+            <!-- Task Details -->
+            <div class="mb-xl" id="taskDetails" style="display: none;">
+              <h4 class="mb-md">Task Details</h4>
+              
+              <div class="grid grid-cols-3 mb-lg">
+                <div>
+                  <div class="stat-label">Item Number</div>
+                  <div class="font-semibold" style="font-size: var(--font-size-xl);" id="taskItem">ITM-5678</div>
+                </div>
+                <div>
+                  <div class="stat-label">Description</div>
+                  <div class="font-semibold" id="taskDescription">Widget Assembly A</div>
+                </div>
+                <div>
+                  <div class="stat-label">Quantity to Move</div>
+                  <div class="font-semibold" style="font-size: var(--font-size-xl);" id="taskQty">200 EA</div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2 mb-lg">
+                <div>
+                  <h5 class="mb-sm">From Location (Source)</h5>
+                  <div class="card" style="background-color: var(--color-grey-lightest);">
+                    <div class="card-body">
+                      <div class="grid grid-cols-2">
+                        <div>
+                          <div class="text-grey mb-xs">Location</div>
+                          <div class="font-bold" style="font-size: var(--font-size-lg);" id="sourceLocation">B-05-12-A</div>
+                        </div>
+                        <div>
+                          <div class="text-grey mb-xs">Type</div>
+                          <div id="sourceType">Reserve Storage</div>
+                        </div>
+                      </div>
+                      <div class="grid grid-cols-2 mt-md">
+                        <div>
+                          <div class="text-grey mb-xs">Available Qty</div>
+                          <div class="font-semibold" id="sourceQty">500 EA</div>
+                        </div>
+                        <div>
+                          <div class="text-grey mb-xs">LPN</div>
+                          <div class="font-semibold" id="sourceLPN">LPN-1001</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h5 class="mb-sm">To Location (Destination)</h5>
+                  <div class="card" style="background-color: var(--color-grey-lightest);">
+                    <div class="card-body">
+                      <div class="grid grid-cols-2">
+                        <div>
+                          <div class="text-grey mb-xs">Location</div>
+                          <div class="font-bold" style="font-size: var(--font-size-lg);" id="destLocation">A-01-05-A</div>
+                        </div>
+                        <div>
+                          <div class="text-grey mb-xs">Type</div>
+                          <div id="destType">Pick Face</div>
+                        </div>
+                      </div>
+                      <div class="grid grid-cols-2 mt-md">
+                        <div>
+                          <div class="text-grey mb-xs">Current Qty</div>
+                          <div class="font-semibold" id="destQty">15 EA</div>
+                        </div>
+                        <div>
+                          <div class="text-grey mb-xs">Max Capacity</div>
+                          <div class="font-semibold" id="destCapacity">250 EA</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Execution -->
+              <div class="grid grid-cols-3">
+                <div class="form-group">
+                  <label class="form-label form-label-required">Scan Source Location</label>
+                  <input type="text" class="form-input" id="scanSource" placeholder="Scan source location" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label form-label-required">Scan LPN</label>
+                  <input type="text" class="form-input" id="scanLPN" placeholder="Scan LPN" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label form-label-required">Quantity Moved</label>
+                  <input type="number" class="form-input" id="movedQty" placeholder="Enter quantity" required>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2">
+                <div class="form-group">
+                  <label class="form-label form-label-required">Scan Destination Location</label>
+                  <input type="text" class="form-input" id="scanDest" placeholder="Scan destination location" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Lot Number</label>
+                  <input type="text" class="form-input" id="replenLot" placeholder="Scan lot if applicable">
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-end gap-md" id="replenActions" style="display: none;">
+              <button type="button" class="btn btn-outline" onclick="cancelReplen()">Cancel</button>
+              <button type="submit" class="btn btn-primary">Confirm Replenishment</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Replenishment Tasks -->
+      <div class="card">
+        <div class="card-header flex justify-between items-center">
+          <h3 class="card-title mb-0">Active Replenishment Tasks</h3>
+          <span class="badge badge-primary">18 Tasks</span>
+        </div>
+        <div class="card-body">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Task ID</th>
+                  <th>Type</th>
+                  <th>Item</th>
+                  <th>Description</th>
+                  <th>Qty</th>
+                  <th>From Location</th>
+                  <th>To Location</th>
+                  <th>Priority</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="replenTasksTable">
+                <tr>
+                  <td><strong>REP-2025-001</strong></td>
+                  <td>Min/Max</td>
+                  <td>ITM-5678</td>
+                  <td>Widget Assembly A</td>
+                  <td>200 EA</td>
+                  <td>B-05-12-A</td>
+                  <td>A-01-05-A</td>
+                  <td><span class="badge badge-primary">High</span></td>
+                  <td><span class="badge badge-outline">Pending</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-primary" onclick="startReplen('REP-2025-001')">Start</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>REP-2025-002</strong></td>
+                  <td>Pick Face</td>
+                  <td>ITM-5679</td>
+                  <td>Component B</td>
+                  <td>150 EA</td>
+                  <td>C-10-08-B</td>
+                  <td>A-02-03-B</td>
+                  <td><span class="badge badge-primary">High</span></td>
+                  <td><span class="badge badge-outline">Pending</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-primary" onclick="startReplen('REP-2025-002')">Start</button>
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>REP-2025-003</strong></td>
+                  <td>Demand</td>
+                  <td>ITM-5680</td>
+                  <td>Part C</td>
+                  <td>100 EA</td>
+                  <td>B-08-15-C</td>
+                  <td>A-03-01-A</td>
+                  <td><span class="badge badge-outline">Normal</span></td>
+                  <td><span class="badge badge-primary">In Progress</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-primary" onclick="startReplen('REP-2025-003')">Resume</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="searchOverlay"></div>
+
+  <!-- Upload Sidebar -->
+  <div class="upload-sidebar-overlay" id="uploadOverlay"></div>
+  <div class="upload-sidebar" id="uploadSidebar">
+    <div class="upload-header">
+      <div class="upload-title">Upload Files</div>
+      <button class="upload-close" onclick="closeUploadSidebar()">&times;</button>
+    </div>
+    <div class="upload-body">
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+        </div>
+        <div class="upload-text">Click to upload or drag and drop</div>
+        <div class="upload-hint">CSV, XLSX, PDF (Max 10MB)</div>
+      </div>
+      <input type="file" id="fileInput" class="file-input-hidden" multiple accept=".csv,.xlsx,.xls,.pdf">
+      <div class="file-list">
+        <div class="file-list-title">Selected Files</div>
+        <div id="fileList">
+          <p style="text-align: center; color: var(--color-grey); padding: var(--spacing-lg);">No files selected</p>
+        </div>
+      </div>
+    </div>
+    <div class="upload-footer">
+      <button class="btn btn-secondary" style="flex: 1;" onclick="cancelUpload()">Cancel</button>
+      <button class="btn btn-primary" style="flex: 1;" onclick="uploadFiles()">Upload Files</button>
+    </div>
+  </div>
+
+  <!-- Performance & Security Utilities -->
+  <script src="js/performance-utils.js"></script>
+  <script src="js/security-utils.js"></script>
+
+  <script src="js/auth.js"></script>
+  <script src="js/sidebar.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/common-header.js"></script>
+  <script src="js/replenishment.js"></script>
+
+  <script>
+    function toggleUserMenu() {
+      document.querySelector('.user-dropdown').classList.toggle('show');
+    }
+
+    function viewProfile() {
+      alert('Profile management coming soon!');
+    }
+
+    function changePassword() {
+      alert('Change password coming soon!');
+    }
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.user-menu')) {
+        document.querySelector('.user-dropdown')?.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

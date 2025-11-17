@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pixel Logistics - Lot Traceability">
+  <title>Pixel Logistics - Lot Traceability</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/enhanced-table.css">
+  <link rel="stylesheet" href="css/notifications.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Warehouse Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <!-- Theme Toggle Button -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <!-- Global Search -->
+      <div class="search-container" id="searchContainer">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" class="search-input" id="globalSearchInput" placeholder="Search warehouse..." autocomplete="off" readonly>
+          <kbd class="search-kbd">⌘K</kbd>
+          <button class="search-close" onclick="closeSearch()">&times;</button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">Admin User</div>
+          <div class="user-role">Warehouse Manager</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">AK</div>
+        <div class="user-dropdown">
+          <button class="dropdown-item" onclick="viewProfile()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </button>
+          <button class="dropdown-item" onclick="changePassword()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Change Password
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="logout()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="layout">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Main Menu</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="index.html" class="sidebar-link active">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="user-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span>User Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="access-control.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <span>Access Control</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">Quality & Accuracy</div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="cycle-count.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+              </span>
+              <span>Cycle Count</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="lot-traceability.html" class="sidebar-link active">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Lot Traceability</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="quality-inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </span>
+              <span>Quality Inspection</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">Outbound Operations</div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="orders.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </span>
+              <span>Orders</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="picking.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </span>
+              <span>Picking</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="shipping.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+              </span>
+              <span>Shipping</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">Inbound Operations</div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="receiving.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+              </span>
+              <span>Receiving</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="putaway.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Put-away</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">Inventory & Reports</div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="inventory.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="20" x2="12" y2="10"></line>
+                  <line x1="18" y1="20" x2="18" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+              </span>
+              <span>Inventory</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="reports.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+              </span>
+              <span>Reports</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <span class="breadcrumb-item">Dashboard</span>
+        <span class="breadcrumb-item active">Lot Traceability</span>
+      </div>
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Lot Traceability</h1>
+          <p class="page-subtitle">Track lot numbers, expiry dates, genealogy, and quality holds</p>
+        </div>
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+          <button class="btn btn-secondary" onclick="openUploadSidebar()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Upload
+          </button>
+          <button class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export
+          </button>
+          <button class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            Trace Lot
+          </button>
+        </div>
+      </div>
+
+      <!-- Lot Search -->
+      <div class="card mb-xl">
+        <div class="card-header">
+          <h3 class="card-title">Lot Lookup</h3>
+        </div>
+        <div class="card-body">
+          <form id="lotSearchForm">
+            <div class="grid grid-cols-4 mb-lg">
+              <div class="form-group">
+                <label class="form-label">Lot Number</label>
+                <input type="text" class="form-input" id="searchLotNum" placeholder="Enter lot number">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Item Number</label>
+                <input type="text" class="form-input" id="searchItemNum" placeholder="Enter item number">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Receipt Date From</label>
+                <input type="date" class="form-input" id="searchDateFrom">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Receipt Date To</label>
+                <input type="date" class="form-input" id="searchDateTo">
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-4">
+              <div class="form-group">
+                <label class="form-label">Supplier</label>
+                <input type="text" class="form-input" id="searchSupplier" placeholder="Supplier name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Lot Status</label>
+                <select class="form-input" id="searchLotStatus">
+                  <option value="">All Statuses</option>
+                  <option value="active">Active</option>
+                  <option value="hold">On Hold</option>
+                  <option value="expired">Expired</option>
+                  <option value="consumed">Consumed</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Expiry Status</label>
+                <select class="form-input" id="searchExpiryStatus">
+                  <option value="">All</option>
+                  <option value="expired">Expired</option>
+                  <option value="expiring-30">Expiring in 30 days</option>
+                  <option value="expiring-60">Expiring in 60 days</option>
+                  <option value="expiring-90">Expiring in 90 days</option>
+                </select>
+              </div>
+              <div class="form-group" style="display: flex; align-items: flex-end;">
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Search Lots</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Lot Details -->
+      <div class="card mb-xl" id="lotDetailsCard" style="display: none;">
+        <div class="card-header flex justify-between items-center">
+          <h3 class="card-title mb-0">Lot Details</h3>
+          <div class="flex gap-md">
+            <button class="btn btn-sm btn-outline" onclick="printLotHistory()">Print History</button>
+            <button class="btn btn-sm btn-secondary" onclick="holdLot()" id="holdLotBtn">Hold Lot</button>
+            <button class="btn btn-sm btn-primary" onclick="releaseLot()" id="releaseLotBtn" style="display: none;">Release Lot</button>
+          </div>
+        </div>
+        <div class="card-body">
+          
+          <!-- Lot Summary -->
+          <div class="mb-xl">
+            <h4 class="mb-md">Lot Information</h4>
+            <div class="grid grid-cols-4 mb-lg">
+              <div>
+                <div class="stat-label">Lot Number</div>
+                <div class="font-bold" style="font-size: var(--font-size-xl);" id="lotNumber">LOT-2025-001</div>
+              </div>
+              <div>
+                <div class="stat-label">Item Number</div>
+                <div class="font-bold" id="lotItem">ITM-5678</div>
+              </div>
+              <div>
+                <div class="stat-label">Description</div>
+                <div class="font-bold" id="lotDescription">Widget Assembly A</div>
+              </div>
+              <div>
+                <div class="stat-label">Status</div>
+                <div id="lotStatusBadge"><span class="badge badge-primary">Active</span></div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-4">
+              <div>
+                <div class="stat-label">Supplier</div>
+                <div class="font-semibold" id="lotSupplier">ABC Manufacturing</div>
+              </div>
+              <div>
+                <div class="stat-label">Receipt Date</div>
+                <div class="font-semibold" id="lotReceiptDate">2025-01-15</div>
+              </div>
+              <div>
+                <div class="stat-label">Manufacture Date</div>
+                <div class="font-semibold" id="lotMfgDate">2025-01-10</div>
+              </div>
+              <div>
+                <div class="stat-label">Expiry Date</div>
+                <div class="font-semibold" id="lotExpiryDate">2026-01-10</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quantity Summary -->
+          <div class="mb-xl">
+            <h4 class="mb-md">Quantity Summary</h4>
+            <div class="grid grid-cols-4">
+              <div class="stat-card">
+                <div class="stat-label">Received</div>
+                <div class="stat-value" id="lotQtyReceived">1,000</div>
+                <div class="stat-change">EA</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">On-Hand</div>
+                <div class="stat-value" id="lotQtyOnHand">650</div>
+                <div class="stat-change">EA</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Reserved</div>
+                <div class="stat-value" id="lotQtyReserved">150</div>
+                <div class="stat-change">EA</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-label">Available</div>
+                <div class="stat-value" id="lotQtyAvailable">500</div>
+                <div class="stat-change">EA</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lot Locations -->
+          <div class="mb-xl">
+            <h4 class="mb-md">Lot Locations</h4>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Location</th>
+                    <th>LPN</th>
+                    <th>Quantity</th>
+                    <th>Status</th>
+                    <th>Last Updated</th>
+                  </tr>
+                </thead>
+                <tbody id="lotLocationsTable">
+                  <tr>
+                    <td><strong>A-01-01-A</strong></td>
+                    <td>LPN-1001</td>
+                    <td>300 EA</td>
+                    <td><span class="badge badge-primary">Active</span></td>
+                    <td>2025-11-15 09:30 AM</td>
+                  </tr>
+                  <tr>
+                    <td><strong>A-02-03-B</strong></td>
+                    <td>LPN-1002</td>
+                    <td>200 EA</td>
+                    <td><span class="badge badge-primary">Active</span></td>
+                    <td>2025-11-15 10:15 AM</td>
+                  </tr>
+                  <tr>
+                    <td><strong>B-05-12-C</strong></td>
+                    <td>LPN-1003</td>
+                    <td>150 EA</td>
+                    <td><span class="badge badge-outline">Reserved</span></td>
+                    <td>2025-11-15 11:00 AM</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Transaction History -->
+          <div class="mb-xl">
+            <h4 class="mb-md">Transaction History</h4>
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Date/Time</th>
+                    <th>Transaction Type</th>
+                    <th>Quantity</th>
+                    <th>From Location</th>
+                    <th>To Location</th>
+                    <th>Reference</th>
+                    <th>User</th>
+                  </tr>
+                </thead>
+                <tbody id="lotHistoryTable">
+                  <tr>
+                    <td>2025-11-15 09:30 AM</td>
+                    <td><strong>Receipt</strong></td>
+                    <td>+1,000 EA</td>
+                    <td>-</td>
+                    <td>RECEIVING-01</td>
+                    <td>PO-2025-001</td>
+                    <td>Ashish Kumar</td>
+                  </tr>
+                  <tr>
+                    <td>2025-11-15 10:00 AM</td>
+                    <td><strong>Put-away</strong></td>
+                    <td>300 EA</td>
+                    <td>RECEIVING-01</td>
+                    <td>A-01-01-A</td>
+                    <td>PA-2025-045</td>
+                    <td>Ashish Kumar</td>
+                  </tr>
+                  <tr>
+                    <td>2025-11-15 02:15 PM</td>
+                    <td><strong>Pick</strong></td>
+                    <td>-150 EA</td>
+                    <td>A-01-01-A</td>
+                    <td>STAGING-A</td>
+                    <td>SO-2025-1001</td>
+                    <td>Ashish Kumar</td>
+                  </tr>
+                  <tr>
+                    <td>2025-11-15 03:45 PM</td>
+                    <td><strong>Ship Confirm</strong></td>
+                    <td>-150 EA</td>
+                    <td>STAGING-A</td>
+                    <td>-</td>
+                    <td>SO-2025-1001</td>
+                    <td>Ashish Kumar</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Lot Genealogy -->
+          <div>
+            <h4 class="mb-md">Lot Genealogy</h4>
+            <div class="card" style="background-color: var(--color-grey-lightest);">
+              <div class="card-body">
+                <div class="flex items-center gap-lg">
+                  <div>
+                    <div class="text-grey mb-sm">Parent Lot</div>
+                    <div class="font-bold">-</div>
+                  </div>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                  <div>
+                    <div class="text-grey mb-sm">Current Lot</div>
+                    <div class="font-bold" style="font-size: var(--font-size-lg);">LOT-2025-001</div>
+                  </div>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                  <div>
+                    <div class="text-grey mb-sm">Child Lots</div>
+                    <div class="font-bold">LOT-2025-002, LOT-2025-003</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Lot Search Results -->
+      <div class="card">
+        <div class="card-header flex justify-between items-center">
+          <h3 class="card-title mb-0">Lot Inventory</h3>
+          <span class="badge badge-primary">248 Active Lots</span>
+        </div>
+        <div class="card-body" style="padding: 0;">
+          <div id="lotInventoryTableContainer"></div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="searchOverlay"></div>
+
+  <!-- Upload Sidebar -->
+  <div class="upload-sidebar-overlay" id="uploadOverlay"></div>
+  <div class="upload-sidebar" id="uploadSidebar">
+    <div class="upload-header">
+      <div class="upload-title">Upload Files</div>
+      <button class="upload-close" onclick="closeUploadSidebar()">&times;</button>
+    </div>
+    <div class="upload-body">
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+        </div>
+        <div class="upload-text">Click to upload or drag and drop</div>
+        <div class="upload-hint">CSV, XLSX, PDF (Max 10MB)</div>
+      </div>
+      <input type="file" id="fileInput" class="file-input-hidden" multiple accept=".csv,.xlsx,.xls,.pdf">
+      <div class="file-list">
+        <div class="file-list-title">Selected Files</div>
+        <div id="fileList">
+          <p style="text-align: center; color: var(--color-grey); padding: var(--spacing-lg);">No files selected</p>
+        </div>
+      </div>
+    </div>
+    <div class="upload-footer">
+      <button class="btn btn-secondary" style="flex: 1;" onclick="cancelUpload()">Cancel</button>
+      <button class="btn btn-primary" style="flex: 1;" onclick="uploadFiles()">Upload Files</button>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/sidebar.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/common-header.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/enhanced-table-v2.js"></script>
+  <script src="js/lot-traceability.js"></script>
+
+  <script>
+    // Helper function to calculate days to expiry
+    function calculateDaysToExpiry(expiryDate) {
+      const today = new Date();
+      const expiry = new Date(expiryDate);
+      const diffTime = expiry - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays;
+    }
+
+    // Sample lot inventory data
+    const lotInventoryData = [
+      { lotNumber: 'LOT-2025-001', item: 'ITM-5678', description: 'Widget Assembly A', quantity: 650, uom: 'EA', receiptDate: '2025-01-15', manufactureDate: '2024-12-20', expiryDate: '2026-01-10', supplier: 'ABC Mfg', location: 'A-01-05-A', status: 'Active', hold: 'No' },
+      { lotNumber: 'LOT-2025-002', item: 'ITM-5679', description: 'Component B', quantity: 1200, uom: 'EA', receiptDate: '2025-02-01', manufactureDate: '2025-01-15', expiryDate: '2025-12-20', supplier: 'XYZ Corp', location: 'B-05-12-A', status: 'Active', hold: 'No' },
+      { lotNumber: 'LOT-2025-003', item: 'ITM-5680', description: 'Part C', quantity: 800, uom: 'EA', receiptDate: '2025-03-12', manufactureDate: '2025-03-01', expiryDate: '2025-11-10', supplier: 'Global Supply', location: 'C-03-07-C', status: 'Active', hold: 'Yes' },
+      { lotNumber: 'LOT-2024-078', item: 'ITM-5681', description: 'Electronic Module D', quantity: 450, uom: 'EA', receiptDate: '2024-11-20', manufactureDate: '2024-11-10', expiryDate: '2026-05-15', supplier: 'Tech Industries', location: 'D-02-06-B', status: 'Active', hold: 'No' },
+      { lotNumber: 'LOT-2024-092', item: 'ITM-5682', description: 'Power Supply E', quantity: 320, uom: 'EA', receiptDate: '2024-12-05', manufactureDate: '2024-11-25', expiryDate: '2025-11-30', supplier: 'Power Corp', location: 'E-05-12-A', status: 'Expiring Soon', hold: 'No' },
+      { lotNumber: 'LOT-2025-015', item: 'ITM-5683', description: 'Cable Assembly F', quantity: 980, uom: 'EA', receiptDate: '2025-04-10', manufactureDate: '2025-04-01', expiryDate: '2026-10-05', supplier: 'Wire Solutions', location: 'A-04-10-C', status: 'Active', hold: 'No' },
+      { lotNumber: 'LOT-2024-055', item: 'ITM-5684', description: 'Circuit Board G', quantity: 275, uom: 'EA', receiptDate: '2024-09-15', manufactureDate: '2024-09-05', expiryDate: '2025-09-10', supplier: 'Electronics Plus', location: 'B-01-02-A', status: 'Expired', hold: 'Yes' },
+      { lotNumber: 'LOT-2025-008', item: 'ITM-5685', description: 'Sensor Unit H', quantity: 1150, uom: 'EA', receiptDate: '2025-03-22', manufactureDate: '2025-03-10', expiryDate: '2026-09-18', supplier: 'Sensor Tech', location: 'C-08-20-D', status: 'Active', hold: 'No' },
+      { lotNumber: 'LOT-2024-120', item: 'ITM-5686', description: 'Motor Assembly I', quantity: 540, uom: 'EA', receiptDate: '2024-12-28', manufactureDate: '2024-12-15', expiryDate: '2025-12-25', supplier: 'Motor Works', location: 'D-06-15-B', status: 'Active', hold: 'No' },
+      { lotNumber: 'LOT-2025-022', item: 'ITM-5687', description: 'Filter Kit J', quantity: 890, uom: 'EA', receiptDate: '2025-05-05', manufactureDate: '2025-04-25', expiryDate: '2026-11-01', supplier: 'Filter Inc', location: 'E-01-03-A', status: 'Active', hold: 'No' },
+      { lotNumber: 'LOT-2024-088', item: 'ITM-5688', description: 'Valve Assembly K', quantity: 365, uom: 'EA', receiptDate: '2024-11-18', manufactureDate: '2024-11-05', expiryDate: '2025-11-15', supplier: 'Valve Corp', location: 'A-07-18-B', status: 'Expiring Soon', hold: 'Yes' },
+      { lotNumber: 'LOT-2025-010', item: 'ITM-5689', description: 'Bearing Set L', quantity: 720, uom: 'EA', receiptDate: '2025-03-28', manufactureDate: '2025-03-18', expiryDate: '2027-03-20', supplier: 'Bearings Ltd', location: 'B-03-08-C', status: 'Active', hold: 'No' },
+      { lotNumber: 'LOT-2024-102', item: 'ITM-5690', description: 'Gasket Pack M', quantity: 1420, uom: 'EA', receiptDate: '2024-12-15', manufactureDate: '2024-12-05', expiryDate: '2025-12-10', supplier: 'Seal Solutions', location: 'C-02-04-A', status: 'Active', hold: 'No' },
+      { lotNumber: 'LOT-2025-018', item: 'ITM-5691', description: 'Spring Assembly N', quantity: 615, uom: 'EA', receiptDate: '2025-04-18', manufactureDate: '2025-04-08', expiryDate: '2026-10-12', supplier: 'Spring Works', location: 'D-09-22-D', status: 'Active', hold: 'No' },
+      { lotNumber: 'LOT-2024-065', item: 'ITM-5692', description: 'Coupling Unit O', quantity: 425, uom: 'EA', receiptDate: '2024-10-08', manufactureDate: '2024-09-28', expiryDate: '2025-10-05', supplier: 'Coupling Inc', location: 'E-04-11-B', status: 'Expiring Soon', hold: 'No' },
+      { lotNumber: 'LOT-2025-012', item: 'ITM-5693', description: 'Relay Module P', quantity: 835, uom: 'EA', receiptDate: '2025-04-02', manufactureDate: '2025-03-22', expiryDate: '2026-09-28', supplier: 'Relay Systems', location: 'A-05-13-A', status: 'Active', hold: 'No' },
+      { lotNumber: 'LOT-2024-098', item: 'ITM-5694', description: 'Connector Set Q', quantity: 1050, uom: 'EA', receiptDate: '2024-12-10', manufactureDate: '2024-11-30', expiryDate: '2025-11-28', supplier: 'Connector Co', location: 'B-06-16-C', status: 'Expiring Soon', hold: 'Yes' },
+      { lotNumber: 'LOT-2025-025', item: 'ITM-5695', description: 'Adapter Kit R', quantity: 695, uom: 'EA', receiptDate: '2025-05-12', manufactureDate: '2025-05-02', expiryDate: '2026-11-08', supplier: 'Adapter Inc', location: 'C-04-09-A', status: 'Active', hold: 'No' },
+      { lotNumber: 'LOT-2024-075', item: 'ITM-5696', description: 'Terminal Block S', quantity: 940, uom: 'EA', receiptDate: '2024-11-05', manufactureDate: '2024-10-25', expiryDate: '2025-10-30', supplier: 'Terminal Tech', location: 'D-01-05-C', status: 'Expiring Soon', hold: 'No' },
+      { lotNumber: 'LOT-2025-020', item: 'ITM-5697', description: 'Fuse Assembly T', quantity: 1280, uom: 'EA', receiptDate: '2025-04-25', manufactureDate: '2025-04-15', expiryDate: '2026-10-20', supplier: 'Fuse Corp', location: 'E-08-19-B', status: 'Active', hold: 'No' }
+    ];
+
+    // Add calculated daysToExpiry to each lot
+    lotInventoryData.forEach(lot => {
+      lot.daysToExpiry = calculateDaysToExpiry(lot.expiryDate);
+    });
+
+    // Initialize enhanced table
+    let lotInventoryTable;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      lotInventoryTable = new EnhancedDataTable('lotInventoryTableContainer', {
+        data: lotInventoryData,
+        columns: [
+          { field: 'lotNumber', label: 'Lot Number', sortable: true, width: '140px' },
+          { field: 'item', label: 'Item', sortable: true, width: '110px' },
+          { field: 'description', label: 'Description', sortable: true },
+          { field: 'quantity', label: 'Quantity', type: 'number', sortable: true, width: '100px' },
+          { field: 'uom', label: 'UOM', sortable: true, width: '80px' },
+          { field: 'manufactureDate', label: 'Mfg Date', type: 'date', sortable: true, width: '120px' },
+          { field: 'expiryDate', label: 'Expiry Date', type: 'date', sortable: true, width: '120px' },
+          { 
+            field: 'daysToExpiry', 
+            label: 'Days to Expiry', 
+            type: 'number', 
+            sortable: true, 
+            width: '130px',
+            render: function(value) {
+              let colorClass = 'text-success';
+              let bgClass = '';
+              if (value < 0) {
+                colorClass = 'text-danger';
+                bgClass = 'badge-danger';
+                return `<span class="badge ${bgClass}">Expired (${Math.abs(value)}d ago)</span>`;
+              } else if (value < 30) {
+                colorClass = 'text-danger';
+                return `<span style="color: var(--color-error); font-weight: 600;">${value}d</span>`;
+              } else if (value < 90) {
+                colorClass = 'text-warning';
+                return `<span style="color: var(--color-warning); font-weight: 600;">${value}d</span>`;
+              }
+              return `<span class="${colorClass}" style="font-weight: 600;">${value}d</span>`;
+            }
+          },
+          { field: 'supplier', label: 'Supplier', sortable: true, width: '140px' },
+          { field: 'location', label: 'Location', sortable: true, width: '120px' },
+          { 
+            field: 'status', 
+            label: 'Status', 
+            type: 'badge',
+            sortable: true,
+            width: '130px',
+            filterType: 'select',
+            filterOptions: [
+              { value: 'Active', label: 'Active' },
+              { value: 'Expiring Soon', label: 'Expiring Soon' },
+              { value: 'Expired', label: 'Expired' }
+            ],
+            badgeClass: function(value) {
+              const statusMap = {
+                'Active': 'badge-success',
+                'Expiring Soon': 'badge-warning',
+                'Expired': 'badge-danger'
+              };
+              return statusMap[value] || 'badge-secondary';
+            }
+          },
+          { 
+            field: 'hold', 
+            label: 'Hold', 
+            type: 'badge',
+            sortable: true,
+            width: '80px',
+            filterType: 'select',
+            filterOptions: [
+              { value: 'Yes', label: 'Yes' },
+              { value: 'No', label: 'No' }
+            ],
+            badgeClass: function(value) {
+              return value === 'Yes' ? 'badge-danger' : 'badge-success';
+            }
+          },
+          {
+            field: 'actions',
+            label: 'Actions',
+            width: '100px',
+            filterable: false,
+            sortable: false,
+            render: function(value, row) {
+              return `<button class="btn btn-sm btn-primary" onclick="viewLotDetails('${row.lotNumber}')">View</button>`;
+            }
+          }
+        ],
+        pageSize: 25,
+        searchable: true,
+        filterable: true,
+        selectable: true,
+        exportable: true,
+        multiSort: true,
+        columnReorder: true,
+        actions: [
+          { 
+            id: 'hold', 
+            label: 'Place Hold',
+            handler: function(selectedData) {
+              notify.prompt(
+                'Enter hold reason:',
+                (reason) => {
+                  const hideLoader = notify.loading(`Placing hold on ${selectedData.length} lot(s)...`);
+                  setTimeout(() => {
+                    hideLoader();
+                    notify.warning(`${selectedData.length} lot(s) placed on quality hold: ${reason}`);
+                  }, 800);
+                },
+                { placeholder: 'Quality inspection required', title: 'Place Hold' }
+              );
+            }
+          },
+          { 
+            id: 'release', 
+            label: 'Release Hold',
+            handler: function(selectedData) {
+              notify.confirm(
+                `Release hold on ${selectedData.length} lot(s)? They will become available for use.`,
+                () => {
+                  const hideLoader = notify.loading('Releasing hold...');
+                  setTimeout(() => {
+                    hideLoader();
+                    notify.success(`Hold released for ${selectedData.length} lot(s)`);
+                  }, 700);
+                },
+                null,
+                { title: 'Release Hold' }
+              );
+            }
+          },
+          { 
+            id: 'transfer', 
+            label: 'Transfer Lot',
+            handler: function(selectedData) {
+              notify.prompt(
+                'Transfer to location:',
+                (location) => {
+                  const hideLoader = notify.loading(`Transferring ${selectedData.length} lot(s)...`);
+                  setTimeout(() => {
+                    hideLoader();
+                    notify.success(`${selectedData.length} lot(s) transferred to ${location}`);
+                  }, 900);
+                },
+                { placeholder: 'QUARANTINE-01', title: 'Transfer Lots' }
+              );
+            }
+          },
+          { 
+            id: 'dispose', 
+            label: 'Dispose Expired',
+            handler: function(selectedData) {
+              const expiredLots = selectedData.filter(lot => lot.daysToExpiry < 0);
+              if (expiredLots.length > 0) {
+                notify.confirm(
+                  `Dispose ${expiredLots.length} expired lot(s)? This action cannot be undone.`,
+                  () => {
+                    const hideLoader = notify.loading('Disposing expired lots...');
+                    setTimeout(() => {
+                      hideLoader();
+                      notify.success(`${expiredLots.length} expired lot(s) disposed successfully`);
+                    }, 1000);
+                  },
+                  null,
+                  { danger: true, title: 'Dispose Lots' }
+                );
+              } else {
+                notify.warning('No expired lots selected');
+              }
+            }
+          }
+        ]
+      });
+    });
+
+    function toggleUserMenu() {
+      document.querySelector('.user-dropdown').classList.toggle('show');
+    }
+
+    function viewProfile() {
+      notify.info('Profile management coming soon!');
+    }
+
+    function changePassword() {
+      notify.info('Password change feature coming soon!');
+    }
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.user-menu')) {
+        document.querySelector('.user-dropdown')?.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

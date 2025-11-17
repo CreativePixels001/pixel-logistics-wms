@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Logistics - Inventory Adjustment</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Warehouse Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <div class="search-container" id="searchContainer">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" class="search-input" id="globalSearchInput" placeholder="Search warehouse..." autocomplete="off" readonly>
+          <kbd class="search-kbd">⌘K</kbd>
+          <button class="search-close" onclick="closeSearch()">&times;</button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">Admin User</div>
+          <div class="user-role">System Administrator</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">AK</div>
+        <div class="user-dropdown" id="userDropdown">
+          <a href="#" class="dropdown-item">My Profile</a>
+          <a href="#" class="dropdown-item">Change Password</a>
+          <div class="dropdown-divider"></div>
+          <a href="login.html" class="dropdown-item">Logout</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Main Menu</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="index.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="user-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span>User Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="access-control.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <span>Access Control</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inventory</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="inventory.html" class="sidebar-link active">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+              </span>
+              <span>Inventory View</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="breadcrumb">
+        <span class="breadcrumb-item">Inventory</span>
+        <span class="breadcrumb-item active">Inventory Adjustment</span>
+      </div>
+
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Inventory Adjustment</h1>
+          <p class="page-subtitle">Adjust inventory quantities with reason codes</p>
+        </div>
+        <div style="display: flex; gap: var(--spacing-sm);">
+          <button class="btn btn-secondary" onclick="window.location.href='inventory.html'">Cancel</button>
+          <button class="btn btn-primary" onclick="submitAdjustment()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            Submit Adjustment
+          </button>
+        </div>
+      </div>
+
+      <!-- Item Selection -->
+      <div class="card mb-xl">
+        <div class="card-header">
+          <h3 class="card-title">Item & Location Selection</h3>
+          <span class="badge badge-info" id="autoSaveIndicator" style="display: none;">Auto-Saved</span>
+        </div>
+        <div class="card-body">
+          <div class="grid grid-cols-3">
+            <div class="form-group">
+              <label for="item">Item Number *</label>
+              <select id="item" class="form-control" required onchange="loadItemDetails()">
+                <option value="">Select Item</option>
+                <option value="ITEM001">ITEM001 - Laptop Computer</option>
+                <option value="ITEM002">ITEM002 - Wireless Mouse</option>
+                <option value="ITEM003">ITEM003 - USB-C Cable</option>
+                <option value="ITEM004">ITEM004 - Monitor 24"</option>
+                <option value="ITEM005">ITEM005 - Keyboard Mechanical</option>
+                <option value="ITEM006">ITEM006 - Headphones Wireless</option>
+                <option value="ITEM007">ITEM007 - Webcam HD</option>
+              </select>
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="location">Location *</label>
+              <select id="location" class="form-control" required onchange="loadCurrentQuantity()">
+                <option value="">Select Location</option>
+                <option value="A-01-01">A-01-01 - Aisle A, Bay 01, Level 01</option>
+                <option value="A-01-02">A-01-02 - Aisle A, Bay 01, Level 02</option>
+                <option value="B-02-01">B-02-01 - Aisle B, Bay 02, Level 01</option>
+                <option value="C-03-01">C-03-01 - Aisle C, Bay 03, Level 01</option>
+                <option value="BULK-01">BULK-01 - Bulk Storage 01</option>
+              </select>
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="lpn">LPN (Optional)</label>
+              <input type="text" id="lpn" class="form-control" placeholder="LPN000123456">
+            </div>
+
+            <div class="form-group">
+              <label for="lotNumber">Lot Number</label>
+              <input type="text" id="lotNumber" class="form-control" placeholder="LOT-2025-001">
+            </div>
+
+            <div class="form-group">
+              <label for="serialNumber">Serial Number</label>
+              <input type="text" id="serialNumber" class="form-control" placeholder="SN123456789">
+            </div>
+
+            <div class="form-group">
+              <label for="uom">UOM *</label>
+              <select id="uom" class="form-control" required>
+                <option value="EA">Each</option>
+                <option value="BOX">Box</option>
+                <option value="CASE">Case</option>
+                <option value="PALLET">Pallet</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Current vs Adjusted Quantity -->
+      <div class="card mb-xl">
+        <div class="card-header">
+          <h3 class="card-title">Quantity Adjustment</h3>
+        </div>
+        <div class="card-body">
+          <div class="grid grid-cols-4">
+            <div class="stat-card">
+              <div class="stat-label">Current On-Hand</div>
+              <div class="stat-value" id="currentQty" style="font-size: 2rem;">--</div>
+              <div class="stat-change">System Quantity</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Adjusted Quantity *</div>
+              <input type="number" id="adjustedQty" class="form-control" style="font-size: 1.5rem; text-align: center;" min="0" placeholder="0" oninput="calculateVariance()">
+              <span class="error-message"></span>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Variance</div>
+              <div class="stat-value" id="variance" style="font-size: 2rem; color: var(--text-secondary);">--</div>
+              <div class="stat-change" id="varianceType">No Change</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-label">Adjustment Type</div>
+              <div class="stat-value" id="adjustmentType" style="font-size: 1.2rem;">--</div>
+              <div class="stat-change" id="adjustmentImpact">Select quantities</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Adjustment Details -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Adjustment Reason & Details</h3>
+        </div>
+        <div class="card-body">
+          <div class="grid grid-cols-2">
+            <div class="form-group">
+              <label for="reasonCode">Reason Code *</label>
+              <select id="reasonCode" class="form-control" required>
+                <option value="">Select Reason</option>
+                <optgroup label="Increase Reasons">
+                  <option value="FOUND">Found Inventory</option>
+                  <option value="MISCOUNT">Miscount - Undercount</option>
+                  <option value="RECEIVING_ERROR">Receiving Error</option>
+                  <option value="RETURN">Customer Return</option>
+                </optgroup>
+                <optgroup label="Decrease Reasons">
+                  <option value="DAMAGED">Damaged Goods</option>
+                  <option value="EXPIRED">Expired Product</option>
+                  <option value="SHRINKAGE">Shrinkage/Loss</option>
+                  <option value="MISCOUNT_OVER">Miscount - Overcount</option>
+                  <option value="QUALITY_REJECT">Quality Rejection</option>
+                  <option value="THEFT">Theft/Missing</option>
+                </optgroup>
+                <optgroup label="Other">
+                  <option value="CYCLE_COUNT">Cycle Count Adjustment</option>
+                  <option value="PHYSICAL_INV">Physical Inventory</option>
+                  <option value="SYSTEM_ERROR">System Error Correction</option>
+                </optgroup>
+              </select>
+              <span class="error-message"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="referenceDoc">Reference Document</label>
+              <input type="text" id="referenceDoc" class="form-control" placeholder="CC-2025-001, INV-123">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="comments">Comments/Notes *</label>
+            <textarea id="comments" class="form-control" rows="4" required placeholder="Provide detailed explanation for this adjustment..."></textarea>
+            <span class="error-message"></span>
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="requiresApproval">
+              <span style="margin-left: 8px;">Requires Manager Approval (for adjustments > 100 units or > $1000 value)</span>
+            </label>
+          </div>
+        </div>
+        <div class="card-footer">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <button class="btn btn-outline" onclick="resetForm()">Reset Form</button>
+            <div style="display: flex; gap: var(--spacing-sm);">
+              <button class="btn btn-secondary" onclick="window.location.href='inventory.html'">Cancel</button>
+              <button class="btn btn-primary" onclick="submitAdjustment()">Submit Adjustment</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <div class="search-overlay" id="searchOverlay"></div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/sidebar.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/common-header.js"></script>
+
+  <script>
+    // Mock current inventory data
+    const inventoryData = {
+      'ITEM001-A-01-01': 150,
+      'ITEM002-A-01-02': 300,
+      'ITEM003-B-02-01': 75,
+      'ITEM004-C-03-01': 50,
+      'ITEM005-BULK-01': 500,
+      'ITEM006-A-01-01': 200,
+      'ITEM007-B-02-01': 125
+    };
+
+    // Auto-save functionality
+    let autoSaveTimer;
+    function startAutoSave() {
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        saveDraft();
+      }, 3000);
+    }
+
+    // Add change listeners
+    window.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('input, select, textarea').forEach(element => {
+        element.addEventListener('change', startAutoSave);
+        element.addEventListener('input', startAutoSave);
+      });
+      
+      loadDraft();
+    });
+
+    function loadItemDetails() {
+      const item = document.getElementById('item').value;
+      if (item) {
+        loadCurrentQuantity();
+      }
+    }
+
+    function loadCurrentQuantity() {
+      const item = document.getElementById('item').value;
+      const location = document.getElementById('location').value;
+      
+      if (item && location) {
+        const key = item + '-' + location;
+        const currentQty = inventoryData[key] || 0;
+        
+        document.getElementById('currentQty').textContent = currentQty;
+        calculateVariance();
+      }
+    }
+
+    function calculateVariance() {
+      const currentQty = parseInt(document.getElementById('currentQty').textContent) || 0;
+      const adjustedQty = parseInt(document.getElementById('adjustedQty').value) || 0;
+      
+      const variance = adjustedQty - currentQty;
+      
+      document.getElementById('variance').textContent = variance >= 0 ? '+' + variance : variance;
+      
+      // Update variance type and color
+      const varianceElement = document.getElementById('variance');
+      const varianceTypeElement = document.getElementById('varianceType');
+      const adjustmentTypeElement = document.getElementById('adjustmentType');
+      const adjustmentImpactElement = document.getElementById('adjustmentImpact');
+      
+      if (variance > 0) {
+        varianceElement.style.color = '#2ecc71';
+        varianceTypeElement.textContent = 'Increase';
+        adjustmentTypeElement.textContent = 'Addition';
+        adjustmentImpactElement.textContent = 'Inventory will increase';
+      } else if (variance < 0) {
+        varianceElement.style.color = '#e74c3c';
+        varianceTypeElement.textContent = 'Decrease';
+        adjustmentTypeElement.textContent = 'Reduction';
+        adjustmentImpactElement.textContent = 'Inventory will decrease';
+      } else {
+        varianceElement.style.color = 'var(--text-secondary)';
+        varianceTypeElement.textContent = 'No Change';
+        adjustmentTypeElement.textContent = '--';
+        adjustmentImpactElement.textContent = 'No adjustment';
+      }
+      
+      // Auto-check approval if needed
+      const approvalCheckbox = document.getElementById('requiresApproval');
+      if (Math.abs(variance) > 100) {
+        approvalCheckbox.checked = true;
+      }
+    }
+
+    function validateForm() {
+      let isValid = true;
+      
+      // Clear previous errors
+      document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+      document.querySelectorAll('.form-control').forEach(el => el.classList.remove('error'));
+      
+      // Validate required fields
+      const requiredFields = [
+        { id: 'item', name: 'Item' },
+        { id: 'location', name: 'Location' },
+        { id: 'uom', name: 'UOM' },
+        { id: 'adjustedQty', name: 'Adjusted Quantity' },
+        { id: 'reasonCode', name: 'Reason Code' },
+        { id: 'comments', name: 'Comments' }
+      ];
+      
+      requiredFields.forEach(field => {
+        const element = document.getElementById(field.id);
+        if (!element.value || element.value === '') {
+          showError(field.id, field.name + ' is required');
+          isValid = false;
+        }
+      });
+      
+      // Validate adjusted quantity is different from current
+      const currentQty = parseInt(document.getElementById('currentQty').textContent) || 0;
+      const adjustedQty = parseInt(document.getElementById('adjustedQty').value) || 0;
+      
+      if (adjustedQty === currentQty) {
+        showError('adjustedQty', 'Adjusted quantity must be different from current quantity');
+        isValid = false;
+      }
+      
+      // Validate adjusted quantity is not negative
+      if (adjustedQty < 0) {
+        showError('adjustedQty', 'Adjusted quantity cannot be negative');
+        isValid = false;
+      }
+      
+      // Validate comments length
+      const comments = document.getElementById('comments').value;
+      if (comments.length < 10) {
+        showError('comments', 'Please provide detailed comments (minimum 10 characters)');
+        isValid = false;
+      }
+      
+      return isValid;
+    }
+
+    function showError(fieldId, message) {
+      const field = document.getElementById(fieldId);
+      field.classList.add('error');
+      const errorSpan = field.parentElement.querySelector('.error-message');
+      if (errorSpan) {
+        errorSpan.textContent = message;
+      }
+    }
+
+    function collectFormData() {
+      const currentQty = parseInt(document.getElementById('currentQty').textContent) || 0;
+      const adjustedQty = parseInt(document.getElementById('adjustedQty').value) || 0;
+      const variance = adjustedQty - currentQty;
+      
+      return {
+        item: document.getElementById('item').value,
+        location: document.getElementById('location').value,
+        lpn: document.getElementById('lpn').value,
+        lotNumber: document.getElementById('lotNumber').value,
+        serialNumber: document.getElementById('serialNumber').value,
+        uom: document.getElementById('uom').value,
+        currentQuantity: currentQty,
+        adjustedQuantity: adjustedQty,
+        variance: variance,
+        reasonCode: document.getElementById('reasonCode').value,
+        referenceDoc: document.getElementById('referenceDoc').value,
+        comments: document.getElementById('comments').value,
+        requiresApproval: document.getElementById('requiresApproval').checked,
+        timestamp: new Date().toISOString(),
+        user: 'Admin User'
+      };
+    }
+
+    function saveDraft() {
+      const data = collectFormData();
+      localStorage.setItem('inventoryAdjustmentDraft', JSON.stringify(data));
+      
+      const indicator = document.getElementById('autoSaveIndicator');
+      indicator.style.display = 'inline-block';
+      setTimeout(() => {
+        indicator.style.display = 'none';
+      }, 2000);
+    }
+
+    function loadDraft() {
+      const draft = localStorage.getItem('inventoryAdjustmentDraft');
+      if (!draft) return;
+      
+      const data = JSON.parse(draft);
+      
+      // Load form fields
+      Object.keys(data).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+          if (element.type === 'checkbox') {
+            element.checked = data[key];
+          } else {
+            element.value = data[key];
+          }
+        }
+      });
+      
+      // Reload dependent values
+      loadCurrentQuantity();
+    }
+
+    function submitAdjustment() {
+      if (!validateForm()) {
+        alert('Please fix the errors before submitting');
+        return;
+      }
+      
+      const data = collectFormData();
+      console.log('Submitting adjustment:', data);
+      
+      const approvalMsg = data.requiresApproval 
+        ? '\\n\\nThis adjustment requires manager approval.' 
+        : '';
+      
+      alert(
+        'Inventory Adjustment Submitted Successfully!' +
+        '\\n\\nAdjustment ID: ADJ-' + new Date().getTime() +
+        '\\nItem: ' + data.item +
+        '\\nLocation: ' + data.location +
+        '\\nCurrent Qty: ' + data.currentQuantity +
+        '\\nAdjusted Qty: ' + data.adjustedQuantity +
+        '\\nVariance: ' + data.variance +
+        approvalMsg
+      );
+      
+      // Clear draft
+      localStorage.removeItem('inventoryAdjustmentDraft');
+      
+      // Redirect
+      window.location.href = 'inventory.html';
+    }
+
+    function resetForm() {
+      if (confirm('Are you sure you want to reset the form? All data will be lost.')) {
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+          if (element.type === 'checkbox') {
+            element.checked = false;
+          } else {
+            element.value = '';
+          }
+        });
+        
+        document.getElementById('currentQty').textContent = '--';
+        document.getElementById('variance').textContent = '--';
+        document.getElementById('adjustmentType').textContent = '--';
+        
+        localStorage.removeItem('inventoryAdjustmentDraft');
+      }
+    }
+
+    function toggleUserMenu() {
+      document.querySelector('.user-dropdown').classList.toggle('show');
+    }
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.user-menu')) {
+        document.querySelector('.user-dropdown')?.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

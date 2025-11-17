@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Mobile Cycle Count - Pixel Logistics</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/notifications.css">
+  <link rel="stylesheet" href="css/scanner-qr.css">
+  <link rel="stylesheet" href="css/mobile-scanner.css">
+  <style>
+    /* Mobile Cycle Count Specific Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .mobile-app-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-primary);
+    }
+
+    .mobile-header {
+      background: var(--bg-secondary);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .mobile-back-button {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .mobile-title {
+      flex: 1;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .mobile-scan-btn {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mobile-content {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .count-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .count-type-badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+
+    .info-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .info-value {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .location-display {
+      background: var(--accent-color);
+      color: white;
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      margin: 16px 0;
+    }
+
+    .location-label {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 8px;
+    }
+
+    .location-code {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      font-family: monospace;
+    }
+
+    .scan-location-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      margin-top: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .count-item-card {
+      background: var(--bg-primary);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .count-item-card.counted {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    .count-item-card.variance {
+      border-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.05);
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .item-number {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .system-qty {
+      text-align: right;
+    }
+
+    .system-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .system-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-secondary);
+    }
+
+    .item-description {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .item-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+      padding: 8px;
+      background: var(--bg-secondary);
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail-label {
+      color: var(--text-secondary);
+      font-size: 11px;
+    }
+
+    .detail-value {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .count-input-section {
+      background: var(--bg-secondary);
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .count-input-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .count-input-group {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px;
+    }
+
+    .count-input {
+      padding: 14px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 20px;
+      font-weight: 700;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      text-align: center;
+    }
+
+    .count-input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+    }
+
+    .count-btn {
+      width: 48px;
+      height: 48px;
+      border: 2px solid var(--border-color);
+      background: var(--bg-primary);
+      border-radius: 8px;
+      font-size: 24px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+
+    .variance-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: #fef3c7;
+      color: #92400e;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .variance-indicator.positive {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .variance-indicator.negative {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .count-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .action-btn {
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-scan {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .btn-confirm {
+      background: #10b981;
+      color: white;
+    }
+
+    .btn-recount {
+      background: #f59e0b;
+      color: white;
+      grid-column: span 2;
+    }
+
+    .progress-section {
+      padding: 16px;
+      background: var(--bg-secondary);
+      border-radius: 12px;
+      margin-bottom: 16px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: var(--border-color);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent-color);
+      transition: width 0.3s ease;
+    }
+
+    .summary-footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      padding: 16px;
+      position: sticky;
+      bottom: 0;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .summary-stat {
+      text-align: center;
+      padding: 10px;
+      background: var(--bg-primary);
+      border-radius: 8px;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent-color);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .complete-count-btn {
+      width: 100%;
+      padding: 16px;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    [data-theme="dark"] .location-display {
+      background: #0066cc;
+    }
+
+    [data-theme="dark"] .count-type-badge {
+      background: #3730a3;
+      color: #e0e7ff;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="mobile-app-container">
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+      <button class="mobile-back-button" onclick="goBack()">←</button>
+      <div class="mobile-title">Cycle Count #CC-847</div>
+      <button class="mobile-scan-btn" onclick="openScanner()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+        </svg>
+        Scan
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="mobile-content">
+      <!-- Count Info Card -->
+      <div class="count-card">
+        <div class="card-header">
+          <div class="card-title">ABC Full Count</div>
+          <span class="count-type-badge">Full Count</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Zone:</span>
+          <span class="info-value">A-Zone (High Value)</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Assigned To:</span>
+          <span class="info-value">John Smith</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Due Date:</span>
+          <span class="info-value">Nov 16, 2025</span>
+        </div>
+      </div>
+
+      <!-- Location Display -->
+      <div class="location-display">
+        <div class="location-label">Current Location</div>
+        <div class="location-code">A-02-08</div>
+        <button class="scan-location-btn" onclick="scanLocation()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+          </svg>
+          Scan Location
+        </button>
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-section">
+        <div class="progress-header">
+          <span style="color: var(--text-secondary);">Progress</span>
+          <span style="color: var(--text-primary); font-weight: 600;" id="progressText">0 / 4 items</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Count Items -->
+      <div class="count-card">
+        <div class="card-title" style="margin-bottom: 12px;">Items at Location</div>
+        
+        <!-- Item 1 -->
+        <div class="count-item-card" id="countItem1">
+          <div class="item-header">
+            <div class="item-number">ITEM-HV-450</div>
+            <div class="system-qty">
+              <div class="system-label">System Qty</div>
+              <div class="system-value">150</div>
+            </div>
+          </div>
+          <div class="item-description">High-Value Premium Component</div>
+          
+          <div class="item-details">
+            <div class="detail-item">
+              <span class="detail-label">Lot Number</span>
+              <span class="detail-value">LOT-2024-1156</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">UOM</span>
+              <span class="detail-value">EA</span>
+            </div>
+          </div>
+
+          <div class="count-input-section">
+            <div class="count-input-label">Counted Quantity</div>
+            <div class="count-input-group">
+              <input type="number" class="count-input" value="0" min="0" id="count1" oninput="checkVariance(1, 150)">
+              <button class="count-btn" onclick="decrementCount('count1', 1, 150)">−</button>
+              <button class="count-btn" onclick="incrementCount('count1', 1, 150)">+</button>
+            </div>
+          </div>
+
+          <div id="variance1" style="display: none;"></div>
+
+          <div class="count-actions">
+            <button class="action-btn btn-scan" onclick="scanCount(1, 150)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+              </svg>
+              Scan
+            </button>
+            <button class="action-btn btn-confirm" onclick="confirmCount(1)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Confirm
+            </button>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="count-item-card" id="countItem2">
+          <div class="item-header">
+            <div class="item-number">ITEM-HV-680</div>
+            <div class="system-qty">
+              <div class="system-label">System Qty</div>
+              <div class="system-value">85</div>
+            </div>
+          </div>
+          <div class="item-description">Precision Tool Assembly</div>
+          
+          <div class="item-details">
+            <div class="detail-item">
+              <span class="detail-label">Lot Number</span>
+              <span class="detail-value">LOT-2024-1238</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">UOM</span>
+              <span class="detail-value">EA</span>
+            </div>
+          </div>
+
+          <div class="count-input-section">
+            <div class="count-input-label">Counted Quantity</div>
+            <div class="count-input-group">
+              <input type="number" class="count-input" value="0" min="0" id="count2" oninput="checkVariance(2, 85)">
+              <button class="count-btn" onclick="decrementCount('count2', 2, 85)">−</button>
+              <button class="count-btn" onclick="incrementCount('count2', 2, 85)">+</button>
+            </div>
+          </div>
+
+          <div id="variance2" style="display: none;"></div>
+
+          <div class="count-actions">
+            <button class="action-btn btn-scan" onclick="scanCount(2, 85)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+              </svg>
+              Scan
+            </button>
+            <button class="action-btn btn-confirm" onclick="confirmCount(2)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Confirm
+            </button>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="count-item-card" id="countItem3">
+          <div class="item-header">
+            <div class="item-number">ITEM-HV-215</div>
+            <div class="system-qty">
+              <div class="system-label">System Qty</div>
+              <div class="system-value">200</div>
+            </div>
+          </div>
+          <div class="item-description">Industrial Grade Widget</div>
+          
+          <div class="item-details">
+            <div class="detail-item">
+              <span class="detail-label">Lot Number</span>
+              <span class="detail-value">LOT-2024-0987</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">UOM</span>
+              <span class="detail-value">EA</span>
+            </div>
+          </div>
+
+          <div class="count-input-section">
+            <div class="count-input-label">Counted Quantity</div>
+            <div class="count-input-group">
+              <input type="number" class="count-input" value="0" min="0" id="count3" oninput="checkVariance(3, 200)">
+              <button class="count-btn" onclick="decrementCount('count3', 3, 200)">−</button>
+              <button class="count-btn" onclick="incrementCount('count3', 3, 200)">+</button>
+            </div>
+          </div>
+
+          <div id="variance3" style="display: none;"></div>
+
+          <div class="count-actions">
+            <button class="action-btn btn-scan" onclick="scanCount(3, 200)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+              </svg>
+              Scan
+            </button>
+            <button class="action-btn btn-confirm" onclick="confirmCount(3)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Confirm
+            </button>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="count-item-card" id="countItem4">
+          <div class="item-header">
+            <div class="item-number">ITEM-HV-892</div>
+            <div class="system-qty">
+              <div class="system-label">System Qty</div>
+              <div class="system-value">40</div>
+            </div>
+          </div>
+          <div class="item-description">Professional Equipment Kit</div>
+          
+          <div class="item-details">
+            <div class="detail-item">
+              <span class="detail-label">Lot Number</span>
+              <span class="detail-value">LOT-2024-1420</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">UOM</span>
+              <span class="detail-value">EA</span>
+            </div>
+          </div>
+
+          <div class="count-input-section">
+            <div class="count-input-label">Counted Quantity</div>
+            <div class="count-input-group">
+              <input type="number" class="count-input" value="0" min="0" id="count4" oninput="checkVariance(4, 40)">
+              <button class="count-btn" onclick="decrementCount('count4', 4, 40)">−</button>
+              <button class="count-btn" onclick="incrementCount('count4', 4, 40)">+</button>
+            </div>
+          </div>
+
+          <div id="variance4" style="display: none;"></div>
+
+          <div class="count-actions">
+            <button class="action-btn btn-scan" onclick="scanCount(4, 40)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+              </svg>
+              Scan
+            </button>
+            <button class="action-btn btn-confirm" onclick="confirmCount(4)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Footer -->
+    <div class="summary-footer">
+      <div class="summary-grid">
+        <div class="summary-stat">
+          <div class="stat-value" id="countedStat">0</div>
+          <div class="stat-label">Counted</div>
+        </div>
+        <div class="summary-stat">
+          <div class="stat-value" id="matchStat">0</div>
+          <div class="stat-label">Match</div>
+        </div>
+        <div class="summary-stat">
+          <div class="stat-value" id="varianceStat">0</div>
+          <div class="stat-label">Variance</div>
+        </div>
+        <div class="summary-stat">
+          <div class="stat-value">100%</div>
+          <div class="stat-label">Accuracy</div>
+        </div>
+      </div>
+      <button class="complete-count-btn" onclick="completeCount()">Complete Count</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/barcode-scanner.js"></script>
+  <script src="js/mobile-scanner.js"></script>
+  
+  <script>
+    let countedItems = 0;
+    let matchingItems = 0;
+    let varianceItems = 0;
+    const totalItems = 4;
+    const confirmedCounts = new Set();
+
+    function goBack() {
+      if (confirm('Exit cycle count? Progress will be saved.')) {
+        window.location.href = 'cycle-count.html';
+      }
+    }
+
+    function incrementCount(inputId, itemNum, systemQty) {
+      const input = document.getElementById(inputId);
+      input.value = parseInt(input.value || 0) + 1;
+      checkVariance(itemNum, systemQty);
+    }
+
+    function decrementCount(inputId, itemNum, systemQty) {
+      const input = document.getElementById(inputId);
+      const value = parseInt(input.value || 0);
+      if (value > 0) {
+        input.value = value - 1;
+        checkVariance(itemNum, systemQty);
+      }
+    }
+
+    function checkVariance(itemNum, systemQty) {
+      const input = document.getElementById(`count${itemNum}`);
+      const countedQty = parseInt(input.value || 0);
+      const variance = countedQty - systemQty;
+      const varianceDiv = document.getElementById(`variance${itemNum}`);
+
+      if (countedQty > 0 && variance !== 0) {
+        const sign = variance > 0 ? '+' : '';
+        const className = variance > 0 ? 'positive' : 'negative';
+        const icon = variance > 0 ? '⬆' : '⬇';
+        
+        varianceDiv.innerHTML = `
+          <div class="variance-indicator ${className}">
+            <span>${icon}</span>
+            <span>Variance: ${sign}${variance} units (${sign}${((variance/systemQty)*100).toFixed(1)}%)</span>
+          </div>
+        `;
+        varianceDiv.style.display = 'block';
+      } else {
+        varianceDiv.style.display = 'none';
+      }
+    }
+
+    function scanCount(itemNum, systemQty) {
+      if (typeof MobileScannerUI !== 'undefined') {
+        const scanner = new MobileScannerUI({
+          theme: 'rf',
+          onScan: (barcode) => {
+            notify.success(`Scanned: ${barcode}`);
+            // Auto-fill system qty for demo
+            const input = document.getElementById(`count${itemNum}`);
+            input.value = systemQty;
+            checkVariance(itemNum, systemQty);
+          }
+        });
+        scanner.open();
+      } else {
+        const input = document.getElementById(`count${itemNum}`);
+        input.value = systemQty;
+        checkVariance(itemNum, systemQty);
+        notify.info('Scan simulation - matched system quantity');
+      }
+    }
+
+    function confirmCount(itemNum) {
+      const input = document.getElementById(`count${itemNum}`);
+      const countedQty = parseInt(input.value || 0);
+
+      if (countedQty === 0) {
+        notify.warning('Please enter counted quantity');
+        return;
+      }
+
+      const card = document.getElementById(`countItem${itemNum}`);
+      const systemQty = parseInt(card.querySelector('.system-value').textContent);
+      const variance = countedQty - systemQty;
+
+      if (!confirmedCounts.has(itemNum)) {
+        confirmedCounts.add(itemNum);
+        countedItems++;
+        
+        if (variance === 0) {
+          matchingItems++;
+          card.classList.add('counted');
+        } else {
+          varianceItems++;
+          card.classList.add('variance');
+        }
+      }
+
+      if (navigator.vibrate) {
+        navigator.vibrate(variance === 0 ? [50, 50, 50] : [100]);
+      }
+
+      const message = variance === 0 
+        ? `Count confirmed - matched!` 
+        : `Count confirmed - variance: ${variance}`;
+      
+      notify.success(message);
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const percentage = Math.round((countedItems / totalItems) * 100);
+      document.getElementById('progressText').textContent = `${countedItems} / ${totalItems} items`;
+      document.getElementById('progressBar').style.width = `${percentage}%`;
+      document.getElementById('countedStat').textContent = countedItems;
+      document.getElementById('matchStat').textContent = matchingItems;
+      document.getElementById('varianceStat').textContent = varianceItems;
+    }
+
+    function completeCount() {
+      if (countedItems === 0) {
+        notify.warning('Please count at least one item');
+        return;
+      }
+
+      if (countedItems < totalItems) {
+        if (!confirm(`Only ${countedItems} of ${totalItems} items counted. Complete anyway?`)) {
+          return;
+        }
+      }
+
+      const accuracy = matchingItems > 0 ? ((matchingItems / countedItems) * 100).toFixed(1) : 0;
+      notify.success(`Count completed! ${matchingItems} matched, ${varianceItems} variance. Accuracy: ${accuracy}%`);
+      
+      setTimeout(() => {
+        window.location.href = 'cycle-count.html';
+      }, 2000);
+    }
+
+    function scanLocation() {
+      if (typeof MobileScannerUI !== 'undefined') {
+        const scanner = new MobileScannerUI({
+          theme: 'modern',
+          onScan: (barcode) => {
+            notify.success(`Location verified: ${barcode}`);
+          }
+        });
+        scanner.open();
+      } else {
+        notify.success('Location A-02-08 verified');
+      }
+    }
+
+    function openScanner() {
+      if (typeof MobileScannerUI !== 'undefined') {
+        const scanner = new MobileScannerUI({
+          theme: 'rf',
+          onScan: (barcode) => {
+            notify.success(`Scanned: ${barcode}`);
+          }
+        });
+        scanner.open();
+      } else {
+        notify.info('Scanner not available');
+      }
+    }
+  </script>
+</body>
+</html>

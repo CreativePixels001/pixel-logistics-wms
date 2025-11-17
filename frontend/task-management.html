@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pixel Logistics - Task Management">
+  <title>Pixel Logistics - Task Management</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/enhanced-table.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Warehouse Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <!-- Theme Toggle Button -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <!-- Global Search -->
+      <div class="search-container" id="searchContainer">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" class="search-input" id="globalSearchInput" placeholder="Search warehouse..." autocomplete="off" readonly>
+          <kbd class="search-kbd">⌘K</kbd>
+          <button class="search-close" onclick="closeSearch()">&times;</button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">Admin User</div>
+          <div class="user-role">Warehouse Manager</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">AK</div>
+        <div class="user-dropdown">
+          <button class="dropdown-item" onclick="viewProfile()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </button>
+          <button class="dropdown-item" onclick="changePassword()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Change Password
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="logout()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="layout">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Main Menu</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="index.html" class="sidebar-link active">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="user-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span>User Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="access-control.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <span>Access Control</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="receiving.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                  <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
+                  <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Receipt Processing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="asn-receipt.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </span>
+              <span>ASN Receipt</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="putaway.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Put-away</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Outbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="orders.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </span>
+              <span>Orders</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="picking.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              <span>Picking</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="packing.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+              </span>
+              <span>Packing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="shipping.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+              </span>
+              <span>Shipping</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inventory Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="lpn-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>LPN Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inventory.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="20" x2="12" y2="10"></line>
+                  <line x1="18" y1="20" x2="18" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+              </span>
+              <span>Inventory Visibility</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Quality Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="quality-inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Quality Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="cycle-count.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </span>
+              <span>Cycle Count</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Value-Added Services</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="kitting.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Kitting & Assembly</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="labeling.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>Labeling</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="crossdock.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+              <span>Cross-Docking</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Warehouse Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="replenishment.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+              </span>
+              <span>Replenishment</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="task-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="9" x2="15" y2="9"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+              </span>
+              <span>Task Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Returns & Reports</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="returns.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 14 4 9 9 4"></polyline>
+                  <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+                </svg>
+              </span>
+              <span>Returns</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="reports.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+              </span>
+              <span>Reports & Analytics</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <span class="breadcrumb-item">Dashboard</span>
+        <span class="breadcrumb-item active">Task Management</span>
+      </div>
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Warehouse Task Management</h1>
+          <p class="page-subtitle">Orchestrate warehouse tasks, assign workers, and track performance</p>
+        </div>
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+          <button class="btn btn-secondary" onclick="openUploadSidebar()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Upload
+          </button>
+          <button class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export
+          </button>
+          <button class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <line x1="20" y1="8" x2="20" y2="14"></line>
+              <line x1="23" y1="11" x2="17" y2="11"></line>
+            </svg>
+            Assign Task
+          </button>
+        </div>
+      </div>
+
+      <!-- Task Dashboard -->
+      <div class="grid grid-cols-4 mb-xl">
+        <div class="stat-card">
+          <div class="stat-label">Open Tasks</div>
+          <div class="stat-value">67</div>
+          <div class="stat-change">Across all types</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">In Progress</div>
+          <div class="stat-value">28</div>
+          <div class="stat-change">Currently assigned</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Completed Today</div>
+          <div class="stat-value">142</div>
+          <div class="stat-change">+12% vs yesterday</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg Completion</div>
+          <div class="stat-value">18m</div>
+          <div class="stat-change">Per task average</div>
+        </div>
+      </div>
+
+      <!-- Task Filters -->
+      <div class="card mb-xl">
+        <div class="card-header">
+          <h3 class="card-title">Task Queue</h3>
+        </div>
+        <div class="card-body">
+          <div class="grid grid-cols-4 mb-lg">
+            <div class="form-group">
+              <label class="form-label">Task Type</label>
+              <select class="form-input" id="filterTaskType" onchange="filterTasks()">
+                <option value="">All Types</option>
+                <option value="putaway">Put-away</option>
+                <option value="replenishment">Replenishment</option>
+                <option value="picking">Picking</option>
+                <option value="cycle-count">Cycle Count</option>
+                <option value="packing">Packing</option>
+                <option value="shipping">Shipping</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Priority</label>
+              <select class="form-input" id="filterPriority" onchange="filterTasks()">
+                <option value="">All Priorities</option>
+                <option value="urgent">Urgent</option>
+                <option value="high">High</option>
+                <option value="normal">Normal</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Status</label>
+              <select class="form-input" id="filterStatus" onchange="filterTasks()">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="assigned">Assigned</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Assigned To</label>
+              <select class="form-input" id="filterWorker" onchange="filterTasks()">
+                <option value="">All Workers</option>
+                <option value="john">John Smith</option>
+                <option value="maria">Maria Garcia</option>
+                <option value="robert">Robert Johnson</option>
+                <option value="ashish">Ashish Kumar</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Task Assignment -->
+          <div class="flex justify-between items-center mb-md">
+            <div>
+              <span id="selectedCount" class="font-semibold">0</span> tasks selected
+            </div>
+            <div class="flex gap-md">
+              <button class="btn btn-outline" onclick="bulkAssign()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                Bulk Assign
+              </button>
+              <button class="btn btn-outline" onclick="autoDispatch()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                Auto Dispatch
+              </button>
+              <button class="btn btn-primary" onclick="showCreateTask()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px;">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Create Task
+              </button>
+            </div>
+          </div>
+
+          <!-- Tasks Table -->
+          <div id="tasksTableContainer" style="padding: 0;"></div>
+        </div>
+      </div>
+
+      <!-- Worker Performance -->
+      <div class="card mb-xl">
+        <div class="card-header">
+          <h3 class="card-title">Worker Performance</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-container">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Worker</th>
+                  <th>Active Tasks</th>
+                  <th>Completed Today</th>
+                  <th>Avg Time</th>
+                  <th>Productivity</th>
+                  <th>Utilization</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="flex items-center gap-sm">
+                      <div class="user-avatar" style="width: 32px; height: 32px; font-size: var(--font-size-sm);">JS</div>
+                      <strong>John Smith</strong>
+                    </div>
+                  </td>
+                  <td>3</td>
+                  <td>42</td>
+                  <td>16m</td>
+                  <td><span class="badge badge-primary">105%</span></td>
+                  <td>
+                    <div class="progress-bar" style="width: 100%; height: 8px; background-color: var(--color-grey-lighter); border-radius: 4px; overflow: hidden;">
+                      <div style="width: 88%; height: 100%; background-color: var(--color-primary);"></div>
+                    </div>
+                    <small class="text-grey">88%</small>
+                  </td>
+                  <td><span class="badge badge-primary">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="flex items-center gap-sm">
+                      <div class="user-avatar" style="width: 32px; height: 32px; font-size: var(--font-size-sm);">MG</div>
+                      <strong>Maria Garcia</strong>
+                    </div>
+                  </td>
+                  <td>2</td>
+                  <td>38</td>
+                  <td>18m</td>
+                  <td><span class="badge badge-primary">98%</span></td>
+                  <td>
+                    <div class="progress-bar" style="width: 100%; height: 8px; background-color: var(--color-grey-lighter); border-radius: 4px; overflow: hidden;">
+                      <div style="width: 92%; height: 100%; background-color: var(--color-primary);"></div>
+                    </div>
+                    <small class="text-grey">92%</small>
+                  </td>
+                  <td><span class="badge badge-primary">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="flex items-center gap-sm">
+                      <div class="user-avatar" style="width: 32px; height: 32px; font-size: var(--font-size-sm);">RJ</div>
+                      <strong>Robert Johnson</strong>
+                    </div>
+                  </td>
+                  <td>1</td>
+                  <td>35</td>
+                  <td>19m</td>
+                  <td><span class="badge badge-outline">92%</span></td>
+                  <td>
+                    <div class="progress-bar" style="width: 100%; height: 8px; background-color: var(--color-grey-lighter); border-radius: 4px; overflow: hidden;">
+                      <div style="width: 75%; height: 100%; background-color: var(--color-primary);"></div>
+                    </div>
+                    <small class="text-grey">75%</small>
+                  </td>
+                  <td><span class="badge badge-primary">Active</span></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="flex items-center gap-sm">
+                      <div class="user-avatar" style="width: 32px; height: 32px; font-size: var(--font-size-sm);">AK</div>
+                      <strong>Ashish Kumar</strong>
+                    </div>
+                  </td>
+                  <td>0</td>
+                  <td>27</td>
+                  <td>22m</td>
+                  <td><span class="badge badge-outline">85%</span></td>
+                  <td>
+                    <div class="progress-bar" style="width: 100%; height: 8px; background-color: var(--color-grey-lighter); border-radius: 4px; overflow: hidden;">
+                      <div style="width: 45%; height: 100%; background-color: var(--color-primary);"></div>
+                    </div>
+                    <small class="text-grey">45%</small>
+                  </td>
+                  <td><span class="badge badge-outline">Available</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Analytics -->
+      <div class="grid grid-cols-2">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Tasks by Type</h3>
+          </div>
+          <div class="card-body">
+            <div class="mb-md">
+              <div class="flex justify-between mb-xs">
+                <span>Putaway</span>
+                <span class="font-semibold">18 tasks</span>
+              </div>
+              <div class="progress-bar" style="width: 100%; height: 12px; background-color: var(--color-grey-lighter); border-radius: 4px; overflow: hidden;">
+                <div style="width: 27%; height: 100%; background-color: var(--color-black);"></div>
+              </div>
+            </div>
+            <div class="mb-md">
+              <div class="flex justify-between mb-xs">
+                <span>Replenishment</span>
+                <span class="font-semibold">15 tasks</span>
+              </div>
+              <div class="progress-bar" style="width: 100%; height: 12px; background-color: var(--color-grey-lighter); border-radius: 4px; overflow: hidden;">
+                <div style="width: 22%; height: 100%; background-color: var(--color-grey-dark);"></div>
+              </div>
+            </div>
+            <div class="mb-md">
+              <div class="flex justify-between mb-xs">
+                <span>Picking</span>
+                <span class="font-semibold">23 tasks</span>
+              </div>
+              <div class="progress-bar" style="width: 100%; height: 12px; background-color: var(--color-grey-lighter); border-radius: 4px; overflow: hidden;">
+                <div style="width: 34%; height: 100%; background-color: var(--color-grey);"></div>
+              </div>
+            </div>
+            <div class="mb-md">
+              <div class="flex justify-between mb-xs">
+                <span>Cycle Count</span>
+                <span class="font-semibold">8 tasks</span>
+              </div>
+              <div class="progress-bar" style="width: 100%; height: 12px; background-color: var(--color-grey-lighter); border-radius: 4px; overflow: hidden;">
+                <div style="width: 12%; height: 100%; background-color: var(--color-grey-light);"></div>
+              </div>
+            </div>
+            <div>
+              <div class="flex justify-between mb-xs">
+                <span>Other</span>
+                <span class="font-semibold">3 tasks</span>
+              </div>
+              <div class="progress-bar" style="width: 100%; height: 12px; background-color: var(--color-grey-lighter); border-radius: 4px; overflow: hidden;">
+                <div style="width: 5%; height: 100%; background-color: var(--color-grey-lighter);"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Task Completion Trend</h3>
+          </div>
+          <div class="card-body">
+            <div class="grid grid-cols-7 gap-sm" style="text-align: center;">
+              <div>
+                <div class="text-grey mb-xs" style="font-size: var(--font-size-xs);">Mon</div>
+                <div class="progress-bar" style="height: 80px; width: 100%; background-color: var(--color-grey-lighter); border-radius: 4px; display: flex; flex-direction: column-reverse; overflow: hidden;">
+                  <div style="height: 65%; background-color: var(--color-black);"></div>
+                </div>
+                <div class="mt-xs font-semibold" style="font-size: var(--font-size-sm);">132</div>
+              </div>
+              <div>
+                <div class="text-grey mb-xs" style="font-size: var(--font-size-xs);">Tue</div>
+                <div class="progress-bar" style="height: 80px; width: 100%; background-color: var(--color-grey-lighter); border-radius: 4px; display: flex; flex-direction: column-reverse; overflow: hidden;">
+                  <div style="height: 72%; background-color: var(--color-black);"></div>
+                </div>
+                <div class="mt-xs font-semibold" style="font-size: var(--font-size-sm);">145</div>
+              </div>
+              <div>
+                <div class="text-grey mb-xs" style="font-size: var(--font-size-xs);">Wed</div>
+                <div class="progress-bar" style="height: 80px; width: 100%; background-color: var(--color-grey-lighter); border-radius: 4px; display: flex; flex-direction: column-reverse; overflow: hidden;">
+                  <div style="height: 68%; background-color: var(--color-black);"></div>
+                </div>
+                <div class="mt-xs font-semibold" style="font-size: var(--font-size-sm);">138</div>
+              </div>
+              <div>
+                <div class="text-grey mb-xs" style="font-size: var(--font-size-xs);">Thu</div>
+                <div class="progress-bar" style="height: 80px; width: 100%; background-color: var(--color-grey-lighter); border-radius: 4px; display: flex; flex-direction: column-reverse; overflow: hidden;">
+                  <div style="height: 78%; background-color: var(--color-black);"></div>
+                </div>
+                <div class="mt-xs font-semibold" style="font-size: var(--font-size-sm);">158</div>
+              </div>
+              <div>
+                <div class="text-grey mb-xs" style="font-size: var(--font-size-xs);">Fri</div>
+                <div class="progress-bar" style="height: 80px; width: 100%; background-color: var(--color-grey-lighter); border-radius: 4px; display: flex; flex-direction: column-reverse; overflow: hidden;">
+                  <div style="height: 70%; background-color: var(--color-primary);"></div>
+                </div>
+                <div class="mt-xs font-semibold" style="font-size: var(--font-size-sm);">142</div>
+              </div>
+              <div>
+                <div class="text-grey mb-xs" style="font-size: var(--font-size-xs);">Sat</div>
+                <div class="progress-bar" style="height: 80px; width: 100%; background-color: var(--color-grey-lighter); border-radius: 4px; display: flex; flex-direction: column-reverse; overflow: hidden;">
+                  <div style="height: 45%; background-color: var(--color-grey);"></div>
+                </div>
+                <div class="mt-xs font-semibold" style="font-size: var(--font-size-sm);">92</div>
+              </div>
+              <div>
+                <div class="text-grey mb-xs" style="font-size: var(--font-size-xs);">Sun</div>
+                <div class="progress-bar" style="height: 80px; width: 100%; background-color: var(--color-grey-lighter); border-radius: 4px; display: flex; flex-direction: column-reverse; overflow: hidden;">
+                  <div style="height: 38%; background-color: var(--color-grey);"></div>
+                </div>
+                <div class="mt-xs font-semibold" style="font-size: var(--font-size-sm);">78</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="searchOverlay"></div>
+
+  <!-- Upload Sidebar -->
+  <div class="upload-sidebar-overlay" id="uploadOverlay"></div>
+  <div class="upload-sidebar" id="uploadSidebar">
+    <div class="upload-header">
+      <div class="upload-title">Upload Files</div>
+      <button class="upload-close" onclick="closeUploadSidebar()">&times;</button>
+    </div>
+    <div class="upload-body">
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+        </div>
+        <div class="upload-text">Click to upload or drag and drop</div>
+        <div class="upload-hint">CSV, XLSX, PDF (Max 10MB)</div>
+      </div>
+      <input type="file" id="fileInput" class="file-input-hidden" multiple accept=".csv,.xlsx,.xls,.pdf">
+      <div class="file-list">
+        <div class="file-list-title">Selected Files</div>
+        <div id="fileList">
+          <p style="text-align: center; color: var(--color-grey); padding: var(--spacing-lg);">No files selected</p>
+        </div>
+      </div>
+    </div>
+    <div class="upload-footer">
+      <button class="btn btn-secondary" style="flex: 1;" onclick="cancelUpload()">Cancel</button>
+      <button class="btn btn-primary" style="flex: 1;" onclick="uploadFiles()">Upload Files</button>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/sidebar.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/common-header.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/enhanced-table-v2.js"></script>
+  <script src="js/task-management.js"></script>
+
+  <script>
+    // Sample task data
+    const tasksData = [
+      { taskId: 'TASK-1001', type: 'Putaway', item: 'ITM-5678', description: 'Widget Assembly A', priority: 'Urgent', worker: 'John Smith', zone: 'A', location: 'A-01-05-A', quantity: 150, status: 'In Progress', assignedDate: '2025-11-16', estTime: '5m' },
+      { taskId: 'TASK-1002', type: 'Replenishment', item: 'ITM-5679', description: 'Component B', priority: 'High', worker: 'Maria Garcia', zone: 'B', location: 'B-05-12-A', quantity: 220, status: 'In Progress', assignedDate: '2025-11-16', estTime: '8m' },
+      { taskId: 'TASK-1003', type: 'Picking', item: 'ORD-2025-045', description: 'Order 12 lines', priority: 'High', worker: '-', zone: 'A', location: 'Zone A', quantity: 85, status: 'Pending', assignedDate: '2025-11-16', estTime: '15m' },
+      { taskId: 'TASK-1004', type: 'Cycle Count', item: 'A-02-03-B', description: 'Location count', priority: 'Normal', worker: '-', zone: 'A', location: 'A-02-03-B', quantity: 0, status: 'Pending', assignedDate: '2025-11-16', estTime: '10m' },
+      { taskId: 'TASK-1005', type: 'Packing', item: 'ORD-2025-046', description: 'Order 5 cartons', priority: 'Normal', worker: 'Robert Johnson', zone: 'Pack', location: 'Pack Station 2', quantity: 35, status: 'Assigned', assignedDate: '2025-11-16', estTime: '12m' },
+      { taskId: 'TASK-1006', type: 'Putaway', item: 'ITM-5680', description: 'Electronic Module C', priority: 'High', worker: 'Sarah Wilson', zone: 'E', location: 'E-03-08-B', quantity: 180, status: 'In Progress', assignedDate: '2025-11-16', estTime: '6m' },
+      { taskId: 'TASK-1007', type: 'Picking', item: 'ORD-2025-047', description: 'Order 8 lines', priority: 'Urgent', worker: 'David Chen', zone: 'B', location: 'Zone B', quantity: 120, status: 'In Progress', assignedDate: '2025-11-16', estTime: '18m' },
+      { taskId: 'TASK-1008', type: 'Replenishment', item: 'ITM-5681', description: 'Fastener Kit D', priority: 'Normal', worker: '-', zone: 'C', location: 'C-02-04-A', quantity: 95, status: 'Pending', assignedDate: '2025-11-16', estTime: '7m' },
+      { taskId: 'TASK-1009', type: 'Putaway', item: 'ITM-5682', description: 'Power Supply E', priority: 'High', worker: 'Emily Brown', zone: 'A', location: 'A-04-10-C', quantity: 210, status: 'Assigned', assignedDate: '2025-11-16', estTime: '9m' },
+      { taskId: 'TASK-1010', type: 'Cycle Count', item: 'B-01-02-A', description: 'Location count', priority: 'Low', worker: '-', zone: 'B', location: 'B-01-02-A', quantity: 0, status: 'Pending', assignedDate: '2025-11-16', estTime: '10m' },
+      { taskId: 'TASK-1011', type: 'Picking', item: 'ORD-2025-048', description: 'Order 15 lines', priority: 'High', worker: 'Michael Lee', zone: 'C', location: 'Zone C', quantity: 145, status: 'In Progress', assignedDate: '2025-11-15', estTime: '20m' },
+      { taskId: 'TASK-1012', type: 'Packing', item: 'ORD-2025-049', description: 'Order 3 cartons', priority: 'Normal', worker: '-', zone: 'Pack', location: 'Pack Station 1', quantity: 28, status: 'Pending', assignedDate: '2025-11-15', estTime: '8m' },
+      { taskId: 'TASK-1013', type: 'Replenishment', item: 'ITM-5683', description: 'Cable Assembly F', priority: 'High', worker: 'Jessica Taylor', zone: 'D', location: 'D-06-15-B', quantity: 165, status: 'Assigned', assignedDate: '2025-11-15', estTime: '11m' },
+      { taskId: 'TASK-1014', type: 'Putaway', item: 'ITM-5684', description: 'Circuit Board G', priority: 'Urgent', worker: 'Andrew Miller', zone: 'E', location: 'E-01-03-A', quantity: 195, status: 'In Progress', assignedDate: '2025-11-15', estTime: '7m' },
+      { taskId: 'TASK-1015', type: 'Cycle Count', item: 'C-03-07-C', description: 'Location count', priority: 'Normal', worker: 'Lisa Anderson', zone: 'C', location: 'C-03-07-C', quantity: 0, status: 'In Progress', assignedDate: '2025-11-15', estTime: '10m' },
+      { taskId: 'TASK-1016', type: 'Picking', item: 'ORD-2025-050', description: 'Order 6 lines', priority: 'Normal', worker: '-', zone: 'A', location: 'Zone A', quantity: 72, status: 'Pending', assignedDate: '2025-11-15', estTime: '12m' },
+      { taskId: 'TASK-1017', type: 'Replenishment', item: 'ITM-5685', description: 'Sensor Unit H', priority: 'High', worker: 'Chris Martinez', zone: 'B', location: 'B-08-20-D', quantity: 140, status: 'In Progress', assignedDate: '2025-11-14', estTime: '9m' },
+      { taskId: 'TASK-1018', type: 'Packing', item: 'ORD-2025-051', description: 'Order 7 cartons', priority: 'High', worker: 'Amanda White', zone: 'Pack', location: 'Pack Station 3', quantity: 48, status: 'Assigned', assignedDate: '2025-11-14', estTime: '14m' },
+      { taskId: 'TASK-1019', type: 'Putaway', item: 'ITM-5686', description: 'Motor Assembly I', priority: 'Normal', worker: '-', zone: 'D', location: 'D-02-06-B', quantity: 130, status: 'Pending', assignedDate: '2025-11-14', estTime: '8m' },
+      { taskId: 'TASK-1020', type: 'Cycle Count', item: 'E-05-12-A', description: 'Location count', priority: 'Low', worker: '-', zone: 'E', location: 'E-05-12-A', quantity: 0, status: 'Pending', assignedDate: '2025-11-14', estTime: '10m' }
+    ];
+
+    // Initialize enhanced table
+    let tasksTable;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+      tasksTable = new EnhancedDataTable('tasksTableContainer', {
+        data: tasksData,
+        columns: [
+          { field: 'taskId', label: 'Task ID', sortable: true, width: '120px' },
+          { 
+            field: 'type', 
+            label: 'Type', 
+            type: 'badge',
+            sortable: true,
+            width: '140px',
+            filterType: 'select',
+            filterOptions: [
+              { value: 'Putaway', label: 'Putaway' },
+              { value: 'Picking', label: 'Picking' },
+              { value: 'Replenishment', label: 'Replenishment' },
+              { value: 'Cycle Count', label: 'Cycle Count' },
+              { value: 'Packing', label: 'Packing' }
+            ],
+            badgeClass: function(value) {
+              const typeMap = {
+                'Putaway': 'badge-primary',
+                'Picking': 'badge-warning',
+                'Replenishment': 'badge-info',
+                'Cycle Count': 'badge-secondary',
+                'Packing': 'badge-success'
+              };
+              return typeMap[value] || 'badge-secondary';
+            }
+          },
+          { field: 'item', label: 'Item/Order', sortable: true, width: '130px' },
+          { field: 'description', label: 'Description', sortable: true },
+          { 
+            field: 'priority', 
+            label: 'Priority', 
+            type: 'badge',
+            sortable: true,
+            width: '100px',
+            filterType: 'select',
+            filterOptions: [
+              { value: 'Urgent', label: 'Urgent' },
+              { value: 'High', label: 'High' },
+              { value: 'Normal', label: 'Normal' },
+              { value: 'Low', label: 'Low' }
+            ],
+            badgeClass: function(value) {
+              const priorityMap = {
+                'Urgent': 'badge-danger',
+                'High': 'badge-warning',
+                'Normal': 'badge-secondary',
+                'Low': 'badge-info'
+              };
+              return priorityMap[value] || 'badge-secondary';
+            }
+          },
+          { field: 'worker', label: 'Assigned To', sortable: true, width: '140px' },
+          { field: 'location', label: 'Location', sortable: true, width: '130px' },
+          { field: 'quantity', label: 'Qty', type: 'number', sortable: true, width: '80px' },
+          { 
+            field: 'status', 
+            label: 'Status', 
+            type: 'badge',
+            sortable: true,
+            width: '120px',
+            filterType: 'select',
+            filterOptions: [
+              { value: 'Pending', label: 'Pending' },
+              { value: 'Assigned', label: 'Assigned' },
+              { value: 'In Progress', label: 'In Progress' },
+              { value: 'Complete', label: 'Complete' }
+            ],
+            badgeClass: function(value) {
+              const statusMap = {
+                'Pending': 'badge-secondary',
+                'Assigned': 'badge-info',
+                'In Progress': 'badge-warning',
+                'Complete': 'badge-success'
+              };
+              return statusMap[value] || 'badge-secondary';
+            }
+          },
+          { field: 'estTime', label: 'Est. Time', sortable: true, width: '100px' },
+          {
+            field: 'actions',
+            label: 'Actions',
+            width: '100px',
+            filterable: false,
+            sortable: false,
+            render: function(value, row) {
+              return `<button class="btn btn-sm btn-primary" onclick="viewTask('${row.taskId}')">View</button>`;
+            }
+          }
+        ],
+        pageSize: 25,
+        searchable: true,
+        filterable: true,
+        selectable: true,
+        exportable: true,
+        multiSort: true,
+        columnReorder: true,
+        actions: [
+          { 
+            id: 'assign', 
+            label: 'Assign Worker',
+            handler: function(selectedData) {
+              notify.prompt(
+                'Assign tasks to worker:',
+                (worker) => {
+                  const hideLoader = notify.loading(`Assigning ${selectedData.length} task(s)...`);
+                  setTimeout(() => {
+                    hideLoader();
+                    notify.success(`${selectedData.length} task(s) assigned to ${worker}`);
+                  }, 700);
+                },
+                { placeholder: 'Sarah Johnson', title: 'Assign Worker' }
+              );
+            }
+          },
+          { 
+            id: 'priority', 
+            label: 'Change Priority',
+            handler: function(selectedData) {
+              notify.prompt(
+                'Set priority (High/Medium/Low):',
+                (priority) => {
+                  const hideLoader = notify.loading('Updating priority...');
+                  setTimeout(() => {
+                    hideLoader();
+                    notify.success(`Priority set to ${priority} for ${selectedData.length} task(s)`);
+                  }, 600);
+                },
+                { placeholder: 'High', title: 'Change Priority' }
+              );
+            }
+          },
+          { 
+            id: 'complete', 
+            label: 'Mark Complete',
+            handler: function(selectedData) {
+              notify.confirm(
+                `Mark ${selectedData.length} task(s) as complete?`,
+                () => {
+                  const hideLoader = notify.loading('Completing tasks...');
+                  setTimeout(() => {
+                    hideLoader();
+                    notify.success(`${selectedData.length} task(s) marked as complete`);
+                  }, 800);
+                },
+                null,
+                { title: 'Complete Tasks' }
+              );
+            }
+          },
+          { 
+            id: 'delete', 
+            label: 'Delete Tasks',
+            handler: function(selectedData) {
+              notify.confirm(
+                `Delete ${selectedData.length} task(s)? This action cannot be undone.`,
+                () => {
+                  const hideLoader = notify.loading('Deleting tasks...');
+                  setTimeout(() => {
+                    hideLoader();
+                    notify.success(`${selectedData.length} task(s) deleted successfully`);
+                  }, 700);
+                },
+                null,
+                { danger: true, title: 'Delete Tasks' }
+              );
+            }
+          }
+        ]
+      });
+    });
+
+    function toggleUserMenu() {
+      document.querySelector('.user-dropdown').classList.toggle('show');
+    }
+
+    function viewProfile() {
+      notify.info('Profile management coming soon!');
+    }
+
+    function changePassword() {
+      notify.info('Password change feature coming soon!');
+    }
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.user-menu')) {
+        document.querySelector('.user-dropdown')?.classList.remove('show');
+      }
+    });
+  </script>
+</body>
+</html>

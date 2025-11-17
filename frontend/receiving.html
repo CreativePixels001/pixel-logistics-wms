@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pixel Logistics - Receipt Processing">
+  <title>Pixel Logistics - Receiving</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/notifications.css">
+  <link rel="stylesheet" href="css/scanner-qr.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Warehouse Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <!-- Theme Toggle Button -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <!-- Global Search -->
+      <div class="search-container" id="searchContainer">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" class="search-input" id="globalSearchInput" placeholder="Search warehouse..." autocomplete="off" readonly>
+          <kbd class="search-kbd">⌘K</kbd>
+          <button class="search-close" onclick="closeSearch()">&times;</button>
+        </div>
+        <div class="search-suggestions" id="searchSuggestions"></div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">Admin User</div>
+          <div class="user-role">Warehouse Manager</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">AK</div>
+        <div class="user-dropdown">
+          <button class="dropdown-item" onclick="viewProfile()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </button>
+          <button class="dropdown-item" onclick="changePassword()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Change Password
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item" onclick="logout()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="layout">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Main Menu</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="index.html" class="sidebar-link active">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="user-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span>User Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="access-control.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <span>Access Control</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="receiving.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="7.5 4.21 12 6.81 16.5 4.21"></polyline>
+                  <polyline points="7.5 19.79 7.5 14.6 3 12"></polyline>
+                  <polyline points="21 12 16.5 14.6 16.5 19.79"></polyline>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Receipt Processing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="asn-receipt.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+              </span>
+              <span>ASN Receipt</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="putaway.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span>Put-away</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Outbound Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="orders.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+              </span>
+              <span>Orders</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="picking.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </span>
+              <span>Picking</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="packing.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                </svg>
+              </span>
+              <span>Packing</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="shipping.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+              </span>
+              <span>Shipping</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Inventory Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="lpn-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>LPN Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="inventory.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="20" x2="12" y2="10"></line>
+                  <line x1="18" y1="20" x2="18" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+              </span>
+              <span>Inventory Visibility</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="location-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </span>
+              <span>Location Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Quality Management</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="quality-inspection.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </span>
+              <span>Quality Inspection</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="cycle-count.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                  <polyline points="17 6 23 6 23 12"></polyline>
+                </svg>
+              </span>
+              <span>Cycle Count</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Value-Added Services</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="kitting.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span>Kitting & Assembly</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="labeling.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                  <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                </svg>
+              </span>
+              <span>Labeling</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="crossdock.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+              <span>Cross-Docking</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Warehouse Operations</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="replenishment.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <polyline points="19 12 12 19 5 12"></polyline>
+                </svg>
+              </span>
+              <span>Replenishment</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="task-management.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="9" x2="15" y2="9"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                </svg>
+              </span>
+              <span>Task Management</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title" onclick="toggleSidebarSection(this)">
+          <span>Returns & Reports</span>
+          <svg class="sidebar-title-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="returns.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 14 4 9 9 4"></polyline>
+                  <path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+                </svg>
+              </span>
+              <span>Returns</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="reports.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                </svg>
+              </span>
+              <span>Reports & Analytics</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Breadcrumb -->
+      <div class="breadcrumb">
+        <span class="breadcrumb-item">Dashboard</span>
+        <span class="breadcrumb-item active">Receiving</span>
+      </div>
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Receipt Processing</h1>
+          <p class="page-subtitle">Process inbound material receipts - Standard, Direct, and Inspection routing</p>
+        </div>
+        <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+          <button class="btn btn-outline" onclick="toggleFilters()" id="headerFilterBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            Filters
+          </button>
+          <button class="btn btn-secondary" onclick="openBarcodeScanner()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M3 5v14"></path>
+              <path d="M8 5v14"></path>
+              <path d="M12 5v14"></path>
+              <path d="M17 5v14"></path>
+              <path d="M21 5v14"></path>
+            </svg>
+            Scan Receipt
+          </button>
+          <button class="btn btn-primary" onclick="openCreateReceiptModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Create Receipt
+          </button>
+          <button class="btn btn-secondary" onclick="openUploadSidebar()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="17 8 12 3 7 8"></polyline>
+              <line x1="12" y1="3" x2="12" y2="15"></line>
+            </svg>
+            Upload
+          </button>
+          <button class="btn btn-secondary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export
+          </button>
+          <button class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 6px;">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Schedule Receipt
+          </button>
+        </div>
+      </div>
+
+      <!-- Receipt Type Selection -->
+      <div class="card mb-xl">
+        <div class="card-header">
+          <h3 class="card-title">Select Receipt Type</h3>
+        </div>
+        <div class="card-body">
+          <div class="grid grid-cols-3">
+            <div class="stat-card" onclick="selectReceiptType('standard')" style="cursor: pointer;">
+              <div class="stat-label">Standard Receipt</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </div>
+              <div class="stat-change">Receipt → Put-away later</div>
+            </div>
+            
+            <div class="stat-card" onclick="selectReceiptType('direct')" style="cursor: pointer;">
+              <div class="stat-label">Direct Receipt</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                </svg>
+              </div>
+              <div class="stat-change">Immediate inventory update</div>
+            </div>
+            
+            <div class="stat-card" onclick="selectReceiptType('inspection')" style="cursor: pointer;">
+              <div class="stat-label">Inspection Required</div>
+              <div class="stat-value" style="font-size: 3rem;">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto;">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.35-4.35"></path>
+                </svg>
+              </div>
+              <div class="stat-change">Receipt → Inspection → Put-away</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Receipt Form -->
+      <div class="card" id="receiptForm" style="display: none;">
+        <div class="card-header flex justify-between items-center">
+          <h3 class="card-title mb-0">New Receipt - <span id="receiptTypeLabel">Standard</span></h3>
+          <button class="btn btn-outline btn-sm" onclick="resetForm()">Reset Form</button>
+        </div>
+        <div class="card-body">
+          <form id="receiptFormElement">
+            
+            <!-- Document Information -->
+            <div class="mb-xl">
+              <h4 class="mb-md">Document Information</h4>
+              <div class="grid grid-cols-2">
+                <div class="form-group">
+                  <label class="form-label form-label-required">Document Type</label>
+                  <select class="form-select" id="documentType" required>
+                    <option value="">Select document type</option>
+                    <option value="PO">Purchase Order</option>
+                    <option value="ASN">Advanced Shipment Notice</option>
+                    <option value="RMA">Return Material Authorization</option>
+                    <option value="INTSHIP">Internal Shipment</option>
+                    <option value="INTREQ">Internal Requisition</option>
+                  </select>
+                  <span class="form-help">Select the type of receiving document</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label form-label-required">Document Number</label>
+                  <input type="text" class="form-input" id="documentNumber" placeholder="e.g., PO-45678" required>
+                  <span class="form-help">Enter or scan the document number</span>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-2">
+                <div class="form-group">
+                  <label class="form-label">Supplier/Source</label>
+                  <input type="text" class="form-input" id="supplier" placeholder="Auto-populated from document">
+                  <span class="form-help">Will be auto-filled when document is validated</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Line Number</label>
+                  <select class="form-select" id="lineNumber">
+                    <option value="">Select line number</option>
+                    <option value="1">Line 1</option>
+                    <option value="2">Line 2</option>
+                    <option value="3">Line 3</option>
+                  </select>
+                  <span class="form-help">Select the document line to receive</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- LPN Information -->
+            <div class="mb-xl">
+              <h4 class="mb-md">LPN Information</h4>
+              <div class="grid grid-cols-2">
+                <div class="form-group">
+                  <label class="form-label form-label-required">LPN Number</label>
+                  <div class="flex gap-sm">
+                    <input type="text" class="form-input" id="lpnNumber" placeholder="Scan or enter LPN" required style="flex: 1;">
+                    <button type="button" class="btn btn-secondary" onclick="generateLPN()">Generate</button>
+                  </div>
+                  <span class="form-help">Press Generate to create a system LPN or enter existing LPN</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Into LPN (Nesting)</label>
+                  <input type="text" class="form-input" id="intoLPN" placeholder="Optional - for nested LPNs">
+                  <span class="form-help">Optional: Pack this LPN into another LPN</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Item Information -->
+            <div class="mb-xl">
+              <h4 class="mb-md">Item Information</h4>
+              <div class="grid grid-cols-3">
+                <div class="form-group">
+                  <label class="form-label form-label-required">Item Number</label>
+                  <input type="text" class="form-input" id="itemNumber" placeholder="e.g., ITM-5678" required>
+                  <span class="form-help">Item code or SKU</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Item Description</label>
+                  <input type="text" class="form-input" id="itemDescription" placeholder="Auto-populated" readonly>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Revision</label>
+                  <input type="text" class="form-input" id="revision" placeholder="If applicable">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3">
+                <div class="form-group">
+                  <label class="form-label form-label-required">Quantity</label>
+                  <input type="number" class="form-input" id="quantity" placeholder="0" required min="0">
+                  <span class="form-help">Received quantity</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label form-label-required">UOM</label>
+                  <select class="form-select" id="uom" required>
+                    <option value="">Select UOM</option>
+                    <option value="EA">Each (EA)</option>
+                    <option value="CS">Case (CS)</option>
+                    <option value="PL">Pallet (PL)</option>
+                    <option value="KG">Kilogram (KG)</option>
+                    <option value="LB">Pound (LB)</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Secondary UOM</label>
+                  <select class="form-select" id="secondaryUom">
+                    <option value="">Not applicable</option>
+                    <option value="KG">Kilogram (KG)</option>
+                    <option value="LB">Pound (LB)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Lot & Serial Information -->
+            <div class="mb-xl">
+              <h4 class="mb-md">Lot & Serial Tracking</h4>
+              <div class="grid grid-cols-2">
+                <div class="form-group">
+                  <label class="form-label">Lot Number</label>
+                  <input type="text" class="form-input" id="lotNumber" placeholder="If lot controlled">
+                  <span class="form-help">Required for lot-controlled items</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Lot Expiration Date</label>
+                  <input type="date" class="form-input" id="lotExpiration">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Serial Numbers</label>
+                <textarea class="form-textarea" id="serialNumbers" placeholder="Enter serial numbers (one per line)&#10;e.g.,&#10;SN001&#10;SN002&#10;SN003"></textarea>
+                <span class="form-help">For serial-controlled items, enter each serial number on a new line</span>
+              </div>
+            </div>
+
+            <!-- Location Information (for Direct Receipt) -->
+            <div class="mb-xl" id="locationSection" style="display: none;">
+              <h4 class="mb-md">Destination Location</h4>
+              <div class="grid grid-cols-2">
+                <div class="form-group">
+                  <label class="form-label form-label-required">Subinventory</label>
+                  <select class="form-select" id="subinventory">
+                    <option value="">Select subinventory</option>
+                    <option value="RECV">Receiving (RECV)</option>
+                    <option value="STORES">Stores (STORES)</option>
+                    <option value="WIP">Work in Process (WIP)</option>
+                  </select>
+                  <span class="form-help">Destination subinventory</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label form-label-required">Locator</label>
+                  <input type="text" class="form-input" id="locator" placeholder="e.g., A-01-15-B">
+                  <span class="form-help">Specific storage location</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Receipt Header Information -->
+            <div class="mb-xl">
+              <h4 class="mb-md">Receipt Header (Optional)</h4>
+              <div class="grid grid-cols-2">
+                <div class="form-group">
+                  <label class="form-label">Packing Slip</label>
+                  <input type="text" class="form-input" id="packingSlip" placeholder="Packing slip number">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Carrier</label>
+                  <input type="text" class="form-input" id="carrier" placeholder="Carrier name">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3">
+                <div class="form-group">
+                  <label class="form-label">Bill of Lading</label>
+                  <input type="text" class="form-input" id="bol" placeholder="BOL number">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Waybill</label>
+                  <input type="text" class="form-input" id="waybill" placeholder="Waybill number">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Airbill</label>
+                  <input type="text" class="form-input" id="airbill" placeholder="Airbill number">
+                </div>
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex justify-between items-center">
+              <button type="button" class="btn btn-outline" onclick="resetForm()">Cancel</button>
+              <div class="flex gap-md">
+                <button type="button" class="btn btn-secondary">Save Draft</button>
+                <button type="submit" class="btn btn-primary">Complete Receipt</button>
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Search Overlay -->
+  <div class="search-overlay" id="searchOverlay"></div>
+
+  <!-- Upload Sidebar -->
+  <div class="upload-sidebar-overlay" id="uploadOverlay"></div>
+  <div class="upload-sidebar" id="uploadSidebar">
+    <div class="upload-header">
+      <div class="upload-title">Upload Files</div>
+      <button class="upload-close" onclick="closeUploadSidebar()">&times;</button>
+    </div>
+    <div class="upload-body">
+      <div class="upload-zone" id="uploadZone">
+        <div class="upload-icon">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+        </div>
+        <div class="upload-text">Click to upload or drag and drop</div>
+        <div class="upload-hint">CSV, XLSX, PDF (Max 10MB)</div>
+      </div>
+      <input type="file" id="fileInput" class="file-input-hidden" multiple accept=".csv,.xlsx,.xls,.pdf">
+      <div class="file-list">
+        <div class="file-list-title">Selected Files</div>
+        <div id="fileList">
+          <p style="text-align: center; color: var(--color-grey); padding: var(--spacing-lg);">No files selected</p>
+        </div>
+      </div>
+    </div>
+    <div class="upload-footer">
+      <button class="btn btn-secondary" style="flex: 1;" onclick="cancelUpload()">Cancel</button>
+      <button class="btn btn-primary" style="flex: 1;" onclick="uploadFiles()">Upload Files</button>
+    </div>
+  </div>
+
+  <!-- Create Receipt Modal -->
+  <div id="createReceiptModal" class="modal">
+    <div class="modal-content" style="max-width: 1200px; max-height: 90vh; overflow-y: auto;">
+      <div class="modal-header">
+        <h2 class="modal-title">Create Receipt</h2>
+        <button class="modal-close" onclick="closeCreateReceiptModal()">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 0;">
+        
+        <!-- Receipt Header Form -->
+        <div style="padding: var(--spacing-lg); border-bottom: 1px solid var(--border-color);">
+          <h3 style="font-size: 14px; font-weight: 600; margin-bottom: var(--spacing-md); color: var(--text-secondary);">Receipt Header</h3>
+          <form id="receiptForm">
+            <div class="grid grid-cols-3" style="gap: var(--spacing-md);">
+              <div class="form-group">
+                <label for="receiptType" style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">Receipt Type *</label>
+                <select id="receiptType" class="form-control" required onchange="handleReceiptTypeChange()" style="height: 38px; font-size: 13px;">
+                  <option value="">Select Type</option>
+                  <option value="PO">Purchase Order</option>
+                  <option value="RMA">Return Merchandise Authorization</option>
+                  <option value="TRANSFER">Internal Transfer</option>
+                  <option value="MISC">Miscellaneous Receipt</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="documentNumber" style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">Document Number *</label>
+                <input type="text" id="documentNumber" class="form-control" placeholder="PO-2025-001" required style="height: 38px; font-size: 13px;">
+              </div>
+
+              <div class="form-group">
+                <label for="expectedDate" style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">Expected Date *</label>
+                <input type="date" id="expectedDate" class="form-control" required style="height: 38px; font-size: 13px;">
+              </div>
+
+              <div class="form-group">
+                <label for="vendor" style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">Vendor/Supplier *</label>
+                <select id="vendor" class="form-control" required style="height: 38px; font-size: 13px;">
+                  <option value="">Select Vendor</option>
+                  <option value="V001">ABC Suppliers Inc.</option>
+                  <option value="V002">Global Manufacturing Co.</option>
+                  <option value="V003">Tech Components Ltd.</option>
+                  <option value="V004">Industrial Parts Supply</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="carrier" style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">Carrier</label>
+                <input type="text" id="carrier" class="form-control" placeholder="FedEx, UPS, etc." style="height: 38px; font-size: 13px;">
+              </div>
+
+              <div class="form-group">
+                <label for="trackingNumber" style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">Tracking Number</label>
+                <input type="text" id="trackingNumber" class="form-control" placeholder="1Z999AA10123456784" style="height: 38px; font-size: 13px;">
+              </div>
+
+              <div class="form-group">
+                <label for="routingType" style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">Routing Type *</label>
+                <select id="routingType" class="form-control" required style="height: 38px; font-size: 13px;">
+                  <option value="STANDARD">Standard Receipt</option>
+                  <option value="EXPRESS">Express Receipt</option>
+                  <option value="INSPECT">Inspection Required</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="warehouse" style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">Warehouse *</label>
+                <select id="warehouse" class="form-control" required style="height: 38px; font-size: 13px;">
+                  <option value="WH01">Warehouse 01 - Main DC</option>
+                  <option value="WH02">Warehouse 02 - East Coast</option>
+                  <option value="WH03">Warehouse 03 - West Coast</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="dockDoor" style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">Dock Door</label>
+                <select id="dockDoor" class="form-control" style="height: 38px; font-size: 13px;">
+                  <option value="">Select Door</option>
+                  <option value="DOCK-01">Dock Door 01</option>
+                  <option value="DOCK-02">Dock Door 02</option>
+                  <option value="DOCK-03">Dock Door 03</option>
+                  <option value="DOCK-04">Dock Door 04</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: var(--spacing-md);">
+              <label for="notes" style="display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px;">Notes</label>
+              <textarea id="notes" class="form-control" rows="2" placeholder="Additional receipt notes..." style="resize: vertical; min-height: 60px; font-size: 13px;"></textarea>
+            </div>
+          </form>
+        </div>
+
+        <!-- Receipt Lines -->
+        <div style="padding: var(--spacing-lg);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md);">
+            <h3 style="font-size: 14px; font-weight: 600; margin: 0; color: var(--text-secondary);">Receipt Lines</h3>
+            <button class="btn btn-sm btn-primary" onclick="addReceiptLine()" style="font-weight: 600; font-size: 12px; padding: 6px 12px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              ADD LINE
+            </button>
+          </div>
+          
+          <div class="table-container" style="max-height: 300px; overflow-y: auto; border: 1px solid var(--border-color);">
+            <table class="table" id="linesTable" style="margin-bottom: 0; font-size: 13px;">
+              <thead style="position: sticky; top: 0; background: var(--bg-primary); z-index: 10;">
+                <tr style="background-color: var(--bg-secondary);">
+                  <th style="width: 5%; padding: 10px; font-weight: 600; font-size: 12px; border-bottom: 2px solid var(--border-color);">#</th>
+                  <th style="width: 30%; padding: 10px; font-weight: 600; font-size: 12px; border-bottom: 2px solid var(--border-color);">Item *</th>
+                  <th style="width: 15%; padding: 10px; font-weight: 600; font-size: 12px; border-bottom: 2px solid var(--border-color);">Expected Qty *</th>
+                  <th style="width: 10%; padding: 10px; font-weight: 600; font-size: 12px; border-bottom: 2px solid var(--border-color);">UOM *</th>
+                  <th style="width: 15%; padding: 10px; font-weight: 600; font-size: 12px; border-bottom: 2px solid var(--border-color);">Lot Number</th>
+                  <th style="width: 15%; padding: 10px; font-weight: 600; font-size: 12px; border-bottom: 2px solid var(--border-color);">Expiry Date</th>
+                  <th style="width: 10%; padding: 10px; font-weight: 600; font-size: 12px; border-bottom: 2px solid var(--border-color); text-align: center;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="linesTableBody">
+                <tr id="emptyRow">
+                  <td colspan="7" style="text-align: center; padding: 40px var(--spacing-lg); background-color: var(--bg-secondary);">
+                    <p style="margin-bottom: var(--spacing-sm); color: var(--text-secondary); font-size: 13px;">No receipt lines added yet</p>
+                    <button class="btn btn-sm btn-outline" onclick="addReceiptLine()" style="font-weight: 600; font-size: 12px;">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                      </svg>
+                      Add First Line
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div style="margin-top: var(--spacing-md); padding: var(--spacing-sm) var(--spacing-md); background-color: var(--bg-secondary); border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="color: var(--text-secondary); font-size: 12px; font-weight: 500;">
+              Total Lines: <strong style="color: var(--text-primary); font-size: 13px;" id="totalLines">0</strong> | 
+              Total Quantity: <strong style="color: var(--text-primary); font-size: 13px;" id="totalQty">0</strong>
+            </div>
+            <span class="badge badge-warning" id="draftIndicator" style="display: none; font-size: 11px;">Auto-Saved</span>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeCreateReceiptModal()">CANCEL</button>
+        <button class="btn btn-outline" onclick="saveDraft()">SAVE AS DRAFT</button>
+        <button class="btn btn-primary" onclick="saveReceipt()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+            <polyline points="17 21 17 13 7 13 7 21"></polyline>
+            <polyline points="7 3 7 8 15 8"></polyline>
+          </svg>
+          SAVE RECEIPT
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Performance & Security Utilities -->
+  <script src="js/performance-utils.js"></script>
+  <script src="js/security-utils.js"></script>
+
+  <script src="js/auth.js"></script>
+  <script src="js/sidebar.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/common-header.js"></script>
+  <script src="js/filters.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/receiving.js"></script>
+  <script>
+    // Receipt Modal Functions
+    let lineCounter = 0;
+    let autoSaveTimer;
+
+    function openCreateReceiptModal() {
+      document.getElementById('createReceiptModal').style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+      loadDraft();
+      document.getElementById('expectedDate').valueAsDate = new Date();
+    }
+
+    function closeCreateReceiptModal() {
+      if (confirm('Are you sure you want to close? Any unsaved changes will be lost.')) {
+        document.getElementById('createReceiptModal').style.display = 'none';
+        document.body.style.overflow = 'auto';
+        resetForm();
+      }
+    }
+
+    function handleReceiptTypeChange() {
+      const type = document.getElementById('receiptType').value;
+      const docNumberInput = document.getElementById('documentNumber');
+      const placeholders = {
+        'PO': 'PO-2025-001',
+        'RMA': 'RMA-2025-001',
+        'TRANSFER': 'TRF-2025-001',
+        'MISC': 'MISC-2025-001'
+      };
+      docNumberInput.placeholder = placeholders[type] || 'Enter document number';
+    }
+
+    function addReceiptLine() {
+      lineCounter++;
+      document.getElementById('emptyRow')?.remove();
+      
+      const tbody = document.getElementById('linesTableBody');
+      const row = tbody.insertRow();
+      row.id = `line-${lineCounter}`;
+      row.style.borderBottom = '1px solid var(--border-color)';
+      
+      row.innerHTML = `
+        <td style="padding: 10px; font-weight: 500; font-size: 13px;">${lineCounter}</td>
+        <td style="padding: 10px;">
+          <select class="form-control form-control-sm" id="item-${lineCounter}" required onchange="updateLineTotals()" style="height: 34px; font-size: 13px;">
+            <option value="">Select Item</option>
+            <option value="ITEM001">ITEM001 - Laptop Computer</option>
+            <option value="ITEM002">ITEM002 - Wireless Mouse</option>
+            <option value="ITEM003">ITEM003 - USB-C Cable</option>
+            <option value="ITEM004">ITEM004 - Monitor 24"</option>
+            <option value="ITEM005">ITEM005 - Keyboard Mechanical</option>
+          </select>
+        </td>
+        <td style="padding: 10px;">
+          <input type="number" class="form-control form-control-sm" id="qty-${lineCounter}" min="1" value="1" required onchange="updateLineTotals()" style="height: 34px; font-size: 13px;">
+        </td>
+        <td style="padding: 10px;">
+          <select class="form-control form-control-sm" id="uom-${lineCounter}" required style="height: 34px; font-size: 13px;">
+            <option value="EA">Each</option>
+            <option value="BOX">Box</option>
+            <option value="CASE">Case</option>
+            <option value="PALLET">Pallet</option>
+          </select>
+        </td>
+        <td style="padding: 10px;">
+          <input type="text" class="form-control form-control-sm" id="lot-${lineCounter}" placeholder="LOT123" style="height: 34px; font-size: 13px;">
+        </td>
+        <td style="padding: 10px;">
+          <input type="date" class="form-control form-control-sm" id="expiry-${lineCounter}" style="height: 34px; font-size: 13px;">
+        </td>
+        <td style="padding: 10px; text-align: center;">
+          <button class="btn btn-sm btn-danger" onclick="removeReceiptLine(${lineCounter})" style="padding: 4px 8px; font-size: 12px;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+        </td>
+      `;
+      
+      updateLineTotals();
+      startAutoSave();
+    }
+
+    function removeReceiptLine(lineNum) {
+      if (confirm('Remove this line?')) {
+        document.getElementById(`line-${lineNum}`).remove();
+        updateLineTotals();
+        
+        const tbody = document.getElementById('linesTableBody');
+        if (tbody.rows.length === 0) {
+          tbody.innerHTML = `
+            <tr id="emptyRow">
+              <td colspan="7" style="text-align: center; padding: 40px var(--spacing-lg); background-color: var(--bg-secondary);">
+                <p style="margin-bottom: var(--spacing-sm); color: var(--text-secondary); font-size: 13px;">No receipt lines added yet</p>
+                <button class="btn btn-sm btn-outline" onclick="addReceiptLine()" style="font-weight: 600; font-size: 12px;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Add First Line
+                </button>
+              </td>
+            </tr>
+          `;
+        }
+        startAutoSave();
+      }
+    }
+
+    function updateLineTotals() {
+      const tbody = document.getElementById('linesTableBody');
+      const rows = tbody.querySelectorAll('tr:not(#emptyRow)');
+      
+      let totalQty = 0;
+      rows.forEach(row => {
+        const qtyInput = row.querySelector('input[type="number"]');
+        if (qtyInput) {
+          totalQty += parseInt(qtyInput.value) || 0;
+        }
+      });
+      
+      document.getElementById('totalLines').textContent = rows.length;
+      document.getElementById('totalQty').textContent = totalQty;
+    }
+
+    function startAutoSave() {
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        saveDraft();
+      }, 3000);
+    }
+
+    function saveDraft() {
+      const data = collectFormData();
+      localStorage.setItem('receiptDraft', JSON.stringify(data));
+      
+      const indicator = document.getElementById('draftIndicator');
+      indicator.style.display = 'inline-block';
+      setTimeout(() => {
+        indicator.style.display = 'none';
+      }, 2000);
+    }
+
+    function loadDraft() {
+      const draft = localStorage.getItem('receiptDraft');
+      if (draft) {
+        const data = JSON.parse(draft);
+        
+        // Load header
+        if (data.header) {
+          Object.keys(data.header).forEach(key => {
+            const field = document.getElementById(key);
+            if (field) field.value = data.header[key];
+          });
+        }
+        
+        // Load lines
+        if (data.lines && data.lines.length > 0) {
+          data.lines.forEach(line => {
+            addReceiptLine();
+            const currentLine = lineCounter;
+            Object.keys(line).forEach(key => {
+              const field = document.getElementById(`${key}-${currentLine}`);
+              if (field) field.value = line[key];
+            });
+          });
+          updateLineTotals();
+        }
+      }
+    }
+
+    function collectFormData() {
+      const data = {
+        header: {
+          receiptType: document.getElementById('receiptType').value,
+          documentNumber: document.getElementById('documentNumber').value,
+          expectedDate: document.getElementById('expectedDate').value,
+          vendor: document.getElementById('vendor').value,
+          carrier: document.getElementById('carrier').value,
+          trackingNumber: document.getElementById('trackingNumber').value,
+          routingType: document.getElementById('routingType').value,
+          warehouse: document.getElementById('warehouse').value,
+          dockDoor: document.getElementById('dockDoor').value,
+          notes: document.getElementById('notes').value
+        },
+        lines: []
+      };
+      
+      const tbody = document.getElementById('linesTableBody');
+      const rows = tbody.querySelectorAll('tr:not(#emptyRow)');
+      
+      rows.forEach((row, index) => {
+        const lineNum = row.id.split('-')[1];
+        data.lines.push({
+          item: document.getElementById(`item-${lineNum}`)?.value,
+          qty: document.getElementById(`qty-${lineNum}`)?.value,
+          uom: document.getElementById(`uom-${lineNum}`)?.value,
+          lot: document.getElementById(`lot-${lineNum}`)?.value,
+          expiry: document.getElementById(`expiry-${lineNum}`)?.value
+        });
+      });
+      
+      return data;
+    }
+
+    function validateForm() {
+      const data = collectFormData();
+      
+      if (!data.header.receiptType || !data.header.documentNumber || !data.header.expectedDate || !data.header.vendor || !data.header.routingType || !data.header.warehouse) {
+        alert('Please fill in all required header fields (marked with *)');
+        return false;
+      }
+      
+      if (data.lines.length === 0) {
+        alert('Please add at least one receipt line');
+        return false;
+      }
+      
+      for (let i = 0; i < data.lines.length; i++) {
+        if (!data.lines[i].item || !data.lines[i].qty || !data.lines[i].uom) {
+          alert(`Line ${i + 1}: Please fill in Item, Quantity, and UOM`);
+          return false;
+        }
+      }
+      
+      return true;
+    }
+
+    function saveReceipt() {
+      if (!validateForm()) return;
+      
+      const data = collectFormData();
+      const receiptId = 'RCV-' + Date.now();
+      
+      console.log('Saving receipt:', receiptId, data);
+      
+      alert(`Receipt ${receiptId} created successfully!\n\n` +
+            `Document: ${data.header.documentNumber}\n` +
+            `Vendor: ${data.header.vendor}\n` +
+            `Lines: ${data.lines.length}\n` +
+            `Total Qty: ${document.getElementById('totalQty').textContent}`);
+      
+      localStorage.removeItem('receiptDraft');
+      closeCreateReceiptModal();
+      resetForm();
+    }
+
+    function resetForm() {
+      document.getElementById('receiptForm').reset();
+      document.getElementById('linesTableBody').innerHTML = `
+        <tr id="emptyRow">
+          <td colspan="7" style="text-align: center; padding: 40px var(--spacing-lg); background-color: var(--bg-secondary);">
+            <p style="margin-bottom: var(--spacing-sm); color: var(--text-secondary); font-size: 13px;">No receipt lines added yet</p>
+            <button class="btn btn-sm btn-outline" onclick="addReceiptLine()" style="font-weight: 600; font-size: 12px;">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 4px;">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add First Line
+            </button>
+          </td>
+        </tr>
+      `;
+      lineCounter = 0;
+      updateLineTotals();
+    }
+
+    // Add auto-save listeners
+    window.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('receiptForm');
+      if (form) {
+        form.addEventListener('input', startAutoSave);
+      }
+    });
+
+    // Existing functions
+    function toggleUserMenu() {
+      document.querySelector('.user-dropdown').classList.toggle('show');
+    }
+
+    function viewProfile() {
+      alert('Profile management coming soon!');
+    }
+
+    function changePassword() {
+      alert('Change password coming soon!');
+    }
+
+    window.addEventListener('click', function(e) {
+      if (!e.target.closest('.user-menu')) {
+        document.querySelector('.user-dropdown')?.classList.remove('show');
+      }
+    });
+
+    // Barcode Scanner Integration
+    function openBarcodeScanner() {
+      const scanner = new BarcodeScannerUI(null, {
+        title: 'Scan PO / ASN Number',
+        allowManual: true,
+        showHistory: true,
+        onScan: handleReceiptScan,
+        onClose: () => console.log('Scanner closed')
+      });
+      scanner.open();
+    }
+
+    function handleReceiptScan(scanData) {
+      console.log('Scanned:', scanData);
+      
+      // Extract value
+      const scannedValue = scanData.value;
+      
+      // Try to find matching receipt
+      const mockReceipts = {
+        'PO001': { poNumber: 'PO001', supplier: 'ABC Corp', items: 5, status: 'Expected' },
+        'PO002': { poNumber: 'PO002', supplier: 'XYZ Ltd', items: 3, status: 'Expected' },
+        'ASN1001': { asnNumber: 'ASN1001', poNumber: 'PO001', supplier: 'ABC Corp', items: 5 },
+        'ASN1002': { asnNumber: 'ASN1002', poNumber: 'PO002', supplier: 'XYZ Ltd', items: 3 }
+      };
+
+      if (mockReceipts[scannedValue]) {
+        const receiptData = mockReceipts[scannedValue];
+        
+        if (window.notify) {
+          notify.success(`Found: ${scannedValue} - ${receiptData.supplier}`, 3000);
+        }
+        
+        // Auto-fill receipt form if open
+        setTimeout(() => {
+          const poInput = document.getElementById('receiptPO');
+          const supplierInput = document.getElementById('receiptSupplier');
+          
+          if (poInput) poInput.value = receiptData.poNumber || scannedValue;
+          if (supplierInput) supplierInput.value = receiptData.supplier || '';
+        }, 500);
+      } else {
+        if (window.notify) {
+          notify.warning(`No matching receipt found for: ${scannedValue}`);
+        }
+      }
+    }
+  </script>
+  <script src="js/barcode-scanner.js"></script>
+  <script src="js/qr-generator.js"></script>
+</body>
+</html>

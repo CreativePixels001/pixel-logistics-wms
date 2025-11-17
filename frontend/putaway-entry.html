@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Put-away Entry - Pixel Logistics</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .putaway-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .putaway-mode-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .mode-card {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mode-card:hover {
+            border-color: var(--text-secondary);
+            transform: translateY(-2px);
+        }
+
+        .mode-card.selected {
+            border-color: var(--text-primary);
+            background: var(--hover-bg);
+        }
+
+        .mode-card i {
+            font-size: 2.5rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-secondary);
+        }
+
+        .mode-card.selected i {
+            color: var(--text-primary);
+        }
+
+        .mode-card .mode-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            font-size: var(--font-size-base);
+        }
+
+        .mode-card .mode-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .putaway-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            padding: var(--spacing-md) var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .section-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .section-title i {
+            color: var(--text-secondary);
+        }
+
+        .lpn-scan-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .lpn-scan-group input {
+            flex: 1;
+            font-size: var(--font-size-lg);
+            padding: var(--spacing-md);
+            font-weight: 600;
+        }
+
+        .lpn-info-card {
+            background: var(--hover-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            display: none;
+        }
+
+        .lpn-info-card.active {
+            display: block;
+        }
+
+        .lpn-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .lpn-number {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .lpn-status {
+            padding: 0.25rem 0.625rem;
+            border-radius: var(--border-radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--hover-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        .lpn-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: var(--font-size-sm);
+        }
+
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--spacing-md);
+        }
+
+        .items-table th,
+        .items-table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: var(--font-size-sm);
+        }
+
+        .items-table th {
+            background: var(--hover-bg);
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .location-assignment {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-md);
+        }
+
+        .location-input-group {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: var(--spacing-sm);
+            align-items: end;
+        }
+
+        .suggested-locations {
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .suggested-title {
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .location-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+
+        .location-chip {
+            background: var(--hover-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: 0.375rem 0.75rem;
+            font-size: var(--font-size-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+
+        .location-chip:hover {
+            border-color: var(--text-primary);
+            background: var(--card-bg);
+        }
+
+        .location-chip i {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .location-chip .capacity {
+            font-size: 0.625rem;
+            color: var(--text-secondary);
+            margin-left: 0.25rem;
+        }
+
+        .verification-panel {
+            background: #f5f5f5;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            text-align: center;
+            margin-top: var(--spacing-md);
+            display: none;
+        }
+
+        .verification-panel.active {
+            display: block;
+        }
+
+        .dark-theme .verification-panel {
+            background: #1a1a1a;
+        }
+
+        .verification-panel i {
+            font-size: 3rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .verification-panel.verified i {
+            color: #4caf50;
+        }
+
+        .verification-panel.error i {
+            color: #f44336;
+        }
+
+        .verification-message {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .verification-detail {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+        }
+
+        .putaway-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: flex-end;
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+
+        .btn-putaway-complete {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            padding: var(--spacing-sm) var(--spacing-xl);
+            border: none;
+            border-radius: var(--border-radius-md);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: var(--font-size-base);
+            transition: opacity 0.2s ease;
+        }
+
+        .btn-putaway-complete:hover {
+            opacity: 0.85;
+        }
+
+        .btn-putaway-complete:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-indicator {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .progress-bar-container {
+            background: var(--hover-bg);
+            border-radius: var(--border-radius-sm);
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .progress-bar-fill {
+            background: var(--text-primary);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .putaway-mode-selector {
+                grid-template-columns: 1fr;
+            }
+
+            .location-input-group {
+                grid-template-columns: 1fr;
+            }
+
+            .lpn-details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+      <div class="logo">
+                <i class="fas fa-warehouse"></i>
+                <span>Pixel Logistics</span>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" id="themeToggle" title="Toggle theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="icon-btn" id="searchToggle" title="Search">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="icon-btn" id="uploadToggle" title="Upload">
+                    <i class="fas fa-upload"></i>
+                </button>
+                <div class="user-menu">
+                    <button class="user-menu-toggle" id="userMenuToggle">
+                        <i class="fas fa-user-circle"></i>
+                        <span class="user-name">Admin User</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="user-menu-dropdown" id="userMenuDropdown">
+                        <a href="profile.html"><i class="fas fa-user"></i> Profile</a>
+                        <a href="settings.html"><i class="fas fa-cog"></i> Settings</a>
+                        <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                    </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <div class="nav-section-title">Main Menu</div>
+                <a href="dashboard.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="user-management.html" class="nav-item">
+                    <i class="fas fa-users-cog"></i>
+                    <span>User Management</span>
+                </a>
+                <a href="access-control.html" class="nav-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Access Control</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Inbound</div>
+                <a href="receiving.html" class="nav-item">
+                    <i class="fas fa-truck-loading"></i>
+                    <span>Receiving</span>
+                </a>
+                <a href="putaway.html" class="nav-item active">
+                    <i class="fas fa-dolly"></i>
+                    <span>Putaway</span>
+                </a>
+                <a href="quality-control.html" class="nav-item">
+                    <i class="fas fa-clipboard-check"></i>
+                    <span>Quality Control</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Inventory</div>
+                <a href="inventory.html" class="nav-item">
+                    <i class="fas fa-boxes"></i>
+                    <span>Inventory</span>
+                </a>
+                <a href="locations.html" class="nav-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Locations</span>
+                </a>
+                <a href="cycle-count.html" class="nav-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span>Cycle Count</span>
+                </a>
+                <a href="stock-transfer.html" class="nav-item">
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>Stock Transfer</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Outbound</div>
+                <a href="orders.html" class="nav-item">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Orders</span>
+                </a>
+                <a href="picking.html" class="nav-item">
+                    <i class="fas fa-hand-paper"></i>
+                    <span>Picking</span>
+                </a>
+                <a href="packing.html" class="nav-item">
+                    <i class="fas fa-box"></i>
+                    <span>Packing</span>
+                </a>
+                <a href="shipping.html" class="nav-item">
+                    <i class="fas fa-shipping-fast"></i>
+                    <span>Shipping</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Reports</div>
+                <a href="reports.html" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Reports</span>
+                </a>
+                <a href="analytics.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </a>
+            </div>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Put-away Entry</h1>
+                <p class="page-subtitle">Scan LPN and assign storage location</p>
+            </div>
+            <div class="page-actions">
+                <button class="btn btn-outline" onclick="window.location.href='putaway.html'">
+                    <i class="fas fa-arrow-left"></i> Back to Put-away
+                </button>
+            </div>
+
+        <div class="putaway-container">
+            <!-- Progress Indicator -->
+            <div class="progress-indicator" id="progressIndicator" style="display: none;">
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" id="progressBarFill" style="width: 0%"></div>
+                <div class="progress-text">
+                    <span id="progressLabel">Step 1 of 3: LPN Scan</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+
+            <!-- Mode Selection -->
+            <div class="putaway-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fas fa-cog"></i>
+                        Put-away Mode
+                    </div>
+                <div class="putaway-mode-selector">
+                    <div class="mode-card selected" onclick="selectMode('directed')" data-mode="directed">
+                        <i class="fas fa-route"></i>
+                        <div class="mode-name">Directed Put-away</div>
+                        <div class="mode-desc">System suggests optimal location based on rules</div>
+                    <div class="mode-card" onclick="selectMode('user')" data-mode="user">
+                        <i class="fas fa-user-check"></i>
+                        <div class="mode-name">User-Directed</div>
+                        <div class="mode-desc">User selects location manually</div>
+                    <div class="mode-card" onclick="selectMode('bulk')" data-mode="bulk">
+                        <i class="fas fa-layer-group"></i>
+                        <div class="mode-name">Bulk Put-away</div>
+                        <div class="mode-desc">Process multiple LPNs to one location</div>
+
+            <!-- LPN Scan Section -->
+            <div class="putaway-section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fas fa-barcode"></i>
+                        LPN Information
+                    </div>
+                <div class="lpn-scan-group">
+                    <input type="text" id="lpnInput" class="form-control" placeholder="Scan or enter LPN number" autofocus>
+                    <button class="btn btn-primary" onclick="scanLPN()">
+                        <i class="fas fa-search"></i> Lookup
+                    </button>
+                </div>
+
+                <!-- LPN Info Card -->
+                <div class="lpn-info-card" id="lpnInfoCard">
+                    <div class="lpn-header">
+                        <div class="lpn-number" id="lpnNumber">LPN-</div>
+                        <div class="lpn-status" id="lpnStatus">Ready for Put-away</div>
+                    <div class="lpn-details-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Receipt Number</span>
+                            <span class="detail-value" id="receiptNumber">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Received Date</span>
+                            <span class="detail-value" id="receivedDate">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Total Items</span>
+                            <span class="detail-value" id="totalItems">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Total Quantity</span>
+                            <span class="detail-value" id="totalQuantity">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Weight</span>
+                            <span class="detail-value" id="weight">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Dimensions (LxWxH)</span>
+                            <span class="detail-value" id="dimensions">-</span>
+                        </div>
+
+                    <!-- Items in LPN -->
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Item Name</th>
+                                <th>Quantity</th>
+                                <th>UOM</th>
+                                <th>Category</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsTableBody">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: var(--text-secondary);">Scan LPN to view items</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            <!-- Location Assignment -->
+            <div class="putaway-section" id="locationSection" style="display: none;">
+                <div class="section-header">
+                    <div class="section-title">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Location Assignment
+                    </div>
+
+                <div class="location-assignment">
+                    <div class="location-input-group">
+                        <div class="form-group">
+                            <label for="locationInput" class="form-label required">Destination Location</label>
+                            <input type="text" id="locationInput" class="form-control" placeholder="Scan or enter location">
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-outline" onclick="verifyLocation()">
+                                <i class="fas fa-check-circle"></i> Verify
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary" onclick="confirmPutaway()">
+                                <i class="fas fa-check"></i> Confirm
+                            </button>
+                        </div>
+
+                    <!-- Suggested Locations -->
+                    <div class="suggested-locations" id="suggestedLocations">
+                        <div class="suggested-title">
+                            <i class="fas fa-lightbulb"></i> Suggested Locations
+                        </div>
+                        <div class="location-chips" id="locationChips">
+                            <!-- Will be populated dynamically -->
+                        </div>
+
+                <!-- Verification Panel -->
+                <div class="verification-panel" id="verificationPanel">
+                    <i class="fas fa-qrcode"></i>
+                    <div class="verification-message">Scan location to verify</div>
+                    <div class="verification-detail">Please scan the location barcode to confirm</div>
+
+            <!-- Actions -->
+            <div class="putaway-section" id="actionsSection" style="display: none;">
+                <div class="putaway-actions">
+                    <button class="btn btn-outline" onclick="cancelPutaway()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="btn btn-outline" onclick="printLabel()">
+                        <i class="fas fa-print"></i> Print Label
+                    </button>
+                    <button class="btn-putaway-complete" onclick="completePutaway()" id="completeBtn" disabled>
+                        <i class="fas fa-check-circle"></i> Complete Put-away
+                    </button>
+                </div>
+    </main>
+
+    <!-- Upload Sidebar -->
+    <div class="upload-sidebar" id="uploadSidebar">
+        <div class="upload-header">
+            <h3>Upload Files</h3>
+            <button class="close-btn" onclick="toggleUploadSidebar()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="upload-content">
+            <div class="upload-zone" id="uploadZone">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Drag and drop files here</p>
+                <p class="upload-hint">or click to browse</p>
+                <input type="file" id="fileInput" multiple hidden>
+            </div>
+            <div class="upload-list" id="uploadList"></div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <script src="theme.js"></script>
+    <script src="common-header.js"></script>
+    <script>
+        // Authentication check
+        if (!sessionStorage.getItem('isAuthenticated')) {
+            window.location.href = 'index.html';
+        }
+
+        let currentMode = 'directed';
+        let currentLPN = null;
+        let verifiedLocation = false;
+
+        // Sample LPN database
+        const lpnDatabase = {
+            'LPN001': {
+                lpn: 'LPN001',
+                receipt: 'RCV-20241116-001',
+                receivedDate: '2024-11-16',
+                items: [
+                    { sku: 'SKU001', name: 'Laptop Dell XPS 15', qty: 10, uom: 'EA', category: 'Electronics' },
+                    { sku: 'SKU004', name: 'Monitor 27" 4K', qty: 8, uom: 'EA', category: 'Electronics' }
+                ],
+                weight: '45.5 kg',
+                dimensions: '120x80x60 cm'
+            },
+            'LPN002': {
+                lpn: 'LPN002',
+                receipt: 'RCV-20241116-002',
+                receivedDate: '2024-11-16',
+                items: [
+                    { sku: 'SKU002', name: 'Office Chair Ergonomic', qty: 15, uom: 'EA', category: 'Furniture' }
+                ],
+                weight: '75.0 kg',
+                dimensions: '100x100x80 cm'
+            },
+            'LPN003': {
+                lpn: 'LPN003',
+                receipt: 'RCV-20241115-003',
+                receivedDate: '2024-11-15',
+                items: [
+                    { sku: 'SKU003', name: 'Wireless Mouse Logitech', qty: 50, uom: 'EA', category: 'Accessories' },
+                    { sku: 'SKU005', name: 'Desk Lamp LED', qty: 30, uom: 'EA', category: 'Accessories' }
+                ],
+                weight: '12.3 kg',
+                dimensions: '60x40x40 cm'
+            }
+        };
+
+        // Suggested locations by category
+        const locationSuggestions = {
+            'Electronics': ['A1-01-01', 'A1-01-02', 'A1-02-01', 'A2-01-01'],
+            'Furniture': ['B1-01-01', 'B1-02-01', 'B2-01-01'],
+            'Accessories': ['C1-01-01', 'C1-01-02', 'C1-02-01', 'C2-01-01']
+        };
+
+        function selectMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
+
+            // Show/hide suggested locations based on mode
+            const suggestedDiv = document.getElementById('suggestedLocations');
+            if (mode === 'directed') {
+                suggestedDiv.style.display = 'block';
+            } else {
+                suggestedDiv.style.display = 'none';
+            }
+        }
+
+        function scanLPN() {
+            const lpnInput = document.getElementById('lpnInput').value.trim().toUpperCase();
+            
+            if (!lpnInput) {
+                alert('Please enter an LPN number');
+                return;
+            }
+
+            const lpnData = lpnDatabase[lpnInput];
+            
+            if (!lpnData) {
+                alert('LPN not found. Please check and try again.');
+                return;
+            }
+
+            currentLPN = lpnData;
+            
+            // Update progress
+            updateProgress(1, 33);
+
+            // Populate LPN info
+            document.getElementById('lpnNumber').textContent = lpnData.lpn;
+            document.getElementById('receiptNumber').textContent = lpnData.receipt;
+            document.getElementById('receivedDate').textContent = lpnData.receivedDate;
+            document.getElementById('totalItems').textContent = lpnData.items.length;
+            document.getElementById('totalQuantity').textContent = lpnData.items.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('weight').textContent = lpnData.weight;
+            document.getElementById('dimensions').textContent = lpnData.dimensions;
+
+            // Populate items table
+            const tbody = document.getElementById('itemsTableBody');
+            tbody.innerHTML = lpnData.items.map(item => `
+                <tr>
+                    <td>${item.sku}</td>
+                    <td>${item.name}</td>
+                    <td>${item.qty}</td>
+                    <td>${item.uom}</td>
+                    <td>${item.category}</td>
+                </tr>
+            `).join('');
+
+            // Show LPN info card
+            document.getElementById('lpnInfoCard').classList.add('active');
+            
+            // Show location section
+            document.getElementById('locationSection').style.display = 'block';
+            
+            // Generate suggested locations
+            if (currentMode === 'directed') {
+                generateSuggestedLocations(lpnData.items);
+            }
+
+            // Show actions
+            document.getElementById('actionsSection').style.display = 'block';
+
+            // Focus on location input
+            setTimeout(() => {
+                document.getElementById('locationInput').focus();
+            }, 100);
+        }
+
+        function generateSuggestedLocations(items) {
+            const categories = [...new Set(items.map(item => item.category))];
+            const chipsContainer = document.getElementById('locationChips');
+            
+            let allLocations = [];
+            categories.forEach(category => {
+                if (locationSuggestions[category]) {
+                    allLocations = allLocations.concat(locationSuggestions[category]);
+                }
+            });
+
+            // Remove duplicates
+            allLocations = [...new Set(allLocations)];
+
+            chipsContainer.innerHTML = allLocations.map((loc, index) => {
+                const capacity = 80 + Math.floor(Math.random() * 20); // Random capacity 80-99%
+                return `
+                    <div class="location-chip" onclick="selectSuggestedLocation('${loc}')">
+                        <i class="fas fa-map-pin"></i>
+                        <span>${loc}</span>
+                        <span class="capacity">${capacity}% free</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selectSuggestedLocation(location) {
+            document.getElementById('locationInput').value = location;
+            verifyLocation();
+        }
+
+        function verifyLocation() {
+            const location = document.getElementById('locationInput').value.trim();
+            
+            if (!location) {
+                alert('Please enter a location');
+                return;
+            }
+
+            // Update progress
+            updateProgress(2, 66);
+
+            // Simulate verification
+            const panel = document.getElementById('verificationPanel');
+            panel.classList.add('active');
+            panel.classList.remove('verified', 'error');
+            panel.innerHTML = `
+                <i class="fas fa-spinner fa-spin"></i>
+                <div class="verification-message">Verifying location...</div>
+                <div class="verification-detail">Please wait</div>
+            `;
+
+            setTimeout(() => {
+                // Simulate successful verification
+                panel.classList.add('verified');
+                panel.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <div class="verification-message">Location Verified</div>
+                    <div class="verification-detail">Location ${location} is available</div>
+                `;
+                verifiedLocation = true;
+                document.getElementById('completeBtn').disabled = false;
+            }, 1500);
+        }
+
+        function confirmPutaway() {
+            if (!verifiedLocation) {
+                alert('Please verify the location first');
+                return;
+            }
+
+            if (confirm('Confirm put-away to location ' + document.getElementById('locationInput').value + '?')) {
+                document.getElementById('completeBtn').disabled = false;
+                document.getElementById('completeBtn').focus();
+            }
+        }
+
+        function completePutaway() {
+            if (!currentLPN) {
+                alert('Please scan an LPN first');
+                return;
+            }
+
+            if (!verifiedLocation) {
+                alert('Please verify the location before completing');
+                return;
+            }
+
+            // Update progress
+            updateProgress(3, 100);
+
+            const putawayData = {
+                lpn: currentLPN.lpn,
+                location: document.getElementById('locationInput').value,
+                mode: currentMode,
+                completedBy: 'Admin User',
+                completedAt: new Date().toISOString()
+            };
+
+            console.log('Put-away completed:', putawayData);
+
+            alert('Put-away completed successfully!\n\nLPN: ' + putawayData.lpn + '\nLocation: ' + putawayData.location);
+            
+            // Reset form
+            setTimeout(() => {
+                if (confirm('Put-away another LPN?')) {
+                    resetForm();
+                } else {
+                    window.location.href = 'putaway.html';
+                }
+            }, 500);
+        }
+
+        function cancelPutaway() {
+            if (confirm('Cancel current put-away? All data will be lost.')) {
+                resetForm();
+            }
+        }
+
+        function printLabel() {
+            if (!currentLPN) {
+                alert('Please scan an LPN first');
+                return;
+            }
+
+            alert('Printing label for LPN: ' + currentLPN.lpn + '\n\nLabel sent to default printer.');
+        }
+
+        function resetForm() {
+            currentLPN = null;
+            verifiedLocation = false;
+            
+            document.getElementById('lpnInput').value = '';
+            document.getElementById('locationInput').value = '';
+            document.getElementById('lpnInfoCard').classList.remove('active');
+            document.getElementById('locationSection').style.display = 'none';
+            document.getElementById('actionsSection').style.display = 'none';
+            document.getElementById('verificationPanel').classList.remove('active', 'verified', 'error');
+            document.getElementById('completeBtn').disabled = true;
+            
+            updateProgress(0, 0);
+            
+            document.getElementById('lpnInput').focus();
+        }
+
+        function updateProgress(step, percent) {
+            const indicator = document.getElementById('progressIndicator');
+            const fill = document.getElementById('progressBarFill');
+            const label = document.getElementById('progressLabel');
+            const percentText = document.getElementById('progressPercent');
+
+            indicator.style.display = 'block';
+            fill.style.width = percent + '%';
+            percentText.textContent = percent + '%';
+
+            const steps = [
+                'Step 1 of 3: LPN Scan',
+                'Step 2 of 3: Location Assignment',
+                'Step 3 of 3: Verification',
+                'Complete'
+            ];
+
+            label.textContent = steps[step] || steps[0];
+        }
+
+        // Allow Enter key for LPN lookup
+        document.getElementById('lpnInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                scanLPN();
+            }
+        });
+
+        // Allow Enter key for location verification
+        document.getElementById('locationInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                verifyLocation();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Mobile Receiving - Pixel Logistics</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/notifications.css">
+  <link rel="stylesheet" href="css/scanner-qr.css">
+  <link rel="stylesheet" href="css/mobile-scanner.css">
+  <style>
+    /* Mobile Receiving Specific Styles */
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    .mobile-app-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-primary);
+    }
+
+    .mobile-header {
+      background: var(--bg-secondary);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .mobile-back-button {
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 24px;
+      cursor: pointer;
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mobile-title {
+      flex: 1;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .mobile-scan-btn {
+      background: var(--accent-color);
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .mobile-content {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+    }
+
+    .receipt-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .status-badge {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-expected { background: #fef3c7; color: #92400e; }
+    .status-receiving { background: #dbeafe; color: #1e40af; }
+    .status-complete { background: #d1fae5; color: #065f46; }
+
+    .info-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+
+    .info-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .info-value {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .item-list {
+      margin-top: 16px;
+    }
+
+    .item-card {
+      background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .item-number {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 14px;
+    }
+
+    .item-qty {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--accent-color);
+    }
+
+    .item-description {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .qty-input-group {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .qty-input {
+      padding: 12px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      text-align: center;
+    }
+
+    .qty-btn {
+      width: 44px;
+      height: 44px;
+      border: 2px solid var(--border-color);
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+
+    .qty-btn:active {
+      background: var(--border-color);
+    }
+
+    .action-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .action-btn {
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-confirm {
+      background: #10b981;
+      color: white;
+    }
+
+    .btn-hold {
+      background: #f59e0b;
+      color: white;
+    }
+
+    .btn-scan {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    .btn-manual {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
+    }
+
+    .summary-footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-color);
+      padding: 16px;
+      position: sticky;
+      bottom: 0;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 15px;
+    }
+
+    .summary-total {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--accent-color);
+      border-top: 2px solid var(--border-color);
+      padding-top: 12px;
+      margin-top: 8px;
+    }
+
+    .complete-btn {
+      width: 100%;
+      padding: 16px;
+      background: #10b981;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .complete-btn:active {
+      background: #059669;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+    }
+
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+
+    .empty-text {
+      color: var(--text-secondary);
+      font-size: 16px;
+    }
+
+    /* Dark theme support */
+    [data-theme="dark"] .qty-input,
+    [data-theme="dark"] .qty-btn,
+    [data-theme="dark"] .btn-manual {
+      background: var(--bg-primary);
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="mobile-app-container">
+    <!-- Mobile Header -->
+    <div class="mobile-header">
+      <button class="mobile-back-button" onclick="goBack()">←</button>
+      <div class="mobile-title">Receiving</div>
+      <button class="mobile-scan-btn" onclick="openMobileScanner()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <path d="M9 3v18M15 3v18"/>
+        </svg>
+        Scan
+      </button>
+    </div>
+
+    <!-- Content -->
+    <div class="mobile-content" id="mobileContent">
+      <!-- Receipt Card -->
+      <div class="receipt-card">
+        <div class="card-header">
+          <div class="card-title">PO-2024-00156</div>
+          <span class="status-badge status-receiving">Receiving</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Supplier:</span>
+          <span class="info-value">ABC Supplies Inc.</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Expected:</span>
+          <span class="info-value">Nov 16, 2025</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Total Items:</span>
+          <span class="info-value">4</span>
+        </div>
+      </div>
+
+      <!-- Items to Receive -->
+      <div class="receipt-card">
+        <div class="card-title" style="margin-bottom: 12px;">Items to Receive</div>
+        
+        <div class="item-list">
+          <!-- Item 1 -->
+          <div class="item-card">
+            <div class="item-header">
+              <div class="item-number">ITEM-001-A</div>
+              <div class="item-qty">0/100</div>
+            </div>
+            <div class="item-description">Industrial Widget - Standard Grade</div>
+            <div class="qty-input-group">
+              <input type="number" class="qty-input" value="0" min="0" max="100" id="qty1">
+              <button class="qty-btn" onclick="decrementQty('qty1')">−</button>
+              <button class="qty-btn" onclick="incrementQty('qty1', 100)">+</button>
+            </div>
+            <div class="action-buttons">
+              <button class="action-btn btn-scan" onclick="scanItem('qty1')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                </svg>
+                Scan
+              </button>
+              <button class="action-btn btn-confirm" onclick="confirmItem(1)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Confirm
+              </button>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="item-card">
+            <div class="item-header">
+              <div class="item-number">ITEM-002-B</div>
+              <div class="item-qty">0/50</div>
+            </div>
+            <div class="item-description">Premium Component Kit</div>
+            <div class="qty-input-group">
+              <input type="number" class="qty-input" value="0" min="0" max="50" id="qty2">
+              <button class="qty-btn" onclick="decrementQty('qty2')">−</button>
+              <button class="qty-btn" onclick="incrementQty('qty2', 50)">+</button>
+            </div>
+            <div class="action-buttons">
+              <button class="action-btn btn-scan" onclick="scanItem('qty2')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                </svg>
+                Scan
+              </button>
+              <button class="action-btn btn-confirm" onclick="confirmItem(2)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Confirm
+              </button>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="item-card">
+            <div class="item-header">
+              <div class="item-number">ITEM-003-C</div>
+              <div class="item-qty">0/75</div>
+            </div>
+            <div class="item-description">Standard Assembly Part</div>
+            <div class="qty-input-group">
+              <input type="number" class="qty-input" value="0" min="0" max="75" id="qty3">
+              <button class="qty-btn" onclick="decrementQty('qty3')">−</button>
+              <button class="qty-btn" onclick="incrementQty('qty3', 75)">+</button>
+            </div>
+            <div class="action-buttons">
+              <button class="action-btn btn-scan" onclick="scanItem('qty3')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                </svg>
+                Scan
+              </button>
+              <button class="action-btn btn-confirm" onclick="confirmItem(3)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Confirm
+              </button>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="item-card">
+            <div class="item-header">
+              <div class="item-number">ITEM-004-D</div>
+              <div class="item-qty">0/25</div>
+            </div>
+            <div class="item-description">Precision Tool Set</div>
+            <div class="qty-input-group">
+              <input type="number" class="qty-input" value="0" min="0" max="25" id="qty4">
+              <button class="qty-btn" onclick="decrementQty('qty4')">−</button>
+              <button class="qty-btn" onclick="incrementQty('qty4', 25)">+</button>
+            </div>
+            <div class="action-buttons">
+              <button class="action-btn btn-scan" onclick="scanItem('qty4')">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/>
+                </svg>
+                Scan
+              </button>
+              <button class="action-btn btn-confirm" onclick="confirmItem(4)">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Footer -->
+    <div class="summary-footer">
+      <div class="summary-row">
+        <span>Items Received:</span>
+        <span id="itemsReceived">0 / 4</span>
+      </div>
+      <div class="summary-row">
+        <span>Units Received:</span>
+        <span id="unitsReceived">0 / 250</span>
+      </div>
+      <div class="summary-row summary-total">
+        <span>Progress:</span>
+        <span id="progressPct">0%</span>
+      </div>
+      <button class="complete-btn" onclick="completeReceipt()">Complete Receipt</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/theme.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/barcode-scanner.js"></script>
+  <script src="js/mobile-scanner.js"></script>
+  
+  <script>
+    let receivedItems = 0;
+    let receivedUnits = 0;
+    const totalItems = 4;
+    const totalUnits = 250;
+    const confirmedItems = new Set();
+
+    function goBack() {
+      if (confirm('Exit receiving? Progress will be saved.')) {
+        window.location.href = 'receiving.html';
+      }
+    }
+
+    function incrementQty(inputId, max) {
+      const input = document.getElementById(inputId);
+      const currentValue = parseInt(input.value) || 0;
+      if (currentValue < max) {
+        input.value = currentValue + 1;
+      }
+      updateSummary();
+    }
+
+    function decrementQty(inputId) {
+      const input = document.getElementById(inputId);
+      const currentValue = parseInt(input.value) || 0;
+      if (currentValue > 0) {
+        input.value = currentValue - 1;
+      }
+      updateSummary();
+    }
+
+    function scanItem(inputId) {
+      // Open mobile scanner
+      if (typeof MobileScannerUI !== 'undefined') {
+        const scanner = new MobileScannerUI({
+          onScan: (barcode) => {
+            notify.success(`Scanned: ${barcode}`);
+            const input = document.getElementById(inputId);
+            const max = parseInt(input.max);
+            input.value = max; // Auto-fill expected quantity
+            updateSummary();
+          }
+        });
+        scanner.open();
+      } else {
+        notify.info('Scanning simulation - auto-filling quantity');
+        const input = document.getElementById(inputId);
+        const max = parseInt(input.max);
+        input.value = max;
+        updateSummary();
+      }
+    }
+
+    function confirmItem(itemNum) {
+      const inputId = `qty${itemNum}`;
+      const input = document.getElementById(inputId);
+      const qty = parseInt(input.value) || 0;
+      
+      if (qty === 0) {
+        notify.warning('Please enter quantity to receive');
+        return;
+      }
+
+      if (!confirmedItems.has(itemNum)) {
+        confirmedItems.add(itemNum);
+        receivedItems++;
+      }
+
+      // Add vibration feedback if available
+      if (navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+
+      notify.success(`Confirmed ${qty} units for Item ${itemNum}`);
+      updateSummary();
+    }
+
+    function updateSummary() {
+      receivedUnits = 0;
+      for (let i = 1; i <= 4; i++) {
+        const input = document.getElementById(`qty${i}`);
+        receivedUnits += parseInt(input.value) || 0;
+      }
+
+      document.getElementById('itemsReceived').textContent = `${confirmedItems.size} / ${totalItems}`;
+      document.getElementById('unitsReceived').textContent = `${receivedUnits} / ${totalUnits}`;
+      
+      const progress = Math.round((receivedUnits / totalUnits) * 100);
+      document.getElementById('progressPct').textContent = `${progress}%`;
+    }
+
+    function completeReceipt() {
+      if (confirmedItems.size === 0) {
+        notify.warning('Please confirm at least one item');
+        return;
+      }
+
+      if (confirmedItems.size < totalItems) {
+        if (!confirm(`Only ${confirmedItems.size} of ${totalItems} items confirmed. Complete anyway?`)) {
+          return;
+        }
+      }
+
+      notify.success('Receipt completed successfully!');
+      setTimeout(() => {
+        window.location.href = 'receiving.html';
+      }, 1500);
+    }
+
+    function openMobileScanner() {
+      if (typeof MobileScannerUI !== 'undefined') {
+        const scanner = new MobileScannerUI({
+          theme: 'modern',
+          onScan: (barcode) => {
+            notify.success(`Scanned: ${barcode}`);
+          }
+        });
+        scanner.open();
+      } else {
+        notify.info('Scanner not available');
+      }
+    }
+
+    // Auto-update summary on input change
+    document.querySelectorAll('.qty-input').forEach(input => {
+      input.addEventListener('input', updateSummary);
+    });
+  </script>
+</body>
+</html>

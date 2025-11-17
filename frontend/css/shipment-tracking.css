@@ -1,0 +1,517 @@
+/* ===================================
+   Live Shipment Tracking Section
+   =================================== */
+
+.shipment-tracking {
+    background: var(--white);
+    padding: 6rem 0;
+    position: relative;
+}
+
+.tracking-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+/* Map Container */
+.tracking-map {
+    position: relative;
+}
+
+.map-container {
+    position: relative;
+    width: 100%;
+    height: 600px;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.map-overlay {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.map-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(to right, rgba(0,0,0,0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0,0,0,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+}
+
+/* Warehouse Marker */
+.warehouse-marker {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    z-index: 10;
+}
+
+.marker-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--dark);
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--white);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.marker-icon i {
+    transform: rotate(45deg);
+    color: var(--white);
+    font-size: 1.25rem;
+}
+
+.marker-label {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--dark);
+    color: var(--white);
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.marker-label::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid var(--dark);
+}
+
+.pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    border: 2px solid var(--dark);
+    border-radius: 50% 50% 50% 0;
+    animation: pulse 2s ease-out infinite;
+    opacity: 0;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) rotate(-45deg) scale(1);
+        opacity: 0.5;
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(-45deg) scale(2);
+        opacity: 0;
+    }
+}
+
+/* Vehicle Markers */
+.vehicle-marker {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 32px;
+    height: 32px;
+    background: var(--dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 0.875rem;
+    border: 3px solid var(--white);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 5;
+    animation: moveVehicle 10s ease-in-out infinite;
+}
+
+.vehicle-marker[data-route="1"] {
+    animation-delay: 0s;
+}
+
+.vehicle-marker[data-route="2"] {
+    animation-delay: 3s;
+}
+
+.vehicle-marker[data-route="3"] {
+    animation-delay: 6s;
+}
+
+@keyframes moveVehicle {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+/* Delivery Points */
+.delivery-point {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    z-index: 3;
+}
+
+.delivery-point i {
+    font-size: 2rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    color: #000000;
+}
+
+.delivery-point.delivered i {
+    opacity: 0.4;
+}
+
+.delivery-point.in-transit i {
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.delivery-point.pending i {
+    opacity: 0.2;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.point-label {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--white);
+    color: var(--dark);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    white-space: nowrap;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Route Lines */
+.route-lines {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Map Legend */
+.map-legend {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+}
+
+.map-legend .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.legend-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.75rem;
+}
+
+.legend-icon.warehouse {
+    background: var(--dark);
+    color: var(--white);
+}
+
+.legend-icon.vehicle {
+    background: var(--dark);
+    color: var(--white);
+}
+
+.legend-icon.delivered {
+    background: #000000;
+    opacity: 0.4;
+}
+
+.legend-icon.in-transit {
+    background: #000000;
+}
+
+/* Tracking Panel */
+.tracking-panel {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    position: sticky;
+    top: 100px;
+    max-height: 600px;
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-light);
+}
+
+.panel-header h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin: 0;
+}
+
+.live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--gray);
+    font-weight: 500;
+}
+
+.live-dot {
+    width: 8px;
+    height: 8px;
+    background: #000000;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Shipment List */
+.shipment-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.shipment-card {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.shipment-card:hover {
+    border-color: var(--dark);
+    box-shadow: var(--shadow-sm);
+}
+
+.shipment-card.active {
+    border-color: var(--dark);
+    background: var(--bg-light);
+}
+
+.shipment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.shipment-id {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--dark);
+    font-size: 0.9375rem;
+}
+
+.shipment-id i {
+    color: var(--gray);
+}
+
+.shipment-status {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.shipment-status.in-transit {
+    background: rgba(0, 0, 0, 0.05);
+    color: #000000;
+}
+
+.shipment-status.delivered {
+    background: rgba(0, 0, 0, 0.05);
+    color: #000000;
+    opacity: 0.6;
+}
+
+.shipment-status.scheduled {
+    background: rgba(0, 0, 0, 0.05);
+    color: #000000;
+    opacity: 0.4;
+}
+
+.shipment-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+}
+
+.detail-label {
+    color: var(--gray);
+    font-weight: 500;
+}
+
+.detail-value {
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.progress-bar {
+    flex: 1;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-left: 1rem;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--dark);
+    border-radius: 3px;
+    transition: width 0.3s ease;
+}
+
+.progress-fill.complete {
+    background: #000000;
+    opacity: 0.4;
+}
+
+/* Tracking Stats */
+.tracking-stats {
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    background: var(--bg-light);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.stat-item .stat-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--dark);
+    border-radius: 0.375rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 1rem;
+}
+
+.stat-item .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1;
+}
+
+.stat-item .stat-label {
+    font-size: 0.75rem;
+    color: var(--gray);
+    line-height: 1.2;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .tracking-layout {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .tracking-panel {
+        position: relative;
+        top: 0;
+        max-height: none;
+    }
+
+    .map-container {
+        height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .map-container {
+        height: 400px;
+    }
+
+    .map-legend {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .tracking-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .warehouse-marker .marker-label {
+        font-size: 0.6875rem;
+    }
+
+    .vehicle-marker {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+}
