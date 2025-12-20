@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students - Pixel Academy Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #fafafa;
+            color: #000000;
+            line-height: 1.6;
+        }
+
+        /* Grid Layout */
+        .admin-container {
+            display: grid;
+            grid-template-areas:
+                "header header"
+                "sidebar main";
+            grid-template-columns: 260px 1fr;
+            grid-template-rows: 64px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            grid-area: header;
+            background: #ffffff;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #000000;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .logo svg {
+            stroke-width: 2;
+        }
+
+        .page-title {
+            font-size: 0.875rem;
+            color: #666666;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-btn {
+            padding: 0.625rem 1rem;
+            border: 1px solid #e0e0e0;
+            background: #ffffff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #000000;
+        }
+
+        .header-btn:hover {
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+
+        .header-btn svg {
+            stroke-width: 2;
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            grid-area: sidebar;
+            background: #ffffff;
+            border-right: 1px solid #e8e8e8;
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .nav-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .nav-section-title {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #999999;
+            margin-bottom: 0.75rem;
+            padding: 0 0.75rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #666666;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            margin-bottom: 0.25rem;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background: #fafafa;
+            color: #000000;
+        }
+
+        .nav-link.active {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .nav-link svg {
+            stroke-width: 2;
+            flex-shrink: 0;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: #000000;
+            color: #ffffff;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .nav-link.active .nav-badge {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Main Content */
+        .main-content {
+            grid-area: main;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #666666;
+            font-size: 0.9375rem;
+        }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .kpi-card:hover {
+            border-color: #d0d0d0;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .kpi-label {
+            font-size: 0.8125rem;
+            color: #666666;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000000;
+            letter-spacing: -0.02em;
+        }
+
+        /* Search & Filter Bar */
+        .search-filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            transition: all 0.15s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            stroke: #999999;
+        }
+
+        .filter-select {
+            padding: 0.75rem 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        /* Students Grid */
+        .students-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .student-card {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .student-card:hover {
+            border-color: #d0d0d0;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .student-header {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .student-avatar {
+            width: 48px;
+            height: 48px;
+            background: #fafafa;
+            border: 1px solid #e0e0e0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: #666666;
+            flex-shrink: 0;
+        }
+
+        .student-info h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .student-email {
+            font-size: 0.8125rem;
+            color: #666666;
+        }
+
+        .student-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+            padding: 1rem 0;
+            border-top: 1px solid #f5f5f5;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .meta-label {
+            font-size: 0.6875rem;
+            color: #999999;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+
+        .meta-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .progress-section {
+            margin-bottom: 1rem;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .progress-percentage {
+            color: #000000;
+        }
+
+        .progress-bar-bg {
+            background: #f5f5f5;
+            border-radius: 4px;
+            height: 6px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: #000000;
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .student-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.625rem;
+            border: 1px solid #e0e0e0;
+            background: #ffffff;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.375rem;
+        }
+
+        .action-btn:hover {
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+
+        .action-btn svg {
+            width: 14px;
+            height: 14px;
+            stroke-width: 2;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin: -0.5rem;
+            transition: all 0.15s ease;
+        }
+
+        .close-btn:hover {
+            opacity: 0.6;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .detail-section {
+            margin-bottom: 2rem;
+        }
+
+        .detail-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-section h3 {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666666;
+            margin-bottom: 1rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+        }
+
+        .detail-label {
+            font-size: 0.75rem;
+            color: #999999;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .module-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .module-item {
+            background: #fafafa;
+            border: 1px solid #f0f0f0;
+            border-radius: 6px;
+            padding: 1rem;
+        }
+
+        .module-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .module-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .module-status {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.25rem 0.625rem;
+            border-radius: 4px;
+            background: #e8e8e8;
+            color: #666666;
+        }
+
+        .module-status.completed {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .module-status.in-progress {
+            background: #e8e8e8;
+            color: #000000;
+        }
+
+        .module-progress {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .module-progress-bar {
+            flex: 1;
+            background: #e8e8e8;
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .module-progress-fill {
+            background: #000000;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .module-progress-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #666666;
+            min-width: 40px;
+            text-align: right;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #666666;
+        }
+
+        .empty-state svg {
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #000000;
+        }
+
+        .empty-state p {
+            font-size: 0.9375rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Top Header -->
+        <header class="header">
+            <div class="header-left">
+                <a href="../index.html" class="logo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>
+                    </svg>
+                    Pixel Academy
+                </a>
+                <span class="page-title">Student Management</span>
+            </div>
+            <div class="header-right">
+                <a href="../student/dashboard.html" class="header-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    </svg>
+                    Student View
+                </a>
+            </div>
+        </header>
+
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Admin</div>
+                    <a href="dashboard.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        <span>Overview</span>
+                    </a>
+                    <a href="students.html" class="nav-link active">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Students</span>
+                    </a>
+                    <a href="assignments.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+                        </svg>
+                        <span>Assignments</span>
+                        <span class="nav-badge" id="assignmentsBadge">0</span>
+                    </a>
+                    <a href="analytics.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M3 3v18h18"/>
+                            <path d="M18 17V9M13 17V5M8 17v-3"/>
+                        </svg>
+                        <span>Analytics</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Student Portal</div>
+                    <a href="../student/dashboard.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="../student/my-courses.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        </svg>
+                        <span>My Courses</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Student Management</h1>
+                <p class="page-subtitle">View and manage all enrolled students</p>
+            </div>
+
+            <!-- KPI Grid -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Total Students</div>
+                    <div class="kpi-value" id="totalStudents">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Active Students</div>
+                    <div class="kpi-value" id="activeStudents">0</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Avg. Progress</div>
+                    <div class="kpi-value" id="avgProgress">0%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Completed Courses</div>
+                    <div class="kpi-value" id="completedCourses">0</div>
+                </div>
+            </div>
+
+            <!-- Search & Filter -->
+            <div class="search-filter-bar">
+                <div class="search-box">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="searchInput" placeholder="Search students by name or email...">
+                </div>
+                <select class="filter-select" id="statusFilter">
+                    <option value="all">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="completed">Completed</option>
+                    <option value="not-started">Not Started</option>
+                </select>
+                <select class="filter-select" id="sortBy">
+                    <option value="name">Sort by Name</option>
+                    <option value="progress">Sort by Progress</option>
+                    <option value="date">Sort by Enrolled Date</option>
+                </select>
+            </div>
+
+            <!-- Students Grid -->
+            <div id="studentsContainer">
+                <div class="students-grid" id="studentsGrid">
+                    <!-- Students will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Student Detail Modal -->
+    <div class="modal" id="studentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div>
+                    <h2 id="modalStudentName">Student Name</h2>
+                    <p style="color: #666666; font-size: 0.9375rem; margin-top: 0.25rem;" id="modalStudentEmail">email@example.com</p>
+                </div>
+                <button class="close-btn" onclick="closeModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-section">
+                    <h3>Student Information</h3>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Enrolled Date</div>
+                            <div class="detail-value" id="modalEnrolledDate">-</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Total Progress</div>
+                            <div class="detail-value" id="modalProgress">0%</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Completed Modules</div>
+                            <div class="detail-value" id="modalCompletedModules">0/5</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Time Spent</div>
+                            <div class="detail-value" id="modalTimeSpent">0h</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3>Course Progress</h3>
+                    <div class="module-list" id="modalModuleList">
+                        <!-- Modules will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/progress-tracker.js"></script>
+    <script>
+        // Initialize
+        const progressTracker = window.progressTracker;
+        let allStudents = [];
+
+        // Load students data
+        function loadStudents() {
+            const progress = progressTracker.getProgress();
+            const courses = progress.courses || {};
+            
+            // For demo, we'll show the current user's data
+            // In production, this would fetch all students from a database
+            allStudents = [{
+                name: progress.studentName || 'Demo Student',
+                email: progress.studentEmail || 'demo@pixelacademy.com',
+                enrolledDate: progress.enrolledDate || new Date().toISOString(),
+                courses: courses
+            }];
+
+            updateKPIs();
+            renderStudents();
+        }
+
+        // Update KPI cards
+        function updateKPIs() {
+            const totalStudents = allStudents.length;
+            let totalProgress = 0;
+            let activeCount = 0;
+            let completedCount = 0;
+
+            allStudents.forEach(student => {
+                const course = student.courses['design-technology-ai'];
+                if (course) {
+                    const progress = calculateCourseProgress(course);
+                    totalProgress += progress;
+                    
+                    if (progress > 0 && progress < 100) activeCount++;
+                    if (progress === 100) completedCount++;
+                }
+            });
+
+            const avgProgress = totalStudents > 0 ? Math.round(totalProgress / totalStudents) : 0;
+
+            document.getElementById('totalStudents').textContent = totalStudents;
+            document.getElementById('activeStudents').textContent = activeCount;
+            document.getElementById('avgProgress').textContent = avgProgress + '%';
+            document.getElementById('completedCourses').textContent = completedCount;
+
+            // Update badge
+            const pendingAssignments = progressTracker.getAllPendingAssignments();
+            document.getElementById('assignmentsBadge').textContent = pendingAssignments.length;
+        }
+
+        // Calculate course progress
+        function calculateCourseProgress(course) {
+            if (!course || !course.modules) return 0;
+
+            const modules = Object.values(course.modules);
+            let completedCount = 0;
+
+            modules.forEach(module => {
+                if (module.status === 'completed') {
+                    completedCount++;
+                }
+            });
+
+            return Math.round((completedCount / modules.length) * 100);
+        }
+
+        // Render students grid
+        function renderStudents() {
+            const grid = document.getElementById('studentsGrid');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const statusFilter = document.getElementById('statusFilter').value;
+            const sortBy = document.getElementById('sortBy').value;
+
+            // Filter students
+            let filteredStudents = allStudents.filter(student => {
+                const matchesSearch = student.name.toLowerCase().includes(searchTerm) || 
+                                    student.email.toLowerCase().includes(searchTerm);
+                
+                if (!matchesSearch) return false;
+
+                if (statusFilter === 'all') return true;
+
+                const course = student.courses['design-technology-ai'];
+                const progress = course ? calculateCourseProgress(course) : 0;
+
+                if (statusFilter === 'active') return progress > 0 && progress < 100;
+                if (statusFilter === 'completed') return progress === 100;
+                if (statusFilter === 'not-started') return progress === 0;
+
+                return true;
+            });
+
+            // Sort students
+            filteredStudents.sort((a, b) => {
+                if (sortBy === 'name') {
+                    return a.name.localeCompare(b.name);
+                } else if (sortBy === 'progress') {
+                    const progressA = a.courses['design-technology-ai'] ? calculateCourseProgress(a.courses['design-technology-ai']) : 0;
+                    const progressB = b.courses['design-technology-ai'] ? calculateCourseProgress(b.courses['design-technology-ai']) : 0;
+                    return progressB - progressA;
+                } else if (sortBy === 'date') {
+                    return new Date(b.enrolledDate) - new Date(a.enrolledDate);
+                }
+                return 0;
+            });
+
+            // Render
+            if (filteredStudents.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <h3>No Students Found</h3>
+                        <p>Try adjusting your search or filters</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filteredStudents.map(student => {
+                const course = student.courses['design-technology-ai'];
+                const progress = course ? calculateCourseProgress(course) : 0;
+                const modules = course ? Object.values(course.modules) : [];
+                const completedModules = modules.filter(m => m.status === 'completed').length;
+                const totalModules = modules.length || 5;
+                
+                const initials = student.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+                const enrolledDate = new Date(student.enrolledDate).toLocaleDateString('en-US', { 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                });
+
+                // Calculate total time (estimate based on modules)
+                const timeSpent = completedModules * 50; // 50 min per module average
+
+                return `
+                    <div class="student-card" onclick="openStudentModal('${student.email}')">
+                        <div class="student-header">
+                            <div class="student-avatar">${initials}</div>
+                            <div class="student-info">
+                                <h3>${student.name}</h3>
+                                <div class="student-email">${student.email}</div>
+                            </div>
+                        </div>
+                        <div class="student-meta">
+                            <div class="meta-item">
+                                <div class="meta-label">Enrolled</div>
+                                <div class="meta-value">${enrolledDate}</div>
+                            </div>
+                            <div class="meta-item">
+                                <div class="meta-label">Modules</div>
+                                <div class="meta-value">${completedModules}/${totalModules}</div>
+                            </div>
+                        </div>
+                        <div class="progress-section">
+                            <div class="progress-label">
+                                <span style="color: #666666;">Course Progress</span>
+                                <span class="progress-percentage">${progress}%</span>
+                            </div>
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                        <div class="student-actions">
+                            <button class="action-btn" onclick="event.stopPropagation(); openStudentModal('${student.email}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                View Details
+                            </button>
+                            <button class="action-btn" onclick="event.stopPropagation(); alert('Message feature coming soon!')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                                </svg>
+                                Message
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Open student detail modal
+        function openStudentModal(email) {
+            const student = allStudents.find(s => s.email === email);
+            if (!student) return;
+
+            const course = student.courses['design-technology-ai'];
+            const progress = course ? calculateCourseProgress(course) : 0;
+            const modules = course ? course.modules : {};
+            
+            const completedModules = Object.values(modules).filter(m => m.status === 'completed').length;
+            const totalModules = Object.keys(modules).length || 5;
+            const timeSpent = completedModules * 50; // Estimate
+
+            document.getElementById('modalStudentName').textContent = student.name;
+            document.getElementById('modalStudentEmail').textContent = student.email;
+            document.getElementById('modalEnrolledDate').textContent = new Date(student.enrolledDate).toLocaleDateString('en-US', { 
+                month: 'long', 
+                day: 'numeric', 
+                year: 'numeric' 
+            });
+            document.getElementById('modalProgress').textContent = progress + '%';
+            document.getElementById('modalCompletedModules').textContent = `${completedModules}/${totalModules}`;
+            document.getElementById('modalTimeSpent').textContent = timeSpent + 'min';
+
+            // Render modules
+            const moduleList = document.getElementById('modalModuleList');
+            const moduleNames = {
+                'module-01': 'Module 01: Introduction to Design Thinking',
+                'module-02': 'Module 02: Visual Design Fundamentals',
+                'module-03': 'Module 03: Understanding AI & Prompts',
+                'module-04': 'Module 04: Systems Thinking',
+                'module-05': 'Module 05: Design in the Real World'
+            };
+
+            moduleList.innerHTML = Object.entries(modules).map(([moduleId, module]) => {
+                const chapters = module.chapters || {};
+                const completedChapters = Object.values(chapters).filter(c => c.completed).length;
+                const totalChapters = Object.keys(chapters).length || 3;
+                const moduleProgress = totalChapters > 0 ? Math.round((completedChapters / totalChapters) * 100) : 0;
+
+                let statusClass = 'not-started';
+                let statusText = 'Not Started';
+                if (module.status === 'completed') {
+                    statusClass = 'completed';
+                    statusText = 'Completed';
+                } else if (module.status === 'in-progress' || module.status === 'awaiting-approval') {
+                    statusClass = 'in-progress';
+                    statusText = 'In Progress';
+                }
+
+                return `
+                    <div class="module-item">
+                        <div class="module-item-header">
+                            <div class="module-name">${moduleNames[moduleId] || moduleId}</div>
+                            <div class="module-status ${statusClass}">${statusText}</div>
+                        </div>
+                        <div class="module-progress">
+                            <div class="module-progress-bar">
+                                <div class="module-progress-fill" style="width: ${moduleProgress}%"></div>
+                            </div>
+                            <div class="module-progress-text">${moduleProgress}%</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('studentModal').classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('studentModal').classList.remove('active');
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', renderStudents);
+        document.getElementById('statusFilter').addEventListener('change', renderStudents);
+        document.getElementById('sortBy').addEventListener('change', renderStudents);
+
+        // Close modal on background click
+        document.getElementById('studentModal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        loadStudents();
+    </script>
+</body>
+</html>

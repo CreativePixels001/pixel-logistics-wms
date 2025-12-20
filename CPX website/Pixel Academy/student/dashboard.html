@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard - Pixel Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark: #1a1a1a;
+            --gray: #666666;
+            --gray-light: #999999;
+            --gray-bg: #f5f5f5;
+            --gray-border: #e0e0e0;
+            --accent: #4a4a4a;
+            --white: #ffffff;
+            --border: 1px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gray-bg);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: white;
+            border-bottom: var(--border) solid var(--gray-border);
+            padding: 1.5rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            opacity: 0.6;
+        }
+
+        /* User Profile Dropdown */
+        .user-profile {
+            position: relative;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            background: var(--gray-bg);
+        }
+
+        .profile-trigger:hover {
+            border-color: var(--gray-border);
+            background: white;
+        }
+
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gray-border);
+        }
+
+        .profile-name {
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.9rem;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .profile-chevron {
+            width: 16px;
+            height: 16px;
+            stroke: var(--gray);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-trigger.active .profile-chevron {
+            transform: rotate(180deg);
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: white;
+            border: 1px solid var(--gray-border);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .profile-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .profile-dropdown-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .profile-email {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+
+        .profile-dropdown-menu {
+            padding: 0.5rem;
+        }
+
+        .profile-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: var(--dark);
+        }
+
+        .profile-dropdown-item:hover {
+            background: var(--gray-bg);
+        }
+
+        .profile-dropdown-item svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--gray);
+        }
+
+        .profile-dropdown-item.logout {
+            color: #d32f2f;
+        }
+
+        .profile-dropdown-item.logout svg {
+            stroke: #d32f2f;
+        }
+
+        .profile-dropdown-item.logout:hover {
+            background: #ffebee;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 3rem 2rem;
+        }
+
+        .welcome-header {
+            margin-bottom: 3rem;
+        }
+
+        .welcome-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .welcome-subtext {
+            font-size: 1.1rem;
+            color: var(--gray);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid var(--gray-border);
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gray-bg);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--accent);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Course Cards */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .view-all {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .view-all:hover {
+            opacity: 0.7;
+        }
+
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--gray-border);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .course-thumbnail {
+            height: 180px;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: 700;
+        }
+
+        .course-content {
+            padding: 1.5rem;
+        }
+
+        .course-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            background: var(--gray-bg);
+            color: var(--gray);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .course-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+        }
+
+        .course-desc {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .course-progress {
+            margin-bottom: 1rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .progress-label {
+            color: var(--gray);
+        }
+
+        .progress-percent {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--gray-bg);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--gray-border);
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        .course-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .course-meta svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--gray-light);
+        }
+
+        .continue-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--dark);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .continue-btn:hover {
+            background: var(--accent);
+        }
+
+        .continue-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: white;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-header h1 {
+                font-size: 2rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="../index.html" class="logo">Pixel Academy</a>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Explore Courses</a></li>
+                <li><a href="my-courses.html">My Courses</a></li>
+                <li class="user-profile">
+                    <div class="profile-trigger" onclick="toggleProfileDropdown()">
+                        <img src="" alt="User" class="profile-avatar" id="userAvatar">
+                        <span class="profile-name" id="userName">User</span>
+                        <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-dropdown-header">
+                            <div class="profile-name" id="userNameFull">Loading...</div>
+                            <div class="profile-email" id="userEmail">Loading...</div>
+                        </div>
+                        <div class="profile-dropdown-menu">
+                            <a href="../admin/assignments.html" class="profile-dropdown-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                                </svg>
+                                📋 Admin Panel
+                            </a>
+                            <a href="settings.html" class="profile-dropdown-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"/>
+                                </svg>
+                                Settings
+                            </a>
+                            <div class="profile-dropdown-item logout" onclick="handleLogout()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                                </svg>
+                                Log Out
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="welcome-header">
+            <h1 id="welcomeMessage">Welcome back, Student</h1>
+            <p class="welcome-subtext">Continue your learning journey</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                    </svg>
+                </div>
+                <div class="stat-value">1</div>
+                <div class="stat-label">Enrolled Courses</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                </div>
+                <div class="stat-value" id="totalHours">2.5h</div>
+                <div class="stat-label">Learning Time</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                </div>
+                <div class="stat-value" id="progressPercent">20%</div>
+                <div class="stat-label">Overall Progress</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                </div>
+                <div class="stat-value">1/5</div>
+                <div class="stat-label">Modules Completed</div>
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h2>Continue Learning</h2>
+            <a href="my-courses.html" class="view-all">View All →</a>
+        </div>
+
+        <div class="courses-grid">
+            <div class="course-card" onclick="window.location.href='../courses/design-technology-ai/lectures/module-01.html'">
+                <div class="course-thumbnail">01</div>
+                <div class="course-content">
+                    <div class="course-badge">In Progress</div>
+                    <h3 class="course-title">Design & Technology in the AI Era</h3>
+                    <p class="course-desc">A discussion-based course exploring how design, technology, and AI are reshaping the way we think and build.</p>
+                    
+                    <div class="course-progress">
+                        <div class="progress-header">
+                            <span class="progress-label">Module 1 of 5</span>
+                            <span class="progress-percent">20%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 20%"></div>
+                        </div>
+                    </div>
+
+                    <div class="course-meta">
+                        <span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            45 min
+                        </span>
+                        <span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                            </svg>
+                            5 Modules
+                        </span>
+                    </div>
+
+                    <a href="../courses/design-technology-ai/lectures/module-01.html" class="continue-btn" onclick="event.stopPropagation()">
+                        Continue Module 1
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="9 18 15 12 9 6"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/progress-tracker.js"></script>
+    <script>
+        // Check authentication and load user profile
+        window.addEventListener('load', () => {
+            const user = sessionStorage.getItem('pixelAcademyUser');
+            if (!user) {
+                window.location.href = '../login.html';
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(user);
+                const firstName = userData.name.split(' ')[0];
+                
+                // Update welcome message
+                document.getElementById('welcomeMessage').textContent = `Welcome back, ${firstName}`;
+                
+                // Update profile elements
+                document.getElementById('userName').textContent = firstName;
+                document.getElementById('userNameFull').textContent = userData.name;
+                document.getElementById('userEmail').textContent = userData.email;
+                document.getElementById('userAvatar').src = userData.picture || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"%3E%3Cpath d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/%3E%3C/svg%3E';
+                
+                // Load and display progress stats
+                loadDashboardStats();
+            } catch (e) {
+                console.error('Error loading user data:', e);
+            }
+        });
+        
+        function loadDashboardStats() {
+            const stats = window.progressTracker.getDashboardStats();
+            const courseProgress = window.progressTracker.getCourseProgress('design-technology-ai');
+            
+            // Update stats cards
+            document.getElementById('totalHours').textContent = window.progressTracker.getLearningHoursFormatted();
+            document.getElementById('progressPercent').textContent = stats.overallProgress + '%';
+            
+            // Update course card
+            if (courseProgress) {
+                const completedModules = courseProgress.completedModules;
+                const totalModules = courseProgress.totalModules;
+                const progressPercent = courseProgress.overallProgress;
+                
+                // Update progress display
+                document.querySelector('.progress-label').textContent = `Module ${completedModules + 1} of ${totalModules}`;
+                document.querySelector('.progress-percent').textContent = progressPercent + '%';
+                document.querySelector('.progress-fill').style.width = progressPercent + '%';
+                
+                // Update stats card
+                document.querySelector('.stat-card:nth-child(4) .stat-value').textContent = `${completedModules}/${totalModules}`;
+                
+                // Update badge based on status
+                const badge = document.querySelector('.course-badge');
+                if (courseProgress.status === 'completed') {
+                    badge.textContent = 'Completed';
+                    badge.style.background = '#4CAF50';
+                    badge.style.color = 'white';
+                } else if (courseProgress.status === 'in-progress') {
+                    badge.textContent = 'In Progress';
+                } else {
+                    badge.textContent = 'Not Started';
+                }
+            }
+        }
+        
+        // Toggle profile dropdown
+        function toggleProfileDropdown() {
+            const trigger = document.querySelector('.profile-trigger');
+            const dropdown = document.getElementById('profileDropdown');
+            trigger.classList.toggle('active');
+            dropdown.classList.toggle('active');
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const profile = document.querySelector('.user-profile');
+            if (profile && !profile.contains(e.target)) {
+                document.querySelector('.profile-trigger')?.classList.remove('active');
+                document.getElementById('profileDropdown')?.classList.remove('active');
+            }
+        });
+        
+        // Handle logout
+        function handleLogout() {
+            if (confirm('Are you sure you want to log out?')) {
+                sessionStorage.removeItem('pixelAcademyUser');
+                window.location.href = '../login.html';
+            }
+        }
+    </script>
+</body>
+</html>

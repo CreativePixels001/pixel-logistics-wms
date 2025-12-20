@@ -1,0 +1,1807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 02: How Interfaces Work | Pixel Academy</title>
+    <meta name="description" content="Understanding FONT, COLOR, and SHAPE in interface design.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:wght@400;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { 
+            --primary: #000000; 
+            --dark: #1a1a1a; 
+            --light: #FFFFFF; 
+            --gray: #666666;
+            --gray-light: #999999;
+            --gray-lighter: #cccccc;
+            --gray-dark: #333333;
+            --gray-bg: #f5f5f5;
+            --gray-border: #e0e0e0;
+            --accent: #4a4a4a;
+            --accent-light: #757575;
+            --border: 2px; 
+        }
+        body { font-family: 'Inter', sans-serif; background: white; color: var(--dark); line-height: 1.6; }
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.3; }
+        
+        /* Layout */
+        .lecture-layout { display: grid; grid-template-columns: 320px 1fr; min-height: 100vh; margin-top: 80px; }
+        
+        /* Progress Bar */
+        .reading-progress { position: fixed; top: 80px; left: 320px; right: 0; width: calc(100% - 320px); height: 4px; background: linear-gradient(90deg, #1a1a1a, #666666); z-index: 999; transform-origin: left; transform: scaleX(0); transition: transform 0.1s ease; }
+        
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: white; border-bottom: var(--border) solid var(--gray-border); padding: 1.5rem 0; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--dark); text-decoration: none; }
+        .nav-menu { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-menu a { color: var(--dark); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        .nav-menu a:hover { opacity: 0.6; }
+        
+        /* User Profile Dropdown */
+        .user-profile { position: relative; }
+        .profile-trigger { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 1rem; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; border: 1px solid transparent; background: var(--gray-bg); }
+        .profile-trigger:hover { border-color: var(--gray-border); background: white; }
+        .profile-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gray-border); }
+        .profile-name { font-weight: 500; color: var(--dark); font-size: 0.9rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .profile-chevron { width: 16px; height: 16px; stroke: var(--gray); transition: transform 0.3s ease; }
+        .profile-trigger.active .profile-chevron { transform: rotate(180deg); }
+        
+        .profile-dropdown { position: absolute; top: calc(100% + 0.5rem); right: 0; background: white; border: 1px solid var(--gray-border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 220px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; }
+        .profile-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .profile-dropdown-header { padding: 1rem; border-bottom: 1px solid var(--gray-border); }
+        .profile-email { font-size: 0.85rem; color: var(--gray); margin-top: 0.25rem; }
+        .profile-dropdown-menu { padding: 0.5rem; }
+        .profile-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; text-decoration: none; color: var(--dark); }
+        .profile-dropdown-item:hover { background: var(--gray-bg); }
+        .profile-dropdown-item svg { width: 18px; height: 18px; stroke: var(--gray); }
+        .profile-dropdown-item.logout { color: #d32f2f; }
+        .profile-dropdown-item.logout svg { stroke: #d32f2f; }
+        .profile-dropdown-item.logout:hover { background: #ffebee; }
+        
+        /* Sidebar */
+        .sidebar { background: var(--gray-bg); border-right: var(--border) solid var(--gray-border); padding: 2rem; position: sticky; top: 80px; height: calc(100vh - 80px); overflow-y: auto; }
+        .sidebar h3 { font-size: 1.125rem; margin-bottom: 1.5rem; color: var(--dark); }
+        .lecture-list { list-style: none; }
+        .lecture-item { margin-bottom: 0.5rem; }
+        .lecture-link { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; text-decoration: none; color: var(--gray); transition: all 0.3s ease; border-radius: 4px; background: white; border: 1px solid var(--gray-border); cursor: pointer; }
+        .lecture-link:hover { background: var(--gray-bg); transform: translateX(4px); border-color: var(--gray); }
+        .lecture-link.active { background: var(--dark); color: white; border-color: var(--dark); }
+        .lecture-number { font-weight: 600; font-size: 0.85rem; min-width: 20px; }
+        .lecture-title-small { font-size: 0.9rem; line-height: 1.4; }
+        .lecture-link.active .lecture-title-small { color: white; }
+        .lecture-duration { font-size: 0.75rem; color: var(--gray); margin-top: 0.25rem; }
+        .lecture-link.active .lecture-duration { color: rgba(255,255,255,0.7); }
+        .lecture-status { font-size: 0.75rem; margin-top: 0.25rem; }
+        .status-complete { color: #00C853; font-weight: 600; }
+        
+        /* Expandable Module with Sub-items */
+        .module-expandable { position: relative; }
+        .module-toggle-icon { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); transition: transform 0.3s ease; font-size: 0.75rem; }
+        .module-expandable.expanded .module-toggle-icon { transform: translateY(-50%) rotate(90deg); }
+        .module-subitems { list-style: none; max-height: 0; overflow: hidden; transition: max-height 0.3s ease; margin: 0.5rem 0 0 0; }
+        .module-expandable.expanded .module-subitems { max-height: 500px; }
+        .subitem-link { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 1rem 0.75rem 2.5rem; text-decoration: none; color: var(--gray); transition: all 0.3s ease; border-radius: 4px; background: rgba(255,255,255,0.5); border: 1px solid transparent; margin-bottom: 0.35rem; cursor: pointer; }
+        .subitem-link:hover { background: white; border-color: var(--gray-border); transform: translateX(4px); }
+        .subitem-link.active { background: var(--gray-dark); color: white; border-color: var(--gray-dark); }
+        .subitem-icon { font-size: 0.75rem; min-width: 16px; }
+        .subitem-title { font-size: 0.85rem; line-height: 1.4; flex: 1; }
+        .subitem-link.active .subitem-title { color: white; }
+        .subitem-status { font-size: 0.7rem; margin-top: 0.15rem; }
+        
+        /* Content Area */
+        .content-area { padding: 3rem; max-width: 900px; padding-bottom: 10rem; }
+        .breadcrumb { font-size: 0.9rem; margin-bottom: 2rem; color: var(--gray); }
+        .breadcrumb a { color: var(--gray); text-decoration: none; }
+        .breadcrumb a:hover { color: black; }
+        
+        /* Chapter Sections - Hidden by default */
+        .chapter-section { display: none; }
+        .chapter-section.active { display: block; animation: fadeInUp 0.6s ease forwards; }
+        
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .lecture-header { margin-bottom: 3rem; }
+        .lecture-badge { display: inline-block; padding: 0.5rem 1rem; background: var(--gray-bg); color: var(--gray-dark); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1rem; border-radius: 4px; border: 1px solid var(--gray-border); }
+        .lecture-header h1 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 700; margin-bottom: 1rem; color: var(--dark); }
+        .lecture-subtitle { font-size: 1.15rem; color: var(--gray); line-height: 1.7; margin-bottom: 1.5rem; max-width: 700px; }
+        .lecture-meta { display: flex; gap: 2rem; color: var(--gray); font-size: 0.9rem; flex-wrap: wrap; }
+        .meta-item { display: flex; align-items: center; gap: 0.5rem; }
+        .meta-item svg { width: 18px; height: 18px; stroke: var(--gray); }
+        
+        /* Content Sections */
+        .lecture-content { margin-top: 3rem; }
+        .content-section { margin-bottom: 4rem; opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+        .content-section.visible { opacity: 1; transform: translateY(0); }
+        .content-section h2 { font-size: 2rem; margin-bottom: 1.5rem; color: var(--dark); position: relative; padding-left: 1rem; }
+        .content-section h2:before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--dark); }
+        .content-section h3 { font-size: 1.5rem; margin: 2rem 0 1rem; color: var(--accent); }
+        .content-section p { margin-bottom: 1.25rem; font-size: 1.1rem; line-height: 1.8; color: var(--gray-dark); }
+        .content-section ul, .content-section ol { margin: 1.5rem 0; padding-left: 2rem; }
+        .content-section li { margin-bottom: 0.75rem; font-size: 1.05rem; line-height: 1.7; color: var(--gray-dark); }
+        
+        /* Font Examples */
+        .font-showcase { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0; }
+        .font-example { padding: 2rem; background: var(--gray-bg); border-radius: 12px; border: 1px solid var(--gray-border); }
+        .font-example-title { font-size: 0.85rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
+        .font-example-display { font-size: 2.5rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; line-height: 1.2; }
+        .font-example-body { font-size: 1rem; line-height: 1.6; color: var(--gray-dark); }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-sans { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'Roboto Mono', monospace; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        
+        /* Highlight Box */
+        .highlight-box { background: var(--dark); color: white; padding: 2rem; border-radius: 12px; margin: 2rem 0; }
+        .highlight-box h3 { color: white; margin-bottom: 1rem; }
+        .highlight-box p { color: rgba(255,255,255,0.9); margin-bottom: 0.75rem; }
+        .highlight-box ul { color: rgba(255,255,255,0.85); }
+        
+        /* 60-30-10 Visual Demonstration */
+        .color-rule-demo { background: white; padding: 2.5rem; border-radius: 12px; margin: 2rem 0; border: 2px solid var(--gray-border); }
+        .color-rule-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--dark); text-align: center; }
+        .color-blocks-container { display: flex; gap: 1rem; margin-bottom: 2rem; height: 300px; }
+        .color-block { border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: transform 0.3s ease; position: relative; overflow: hidden; }
+        .color-block:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        .color-block-60 { flex: 6; background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%); border: 2px solid #d0d0d0; }
+        .color-block-30 { flex: 3; background: linear-gradient(135deg, #666666 0%, #4a4a4a 100%); border: 2px solid #333333; }
+        .color-block-10 { flex: 1.5; background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%); border: 2px solid #000000; min-width: 180px; }
+        .block-label { font-size: 2.5rem; font-weight: 800; color: rgba(255,255,255,0.9); text-shadow: 0 2px 4px rgba(0,0,0,0.3); margin-bottom: 0.5rem; }
+        .color-block-60 .block-label { color: #333333; text-shadow: 0 2px 4px rgba(255,255,255,0.5); }
+        .block-description { font-size: 0.9rem; font-weight: 600; text-align: center; padding: 0 1rem; color: rgba(255,255,255,0.85); }
+        .color-block-60 .block-description { color: #666666; }
+        .color-rule-explanation { background: var(--gray-bg); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--dark); }
+        .color-rule-explanation p { margin-bottom: 0.75rem; font-size: 1rem; color: var(--gray-dark); }
+        .color-rule-explanation strong { color: var(--dark); }
+        
+        /* Shape Combinations Visual Demo */
+        .shape-combo-demo { background: white; padding: 2.5rem; border-radius: 12px; margin: 2rem 0; border: 2px solid var(--gray-border); }
+        .shape-combo-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 2rem; color: var(--dark); text-align: center; }
+        .shape-combos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-bottom: 2rem; }
+        .shape-combo-card { background: var(--gray-bg); border-radius: 12px; padding: 2rem; text-align: center; border: 2px solid var(--gray-border); transition: all 0.3s ease; }
+        .shape-combo-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-color: var(--gray); }
+        .shape-visual { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1.5rem; min-height: 100px; }
+        .shape-icon { font-size: 3.5rem; opacity: 0.9; }
+        .shape-rect { color: #666666; }
+        .shape-circle { color: #999999; }
+        .shape-triangle { color: #4a4a4a; }
+        .shape-plus { font-size: 2rem; opacity: 0.4; color: var(--gray); }
+        .combo-label { font-weight: 700; font-size: 1.1rem; margin-bottom: 0.75rem; color: var(--dark); }
+        .combo-description { font-size: 0.9rem; color: var(--gray); line-height: 1.6; margin-bottom: 1rem; }
+        .combo-example { font-size: 0.85rem; color: var(--accent); font-weight: 600; background: white; padding: 0.5rem 1rem; border-radius: 6px; display: inline-block; }
+        .shape-note { background: var(--gray-bg); padding: 1.5rem; border-radius: 8px; border-left: 4px solid var(--dark); }
+        .shape-note p { margin-bottom: 0.5rem; font-size: 1rem; color: var(--gray-dark); }
+        .shape-note strong { color: var(--dark); }
+        
+        /* Thought Question */
+        .thought-question { background: var(--gray-bg); border-left: 4px solid var(--dark); padding: 2rem; margin: 2rem 0; border-radius: 8px; }
+        .thought-label { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-bottom: 1rem; }
+        .thought-text { font-size: 1.15rem; font-style: italic; color: var(--dark); line-height: 1.7; }
+        
+        /* Assignment Form */
+        .assignment-form { max-width: 700px; margin: 2rem 0; }
+        .form-group { margin-bottom: 2rem; }
+        .form-label { display: block; font-weight: 600; margin-bottom: 0.75rem; color: var(--dark); }
+        .form-input, .form-textarea { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--gray-border); border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 1rem; transition: all 0.3s ease; }
+        .form-input:focus, .form-textarea:focus { outline: none; border-color: var(--dark); box-shadow: 0 0 0 3px rgba(0,0,0,0.05); }
+        .form-textarea { min-height: 150px; resize: vertical; }
+        .file-upload-area { border: 2px dashed var(--gray-border); border-radius: 8px; padding: 2rem; text-align: center; cursor: pointer; transition: all 0.3s ease; }
+        .file-upload-area:hover { border-color: var(--gray); background: var(--gray-bg); }
+        .file-upload-area.dragover { border-color: var(--dark); background: rgba(0,0,0,0.02); }
+        .upload-icon { font-size: 3rem; color: var(--gray); margin-bottom: 1rem; }
+        .upload-text { color: var(--gray); }
+        .file-list { margin-top: 1rem; }
+        .file-item { display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: var(--gray-bg); border-radius: 6px; margin-bottom: 0.5rem; }
+        .file-remove { color: #d32f2f; cursor: pointer; font-weight: 600; }
+        
+        /* Complete Button */
+        .complete-section { margin-top: 4rem; text-align: center; padding: 3rem; background: var(--gray-bg); border-radius: 12px; }
+        .btn { border: none; padding: 1.25rem 3rem; font-size: 1.1rem; font-weight: 600; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.75rem; text-decoration: none; }
+        .btn-primary { background: var(--dark); color: white; }
+        .btn-primary:hover { background: var(--gray-dark); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+        .btn-primary:disabled { background: var(--gray); cursor: not-allowed; transform: none; }
+        
+        /* Audio Player - Bottom Fixed */
+        .audio-player-bottom { position: fixed; bottom: 0; left: 0; right: 0; z-index: 999; background: var(--dark); color: white; padding: 1rem 2rem; box-shadow: 0 -4px 20px rgba(0,0,0,0.2); border-top: 2px solid var(--gray-dark); }
+        .player-container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: auto 1fr auto; gap: 2rem; align-items: center; }
+        .player-controls-group { display: flex; align-items: center; gap: 1rem; }
+        .control-btn { width: 40px; height: 40px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; }
+        .control-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .control-btn svg { width: 20px; height: 20px; fill: white; }
+        .play-btn { width: 50px; height: 50px; background: white; }
+        .play-btn svg { fill: var(--dark); }
+        .play-btn:hover { background: var(--gray-lighter); }
+        
+        .progress-section { flex: 1; }
+        .progress-time { display: flex; justify-content: space-between; font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-bottom: 0.5rem; }
+        .progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; cursor: pointer; position: relative; overflow: hidden; }
+        .progress-fill { height: 100%; background: white; border-radius: 3px; width: 0%; transition: width 0.1s linear; }
+        
+        .speed-controls { display: flex; align-items: center; gap: 0.5rem; }
+        .speed-label { font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-right: 0.25rem; }
+        .speed-btn { padding: 0.4rem 0.75rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: white; font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; }
+        .speed-btn:hover { background: rgba(255,255,255,0.2); }
+        .speed-btn.active { background: white; color: var(--dark); }
+        
+        /* Responsive */
+        @media (max-width: 968px) {
+            .lecture-layout { grid-template-columns: 1fr; }
+            .sidebar { position: relative; height: auto; top: 0; border-right: none; border-bottom: var(--border) solid var(--gray-border); }
+            .reading-progress { left: 0; width: 100%; }
+            .player-container { grid-template-columns: 1fr; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="reading-progress" id="readingProgress"></div>
+    
+    <nav>
+        <div class="nav-container">
+            <a href="../../../index.html" class="logo">Pixel Academy</a>
+            <ul class="nav-menu">
+                <li><a href="../../../student/dashboard.html">Dashboard</a></li>
+                <li><a href="../../../student/my-courses.html">My Courses</a></li>
+                <li class="user-profile">
+                    <div class="profile-trigger" onclick="toggleProfileDropdown()">
+                        <img src="" alt="Profile" class="profile-avatar" id="userAvatar">
+                        <span class="profile-name" id="userName">Student</span>
+                        <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-dropdown-header">
+                            <div style="font-weight: 600;" id="userNameFull">Student Name</div>
+                            <div class="profile-email" id="userEmail">student@example.com</div>
+                        </div>
+                        <div class="profile-dropdown-menu">
+                            <a href="../../../student/settings.html" class="profile-dropdown-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M12 1v6m0 6v6m0-18a10 10 0 0 1 0 20 10 10 0 0 1 0-20z"></path>
+                                </svg>
+                                Settings
+                            </a>
+                            <div class="profile-dropdown-item logout" onclick="handleLogout()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                Logout
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="lecture-layout">
+        <aside class="sidebar">
+            <h3>Course Modules</h3>
+            <ul class="lecture-list">
+                <li class="lecture-item">
+                    <a href="module-01.html" class="lecture-link">
+                        <span class="lecture-number">01</span>
+                        <div>
+                            <div class="lecture-title-small">Introduction: Design in the Age of AI</div>
+                            <div class="lecture-duration">45 min</div>
+                            <div class="lecture-status status-complete">● Completed</div>
+                        </div>
+                    </a>
+                </li>
+                <li class="lecture-item module-expandable expanded">
+                    <div class="lecture-link active" onclick="toggleModule(this)">
+                        <span class="lecture-number">02</span>
+                        <div style="flex: 1;">
+                            <div class="lecture-title-small">How Interfaces Work</div>
+                            <div class="lecture-duration">135 min • 3 chapters</div>
+                            <div class="lecture-status">● In Progress</div>
+                        </div>
+                        <span class="module-toggle-icon">▶</span>
+                    </div>
+                    <ul class="module-subitems">
+                        <li>
+                            <div class="subitem-link active" data-chapter="chapter-1" onclick="loadChapter('chapter-1')">
+                                <span class="subitem-icon">○</span>
+                                <div>
+                                    <div class="subitem-title">Chapter 1: FONT</div>
+                                    <div class="subitem-status">45 min</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="subitem-link" data-chapter="chapter-2" onclick="loadChapter('chapter-2')">
+                                <span class="subitem-icon">○</span>
+                                <div>
+                                    <div class="subitem-title">Chapter 2: COLOR</div>
+                                    <div class="subitem-status">45 min</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="subitem-link" data-chapter="chapter-3" onclick="loadChapter('chapter-3')">
+                                <span class="subitem-icon">○</span>
+                                <div>
+                                    <div class="subitem-title">Chapter 3: SHAPE</div>
+                                    <div class="subitem-status">45 min</div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="subitem-link" data-chapter="assignment" onclick="loadChapter('assignment')">
+                                <span class="subitem-icon">☐</span>
+                                <div>
+                                    <div class="subitem-title">Assignment</div>
+                                    <div class="subitem-status">Submit your work</div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <li class="lecture-item">
+                    <a href="#" class="lecture-link">
+                        <span class="lecture-number">03</span>
+                        <div>
+                            <div class="lecture-title-small">Understanding AI & Prompts</div>
+                            <div class="lecture-duration">60 min</div>
+                            <div class="lecture-status">Available</div>
+                        </div>
+                    </a>
+                </li>
+                <li class="lecture-item">
+                    <a href="#" class="lecture-link">
+                        <span class="lecture-number">04</span>
+                        <div>
+                            <div class="lecture-title-small">Systems Thinking</div>
+                            <div class="lecture-duration">55 min</div>
+                            <div class="lecture-status">Available</div>
+                        </div>
+                    </a>
+                </li>
+                <li class="lecture-item">
+                    <a href="#" class="lecture-link">
+                        <span class="lecture-number">05</span>
+                        <div>
+                            <div class="lecture-title-small">Design in the Real World</div>
+                            <div class="lecture-duration">50 min</div>
+                            <div class="lecture-status">Available</div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="content-area">
+            <div class="breadcrumb">
+                <a href="../../../student/dashboard.html">Dashboard</a> / 
+                <a href="../../../student/my-courses.html">My Courses</a> / 
+                <a href="../overview.html">Design & Technology in AI Era</a> / 
+                <span id="breadcrumbCurrent">Module 02 - Chapter 1: FONT</span>
+            </div>
+
+            <!-- CHAPTER 1: FONT -->
+            <div id="chapter-1" class="chapter-section active">
+                <div class="lecture-header">
+                    <div class="lecture-badge">MODULE 02 • CHAPTER 1 OF 3</div>
+                    <h1>FONT</h1>
+                    <p class="lecture-subtitle">Understanding Typography: The Art and Science of Written Communication</p>
+                    <div class="lecture-meta">
+                        <div class="meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span>45 minutes</span>
+                        </div>
+                        <div class="meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <polyline points="2 17 12 22 22 17"/>
+                                <polyline points="2 12 12 17 22 12"/>
+                            </svg>
+                            <span>Typography Fundamentals</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lecture-content">
+                    <div class="content-section visible">
+                        <h2>Introduction: Why Fonts Matter</h2>
+                        <p>
+                            Imagine opening your favorite app or website. Before you click anything, before you read any words, 
+                            your brain has already formed an opinion. Is this professional? Friendly? Trustworthy? Modern or traditional? 
+                            Much of that impression comes from something most people never consciously notice: the font.
+                        </p>
+                        <p>
+                            Typography is the silent communicator. It speaks before your words do. A luxury brand uses elegant serifs. 
+                            A tech startup uses clean sans-serifs. A creative agency might use bold display fonts. None of this is accidental.
+                        </p>
+                        <p>
+                            In this chapter, we'll explore how fonts shape perception, influence behavior, and fundamentally change how 
+                            people interact with interfaces. By the end, you'll never look at text the same way again.
+                        </p>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>The Four Font Families You Need to Know</h2>
+                        
+                        <div class="font-showcase">
+                            <div class="font-example">
+                                <div class="font-example-title">SERIF</div>
+                                <div class="font-example-display font-serif">Elegant</div>
+                                <p class="font-example-body font-serif">
+                                    Traditional, authoritative, and sophisticated. Used in print for centuries. 
+                                    Think newspapers, books, and luxury brands.
+                                </p>
+                            </div>
+                            
+                            <div class="font-example">
+                                <div class="font-example-title">SANS-SERIF</div>
+                                <div class="font-example-display font-sans">Modern</div>
+                                <p class="font-example-body font-sans">
+                                    Clean, minimal, and contemporary. The default choice for digital interfaces. 
+                                    Used by Apple, Google, and most modern apps.
+                                </p>
+                            </div>
+                            
+                            <div class="font-example">
+                                <div class="font-example-title">MONOSPACE</div>
+                                <div class="font-example-display font-mono">Code</div>
+                                <p class="font-example-body font-mono">
+                                    Technical, precise, and functional. Every character takes equal space. 
+                                    Perfect for code, data, and technical documentation.
+                                </p>
+                            </div>
+                            
+                            <div class="font-example">
+                                <div class="font-example-title">DISPLAY</div>
+                                <div class="font-example-display font-display">Impact</div>
+                                <p class="font-example-body">
+                                    Bold, attention-grabbing, and decorative. Used for headlines, logos, and branding. 
+                                    Never use for body text.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <h3>Understanding the Difference</h3>
+                        <p>
+                            <strong>Serif fonts</strong> have small decorative strokes (called serifs) at the ends of letters. 
+                            They originated in ancient Roman inscriptions and dominated print media for 500 years. Serif fonts 
+                            convey tradition, reliability, and formality. Banks, law firms, and newspapers love serifs.
+                        </p>
+                        <p>
+                            <strong>Sans-serif fonts</strong> (literally "without serifs") emerged in the early 1900s with the 
+                            modernist design movement. They're cleaner, simpler, and easier to read on screens. This is why 
+                            90% of digital interfaces use sans-serif. They feel approachable, modern, and efficient.
+                        </p>
+                    </div>
+
+                    <div class="thought-question">
+                        <div class="thought-label">◆ Pause & Think</div>
+                        <div class="thought-text">
+                            Open three different apps on your phone right now. Look at their fonts. 
+                            What do those font choices tell you about how the company wants you to feel?
+                        </div>
+                    </div>
+
+                    <div class="complete-section">
+                        <h3 style="margin-bottom: 1rem; color: var(--dark);">Chapter Complete!</h3>
+                        <p style="color: var(--gray); margin-bottom: 2rem;">
+                            Great work! You've completed Chapter 1: FONT. Next up: Chapter 2 - COLOR.
+                        </p>
+                        <button class="btn btn-primary" onclick="completeChapter('chapter-1')">
+                            Mark as Complete & Continue to COLOR →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAPTER 2: COLOR -->
+            <div id="chapter-2" class="chapter-section">
+                <div class="lecture-header">
+                    <div class="lecture-badge">MODULE 02 • CHAPTER 2 OF 3</div>
+                    <h1>COLOR</h1>
+                    <p class="lecture-subtitle">Understanding Color Theory, Psychology, and Accessibility in Design</p>
+                    <div class="lecture-meta">
+                        <div class="meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span>45 minutes</span>
+                        </div>
+                        <div class="meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <polyline points="2 17 12 22 22 17"/>
+                                <polyline points="2 12 12 17 22 12"/>
+                            </svg>
+                            <span>Color Psychology & Accessibility</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lecture-content">
+                    <div class="content-section visible">
+                        <h2>Introduction: The Power of Color</h2>
+                        <p>
+                            Close your eyes and think of McDonald's. Did you see red and yellow? Think of Facebook. Blue, right? 
+                            What about Spotify? Green. These aren't random choices. Colors are strategic weapons in the battle for attention, 
+                            emotion, and memory.
+                        </p>
+                        <p>
+                            Color is emotion in visual form. Red increases heart rate by 13.4%. Blue lowers blood pressure. Yellow triggers 
+                            anxiety in high doses. These aren't opinions—they're measurable physiological responses backed by decades of 
+                            psychological research.
+                        </p>
+                        <p>
+                            In this chapter, you'll learn how to wield color like a professional designer: understanding color theory, 
+                            psychology, cultural meanings, accessibility requirements, and practical application in interface design.
+                        </p>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Color Theory Fundamentals</h2>
+                        
+                        <h3>The Color Wheel</h3>
+                        <p>
+                            Everything starts with the color wheel—a visual representation of color relationships invented by Isaac Newton 
+                            in 1666. It contains three types of colors:
+                        </p>
+                        <ul>
+                            <li><strong>Primary Colors:</strong> Red, Yellow, Blue—cannot be created by mixing other colors</li>
+                            <li><strong>Secondary Colors:</strong> Orange (Red + Yellow), Green (Yellow + Blue), Purple (Blue + Red)</li>
+                            <li><strong>Tertiary Colors:</strong> Mix of primary and secondary (Red-Orange, Yellow-Green, Blue-Purple, etc.)</li>
+                        </ul>
+
+                        <h3>Color Harmony Systems</h3>
+                        <p>
+                            Professional designers use these proven color relationships:
+                        </p>
+                        <ul>
+                            <li><strong>Monochromatic:</strong> One color + different shades/tints (safest choice, can feel boring)</li>
+                            <li><strong>Analogous:</strong> 3 colors next to each other on wheel (harmonious, natural feeling)</li>
+                            <li><strong>Complementary:</strong> Colors opposite on wheel (high contrast, vibrant, can be jarring)</li>
+                            <li><strong>Triadic:</strong> 3 colors evenly spaced (balanced, vibrant, harder to master)</li>
+                            <li><strong>Split-Complementary:</strong> Base color + two adjacent to complement (safer than pure complementary)</li>
+                        </ul>
+
+                        <div class="color-rule-demo">
+                            <div class="color-rule-title">◆ The 60-30-10 Rule: Visual Demonstration</div>
+                            
+                            <div class="color-blocks-container">
+                                <div class="color-block color-block-60">
+                                    <div class="block-label">60%</div>
+                                    <div class="block-description">Dominant Color<br>(Background, Main UI)</div>
+                                </div>
+                                <div class="color-block color-block-30">
+                                    <div class="block-label">30%</div>
+                                    <div class="block-description">Secondary Color<br>(Cards, Sidebars)</div>
+                                </div>
+                                <div class="color-block color-block-10">
+                                    <div class="block-label">10%</div>
+                                    <div class="block-description">Accent Color<br>(CTAs, Highlights)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="color-rule-explanation">
+                                <p><strong>How Professional Designers Use This:</strong></p>
+                                <p>
+                                    <strong>60% Dominant:</strong> Usually neutral colors (white, light gray, beige) for backgrounds and main interface. 
+                                    This creates calm, doesn't compete for attention.
+                                </p>
+                                <p>
+                                    <strong>30% Secondary:</strong> Supporting color for cards, sections, sidebars. Adds visual interest without overwhelming.
+                                </p>
+                                <p>
+                                    <strong>10% Accent:</strong> Bold color for CTAs, important buttons, highlights. Small but powerful—guides user action.
+                                </p>
+                                <p style="margin-bottom: 0;">
+                                    <strong>Example:</strong> Apple website = 60% white, 30% light gray, 10% blue buttons. 
+                                    Your eye naturally finds the blue "Buy" button!
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Understanding Color Models</h2>
+                        
+                        <h3>RGB (Red, Green, Blue)</h3>
+                        <p>
+                            <strong>Additive color model</strong> used by screens. Mix all three at full intensity = white. 
+                            No color = black. Each channel ranges 0-255.
+                        </p>
+                        <p>Example: <code>rgb(255, 87, 51)</code> = bright orange</p>
+                        <p><strong>When to use:</strong> Digital displays, web design, app interfaces</p>
+
+                        <h3>HEX (Hexadecimal)</h3>
+                        <p>
+                            Shortened version of RGB using base-16 notation. Six characters representing red, green, blue values.
+                        </p>
+                        <p>Example: <code>#FF5733</code> = same bright orange as above</p>
+                        <p><strong>When to use:</strong> Web development (CSS), design tools, sharing colors with developers</p>
+
+                        <h3>HSL (Hue, Saturation, Lightness)</h3>
+                        <p>
+                            The most intuitive model for designers:
+                        </p>
+                        <ul>
+                            <li><strong>Hue:</strong> The actual color (0-360 degrees on color wheel)</li>
+                            <li><strong>Saturation:</strong> Color intensity (0% = gray, 100% = full color)</li>
+                            <li><strong>Lightness:</strong> Brightness (0% = black, 50% = pure color, 100% = white)</li>
+                        </ul>
+                        <p>Example: <code>hsl(9, 100%, 60%)</code> = that same orange</p>
+                        <p><strong>When to use:</strong> Creating color variations, adjusting brightness, building design systems</p>
+
+                        <div class="thought-question">
+                            <div class="thought-label">◆ Quick Exercise</div>
+                            <div class="thought-text">
+                                Open your browser's DevTools on any website. Inspect element and find a color in the CSS. 
+                                Try changing it from HEX to RGB to HSL. Notice how HSL makes it easiest to create lighter/darker versions?
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Color Psychology: What Colors Mean</h2>
+                        
+                        <h3>● Red</h3>
+                        <p><strong>Emotions:</strong> Passion, urgency, danger, excitement, energy</p>
+                        <p><strong>Psychological Effect:</strong> Increases heart rate and creates urgency</p>
+                        <p><strong>Use Cases:</strong> Error messages, sale tags, food industry (stimulates appetite), CTAs for immediate action</p>
+                        <p><strong>Examples:</strong> Netflix (excitement), Coca-Cola (energy), YouTube (attention)</p>
+
+                        <h3>● Blue</h3>
+                        <p><strong>Emotions:</strong> Trust, calm, security, professionalism, stability</p>
+                        <p><strong>Psychological Effect:</strong> Lowers blood pressure, creates sense of security</p>
+                        <p><strong>Use Cases:</strong> Banking, healthcare, corporate, social media, productivity tools</p>
+                        <p><strong>Examples:</strong> Facebook (trust), PayPal (security), LinkedIn (professional)</p>
+
+                        <h3>● Green</h3>
+                        <p><strong>Emotions:</strong> Growth, health, nature, money, success</p>
+                        <p><strong>Psychological Effect:</strong> Associated with balance and harmony</p>
+                        <p><strong>Use Cases:</strong> Finance apps, health/wellness, environmental brands, success states</p>
+                        <p><strong>Examples:</strong> Spotify (growth), WhatsApp (communication), Whole Foods (natural)</p>
+
+                        <h3>● Yellow</h3>
+                        <p><strong>Emotions:</strong> Optimism, happiness, caution, energy</p>
+                        <p><strong>Psychological Effect:</strong> Grabs attention but can cause anxiety in large doses</p>
+                        <p><strong>Use Cases:</strong> Warning messages, highlights, children's products, fast food</p>
+                        <p><strong>Examples:</strong> McDonald's (energy), Snapchat (playful), IKEA (optimism)</p>
+
+                        <h3>● Purple</h3>
+                        <p><strong>Emotions:</strong> Luxury, creativity, wisdom, spirituality, mystery</p>
+                        <p><strong>Psychological Effect:</strong> Associated with royalty and premium quality</p>
+                        <p><strong>Use Cases:</strong> Beauty brands, creative tools, luxury products, meditation apps</p>
+                        <p><strong>Examples:</strong> Twitch (creativity), Hallmark (sentiment), Yahoo (uniqueness)</p>
+
+                        <h3>● Black</h3>
+                        <p><strong>Emotions:</strong> Sophistication, power, elegance, authority, mystery</p>
+                        <p><strong>Psychological Effect:</strong> Creates sense of exclusivity and premium quality</p>
+                        <p><strong>Use Cases:</strong> Luxury brands, high-end products, minimalist design, fashion</p>
+                        <p><strong>Examples:</strong> Apple (premium), Chanel (luxury), Nike (power)</p>
+
+                        <h3>○ White</h3>
+                        <p><strong>Emotions:</strong> Purity, simplicity, cleanliness, minimalism, space</p>
+                        <p><strong>Psychological Effect:</strong> Creates breathing room and clarity</p>
+                        <p><strong>Use Cases:</strong> Healthcare, tech, minimalist brands, backgrounds</p>
+                        <p><strong>Examples:</strong> Apple (simplicity), Tesla (clean), medical apps (purity)</p>
+
+                        <div class="color-rule-demo">
+                            <div class="color-rule-title">▲ Cultural Color Differences</div>
+                            
+                            <div class="color-rule-explanation">
+                                <p><strong>Color meanings vary dramatically across cultures:</strong></p>
+                                <p>
+                                    <strong>White:</strong> Purity in Western cultures, mourning in Eastern cultures
+                                </p>
+                                <p>
+                                    <strong>Red:</strong> Danger in West, luck and celebration in China
+                                </p>
+                                <p style="margin-bottom: 0;">
+                                    <strong>Yellow:</strong> Happiness in West, sacred/imperial in Asia, mourning in Egypt
+                                </p>
+                            </div>
+                            
+                            <div style="background: var(--gray-bg); padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem; border-left: 4px solid var(--dark);">
+                                <p style="margin: 0; font-size: 1rem; color: var(--gray-dark);">
+                                    <strong style="color: var(--dark);">Always research your target audience's cultural context!</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Color Accessibility: WCAG Guidelines</h2>
+                        
+                        <h3>Why Accessibility Matters</h3>
+                        <p>
+                            <strong>8% of men and 0.5% of women</strong> have some form of color vision deficiency (colorblindness). 
+                            That's roughly 300 million people worldwide. If your interface relies solely on color to communicate information, 
+                            you're excluding a huge audience.
+                        </p>
+
+                        <h3>Contrast Ratios (WCAG 2.0)</h3>
+                        <p>The Web Content Accessibility Guidelines define minimum contrast ratios:</p>
+                        <ul>
+                            <li><strong>4.5:1</strong> = Minimum for normal text (Level AA compliance)</li>
+                            <li><strong>3:1</strong> = Minimum for large text (18pt+ or 14pt+ bold)</li>
+                            <li><strong>7:1</strong> = Enhanced contrast for normal text (Level AAA compliance)</li>
+                        </ul>
+
+                        <h3>Testing Contrast</h3>
+                        <p>Use these free tools to check your color combinations:</p>
+                        <ul>
+                            <li>WebAIM Contrast Checker (webaim.org/resources/contrastchecker)</li>
+                            <li>Contrast Ratio (contrast-ratio.com)</li>
+                            <li>Chrome DevTools built-in contrast checker</li>
+                        </ul>
+
+                        <h3>Best Practices for Accessible Color</h3>
+                        <ul>
+                            <li><strong>Never rely on color alone</strong> to convey information (add icons, labels, or patterns)</li>
+                            <li><strong>Use text labels</strong> on color-coded elements (charts, status indicators)</li>
+                            <li><strong>Provide alternative views</strong> for colorblind users</li>
+                            <li><strong>Test with colorblind simulators</strong> (Color Oracle, Stark plugin)</li>
+                            <li><strong>Use patterns or textures</strong> in addition to color (e.g., striped vs solid)</li>
+                        </ul>
+
+                        <div class="highlight-box">
+                            <h3>✕ Bad Example</h3>
+                            <p>"Click the red button to delete, green button to confirm"</p>
+                            <p><strong>Why it's bad:</strong> Colorblind users can't distinguish red from green</p>
+                            <br>
+                            <h3>✓ Good Example</h3>
+                            <p>"Click 'Delete' (red button with trash icon) or 'Confirm' (green button with checkmark)"</p>
+                            <p><strong>Why it's good:</strong> Color + text label + icon = three ways to understand</p>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Building a Color Palette</h2>
+                        
+                        <h3>Step 1: Choose Your Primary Brand Color</h3>
+                        <p>
+                            This represents your brand personality. Ask:
+                        </p>
+                        <ul>
+                            <li>What emotion should users feel?</li>
+                            <li>What's your industry standard? (Blue for banks, green for health)</li>
+                            <li>What makes you different from competitors?</li>
+                        </ul>
+
+                        <h3>Step 2: Generate Shades and Tints</h3>
+                        <p>
+                            You need variations for hover states, disabled states, backgrounds:
+                        </p>
+                        <ul>
+                            <li><strong>Tints:</strong> Add white to your primary (lighter versions)</li>
+                            <li><strong>Shades:</strong> Add black to your primary (darker versions)</li>
+                            <li><strong>Tones:</strong> Add gray to your primary (muted versions)</li>
+                        </ul>
+                        <p>Create at least 5-9 variations: 50, 100, 200, 300, 400, 500, 600, 700, 800, 900</p>
+
+                        <h3>Step 3: Choose Secondary & Accent Colors</h3>
+                        <p>
+                            Use color harmony rules:
+                        </p>
+                        <ul>
+                            <li><strong>Conservative approach:</strong> Analogous or monochromatic</li>
+                            <li><strong>Bold approach:</strong> Complementary or triadic</li>
+                            <li><strong>Safe approach:</strong> Primary color + neutrals (grays) + one accent</li>
+                        </ul>
+
+                        <h3>Step 4: Add Semantic Colors</h3>
+                        <p>Every interface needs these functional colors:</p>
+                        <ul>
+                            <li><strong>Success:</strong> Green (#00C853)</li>
+                            <li><strong>Error:</strong> Red (#D32F2F)</li>
+                            <li><strong>Warning:</strong> Yellow/Orange (#FFA000)</li>
+                            <li><strong>Info:</strong> Blue (#0288D1)</li>
+                        </ul>
+
+                        <h3>Step 5: Define Neutral Grays</h3>
+                        <p>
+                            50-70% of your interface will be grays. Create a scale:
+                        </p>
+                        <ul>
+                            <li>White (#FFFFFF)</li>
+                            <li>Gray 50 → Gray 900 (9 shades)</li>
+                            <li>Black (#000000)</li>
+                        </ul>
+
+                        <div class="thought-question">
+                            <div class="thought-label">◆ Try This Now</div>
+                            <div class="thought-text">
+                                Go to coolors.co and generate 5 random palettes. For each one, write down what industry or 
+                                brand personality it feels like. Notice how instantly color creates perception?
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Common Color Mistakes</h2>
+                        
+                        <h3>1. Using Too Many Colors</h3>
+                        <p>
+                            <strong>The mistake:</strong> Using 6+ different colors in one interface<br>
+                            <strong>The fix:</strong> Limit to 3 main colors + neutrals + semantic colors<br>
+                            <strong>Why:</strong> Too many colors create visual chaos and reduce brand recognition
+                        </p>
+
+                        <h3>2. Low Contrast Text</h3>
+                        <p>
+                            <strong>The mistake:</strong> Light gray text on white background (#CCCCCC on #FFFFFF)<br>
+                            <strong>The fix:</strong> Use darker gray (#666666 minimum for body text)<br>
+                            <strong>Why:</strong> Fails WCAG standards, hard to read, causes eye strain
+                        </p>
+
+                        <h3>3. Ignoring Color Psychology</h3>
+                        <p>
+                            <strong>The mistake:</strong> Using red for success messages or green for errors<br>
+                            <strong>The fix:</strong> Follow established conventions (green=good, red=bad)<br>
+                            <strong>Why:</strong> Fighting user expectations creates confusion
+                        </p>
+
+                        <h3>4. Forgetting Dark Mode</h3>
+                        <p>
+                            <strong>The mistake:</strong> Designing only for light backgrounds<br>
+                            <strong>The fix:</strong> Test your colors in both light and dark modes<br>
+                            <strong>Why:</strong> 70%+ of users prefer dark mode on mobile devices
+                        </p>
+
+                        <h3>5. Pure Black on Pure White</h3>
+                        <p>
+                            <strong>The mistake:</strong> Using #000000 text on #FFFFFF background<br>
+                            <strong>The fix:</strong> Use slightly softer colors (#1A1A1A on #FAFAFA)<br>
+                            <strong>Why:</strong> Reduces eye strain, looks more professional, easier to read
+                        </p>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Color in Real-World Interfaces</h2>
+                        
+                        <h3>Case Study: Banking Apps</h3>
+                        <p>
+                            Nearly all banks use blue. Why? Blue = trust + security + stability. Chase, Bank of America, 
+                            Barclays, Citibank—all blue. The few that don't (Capital One uses red) work hard to overcome 
+                            the psychological mismatch.
+                        </p>
+
+                        <h3>Case Study: Food Delivery Apps</h3>
+                        <p>
+                            Red and yellow dominate. McDonald's, DoorDash, Uber Eats, Grubhub. These colors stimulate appetite 
+                            and create urgency. Notice how healthy food brands (Sweetgreen, Whole Foods) use green instead?
+                        </p>
+
+                        <h3>Case Study: Productivity Tools</h3>
+                        <p>
+                            Notion (beige/white), Slack (purple), Asana (pink), Trello (blue). Each chose colors that feel 
+                            different from competitors while matching their personality: Notion is calm, Slack is creative, 
+                            Asana is energetic, Trello is organized.
+                        </p>
+                    </div>
+
+                    <div class="complete-section">
+                        <h3 style="margin-bottom: 1rem; color: var(--dark);">Chapter Complete!</h3>
+                        <p style="color: var(--gray); margin-bottom: 2rem;">
+                            Excellent! You've mastered COLOR theory, psychology, and accessibility. Ready for Chapter 3: SHAPE.
+                        </p>
+                        <button class="btn btn-primary" onclick="completeChapter('chapter-2')">
+                            Mark as Complete & Continue to SHAPE →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAPTER 3: SHAPE -->
+            <div id="chapter-3" class="chapter-section">
+                <div class="lecture-header">
+                    <div class="lecture-badge">MODULE 02 • CHAPTER 3 OF 3</div>
+                    <h1>SHAPE</h1>
+                    <p class="lecture-subtitle">Visual Hierarchy, Geometric Design, and Layout Principles</p>
+                    <div class="lecture-meta">
+                        <div class="meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                            <span>45 minutes</span>
+                        </div>
+                        <div class="meta-item">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <polyline points="2 17 12 22 22 17"/>
+                                <polyline points="2 12 12 17 22 12"/>
+                            </svg>
+                            <span>Layout & Visual Structure</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lecture-content">
+                    <div class="content-section visible">
+                        <h2>Introduction: The Geometry of Interfaces</h2>
+                        <p>
+                            Every interface you've ever used is built from three basic shapes: rectangles, circles, and triangles. 
+                            That's it. Instagram? Rectangles (photos) + circles (profile pics) + triangles (implied by directional icons). 
+                            Twitter? Same formula. Your banking app? Same.
+                        </p>
+                        <p>
+                            But here's what most people don't realize: shapes aren't just visual elements—they're psychological triggers. 
+                            Rectangles feel stable and trustworthy. Circles feel friendly and inclusive. Triangles create tension and 
+                            point your eye in specific directions. Understanding shape psychology is like having a secret superpower in design.
+                        </p>
+                        <p>
+                            In this chapter, we'll decode the geometry of great interfaces: shape psychology, visual hierarchy, 
+                            layout systems, spacing principles, and how to use negative space like a professional designer.
+                        </p>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Shape Psychology: What Shapes Communicate</h2>
+                        
+                        <h3>▭ Rectangles & Squares</h3>
+                        <p><strong>Psychological Meaning:</strong> Stability, reliability, order, balance, professionalism</p>
+                        <p><strong>Why They Work:</strong> Rectangles are the most common shape in nature and architecture. 
+                        They feel grounded, organized, and predictable. Our brains find them easy to process.</p>
+                        <p><strong>Common Uses:</strong></p>
+                        <ul>
+                            <li>Cards and containers (content grouping)</li>
+                            <li>Buttons and CTAs (clear clickable areas)</li>
+                            <li>Images and media (standard aspect ratios)</li>
+                            <li>Form fields (input boxes)</li>
+                            <li>Navigation bars (horizontal organization)</li>
+                        </ul>
+                        <p><strong>Real Examples:</strong> LinkedIn (professional stability), Notion (organized information), 
+                        Medium (clean reading experience)</p>
+
+                        <h3>● Circles & Curves</h3>
+                        <p><strong>Psychological Meaning:</strong> Friendliness, unity, community, perfection, infinity, continuity</p>
+                        <p><strong>Why They Work:</strong> Circles have no sharp edges—nothing threatening. They feel soft, 
+                        approachable, and inclusive. They naturally draw the eye to their center.</p>
+                        <p><strong>Common Uses:</strong></p>
+                        <ul>
+                            <li>Profile pictures (personal identity)</li>
+                            <li>Icons (universal symbols)</li>
+                            <li>Buttons for positive actions (submit, agree, confirm)</li>
+                            <li>Loading indicators (continuous motion)</li>
+                            <li>Status dots (online/offline indicators)</li>
+                            <li>Floating action buttons (mobile apps)</li>
+                        </ul>
+                        <p><strong>Real Examples:</strong> Facebook (circular profile pics = community), Google (rounded buttons = friendly), 
+                        Spotify (circular album art = music continuity)</p>
+
+                        <h3>▲ Triangles & Arrows</h3>
+                        <p><strong>Psychological Meaning:</strong> Direction, movement, energy, conflict, hierarchy, progression</p>
+                        <p><strong>Why They Work:</strong> Triangles point. They create visual tension and guide the eye. 
+                        Pointing up = growth, stability. Pointing down = danger, instability. Pointing sideways = movement, direction.</p>
+                        <p><strong>Common Uses:</strong></p>
+                        <ul>
+                            <li>Dropdown indicators (▼ show more)</li>
+                            <li>Navigation arrows (← back, → forward)</li>
+                            <li>Play buttons (▶ start action)</li>
+                            <li>Warning icons (⚠ alert, danger)</li>
+                            <li>Breadcrumb separators (Home > Category > Page)</li>
+                            <li>Sort indicators (▲ ascending, ▼ descending)</li>
+                        </ul>
+                        <p><strong>Real Examples:</strong> YouTube (play button = start watching), Amazon (dropdown menus = explore), 
+                        Airbnb (breadcrumbs = navigation path)</p>
+
+                        <div class="shape-combo-demo">
+                            <div class="shape-combo-title">▲ Shape Combinations Create Meaning</div>
+                            
+                            <div class="shape-combos-grid">
+                                <div class="shape-combo-card">
+                                    <div class="shape-visual">
+                                        <span class="shape-icon shape-rect">▭</span>
+                                        <span class="shape-plus">+</span>
+                                        <span class="shape-icon shape-circle">●</span>
+                                    </div>
+                                    <div class="combo-label">Rectangle + Circle</div>
+                                    <div class="combo-description">
+                                        Stable structure + friendly elements
+                                    </div>
+                                    <div class="combo-example">Most apps use this combo</div>
+                                </div>
+                                
+                                <div class="shape-combo-card">
+                                    <div class="shape-visual">
+                                        <span class="shape-icon shape-rect">▭</span>
+                                        <span class="shape-plus">+</span>
+                                        <span class="shape-icon shape-triangle">▲</span>
+                                    </div>
+                                    <div class="combo-label">Rectangle + Triangle</div>
+                                    <div class="combo-description">
+                                        Organized layout + directional flow
+                                    </div>
+                                    <div class="combo-example">Navigation-heavy sites</div>
+                                </div>
+                                
+                                <div class="shape-combo-card">
+                                    <div class="shape-visual">
+                                        <span class="shape-icon shape-rect" style="font-size: 2.5rem;">▭</span>
+                                        <span class="shape-icon shape-circle" style="font-size: 2.5rem;">●</span>
+                                        <span class="shape-icon shape-triangle" style="font-size: 2.5rem;">▲</span>
+                                    </div>
+                                    <div class="combo-label">All Three Shapes</div>
+                                    <div class="combo-description">
+                                        Complete visual language
+                                    </div>
+                                    <div class="combo-example">Complex applications</div>
+                                </div>
+                            </div>
+                            
+                            <div class="shape-note">
+                                <p><strong>Real-World Examples:</strong></p>
+                                <p>
+                                    <strong>Apple:</strong> Mostly rectangles + circles = Stable, friendly, approachable<br>
+                                    <strong>Gaming apps:</strong> More triangles = Energy, action, excitement<br>
+                                    <strong>Banking apps:</strong> Rectangles dominate = Trust, security, organization
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Visual Hierarchy: Guiding the Eye</h2>
+                        
+                        <h3>What is Visual Hierarchy?</h3>
+                        <p>
+                            Visual hierarchy is the art of arranging elements so users process them in the order YOU want. 
+                            Without hierarchy, everything screams for attention equally—which means nothing gets attention.
+                        </p>
+
+                        <h3>The 7 Tools of Visual Hierarchy</h3>
+                        
+                        <h4>1. Size & Scale</h4>
+                        <p><strong>Principle:</strong> Bigger = more important</p>
+                        <p><strong>Application:</strong> Headlines are 48px, subheads are 24px, body text is 16px. 
+                        Your eye naturally goes to the headline first.</p>
+
+                        <h4>2. Weight & Emphasis</h4>
+                        <p><strong>Principle:</strong> Bolder = more important</p>
+                        <p><strong>Application:</strong> "Buy Now" button is bold 600 weight. "Maybe Later" is thin 400 weight. 
+                        You're drawn to take action.</p>
+
+                        <h4>3. Position & Placement</h4>
+                        <p><strong>Principle:</strong> Top-left = seen first (in Western cultures)</p>
+                        <p><strong>Application:</strong> Logo top-left, CTAs top-right. Users follow F-pattern or Z-pattern reading flow.</p>
+
+                        <h4>4. Color & Contrast</h4>
+                        <p><strong>Principle:</strong> High contrast = more attention</p>
+                        <p><strong>Application:</strong> Black text on white background gets read. Gray text gets skimmed. 
+                        Red CTA button on gray page gets clicked.</p>
+
+                        <h4>5. Proximity & Grouping</h4>
+                        <p><strong>Principle:</strong> Things close together = related</p>
+                        <p><strong>Application:</strong> Form labels sit directly above their inputs. Product price sits next to product image. 
+                        Your brain automatically groups them.</p>
+
+                        <h4>6. Whitespace & Breathing Room</h4>
+                        <p><strong>Principle:</strong> More space around element = more important</p>
+                        <p><strong>Application:</strong> Apple products have tons of whitespace. Premium brands use space to signal quality.</p>
+
+                        <h4>7. Repetition & Consistency</h4>
+                        <p><strong>Principle:</strong> Repeated patterns create rhythm</p>
+                        <p><strong>Application:</strong> All buttons look the same. All headings use same font. 
+                        Breaking the pattern draws attention.</p>
+
+                        <div class="thought-question">
+                            <div class="thought-label">◆ Try This Exercise</div>
+                            <div class="thought-text">
+                                Open Netflix. Squint your eyes (seriously!). Notice how your eye is drawn to certain elements even when blurry? 
+                                That's visual hierarchy working. The featured show is huge, bright, and centered. Everything else is smaller.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Layout Systems: The Grid</h2>
+                        
+                        <h3>Why Grids Matter</h3>
+                        <p>
+                            Every professional interface uses a grid—an invisible structure that keeps everything aligned and organized. 
+                            Without grids, designs feel chaotic. With grids, even complex interfaces feel calm and intentional.
+                        </p>
+
+                        <h3>Common Grid Systems</h3>
+                        
+                        <h4>12-Column Grid (Most Popular)</h4>
+                        <p>
+                            <strong>Why 12?</strong> It's divisible by 2, 3, 4, and 6—maximum flexibility<br>
+                            <strong>Use Case:</strong> Responsive web design, dashboards, complex layouts<br>
+                            <strong>Examples:</strong> Bootstrap, Material Design, most websites
+                        </p>
+                        <ul>
+                            <li>Full width = 12 columns</li>
+                            <li>Two equal sections = 6 + 6 columns</li>
+                            <li>Sidebar + content = 3 + 9 columns</li>
+                            <li>Three cards = 4 + 4 + 4 columns</li>
+                        </ul>
+
+                        <h4>8-Point Grid</h4>
+                        <p>
+                            <strong>The Rule:</strong> All spacing uses multiples of 8 (8px, 16px, 24px, 32px, 40px, etc.)<br>
+                            <strong>Why 8?</strong> Divisible by 2, scales perfectly on all screen densities<br>
+                            <strong>Use Case:</strong> Mobile apps, design systems, consistent spacing<br>
+                            <strong>Examples:</strong> Google Material Design, Apple Human Interface Guidelines
+                        </p>
+
+                        <h4>Asymmetric Grid</h4>
+                        <p>
+                            <strong>The Approach:</strong> Intentionally uneven columns for visual interest<br>
+                            <strong>Use Case:</strong> Editorial layouts, creative portfolios, landing pages<br>
+                            <strong>Examples:</strong> Magazine websites, artist portfolios, Nike product pages
+                        </p>
+
+                        <div class="color-rule-demo">
+                            <div class="color-rule-title">◆ The 8px Rule in Practice</div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                                <!-- Bad Example -->
+                                <div style="background: #f5f5f5; border: 2px solid #999999; border-radius: 12px; padding: 2rem;">
+                                    <div style="font-weight: 700; color: #333333; margin-bottom: 1.5rem; font-size: 1.1rem;">
+                                        ✕ Random Spacing
+                                    </div>
+                                    <div style="background: white; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #666666;">
+                                        <div style="margin-bottom: 13px; padding: 22px; background: var(--gray-bg); border-radius: 4px; font-size: 0.9rem; color: var(--gray-dark);">
+                                            <strong>Margin:</strong> 13px <span style="color: #666666;">(arbitrary)</span>
+                                        </div>
+                                        <div style="margin-bottom: 22px; padding: 18px; background: var(--gray-bg); border-radius: 4px; font-size: 0.9rem; color: var(--gray-dark);">
+                                            <strong>Padding:</strong> 22px <span style="color: #666666;">(random)</span>
+                                        </div>
+                                        <div style="padding: 15px; background: var(--gray-bg); border-radius: 4px; font-size: 0.9rem; color: var(--gray-dark);">
+                                            <strong>Gap:</strong> 18px <span style="color: #666666;">(inconsistent)</span>
+                                        </div>
+                                    </div>
+                                    <p style="margin-top: 1rem; font-size: 0.85rem; color: #333333; font-weight: 600;">
+                                        Feels chaotic and unprofessional
+                                    </p>
+                                </div>
+                                
+                                <!-- Good Example -->
+                                <div style="background: #e8e8e8; border: 2px solid #333333; border-radius: 12px; padding: 2rem;">
+                                    <div style="font-weight: 700; color: #1a1a1a; margin-bottom: 1.5rem; font-size: 1.1rem;">
+                                        ✓ 8px System
+                                    </div>
+                                    <div style="background: white; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #333333;">
+                                        <div style="margin-bottom: 16px; padding: 24px; background: var(--gray-bg); border-radius: 4px; font-size: 0.9rem; color: var(--gray-dark);">
+                                            <strong>Margin:</strong> 16px <span style="color: #1a1a1a;">(2 × 8)</span>
+                                        </div>
+                                        <div style="margin-bottom: 16px; padding: 24px; background: var(--gray-bg); border-radius: 4px; font-size: 0.9rem; color: var(--gray-dark);">
+                                            <strong>Padding:</strong> 24px <span style="color: #1a1a1a;">(3 × 8)</span>
+                                        </div>
+                                        <div style="padding: 16px; background: var(--gray-bg); border-radius: 4px; font-size: 0.9rem; color: var(--gray-dark);">
+                                            <strong>Gap:</strong> 16px <span style="color: #1a1a1a;">(2 × 8)</span>
+                                        </div>
+                                    </div>
+                                    <p style="margin-top: 1rem; font-size: 0.85rem; color: #1a1a1a; font-weight: 600;">
+                                        Feels professional and cohesive
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <div class="color-rule-explanation">
+                                <p><strong>Why the 8px System Works:</strong></p>
+                                <p>
+                                    Using multiples of 8 (8px, 16px, 24px, 32px, 40px, 48px...) creates mathematical harmony. 
+                                    Your brain subconsciously recognizes the pattern, making the design feel intentional and polished.
+                                </p>
+                                <p style="margin-bottom: 0;">
+                                    <strong>Bonus:</strong> 8px divides perfectly on all screen densities (1x, 2x, 3x), 
+                                    ensuring pixel-perfect rendering on any device.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Spacing & White Space Mastery</h2>
+                        
+                        <h3>What is White Space?</h3>
+                        <p>
+                            White space (negative space) isn't wasted space—it's strategic breathing room that makes content readable, 
+                            scannable, and premium-feeling. Luxury brands use tons of white space. Discount brands cram everything together.
+                        </p>
+
+                        <h3>Types of White Space</h3>
+                        
+                        <h4>Micro White Space</h4>
+                        <p>Small spaces between elements:</p>
+                        <ul>
+                            <li>Space between letters (letter-spacing)</li>
+                            <li>Space between lines (line-height)</li>
+                            <li>Space between paragraphs</li>
+                            <li>Padding inside buttons</li>
+                        </ul>
+                        <p><strong>Impact:</strong> Improves readability and reduces cognitive load</p>
+
+                        <h4>Macro White Space</h4>
+                        <p>Large spaces between sections:</p>
+                        <ul>
+                            <li>Space around hero sections</li>
+                            <li>Margins between content blocks</li>
+                            <li>Padding around containers</li>
+                            <li>Empty areas in layouts</li>
+                        </ul>
+                        <p><strong>Impact:</strong> Creates visual hierarchy and guides attention</p>
+
+                        <h3>The Golden Ratio for Spacing</h3>
+                        <p>
+                            Use progressive spacing scales:
+                        </p>
+                        <ul>
+                            <li><strong>Tiny:</strong> 4px (icon spacing)</li>
+                            <li><strong>Small:</strong> 8px (element padding)</li>
+                            <li><strong>Medium:</strong> 16px (component gaps)</li>
+                            <li><strong>Large:</strong> 24px (section spacing)</li>
+                            <li><strong>XL:</strong> 32px (major divisions)</li>
+                            <li><strong>XXL:</strong> 48px+ (hero sections)</li>
+                        </ul>
+
+                        <div class="color-rule-demo">
+                            <div class="color-rule-title">✕ Common Spacing Mistakes</div>
+                            <div class="color-rule-explanation">
+                                <p><strong>Cramming too much:</strong> No breathing room makes everything feel overwhelming</p>
+                                <p><strong>Inconsistent spacing:</strong> 15px here, 22px there—looks unprofessional</p>
+                                <p><strong>Too much space:</strong> Excessive whitespace disconnects related elements</p>
+                                <p style="margin-bottom: 0;"><strong>Ignoring mobile:</strong> Spacing that works on desktop crushes mobile screens</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Gestalt Principles: How the Brain Groups Shapes</h2>
+                        
+                        <p>
+                            Gestalt psychology explains how humans perceive visual patterns. Understanding these principles lets you 
+                            manipulate how users see and understand your interface.
+                        </p>
+
+                        <h3>1. Proximity</h3>
+                        <p><strong>Principle:</strong> Objects close together are perceived as a group</p>
+                        <p><strong>Application:</strong> Form labels sit directly above inputs (they're related). 
+                        Large gap before next form field (new group).</p>
+
+                        <h3>2. Similarity</h3>
+                        <p><strong>Principle:</strong> Objects that look similar are perceived as related</p>
+                        <p><strong>Application:</strong> All primary buttons are blue. All secondary buttons are gray. 
+                        Users instantly know which is more important.</p>
+
+                        <h3>3. Continuity</h3>
+                        <p><strong>Principle:</strong> Eye follows the smoothest path</p>
+                        <p><strong>Application:</strong> Navigation menus in a horizontal line. Users scan left-to-right smoothly. 
+                        Breaking to a new line interrupts flow.</p>
+
+                        <h3>4. Closure</h3>
+                        <p><strong>Principle:</strong> Brain fills in missing information</p>
+                        <p><strong>Application:</strong> Loading spinner doesn't need to be a complete circle. 
+                        Your brain completes the shape automatically.</p>
+
+                        <h3>5. Figure-Ground</h3>
+                        <p><strong>Principle:</strong> Objects are seen as foreground or background</p>
+                        <p><strong>Application:</strong> Modal dialogs appear in front of dimmed background. 
+                        User focuses on modal, background recedes.</p>
+
+                        <h3>6. Common Fate</h3>
+                        <p><strong>Principle:</strong> Objects moving together are perceived as a group</p>
+                        <p><strong>Application:</strong> When you hover a card, the image, title, and button all lift together. 
+                        Your brain sees them as one clickable unit.</p>
+
+                        <div class="thought-question">
+                            <div class="thought-label">◆ Spot the Gestalt</div>
+                            <div class="thought-text">
+                                Open Instagram. Look at a post. Notice how the profile pic, username, and "Follow" button are grouped together 
+                                (Proximity)? How all posts look similar (Similarity)? How scrolling creates smooth flow (Continuity)? 
+                                That's Gestalt in action.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Common Shape & Layout Mistakes</h2>
+                        
+                        <h3>1. Ignoring Alignment</h3>
+                        <p>
+                            <strong>The mistake:</strong> Elements placed randomly without a grid<br>
+                            <strong>The fix:</strong> Align everything to a consistent grid (left, center, or right)<br>
+                            <strong>Why:</strong> Misalignment makes designs feel amateur and chaotic
+                        </p>
+
+                        <h3>2. Using Too Many Shapes</h3>
+                        <p>
+                            <strong>The mistake:</strong> Mixing circles, squares, rounded rectangles, hexagons, etc.<br>
+                            <strong>The fix:</strong> Choose 2-3 shape styles maximum (e.g., rounded rectangles + circles)<br>
+                            <strong>Why:</strong> Consistent shapes create visual harmony
+                        </p>
+
+                        <h3>3. Inconsistent Border Radius</h3>
+                        <p>
+                            <strong>The mistake:</strong> Some buttons have 4px radius, others 8px, others 16px<br>
+                            <strong>The fix:</strong> Define standard radii (e.g., small=4px, medium=8px, large=16px, full=999px)<br>
+                            <strong>Why:</strong> Consistency signals professionalism
+                        </p>
+
+                        <h3>4. No Clear Visual Hierarchy</h3>
+                        <p>
+                            <strong>The mistake:</strong> Everything is the same size, weight, and color<br>
+                            <strong>The fix:</strong> Make important things bigger, bolder, higher contrast<br>
+                            <strong>Why:</strong> Users don't know where to look or what to do first
+                        </p>
+
+                        <h3>5. Cluttered Layouts</h3>
+                        <p>
+                            <strong>The mistake:</strong> Cramming content with minimal spacing<br>
+                            <strong>The fix:</strong> Use the 8px spacing system, add generous margins<br>
+                            <strong>Why:</strong> White space improves comprehension by 20%
+                        </p>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Shape in Real-World Interfaces</h2>
+                        
+                        <h3>Case Study: Apple.com</h3>
+                        <p>
+                            <strong>Shape Strategy:</strong> Predominantly rectangles (stability) with subtle rounded corners (approachable)<br>
+                            <strong>Layout:</strong> Massive white space, strict grid alignment, clear hierarchy<br>
+                            <strong>Result:</strong> Feels premium, organized, trustworthy—perfect for luxury tech brand
+                        </p>
+
+                        <h3>Case Study: Stripe Dashboard</h3>
+                        <p>
+                            <strong>Shape Strategy:</strong> Sharp rectangles (precision) with data visualization (triangles in charts)<br>
+                            <strong>Layout:</strong> Dense information, tight spacing, professional tone<br>
+                            <strong>Result:</strong> Feels powerful, technical, built for serious business users
+                        </p>
+
+                        <h3>Case Study: Headspace App</h3>
+                        <p>
+                            <strong>Shape Strategy:</strong> Primarily circles (friendly, calm) with rounded rectangles (soft, approachable)<br>
+                            <strong>Layout:</strong> Generous spacing, playful animations, gentle colors<br>
+                            <strong>Result:</strong> Feels calming, welcoming—perfect for meditation app
+                        </p>
+
+                        <h3>Case Study: Robinhood</h3>
+                        <p>
+                            <strong>Shape Strategy:</strong> Mix of sharp rectangles (data charts) and circles (friendly profiles)<br>
+                            <strong>Layout:</strong> Clean, minimal, focus on numbers and graphs<br>
+                            <strong>Result:</strong> Feels modern, accessible—democratizing finance for young users
+                        </p>
+                    </div>
+
+                    <div class="content-section">
+                        <h2>Putting It All Together</h2>
+                        
+                        <h3>Your Shape & Layout Checklist</h3>
+                        <p>Before finalizing any interface design, ask yourself:</p>
+                        <ul>
+                            <li>✅ Are all elements aligned to a grid?</li>
+                            <li>✅ Do shape choices match brand personality?</li>
+                            <li>✅ Is there clear visual hierarchy (size, weight, position)?</li>
+                            <li>✅ Does spacing follow a consistent system (8px rule)?</li>
+                            <li>✅ Is there enough white space for breathing room?</li>
+                            <li>✅ Do related elements group together visually?</li>
+                            <li>✅ Are border radii consistent across components?</li>
+                            <li>✅ Does the layout guide users naturally through the flow?</li>
+                        </ul>
+
+                        <div class="color-rule-demo">
+                            <div class="color-rule-title">◆ Your Assignment Preview</div>
+                            <div class="color-rule-explanation">
+                                <p>
+                                    You've now learned FONT, COLOR, and SHAPE—the three fundamental building blocks of interface design. 
+                                    Your assignment will ask you to analyze a real interface through these three lenses:
+                                </p>
+                                <p><strong>What fonts are used and why?</strong></p>
+                                <p><strong>What colors communicate what emotions?</strong></p>
+                                <p style="margin-bottom: 0;"><strong>What shapes create what impressions?</strong></p>
+                            </div>
+                            <div style="background: var(--gray-bg); padding: 1.5rem; border-radius: 8px; margin-top: 1.5rem; border-left: 4px solid var(--dark);">
+                                <p style="margin: 0; font-size: 1rem; color: var(--gray-dark);">
+                                    <strong style="color: var(--dark);">Ready to demonstrate your understanding? Let's move to the assignment!</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="complete-section">
+                        <h3 style="margin-bottom: 1rem; color: var(--dark);">✓ All Chapters Complete!</h3>
+                        <p style="color: var(--gray); margin-bottom: 2rem;">
+                            Amazing work! You've completed all 3 chapters: FONT, COLOR, and SHAPE. 
+                            Now it's time to apply your learning in the assignment.
+                        </p>
+                        <button class="btn btn-primary" onclick="completeChapter('chapter-3')">
+                            Complete SHAPE & Go to Assignment →
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ASSIGNMENT -->
+            <div id="assignment" class="chapter-section">
+                <div class="lecture-header">
+                    <div class="lecture-badge">MODULE 02 • ASSIGNMENT</div>
+                    <h1>Assignment Submission</h1>
+                    <p class="lecture-subtitle">Apply your learning: Submit a case study demonstrating your understanding of FONT, COLOR, and SHAPE</p>
+                </div>
+
+                <div class="lecture-content">
+                    <div class="content-section visible">
+                        <h2>Assignment Requirements</h2>
+                        <p>
+                            Create a comprehensive case study analyzing an existing interface (website, app, or product) through the lens 
+                            of what you've learned about FONT, COLOR, and SHAPE.
+                        </p>
+                        
+                        <div class="color-rule-demo">
+                            <div class="color-rule-title">What to Include:</div>
+                            <div class="color-rule-explanation">
+                                <p><strong>Typography Analysis:</strong> Font choices, hierarchy, readability</p>
+                                <p><strong>Color Analysis:</strong> Color palette, psychology, accessibility</p>
+                                <p><strong>Shape Analysis:</strong> Layout structure, visual flow, geometric elements</p>
+                                <p style="margin-bottom: 0;"><strong>Recommendations:</strong> What works well? What could improve?</p>
+                            </div>
+                        </div>
+
+                        <h3>Submission Format</h3>
+                        <p>
+                            Submit your case study as a <strong>PDF, PowerPoint, or Excel file</strong>. Include screenshots or images 
+                            to support your analysis.
+                        </p>
+
+                        <form class="assignment-form" onsubmit="submitAssignment(event)">
+                            <div class="form-group">
+                                <label class="form-label">Your Name</label>
+                                <input type="text" class="form-input" id="studentName" required readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Case Study Summary (min 200 characters)</label>
+                                <textarea class="form-textarea" id="caseStudy" placeholder="Briefly describe your analysis and key findings..." required minlength="200"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Upload Assignment Files (PDF, PPT, or Excel)</label>
+                                <div class="file-upload-area" id="dropZone">
+                                    <div class="upload-icon">□</div>
+                                    <div class="upload-text">
+                                        <strong>Click to upload</strong> or drag and drop<br>
+                                        <small>PDF, PowerPoint (.ppt, .pptx), or Excel (.xls, .xlsx)</small>
+                                    </div>
+                                    <input type="file" id="fileInput" style="display: none;" accept=".pdf,.ppt,.pptx,.xls,.xlsx" multiple onchange="handleFileSelect(event)">
+                                </div>
+                                <div class="file-list" id="fileList"></div>
+                            </div>
+
+                            <div class="complete-section" style="margin-top: 2rem;">
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
+                                    Submit Assignment for Review →
+                                </button>
+                                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--gray);">
+                                    Your submission will be reviewed by the admin. Module 03 will unlock after approval.
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Audio Player -->
+    <div class="audio-player-bottom">
+        <div class="player-container">
+            <div class="player-controls-group">
+                <button class="control-btn" onclick="skipBackward()">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="19 20 9 12 19 4 19 20"></polygon>
+                        <polygon points="9 20 1 12 9 4 9 20"></polygon>
+                    </svg>
+                </button>
+                <button class="control-btn play-btn" id="playBtn" onclick="togglePlay()">
+                    <svg viewBox="0 0 24 24" id="playIcon">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+                <button class="control-btn" onclick="skipForward()">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                        <polygon points="15 4 23 12 15 20 15 4"></polygon>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="progress-section">
+                <div class="progress-time">
+                    <span id="currentTime">0:00</span>
+                    <span id="totalTime">45:00</span>
+                </div>
+                <div class="progress-bar" onclick="seekAudio(event)">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            
+            <div class="speed-controls">
+                <span class="speed-label">Speed:</span>
+                <button class="speed-btn" onclick="setSpeed(0.75)">0.75x</button>
+                <button class="speed-btn active" onclick="setSpeed(1)">1x</button>
+                <button class="speed-btn" onclick="setSpeed(1.25)">1.25x</button>
+                <button class="speed-btn" onclick="setSpeed(1.5)">1.5x</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../js/progress-tracker.js"></script>
+    <script>
+        const COURSE_ID = 'design-technology-ai';
+        const MODULE_ID = 'module-02';
+        let currentChapter = 'chapter-1';
+        let learningStartTime = null;
+        let uploadedFiles = [];
+        
+        // Check authentication and load user profile
+        window.addEventListener('load', () => {
+            const user = sessionStorage.getItem('pixelAcademyUser');
+            if (!user) {
+                window.location.href = '../../../login.html';
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(user);
+                document.getElementById('userName').textContent = userData.name.split(' ')[0];
+                document.getElementById('userNameFull').textContent = userData.name;
+                document.getElementById('userEmail').textContent = userData.email;
+                document.getElementById('userAvatar').src = userData.picture || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"%3E%3Cpath d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/%3E%3C/svg%3E';
+                
+                // Pre-fill student name in assignment
+                document.getElementById('studentName').value = userData.name;
+                
+                learningStartTime = Date.now();
+                
+                // Initialize scroll animation
+                setTimeout(() => {
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.classList.add('visible');
+                    });
+                }, 100);
+            } catch (e) {
+                console.error('Error loading user data:', e);
+            }
+        });
+        
+        // Toggle profile dropdown
+        function toggleProfileDropdown() {
+            const trigger = document.querySelector('.profile-trigger');
+            const dropdown = document.getElementById('profileDropdown');
+            trigger.classList.toggle('active');
+            dropdown.classList.toggle('active');
+        }
+        
+        document.addEventListener('click', (e) => {
+            const profile = document.querySelector('.user-profile');
+            if (profile && !profile.contains(e.target)) {
+                document.querySelector('.profile-trigger')?.classList.remove('active');
+                document.getElementById('profileDropdown')?.classList.remove('active');
+            }
+        });
+        
+        function handleLogout() {
+            if (confirm('Are you sure you want to log out?')) {
+                sessionStorage.removeItem('pixelAcademyUser');
+                window.location.href = '../../../login.html';
+            }
+        }
+
+        // Toggle module expand/collapse
+        function toggleModule(element) {
+            const moduleItem = element.closest('.module-expandable');
+            moduleItem.classList.toggle('expanded');
+        }
+
+        // Load chapter content
+        function loadChapter(chapterId) {
+            // Hide all chapters
+            document.querySelectorAll('.chapter-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected chapter
+            document.getElementById(chapterId).classList.add('active');
+            
+            // Update sidebar active state
+            document.querySelectorAll('.subitem-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`[data-chapter="${chapterId}"]`).classList.add('active');
+            
+            // Update breadcrumb
+            const breadcrumbMap = {
+                'chapter-1': 'Module 02 - Chapter 1: FONT',
+                'chapter-2': 'Module 02 - Chapter 2: COLOR',
+                'chapter-3': 'Module 02 - Chapter 3: SHAPE',
+                'assignment': 'Module 02 - Assignment'
+            };
+            document.getElementById('breadcrumbCurrent').textContent = breadcrumbMap[chapterId];
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Update current chapter for audio tracking
+            currentChapter = chapterId;
+            
+            // Reinitialize scroll animations
+            setTimeout(() => {
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.add('visible');
+                });
+            }, 100);
+        }
+
+        // Complete chapter and move to next
+        function completeChapter(chapterId) {
+            const chapterMap = {
+                'chapter-1': 'chapter-2',
+                'chapter-2': 'chapter-3',
+                'chapter-3': 'assignment'
+            };
+            
+            // Save progress
+            window.progressTracker.completeChapter(COURSE_ID, MODULE_ID, chapterId);
+            
+            // Load next chapter
+            const nextChapter = chapterMap[chapterId];
+            if (nextChapter) {
+                loadChapter(nextChapter);
+            }
+        }
+
+        // File upload handling
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = Array.from(e.dataTransfer.files);
+            handleFiles(files);
+        });
+
+        function handleFileSelect(event) {
+            const files = Array.from(event.target.files);
+            handleFiles(files);
+        }
+
+        function handleFiles(files) {
+            const validExtensions = ['pdf', 'ppt', 'pptx', 'xls', 'xlsx'];
+            files.forEach(file => {
+                const extension = file.name.split('.').pop().toLowerCase();
+                if (validExtensions.includes(extension)) {
+                    uploadedFiles.push(file);
+                    displayFile(file);
+                } else {
+                    alert(`Invalid file type: ${file.name}. Please upload PDF, PowerPoint, or Excel files.`);
+                }
+            });
+        }
+
+        function displayFile(file) {
+            const fileList = document.getElementById('fileList');
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.innerHTML = `
+                <span>📄 ${file.name} (${formatFileSize(file.size)})</span>
+                <span class="file-remove" onclick="removeFile('${file.name}')">Remove</span>
+            `;
+            fileList.appendChild(fileItem);
+        }
+
+        function removeFile(fileName) {
+            uploadedFiles = uploadedFiles.filter(f => f.name !== fileName);
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            uploadedFiles.forEach(file => displayFile(file));
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        }
+
+        // Assignment submission
+        function submitAssignment(event) {
+            event.preventDefault();
+            
+            if (uploadedFiles.length === 0) {
+                alert('Please upload at least one file before submitting.');
+                return;
+            }
+            
+            const caseStudy = document.getElementById('caseStudy').value;
+            
+            // Store assignment submission in localStorage (in production, send to backend)
+            const submission = {
+                studentName: document.getElementById('studentName').value,
+                caseStudy: caseStudy,
+                files: uploadedFiles.map(f => ({ name: f.name, size: f.size, type: f.type })),
+                submittedDate: new Date().toISOString(),
+                status: 'pending'
+            };
+            
+            // Save to progress tracker
+            window.progressTracker.submitAssignment(COURSE_ID, MODULE_ID, submission);
+            
+            alert('✓ Assignment submitted successfully!\n\nYour work has been sent for review. You\'ll be notified once it\'s approved.\n\nModule 03 will unlock after admin approval.');
+            
+            // Redirect to dashboard
+            setTimeout(() => {
+                window.location.href = '../../../student/dashboard.html';
+            }, 2000);
+        }
+
+        // Reading Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height);
+            document.getElementById('readingProgress').style.transform = `scaleX(${scrolled})`;
+        });
+
+        // Audio Player (simplified for now - would need full implementation)
+        let currentTime = 0;
+        let totalTime = 2700;
+        let isPlaying = false;
+        let currentSpeed = 1;
+
+        function togglePlay() {
+            isPlaying = !isPlaying;
+            // Implementation would go here
+        }
+
+        function skipBackward() {
+            currentTime = Math.max(0, currentTime - 10);
+        }
+
+        function skipForward() {
+            currentTime = Math.min(totalTime, currentTime + 10);
+        }
+
+        function setSpeed(speed) {
+            currentSpeed = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === speed + 'x') btn.classList.add('active');
+            });
+        }
+
+        function seekAudio(event) {
+            const bar = event.currentTarget;
+            const percent = event.offsetX / bar.offsetWidth;
+            currentTime = Math.floor(totalTime * percent);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 02 - Chapter 1: FONT | Pixel Academy</title>
+    <meta name="description" content="Understanding typography, readability, and font psychology in interface design.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=Playfair+Display:wght@400;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { 
+            --primary: #000000; 
+            --dark: #1a1a1a; 
+            --light: #FFFFFF; 
+            --gray: #666666;
+            --gray-light: #999999;
+            --gray-lighter: #cccccc;
+            --gray-dark: #333333;
+            --gray-bg: #f5f5f5;
+            --gray-border: #e0e0e0;
+            --accent: #4a4a4a;
+            --accent-light: #757575;
+            --border: 2px; 
+        }
+        body { font-family: 'Inter', sans-serif; background: white; color: var(--dark); line-height: 1.6; }
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.3; }
+        
+        /* Progress Bar */
+        .reading-progress { position: fixed; top: 80px; left: 0; width: 0%; height: 4px; background: linear-gradient(90deg, #1a1a1a, #666666); z-index: 999; transition: width 0.1s ease; }
+        
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: white; border-bottom: var(--border) solid var(--gray-border); padding: 1.5rem 0; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--dark); text-decoration: none; }
+        .nav-menu { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-menu a { color: var(--dark); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        .nav-menu a:hover { opacity: 0.6; }
+        
+        /* User Profile Dropdown */
+        .user-profile { position: relative; }
+        .profile-trigger { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 1rem; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; border: 1px solid transparent; background: var(--gray-bg); }
+        .profile-trigger:hover { border-color: var(--gray-border); background: white; }
+        .profile-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gray-border); }
+        .profile-name { font-weight: 500; color: var(--dark); font-size: 0.9rem; }
+        .profile-chevron { width: 16px; height: 16px; stroke: var(--gray); transition: transform 0.3s ease; }
+        .profile-trigger.active .profile-chevron { transform: rotate(180deg); }
+        
+        .profile-dropdown { position: absolute; top: calc(100% + 0.5rem); right: 0; background: white; border: 1px solid var(--gray-border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 220px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; }
+        .profile-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .profile-dropdown-header { padding: 1rem; border-bottom: 1px solid var(--gray-border); }
+        .profile-email { font-size: 0.85rem; color: var(--gray); margin-top: 0.25rem; }
+        .profile-dropdown-menu { padding: 0.5rem; }
+        .profile-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; text-decoration: none; color: var(--dark); }
+        .profile-dropdown-item:hover { background: var(--gray-bg); }
+        .profile-dropdown-item svg { width: 18px; height: 18px; stroke: var(--gray); }
+        .profile-dropdown-item.logout { color: #d32f2f; }
+        .profile-dropdown-item.logout svg { stroke: #d32f2f; }
+        .profile-dropdown-item.logout:hover { background: #ffebee; }
+        
+        /* Breadcrumb */
+        .breadcrumb { margin-top: 100px; padding: 1.5rem 2rem; background: var(--gray-bg); border-bottom: 1px solid var(--gray-border); }
+        .breadcrumb-container { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+        .breadcrumb a { color: var(--gray); text-decoration: none; transition: color 0.3s ease; }
+        .breadcrumb a:hover { color: var(--dark); }
+        .breadcrumb-separator { color: var(--gray-light); }
+        .breadcrumb-current { color: var(--dark); font-weight: 500; }
+        
+        /* Main Content */
+        .lecture-container { max-width: 900px; margin: 3rem auto; padding: 0 2rem 10rem 2rem; }
+        .lecture-header { margin-bottom: 3rem; text-align: center; }
+        .module-badge { display: inline-block; background: var(--dark); color: white; padding: 0.5rem 1.25rem; border-radius: 50px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem; letter-spacing: 0.5px; }
+        .lecture-title { font-size: 3rem; font-weight: 800; margin-bottom: 1rem; color: var(--dark); }
+        .lecture-subtitle { font-size: 1.25rem; color: var(--gray); font-weight: 400; max-width: 700px; margin: 0 auto; }
+        .lecture-meta { display: flex; justify-content: center; gap: 2rem; margin-top: 1.5rem; color: var(--gray); font-size: 0.95rem; }
+        .meta-item { display: flex; align-items: center; gap: 0.5rem; }
+        .meta-item svg { width: 18px; height: 18px; stroke: var(--gray); }
+        
+        /* Content Sections */
+        .lecture-content { margin-top: 3rem; }
+        .content-section { margin-bottom: 4rem; opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+        .content-section.visible { opacity: 1; transform: translateY(0); }
+        .content-section h2 { font-size: 2rem; margin-bottom: 1.5rem; color: var(--dark); position: relative; padding-left: 1rem; }
+        .content-section h2:before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--dark); }
+        .content-section h3 { font-size: 1.5rem; margin: 2rem 0 1rem; color: var(--accent); }
+        .content-section p { margin-bottom: 1.25rem; font-size: 1.1rem; line-height: 1.8; color: var(--gray-dark); }
+        .content-section ul, .content-section ol { margin: 1.5rem 0; padding-left: 2rem; }
+        .content-section li { margin-bottom: 0.75rem; font-size: 1.05rem; line-height: 1.7; color: var(--gray-dark); }
+        
+        /* Font Examples */
+        .font-showcase { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0; }
+        .font-example { padding: 2rem; background: var(--gray-bg); border-radius: 12px; border: 1px solid var(--gray-border); }
+        .font-example-title { font-size: 0.85rem; color: var(--gray); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem; }
+        .font-example-display { font-size: 2.5rem; font-weight: 700; color: var(--dark); margin-bottom: 0.5rem; line-height: 1.2; }
+        .font-example-body { font-size: 1rem; line-height: 1.6; color: var(--gray-dark); }
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-sans { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'Roboto Mono', monospace; }
+        .font-display { font-family: 'Space Grotesk', sans-serif; }
+        
+        /* Highlight Box */
+        .highlight-box { background: var(--dark); color: white; padding: 2rem; border-radius: 12px; margin: 2rem 0; }
+        .highlight-box h3 { color: white; margin-bottom: 1rem; }
+        .highlight-box p { color: rgba(255,255,255,0.9); margin-bottom: 0.75rem; }
+        .highlight-box ul { color: rgba(255,255,255,0.85); }
+        
+        /* Thought Question */
+        .thought-question { background: var(--gray-bg); border-left: 4px solid var(--dark); padding: 2rem; margin: 2rem 0; border-radius: 8px; }
+        .thought-label { font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray); margin-bottom: 1rem; }
+        .thought-text { font-size: 1.15rem; font-style: italic; color: var(--dark); line-height: 1.7; }
+        
+        /* Audio Player - Bottom Fixed */
+        .audio-player-bottom { position: fixed; bottom: 0; left: 0; right: 0; z-index: 999; background: var(--dark); color: white; padding: 1rem 2rem; box-shadow: 0 -4px 20px rgba(0,0,0,0.2); border-top: 2px solid var(--gray-dark); }
+        .player-container { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: auto 1fr auto; gap: 2rem; align-items: center; }
+        .player-controls-group { display: flex; align-items: center; gap: 1rem; }
+        .control-btn { width: 40px; height: 40px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; }
+        .control-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+        .control-btn svg { width: 20px; height: 20px; fill: white; }
+        .play-btn { width: 50px; height: 50px; background: white; }
+        .play-btn svg { fill: var(--dark); }
+        .play-btn:hover { background: var(--gray-lighter); }
+        
+        .progress-section { flex: 1; }
+        .progress-time { display: flex; justify-content: space-between; font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-bottom: 0.5rem; }
+        .progress-bar { width: 100%; height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; cursor: pointer; position: relative; overflow: hidden; }
+        .progress-fill { height: 100%; background: white; border-radius: 3px; width: 0%; transition: width 0.1s linear; }
+        
+        .speed-controls { display: flex; align-items: center; gap: 0.5rem; }
+        .speed-label { font-size: 0.85rem; color: rgba(255,255,255,0.7); margin-right: 0.25rem; }
+        .speed-btn { padding: 0.4rem 0.75rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: white; font-size: 0.85rem; cursor: pointer; transition: all 0.3s ease; }
+        .speed-btn:hover { background: rgba(255,255,255,0.2); }
+        .speed-btn.active { background: white; color: var(--dark); }
+        
+        /* Complete Button */
+        .complete-section { margin-top: 4rem; text-align: center; padding: 3rem; background: var(--gray-bg); border-radius: 12px; }
+        .complete-btn { background: var(--dark); color: white; border: none; padding: 1.25rem 3rem; font-size: 1.1rem; font-weight: 600; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.75rem; }
+        .complete-btn:hover { background: var(--gray-dark); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+        .complete-btn svg { width: 20px; height: 20px; fill: white; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .lecture-title { font-size: 2rem; }
+            .player-container { grid-template-columns: 1fr; gap: 1rem; }
+            .font-showcase { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="reading-progress" id="readingProgress"></div>
+    
+    <nav>
+        <div class="nav-container">
+            <a href="../../../index.html" class="logo">Pixel Academy</a>
+            <ul class="nav-menu">
+                <li><a href="../../../student/dashboard.html">Dashboard</a></li>
+                <li><a href="../../../student/my-courses.html">My Courses</a></li>
+                <li class="user-profile">
+                    <div class="profile-trigger" onclick="toggleProfileDropdown()">
+                        <img src="" alt="Profile" class="profile-avatar" id="userAvatar">
+                        <span class="profile-name" id="userName">Student</span>
+                        <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-dropdown-header">
+                            <div style="font-weight: 600;" id="userNameFull">Student Name</div>
+                            <div class="profile-email" id="userEmail">student@example.com</div>
+                        </div>
+                        <div class="profile-dropdown-menu">
+                            <a href="../../../student/settings.html" class="profile-dropdown-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                    <path d="M12 1v6m0 6v6m0-18a10 10 0 0 1 0 20 10 10 0 0 1 0-20z"></path>
+                                </svg>
+                                Settings
+                            </a>
+                            <div class="profile-dropdown-item logout" onclick="handleLogout()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                Logout
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="breadcrumb">
+        <div class="breadcrumb-container">
+            <a href="../../../student/dashboard.html">Dashboard</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="../../../student/my-courses.html">My Courses</a>
+            <span class="breadcrumb-separator">/</span>
+            <a href="../overview.html">Design & Technology in AI Era</a>
+            <span class="breadcrumb-separator">/</span>
+            <span class="breadcrumb-current">Module 02 - Chapter 1: FONT</span>
+        </div>
+    </div>
+
+    <div class="lecture-container">
+        <div class="lecture-header">
+            <div class="module-badge">MODULE 02 • CHAPTER 1 OF 3</div>
+            <h1 class="lecture-title">FONT</h1>
+            <p class="lecture-subtitle">Understanding Typography: The Art and Science of Written Communication</p>
+            <div class="lecture-meta">
+                <div class="meta-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>45 minutes</span>
+                </div>
+                <div class="meta-item">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <polyline points="2 17 12 22 22 17"/>
+                        <polyline points="2 12 12 17 22 12"/>
+                    </svg>
+                    <span>Typography Fundamentals</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="lecture-content">
+            <div class="content-section">
+                <h2>Introduction: Why Fonts Matter</h2>
+                <p>
+                    Imagine opening your favorite app or website. Before you click anything, before you read any words, 
+                    your brain has already formed an opinion. Is this professional? Friendly? Trustworthy? Modern or traditional? 
+                    Much of that impression comes from something most people never consciously notice: the font.
+                </p>
+                <p>
+                    Typography is the silent communicator. It speaks before your words do. A luxury brand uses elegant serifs. 
+                    A tech startup uses clean sans-serifs. A creative agency might use bold display fonts. None of this is accidental.
+                </p>
+                <p>
+                    In this chapter, we'll explore how fonts shape perception, influence behavior, and fundamentally change how 
+                    people interact with interfaces. By the end, you'll never look at text the same way again.
+                </p>
+            </div>
+
+            <div class="content-section">
+                <h2>The Four Font Families You Need to Know</h2>
+                
+                <div class="font-showcase">
+                    <div class="font-example">
+                        <div class="font-example-title">SERIF</div>
+                        <div class="font-example-display font-serif">Elegant</div>
+                        <p class="font-example-body font-serif">
+                            Traditional, authoritative, and sophisticated. Used in print for centuries. 
+                            Think newspapers, books, and luxury brands.
+                        </p>
+                    </div>
+                    
+                    <div class="font-example">
+                        <div class="font-example-title">SANS-SERIF</div>
+                        <div class="font-example-display font-sans">Modern</div>
+                        <p class="font-example-body font-sans">
+                            Clean, minimal, and contemporary. The default choice for digital interfaces. 
+                            Used by Apple, Google, and most modern apps.
+                        </p>
+                    </div>
+                    
+                    <div class="font-example">
+                        <div class="font-example-title">MONOSPACE</div>
+                        <div class="font-example-display font-mono">Code</div>
+                        <p class="font-example-body font-mono">
+                            Technical, precise, and functional. Every character takes equal space. 
+                            Perfect for code, data, and technical documentation.
+                        </p>
+                    </div>
+                    
+                    <div class="font-example">
+                        <div class="font-example-title">DISPLAY</div>
+                        <div class="font-example-display font-display">Impact</div>
+                        <p class="font-example-body">
+                            Bold, attention-grabbing, and decorative. Used for headlines, logos, and branding. 
+                            Never use for body text.
+                        </p>
+                    </div>
+                </div>
+                
+                <h3>Understanding the Difference</h3>
+                <p>
+                    <strong>Serif fonts</strong> have small decorative strokes (called serifs) at the ends of letters. 
+                    They originated in ancient Roman inscriptions and dominated print media for 500 years. Serif fonts 
+                    convey tradition, reliability, and formality. Banks, law firms, and newspapers love serifs.
+                </p>
+                <p>
+                    <strong>Sans-serif fonts</strong> (literally "without serifs") emerged in the early 1900s with the 
+                    modernist design movement. They're cleaner, simpler, and easier to read on screens. This is why 
+                    90% of digital interfaces use sans-serif. They feel approachable, modern, and efficient.
+                </p>
+                <p>
+                    <strong>Monospace fonts</strong> give every character the same width. This was essential for typewriters 
+                    and is now crucial for coding. When developers write code, alignment matters. Monospace makes it easy 
+                    to see structure at a glance.
+                </p>
+                <p>
+                    <strong>Display fonts</strong> are designed to be big and bold. They sacrifice readability for impact. 
+                    Think of movie posters or brand logos. You'd never write a paragraph in a display font—your eyes would hurt.
+                </p>
+            </div>
+
+            <div class="content-section">
+                <h2>The Psychology of Fonts</h2>
+                <p>
+                    Fonts trigger emotional responses. Research shows people make judgments about credibility, 
+                    trustworthiness, and professionalism within milliseconds—based partly on typography.
+                </p>
+                
+                <div class="highlight-box">
+                    <h3>Font Psychology in Action</h3>
+                    <ul>
+                        <li><strong>Banking apps</strong> use professional sans-serifs like SF Pro or Roboto to convey security and modernity</li>
+                        <li><strong>Children's apps</strong> use rounded, playful fonts to feel friendly and safe</li>
+                        <li><strong>Luxury brands</strong> use elegant serifs with generous spacing to signal exclusivity</li>
+                        <li><strong>Tech companies</strong> use geometric sans-serifs to appear innovative and forward-thinking</li>
+                        <li><strong>News websites</strong> mix serif headlines (authority) with sans-serif body text (readability)</li>
+                    </ul>
+                </div>
+                
+                <h3>Case Study: The Rebranding Power of Fonts</h3>
+                <p>
+                    In 2018, Mailchimp changed their logo font from a quirky slab serif to a custom sans-serif called Cooper Light. 
+                    The reaction was massive. Some loved it—it felt more mature and professional. Others hated it—it lost personality.
+                </p>
+                <p>
+                    This wasn't just about aesthetics. Mailchimp was signaling a shift from "fun email tool for small businesses" 
+                    to "serious marketing platform for growing companies." The font communicated strategy before any words did.
+                </p>
+            </div>
+
+            <div class="thought-question">
+                <div class="thought-label">💭 Pause & Think</div>
+                <div class="thought-text">
+                    Open three different apps on your phone right now. Look at their fonts. 
+                    What do those font choices tell you about how the company wants you to feel?
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Readability vs. Legibility: The Critical Difference</h2>
+                <p>
+                    These terms sound similar but mean different things—and both matter enormously in interface design.
+                </p>
+                
+                <h3>Legibility: Can You Distinguish the Letters?</h3>
+                <p>
+                    Legibility is about individual characters. Can you tell an "I" from an "l" from a "1"? 
+                    Can you distinguish "rn" from "m"? Poor legibility causes errors, especially in forms, 
+                    passwords, and confirmation codes.
+                </p>
+                <p>
+                    <strong>Good legibility requires:</strong>
+                </p>
+                <ul>
+                    <li>Clear distinction between similar characters (I, l, 1 or O, 0)</li>
+                    <li>Sufficient character spacing</li>
+                    <li>Appropriate x-height (the height of lowercase letters)</li>
+                    <li>Well-defined counters (the empty space inside letters like 'o' or 'e')</li>
+                </ul>
+                
+                <h3>Readability: Can You Read Comfortably?</h3>
+                <p>
+                    Readability is about sustained reading comfort. Even if letters are legible, reading can be exhausting 
+                    if line length is wrong, spacing is poor, or contrast is insufficient.
+                </p>
+                <p>
+                    <strong>Good readability requires:</strong>
+                </p>
+                <ul>
+                    <li>Appropriate line length (50-75 characters per line is ideal)</li>
+                    <li>Proper line height (1.5x to 1.8x the font size)</li>
+                    <li>Sufficient contrast (at least 4.5:1 ratio for body text)</li>
+                    <li>Comfortable font size (16px minimum for body text on screens)</li>
+                    <li>Adequate paragraph spacing to create visual breaks</li>
+                </ul>
+            </div>
+
+            <div class="content-section">
+                <h2>Font Size Hierarchy: Creating Visual Order</h2>
+                <p>
+                    Your interface should have a clear typographic hierarchy. Users should instantly know what's most important 
+                    without reading everything. This is achieved through size, weight, and spacing.
+                </p>
+                
+                <div class="highlight-box">
+                    <h3>Typical Size Scale (Desktop)</h3>
+                    <ul>
+                        <li><strong>Headings (H1):</strong> 36-48px • Page titles, main headlines</li>
+                        <li><strong>Subheadings (H2):</strong> 28-32px • Section headers</li>
+                        <li><strong>Subheadings (H3):</strong> 20-24px • Subsection headers</li>
+                        <li><strong>Body Text:</strong> 16-18px • Main content, paragraphs</li>
+                        <li><strong>Small Text:</strong> 14px • Captions, labels, metadata</li>
+                        <li><strong>Tiny Text:</strong> 12px • Footnotes, legal text (use sparingly)</li>
+                    </ul>
+                </div>
+                
+                <p>
+                    <strong>The Rule of Consistent Ratios:</strong> Professional designers often use mathematical ratios 
+                    like 1.25 (Major Third) or 1.5 (Perfect Fifth) to scale font sizes. For example:
+                </p>
+                <ul>
+                    <li>Body: 16px</li>
+                    <li>H3: 16 × 1.25 = 20px</li>
+                    <li>H2: 20 × 1.25 = 25px</li>
+                    <li>H1: 25 × 1.25 = 31px</li>
+                </ul>
+                <p>
+                    This creates visual harmony. The sizes feel intentionally related rather than random.
+                </p>
+            </div>
+
+            <div class="content-section">
+                <h2>Font Weight: More Than Just Bold</h2>
+                <p>
+                    Modern fonts come in multiple weights—Thin, Light, Regular, Medium, Semibold, Bold, Extrabold, Black. 
+                    Each weight serves a purpose in creating hierarchy and emphasis.
+                </p>
+                
+                <h3>Strategic Weight Usage</h3>
+                <ul>
+                    <li><strong>Light (300):</strong> Large headings where you want elegance without heaviness</li>
+                    <li><strong>Regular (400):</strong> Body text, the foundation of readable content</li>
+                    <li><strong>Medium (500):</strong> Buttons, labels, subtle emphasis</li>
+                    <li><strong>Semibold (600):</strong> Subheadings, important labels, navigation</li>
+                    <li><strong>Bold (700):</strong> Headings, strong emphasis, calls-to-action</li>
+                    <li><strong>Extrabold (800+):</strong> Hero titles, brand statements (use sparingly)</li>
+                </ul>
+                
+                <p>
+                    <strong>Common Mistake:</strong> Using bold for emphasis too often. When everything is bold, 
+                    nothing stands out. Instead, use weight strategically to guide attention.
+                </p>
+            </div>
+
+            <div class="thought-question">
+                <div class="thought-label">💭 Pause & Think</div>
+                <div class="thought-text">
+                    Look at this lecture page. How many different font sizes and weights do you see? 
+                    How does the hierarchy help you navigate the content?
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Letter Spacing (Tracking) and Word Spacing</h2>
+                <p>
+                    Spacing between letters and words dramatically affects readability and mood. Too tight feels cramped and aggressive. 
+                    Too loose feels disconnected and hard to read.
+                </p>
+                
+                <h3>When to Adjust Letter Spacing</h3>
+                <ul>
+                    <li><strong>Increase spacing</strong> for uppercase headings (ALL CAPS naturally needs more space)</li>
+                    <li><strong>Increase spacing</strong> for small text (helps legibility below 14px)</li>
+                    <li><strong>Decrease spacing</strong> for large display text (prevents letters from feeling isolated)</li>
+                    <li><strong>Never adjust</strong> body text spacing unless absolutely necessary (designers have already optimized it)</li>
+                </ul>
+                
+                <p>
+                    <strong>Professional Tip:</strong> If you're using all caps for a heading, add 5-10% letter spacing. 
+                    "DESIGN" with normal spacing looks cramped. "D E S I G N" with added spacing looks intentional and refined.
+                </p>
+            </div>
+
+            <div class="content-section">
+                <h2>Line Height (Leading): The Invisible Factor</h2>
+                <p>
+                    Line height is the vertical space between lines of text. It's called "leading" (pronounced "ledding") 
+                    because in metal typesetting, printers added thin lead strips between lines.
+                </p>
+                
+                <div class="highlight-box">
+                    <h3>Line Height Best Practices</h3>
+                    <ul>
+                        <li><strong>Body text:</strong> 1.5 to 1.8 times the font size (16px text = 24-29px line height)</li>
+                        <li><strong>Headings:</strong> 1.2 to 1.4 times the font size (tighter because they're short)</li>
+                        <li><strong>Small text:</strong> 1.4 to 1.6 times the font size (more space helps readability)</li>
+                    </ul>
+                </div>
+                
+                <p>
+                    <strong>Why it matters:</strong> Too tight, and lines blur together. Too loose, and eyes struggle to 
+                    find the next line. The sweet spot creates a natural rhythm that makes reading effortless.
+                </p>
+                
+                <h3>The Mobile Exception</h3>
+                <p>
+                    On mobile devices, increase line height slightly more (1.6-1.8x). Smaller screens and varied lighting 
+                    conditions require more generous spacing for comfortable reading.
+                </p>
+            </div>
+
+            <div class="content-section">
+                <h2>Accessibility: Fonts for Everyone</h2>
+                <p>
+                    Good typography isn't just aesthetic—it's ethical. Around 15% of people have some form of reading 
+                    difficulty, including dyslexia, visual impairments, or age-related vision changes.
+                </p>
+                
+                <h3>Accessibility Guidelines</h3>
+                <ul>
+                    <li><strong>Minimum size:</strong> 16px for body text (WCAG 2.0 standard)</li>
+                    <li><strong>Contrast ratio:</strong> At least 4.5:1 for normal text, 3:1 for large text</li>
+                    <li><strong>Avoid pure black on pure white:</strong> Use #333333 on #FFFFFF for less eye strain</li>
+                    <li><strong>Never rely on color alone:</strong> Use size and weight to create hierarchy</li>
+                    <li><strong>Avoid justified text:</strong> Creates uneven word spacing that's hard to read</li>
+                    <li><strong>Use left-aligned text:</strong> Easier for eyes to find the start of each line</li>
+                </ul>
+                
+                <h3>Dyslexia-Friendly Typography</h3>
+                <ul>
+                    <li>Use sans-serif fonts (clearer letter shapes)</li>
+                    <li>Increase letter spacing slightly (0.05-0.1em)</li>
+                    <li>Use generous line height (1.8-2.0x)</li>
+                    <li>Avoid italics for long passages (harder to distinguish letters)</li>
+                    <li>Break text into shorter paragraphs with clear headings</li>
+                </ul>
+            </div>
+
+            <div class="content-section">
+                <h2>Font Pairing: Combining Typefaces</h2>
+                <p>
+                    Most interfaces use 2-3 different fonts. Too many creates chaos. Too few can be boring. 
+                    The key is choosing fonts that complement without competing.
+                </p>
+                
+                <div class="highlight-box">
+                    <h3>Classic Pairing Strategies</h3>
+                    <ul>
+                        <li><strong>Serif + Sans-Serif:</strong> Traditional and modern (e.g., Georgia headings + Inter body)</li>
+                        <li><strong>Display + Neutral Sans:</strong> Impact + readability (e.g., Space Grotesk + Roboto)</li>
+                        <li><strong>Same Family Different Weights:</strong> Cohesive and safe (e.g., Inter Light + Inter Bold)</li>
+                        <li><strong>Geometric + Humanist:</strong> Precision + warmth (e.g., Montserrat + Open Sans)</li>
+                    </ul>
+                </div>
+                
+                <h3>Rules for Successful Pairing</h3>
+                <ul>
+                    <li><strong>Contrast is good, conflict is bad:</strong> Choose fonts that differ clearly but share similar proportions</li>
+                    <li><strong>Limit to 2-3 typefaces maximum:</strong> More creates visual noise</li>
+                    <li><strong>Assign clear roles:</strong> Headings, body, accents—each font should have a purpose</li>
+                    <li><strong>Test at multiple sizes:</strong> Pairings that work large may clash small</li>
+                </ul>
+            </div>
+
+            <div class="content-section">
+                <h2>Web Fonts vs. System Fonts</h2>
+                <p>
+                    When building websites or apps, you have two main options: use fonts already on users' devices 
+                    (system fonts) or load custom fonts from the web (web fonts).
+                </p>
+                
+                <h3>System Fonts (Native)</h3>
+                <p><strong>Pros:</strong></p>
+                <ul>
+                    <li>Instant loading (already on device)</li>
+                    <li>No bandwidth cost</li>
+                    <li>Optimized for each operating system</li>
+                    <li>Familiar to users</li>
+                </ul>
+                <p><strong>Cons:</strong></p>
+                <ul>
+                    <li>Limited creative control</li>
+                    <li>Different fonts on different devices</li>
+                    <li>Can't express unique brand personality</li>
+                </ul>
+                
+                <h3>Web Fonts (Google Fonts, Adobe Fonts)</h3>
+                <p><strong>Pros:</strong></p>
+                <ul>
+                    <li>Consistent across all devices</li>
+                    <li>Thousands of options</li>
+                    <li>Strong brand differentiation</li>
+                    <li>Complete creative control</li>
+                </ul>
+                <p><strong>Cons:</strong></p>
+                <ul>
+                    <li>Loading time (can slow page speed)</li>
+                    <li>Bandwidth usage</li>
+                    <li>Flash of unstyled text (FOUT) if not optimized</li>
+                </ul>
+                
+                <p>
+                    <strong>Best Practice:</strong> Use system font stacks for UI elements (buttons, navigation) 
+                    and web fonts for content (headings, body text). This balances performance with personality.
+                </p>
+            </div>
+
+            <div class="thought-question">
+                <div class="thought-label">💭 Pause & Think</div>
+                <div class="thought-text">
+                    Think about an app you use daily. Would changing its font change how you feel about the app? 
+                    Would you trust a banking app that used Comic Sans?
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Mobile Typography: Special Considerations</h2>
+                <p>
+                    Designing typography for mobile requires different thinking. Smaller screens, varied lighting, 
+                    touch interactions, and thumb-based navigation all affect font choices.
+                </p>
+                
+                <h3>Mobile Typography Rules</h3>
+                <ul>
+                    <li><strong>Larger minimum size:</strong> 16px absolute minimum (iOS Safari zooms if smaller)</li>
+                    <li><strong>Higher contrast:</strong> Mobile screens are viewed in bright sunlight</li>
+                    <li><strong>Shorter line length:</strong> 35-50 characters per line maximum</li>
+                    <li><strong>Generous tap targets:</strong> Buttons need 44×44px minimum (Apple) or 48×48px (Google)</li>
+                    <li><strong>More vertical spacing:</strong> Thumbs are less precise than mouse cursors</li>
+                    <li><strong>Avoid tiny text:</strong> Users can't zoom on many apps</li>
+                </ul>
+                
+                <h3>Responsive Typography</h3>
+                <p>
+                    Professional interfaces scale font sizes based on screen size. This isn't just making everything smaller—
+                    it's recalibrating hierarchy for different contexts.
+                </p>
+                <ul>
+                    <li><strong>Desktop H1:</strong> 48px → <strong>Mobile H1:</strong> 32px</li>
+                    <li><strong>Desktop Body:</strong> 18px → <strong>Mobile Body:</strong> 16px</li>
+                    <li><strong>Desktop Line Height:</strong> 1.6 → <strong>Mobile Line Height:</strong> 1.8</li>
+                </ul>
+            </div>
+
+            <div class="content-section">
+                <h2>Performance Optimization</h2>
+                <p>
+                    Beautiful typography means nothing if your page takes 10 seconds to load. Font files can be large, 
+                    and loading multiple weights and styles adds up quickly.
+                </p>
+                
+                <div class="highlight-box">
+                    <h3>Font Loading Best Practices</h3>
+                    <ul>
+                        <li><strong>Limit font weights:</strong> Load only what you actually use (Regular + Bold is usually enough)</li>
+                        <li><strong>Use font-display: swap:</strong> Shows fallback font immediately, then swaps when custom font loads</li>
+                        <li><strong>Subset fonts:</strong> Include only characters you need (Latin only vs. Latin + Cyrillic + Greek)</li>
+                        <li><strong>Preload critical fonts:</strong> Tell browser to prioritize important font files</li>
+                        <li><strong>Use WOFF2 format:</strong> Smallest file size, supported by all modern browsers</li>
+                        <li><strong>Self-host when possible:</strong> Faster than CDNs if properly cached</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="content-section">
+                <h2>Common Typography Mistakes</h2>
+                <p>
+                    Even experienced designers make these errors. Learn them now and you'll be ahead of 90% of people 
+                    building interfaces.
+                </p>
+                
+                <h3>Top 10 Typography Mistakes</h3>
+                <ol>
+                    <li><strong>Using too many fonts:</strong> Stick to 2-3 maximum</li>
+                    <li><strong>Poor contrast:</strong> Gray text on gray background is unreadable</li>
+                    <li><strong>Lines too long:</strong> Over 75 characters makes eyes work too hard</li>
+                    <li><strong>Too-small body text:</strong> 16px minimum, always</li>
+                    <li><strong>Insufficient line height:</strong> Cramped text causes reading fatigue</li>
+                    <li><strong>Overusing bold and italics:</strong> Emphasis loses impact when overused</li>
+                    <li><strong>Centered paragraphs:</strong> Hard to read for more than 2-3 lines</li>
+                    <li><strong>All caps body text:</strong> Significantly slower to read</li>
+                    <li><strong>Underlining non-links:</strong> Underlines mean clickable on the web</li>
+                    <li><strong>Ignoring hierarchy:</strong> Everything the same size creates visual chaos</li>
+                </ol>
+            </div>
+
+            <div class="content-section">
+                <h2>Key Takeaways</h2>
+                <p>
+                    Typography is invisible until it's wrong. When done well, users read effortlessly without thinking 
+                    about the font. When done poorly, reading becomes work.
+                </p>
+                
+                <div class="highlight-box">
+                    <h3>Remember These Principles</h3>
+                    <ul>
+                        <li>Font choice communicates personality before words do</li>
+                        <li>Legibility (character clarity) and readability (reading comfort) are both essential</li>
+                        <li>Hierarchy guides attention—use size, weight, and spacing intentionally</li>
+                        <li>Accessibility isn't optional—design for everyone</li>
+                        <li>Mobile requires different thinking—bigger, bolder, more spacious</li>
+                        <li>Performance matters—optimize font loading</li>
+                        <li>Less is more—2-3 fonts maximum</li>
+                    </ul>
+                </div>
+                
+                <p>
+                    Typography is one of the most powerful tools in interface design. Master it, and you control 
+                    how people feel, where they look, and what they remember.
+                </p>
+            </div>
+
+            <div class="complete-section">
+                <h3 style="margin-bottom: 1rem; color: var(--dark);">Chapter Complete!</h3>
+                <p style="color: var(--gray); margin-bottom: 2rem;">
+                    Great work! You've completed Chapter 1: FONT. Next up: Chapter 2 - COLOR.
+                </p>
+                <button class="complete-btn" onclick="markComplete()">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    Mark as Complete & Continue
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audio Player -->
+    <div class="audio-player-bottom">
+        <div class="player-container">
+            <div class="player-controls-group">
+                <button class="control-btn" onclick="skipBackward()">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="19 20 9 12 19 4 19 20"></polygon>
+                        <polygon points="9 20 1 12 9 4 9 20"></polygon>
+                    </svg>
+                </button>
+                <button class="control-btn play-btn" id="playBtn" onclick="togglePlay()">
+                    <svg viewBox="0 0 24 24" id="playIcon">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+                <button class="control-btn" onclick="skipForward()">
+                    <svg viewBox="0 0 24 24">
+                        <polygon points="5 4 15 12 5 20 5 4"></polygon>
+                        <polygon points="15 4 23 12 15 20 15 4"></polygon>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="progress-section">
+                <div class="progress-time">
+                    <span id="currentTime">0:00</span>
+                    <span id="totalTime">45:00</span>
+                </div>
+                <div class="progress-bar" onclick="seekAudio(event)">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            
+            <div class="speed-controls">
+                <span class="speed-label">Speed:</span>
+                <button class="speed-btn" onclick="setSpeed(0.75)">0.75x</button>
+                <button class="speed-btn active" onclick="setSpeed(1)">1x</button>
+                <button class="speed-btn" onclick="setSpeed(1.25)">1.25x</button>
+                <button class="speed-btn" onclick="setSpeed(1.5)">1.5x</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../js/progress-tracker.js"></script>
+    <script>
+        const COURSE_ID = 'design-technology-ai';
+        const MODULE_ID = 'module-02';
+        const CHAPTER_ID = 'chapter-01-font';
+        let learningStartTime = null;
+        
+        // Check authentication and load user profile
+        window.addEventListener('load', () => {
+            const user = sessionStorage.getItem('pixelAcademyUser');
+            if (!user) {
+                window.location.href = '../../../../login.html';
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(user);
+                document.getElementById('userName').textContent = userData.name.split(' ')[0];
+                document.getElementById('userNameFull').textContent = userData.name;
+                document.getElementById('userEmail').textContent = userData.email;
+                document.getElementById('userAvatar').src = userData.picture || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"%3E%3Cpath d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/%3E%3C/svg%3E';
+                
+                loadSavedProgress();
+                learningStartTime = Date.now();
+            } catch (e) {
+                console.error('Error loading user data:', e);
+            }
+        });
+        
+        function loadSavedProgress() {
+            const chapterProgress = window.progressTracker.getChapterProgress(COURSE_ID, MODULE_ID, CHAPTER_ID);
+            if (chapterProgress && chapterProgress.lastPosition > 0) {
+                currentTime = chapterProgress.lastPosition;
+                currentSpeed = chapterProgress.audioSpeed || 1;
+                setSpeed(currentSpeed);
+                updateTimeDisplay();
+                updateProgressBar();
+            }
+        }
+        
+        function saveProgress() {
+            window.progressTracker.updateChapterPosition(COURSE_ID, MODULE_ID, CHAPTER_ID, currentTime, currentSpeed);
+            if (learningStartTime) {
+                const minutesSpent = Math.floor((Date.now() - learningStartTime) / 60000);
+                if (minutesSpent > 0) {
+                    window.progressTracker.addLearningTime(COURSE_ID, minutesSpent);
+                    learningStartTime = Date.now();
+                }
+            }
+            const progressPercent = Math.round((currentTime / totalTime) * 100);
+            window.progressTracker.updateChapterProgress(COURSE_ID, MODULE_ID, CHAPTER_ID, {
+                progress: progressPercent,
+                status: progressPercent === 100 ? 'completed' : 'in-progress'
+            });
+        }
+        
+        function toggleProfileDropdown() {
+            const trigger = document.querySelector('.profile-trigger');
+            const dropdown = document.getElementById('profileDropdown');
+            trigger.classList.toggle('active');
+            dropdown.classList.toggle('active');
+        }
+        
+        document.addEventListener('click', (e) => {
+            const profile = document.querySelector('.user-profile');
+            if (profile && !profile.contains(e.target)) {
+                document.querySelector('.profile-trigger')?.classList.remove('active');
+                document.getElementById('profileDropdown')?.classList.remove('active');
+            }
+        });
+        
+        function handleLogout() {
+            if (confirm('Are you sure you want to log out?')) {
+                sessionStorage.removeItem('pixelAcademyUser');
+                window.location.href = '../../../login.html';
+            }
+        }
+
+        // Reading Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('readingProgress').style.width = scrolled + '%';
+        });
+
+        // Scroll Animation
+        const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, observerOptions);
+        document.querySelectorAll('.content-section').forEach(section => observer.observe(section));
+
+        // Audio Player State
+        let currentTime = 0;
+        let totalTime = 2700; // 45 minutes
+        let isPlaying = false;
+        let currentSpeed = 1;
+        let currentUtterance = null;
+        let timeInterval = null;
+        let lectureText = '';
+        let charPosition = 0;
+        
+        function togglePlay() {
+            if (isPlaying) {
+                pauseAudio();
+            } else {
+                playAudio();
+            }
+        }
+        
+        function playAudio() {
+            if (!('speechSynthesis' in window)) {
+                alert('Text-to-speech not supported in your browser. Please use Chrome, Edge, or Safari.');
+                return;
+            }
+            
+            isPlaying = true;
+            const playIcon = document.getElementById('playIcon');
+            playIcon.innerHTML = '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
+            
+            if (!lectureText) {
+                const content = document.querySelector('.lecture-content');
+                lectureText = '';
+                content.querySelectorAll('p, h2, h3, li').forEach(el => {
+                    if (!el.closest('.thought-question') && !el.closest('.highlight-box') && !el.closest('.complete-btn')) {
+                        lectureText += el.textContent + '. ';
+                    }
+                });
+            }
+            
+            const remainingText = lectureText.substring(charPosition);
+            if (!remainingText || remainingText.length < 10) {
+                charPosition = 0;
+                currentTime = 0;
+                playAudio();
+                return;
+            }
+            
+            const utterance = new SpeechSynthesisUtterance(remainingText);
+            utterance.rate = currentSpeed;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            const voices = speechSynthesis.getVoices();
+            const voice = voices.find(v => v.name.includes('Google') || v.name.includes('Samantha')) || voices[0];
+            if (voice) utterance.voice = voice;
+            
+            utterance.onend = () => {
+                charPosition = 0;
+                currentTime = 0;
+                pauseAudio();
+                saveProgress();
+                window.progressTracker.completeChapter(COURSE_ID, MODULE_ID, CHAPTER_ID);
+                alert('🎉 Chapter 1 completed! Chapter 2: COLOR is now unlocked.');
+            };
+            
+            utterance.onerror = (e) => {
+                if (e.error !== 'interrupted' && e.error !== 'canceled') {
+                    console.error('Error:', e.error);
+                }
+            };
+            
+            utterance.onboundary = (event) => {
+                if (event.name === 'word' && isPlaying) {
+                    charPosition += event.charLength || 1;
+                }
+            };
+            
+            currentUtterance = utterance;
+            speechSynthesis.speak(utterance);
+            
+            timeInterval = setInterval(() => {
+                if (isPlaying) {
+                    currentTime++;
+                    updateTimeDisplay();
+                    updateProgressBar();
+                    if (currentTime % 30 === 0) saveProgress();
+                }
+            }, 1000);
+        }
+        
+        function pauseAudio() {
+            isPlaying = false;
+            speechSynthesis.cancel();
+            if (timeInterval) {
+                clearInterval(timeInterval);
+                timeInterval = null;
+            }
+            saveProgress();
+            const playIcon = document.getElementById('playIcon');
+            playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+        }
+        
+        function skipBackward() {
+            currentTime = Math.max(0, currentTime - 10);
+            charPosition = Math.max(0, Math.floor((currentTime / totalTime) * lectureText.length));
+            updateTimeDisplay();
+            updateProgressBar();
+            if (isPlaying) {
+                speechSynthesis.cancel();
+                setTimeout(() => playAudio(), 100);
+            }
+        }
+        
+        function skipForward() {
+            currentTime = Math.min(totalTime, currentTime + 10);
+            charPosition = Math.min(lectureText.length, Math.floor((currentTime / totalTime) * lectureText.length));
+            updateTimeDisplay();
+            updateProgressBar();
+            if (isPlaying) {
+                speechSynthesis.cancel();
+                setTimeout(() => playAudio(), 100);
+            }
+        }
+        
+        function setSpeed(speed) {
+            currentSpeed = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === speed + 'x') btn.classList.add('active');
+            });
+            if (isPlaying) {
+                speechSynthesis.cancel();
+                setTimeout(() => playAudio(), 100);
+            }
+            saveProgress();
+        }
+        
+        function seekAudio(event) {
+            const bar = event.currentTarget;
+            const percent = event.offsetX / bar.offsetWidth;
+            currentTime = Math.floor(totalTime * percent);
+            charPosition = Math.floor(percent * lectureText.length);
+            updateTimeDisplay();
+            updateProgressBar();
+            if (isPlaying) {
+                speechSynthesis.cancel();
+                setTimeout(() => playAudio(), 100);
+            }
+        }
+        
+        function updateTimeDisplay() {
+            const current = Math.floor(currentTime / 60) + ':' + String(currentTime % 60).padStart(2, '0');
+            const total = Math.floor(totalTime / 60) + ':' + String(totalTime % 60).padStart(2, '0');
+            document.getElementById('currentTime').textContent = current;
+            document.getElementById('totalTime').textContent = total;
+        }
+        
+        function updateProgressBar() {
+            const percent = (currentTime / totalTime) * 100;
+            document.getElementById('progressFill').style.width = percent + '%';
+        }
+        
+        function markComplete() {
+            saveProgress();
+            const success = window.progressTracker.completeChapter(COURSE_ID, MODULE_ID, CHAPTER_ID);
+            if (success) {
+                alert('🎉 Chapter 1: FONT completed!\n\nChapter 2: COLOR is now unlocked.');
+                pauseAudio();
+                setTimeout(() => {
+                    window.location.href = 'module-02-chapter-02-color.html';
+                }, 1500);
+            }
+        }
+        
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('currentTime').textContent = '0:00';
+            document.getElementById('totalTime').textContent = '45:00';
+        });
+    </script>
+
+</body>
+</html>

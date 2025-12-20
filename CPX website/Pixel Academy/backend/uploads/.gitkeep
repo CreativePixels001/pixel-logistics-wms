@@ -1,0 +1,23 @@
+# Uploads Directory
+
+This directory stores uploaded assignment files.
+
+Files are organized by user ID:
+```
+uploads/
+  └── {userId}/
+      ├── timestamp-file1.pdf
+      ├── timestamp-file2.jpg
+      └── timestamp-file3.docx
+```
+
+## Important Notes
+
+- This directory is ignored by git (except this .gitkeep file)
+- Maximum file size: 10MB per file
+- Maximum files per assignment: 5
+- Allowed types: JPG, PNG, PDF, DOC, DOCX, TXT, ZIP
+
+## Production Recommendation
+
+For production deployments, use cloud storage (AWS S3, Google Cloud Storage) instead of local file storage.

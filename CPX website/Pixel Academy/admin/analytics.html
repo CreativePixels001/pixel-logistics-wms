@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Pixel Academy Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #fafafa;
+            color: #000000;
+            line-height: 1.6;
+        }
+
+        /* Grid Layout */
+        .admin-container {
+            display: grid;
+            grid-template-areas:
+                "header header"
+                "sidebar main";
+            grid-template-columns: 260px 1fr;
+            grid-template-rows: 64px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            grid-area: header;
+            background: #ffffff;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #000000;
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .logo svg {
+            stroke-width: 2;
+        }
+
+        .page-title {
+            font-size: 0.875rem;
+            color: #666666;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-btn {
+            padding: 0.625rem 1rem;
+            border: 1px solid #e0e0e0;
+            background: #ffffff;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            color: #000000;
+        }
+
+        .header-btn:hover {
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+
+        .header-btn svg {
+            stroke-width: 2;
+        }
+
+        /* Left Sidebar */
+        .sidebar {
+            grid-area: sidebar;
+            background: #ffffff;
+            border-right: 1px solid #e8e8e8;
+            padding: 1.5rem 0;
+            position: sticky;
+            top: 64px;
+            height: calc(100vh - 64px);
+            overflow-y: auto;
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-section {
+            margin-bottom: 2rem;
+            padding: 0 1rem;
+        }
+
+        .nav-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .nav-section-title {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #999999;
+            margin-bottom: 0.75rem;
+            padding: 0 0.75rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            text-decoration: none;
+            color: #666666;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+            margin-bottom: 0.25rem;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background: #fafafa;
+            color: #000000;
+        }
+
+        .nav-link.active {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .nav-link svg {
+            stroke-width: 2;
+            flex-shrink: 0;
+        }
+
+        .nav-badge {
+            margin-left: auto;
+            background: #000000;
+            color: #ffffff;
+            font-size: 0.6875rem;
+            font-weight: 700;
+            padding: 0.125rem 0.5rem;
+            border-radius: 12px;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .nav-link.active .nav-badge {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Main Content */
+        .main-content {
+            grid-area: main;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #666666;
+            font-size: 0.9375rem;
+        }
+
+        /* KPI Grid */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .kpi-card:hover {
+            border-color: #d0d0d0;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .kpi-label {
+            font-size: 0.8125rem;
+            color: #666666;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000000;
+            letter-spacing: -0.02em;
+        }
+
+        .kpi-change {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        .kpi-change.positive {
+            color: #000000;
+        }
+
+        .kpi-change.negative {
+            color: #666666;
+        }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-card {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .chart-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-header h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .chart-subtitle {
+            font-size: 0.8125rem;
+            color: #666666;
+        }
+
+        /* Module Progress Chart */
+        .module-chart {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .module-bar {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .module-bar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .module-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .module-stats {
+            font-size: 0.75rem;
+            color: #666666;
+            font-weight: 600;
+        }
+
+        .bar-container {
+            background: #f5f5f5;
+            border-radius: 6px;
+            height: 8px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            background: #000000;
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+        }
+
+        /* Time Chart */
+        .time-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.75rem;
+            height: 200px;
+            padding: 1rem 0;
+        }
+
+        .time-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .time-bar-fill {
+            width: 100%;
+            background: #e8e8e8;
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .time-bar-fill:hover {
+            background: #000000;
+        }
+
+        .time-bar-label {
+            font-size: 0.6875rem;
+            color: #999999;
+            font-weight: 600;
+        }
+
+        /* Completion Table */
+        .completion-table {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .completion-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .completion-table thead {
+            background: #fafafa;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .completion-table th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666666;
+        }
+
+        .completion-table td {
+            padding: 1rem 1.5rem;
+            font-size: 0.875rem;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .completion-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .completion-table tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .progress-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .progress-mini-bar {
+            flex: 1;
+            max-width: 100px;
+            height: 4px;
+            background: #f5f5f5;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-mini-fill {
+            height: 100%;
+            background: #000000;
+            border-radius: 2px;
+        }
+
+        .percentage-text {
+            font-weight: 600;
+            font-size: 0.75rem;
+            min-width: 40px;
+        }
+
+        /* Insights Grid */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .insight-card {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .insight-card h3 {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #666666;
+            margin-bottom: 1rem;
+        }
+
+        .insight-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .insight-item {
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: #fafafa;
+            border-radius: 6px;
+        }
+
+        .insight-icon {
+            width: 32px;
+            height: 32px;
+            background: #000000;
+            color: #ffffff;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .insight-description {
+            font-size: 0.75rem;
+            color: #666666;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Top Header -->
+        <header class="header">
+            <div class="header-left">
+                <a href="../index.html" class="logo">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <path d="M9 3v18M15 3v18M3 9h18M3 15h18"/>
+                    </svg>
+                    Pixel Academy
+                </a>
+                <span class="page-title">Course Analytics</span>
+            </div>
+            <div class="header-right">
+                <a href="../student/dashboard.html" class="header-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    </svg>
+                    Student View
+                </a>
+            </div>
+        </header>
+
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Admin</div>
+                    <a href="dashboard.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        <span>Overview</span>
+                    </a>
+                    <a href="students.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Students</span>
+                    </a>
+                    <a href="assignments.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/>
+                        </svg>
+                        <span>Assignments</span>
+                        <span class="nav-badge" id="assignmentsBadge">0</span>
+                    </a>
+                    <a href="analytics.html" class="nav-link active">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M3 3v18h18"/>
+                            <path d="M18 17V9M13 17V5M8 17v-3"/>
+                        </svg>
+                        <span>Analytics</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Student Portal</div>
+                    <a href="../student/dashboard.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="../student/my-courses.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        </svg>
+                        <span>My Courses</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Course Analytics</h1>
+                <p class="page-subtitle">Detailed insights into course performance and student engagement</p>
+            </div>
+
+            <!-- KPI Grid -->
+            <div class="kpi-grid">
+                <div class="kpi-card">
+                    <div class="kpi-label">Completion Rate</div>
+                    <div class="kpi-value" id="completionRate">0%</div>
+                    <div class="kpi-change positive" id="completionChange">—</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Avg. Time per Module</div>
+                    <div class="kpi-value" id="avgTime">0m</div>
+                    <div class="kpi-change" id="timeChange">—</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Assignment Approval</div>
+                    <div class="kpi-value" id="approvalRate">0%</div>
+                    <div class="kpi-change" id="approvalChange">—</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Active Learners</div>
+                    <div class="kpi-value" id="activeLearners">0</div>
+                    <div class="kpi-change" id="learnersChange">—</div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="charts-grid">
+                <!-- Module Completion Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h2>Module Completion Rates</h2>
+                        <p class="chart-subtitle">Percentage of students who completed each module</p>
+                    </div>
+                    <div class="module-chart" id="moduleChart">
+                        <!-- Modules will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Time Distribution Chart -->
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h2>Time Distribution</h2>
+                        <p class="chart-subtitle">Average time spent on each module (minutes)</p>
+                    </div>
+                    <div class="time-chart" id="timeChart">
+                        <!-- Time bars will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Module Details Table -->
+            <div class="completion-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Module</th>
+                            <th>Students Started</th>
+                            <th>Completed</th>
+                            <th>Completion Rate</th>
+                            <th>Avg. Time</th>
+                            <th>Drop-off Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody id="moduleTableBody">
+                        <!-- Rows will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <br>
+
+            <!-- Insights Grid -->
+            <div class="insights-grid">
+                <div class="insight-card">
+                    <h3>Key Insights</h3>
+                    <div class="insight-list" id="insightsList">
+                        <!-- Insights will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <h3>Recommendations</h3>
+                    <div class="insight-list" id="recommendationsList">
+                        <!-- Recommendations will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/progress-tracker.js"></script>
+    <script>
+        // Initialize
+        const progressTracker = window.progressTracker;
+
+        // Module names
+        const moduleNames = {
+            'module-01': 'Module 01: Introduction',
+            'module-02': 'Module 02: Visual Design',
+            'module-03': 'Module 03: AI & Prompts',
+            'module-04': 'Module 04: Systems Thinking',
+            'module-05': 'Module 05: Real World'
+        };
+
+        // Estimated time per module (minutes)
+        const moduleTimes = {
+            'module-01': 45,
+            'module-02': 50,
+            'module-03': 60,
+            'module-04': 55,
+            'module-05': 50
+        };
+
+        // Load analytics data
+        function loadAnalytics() {
+            const progress = progressTracker.getProgress();
+            const course = progress.courses['design-technology-ai'];
+            
+            if (!course || !course.modules) {
+                renderEmptyState();
+                return;
+            }
+
+            const modules = course.modules;
+            const moduleIds = Object.keys(modules);
+            const totalStudents = 1; // For demo, would be actual student count
+
+            // Calculate metrics
+            let completedModules = 0;
+            let totalTime = 0;
+            const assignments = progressTracker.getAssignmentHistory();
+            const approvedAssignments = assignments.filter(a => a.status === 'approved').length;
+            const totalAssignments = assignments.length;
+
+            moduleIds.forEach(moduleId => {
+                const module = modules[moduleId];
+                if (module.status === 'completed') {
+                    completedModules++;
+                    totalTime += moduleTimes[moduleId] || 50;
+                }
+            });
+
+            // Update KPIs
+            const completionRate = Math.round((completedModules / moduleIds.length) * 100);
+            const avgTime = completedModules > 0 ? Math.round(totalTime / completedModules) : 0;
+            const approvalRate = totalAssignments > 0 ? Math.round((approvedAssignments / totalAssignments) * 100) : 0;
+
+            document.getElementById('completionRate').textContent = completionRate + '%';
+            document.getElementById('avgTime').textContent = avgTime + 'm';
+            document.getElementById('approvalRate').textContent = approvalRate + '%';
+            document.getElementById('activeLearners').textContent = totalStudents;
+
+            // Update badges
+            const pendingAssignments = progressTracker.getAllPendingAssignments();
+            document.getElementById('assignmentsBadge').textContent = pendingAssignments.length;
+
+            // Render charts
+            renderModuleChart(modules, totalStudents);
+            renderTimeChart(modules);
+            renderModuleTable(modules, totalStudents);
+            renderInsights(modules, completionRate, approvalRate);
+        }
+
+        // Render module completion chart
+        function renderModuleChart(modules, totalStudents) {
+            const chart = document.getElementById('moduleChart');
+            const moduleIds = Object.keys(modules);
+
+            chart.innerHTML = moduleIds.map(moduleId => {
+                const module = modules[moduleId];
+                const completed = module.status === 'completed' ? 1 : 0;
+                const completionRate = Math.round((completed / totalStudents) * 100);
+
+                return `
+                    <div class="module-bar">
+                        <div class="module-bar-header">
+                            <div class="module-name">${moduleNames[moduleId]}</div>
+                            <div class="module-stats">${completionRate}%</div>
+                        </div>
+                        <div class="bar-container">
+                            <div class="bar-fill" style="width: ${completionRate}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render time distribution chart
+        function renderTimeChart(modules) {
+            const chart = document.getElementById('timeChart');
+            const moduleIds = Object.keys(modules);
+            
+            // Calculate max time for scaling
+            const maxTime = Math.max(...Object.values(moduleTimes));
+
+            chart.innerHTML = moduleIds.map(moduleId => {
+                const module = modules[moduleId];
+                const time = module.status === 'completed' ? moduleTimes[moduleId] : 0;
+                const heightPercent = (time / maxTime) * 100;
+
+                return `
+                    <div class="time-bar">
+                        <div class="time-bar-fill" style="height: ${heightPercent}%" title="${time} minutes"></div>
+                        <div class="time-bar-label">M${moduleId.slice(-2)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Render module details table
+        function renderModuleTable(modules, totalStudents) {
+            const tbody = document.getElementById('moduleTableBody');
+            const moduleIds = Object.keys(modules);
+
+            tbody.innerHTML = moduleIds.map(moduleId => {
+                const module = modules[moduleId];
+                const started = 1; // Demo: all modules accessible
+                const completed = module.status === 'completed' ? 1 : 0;
+                const completionRate = Math.round((completed / started) * 100);
+                const dropoffRate = 100 - completionRate;
+                const avgTime = module.status === 'completed' ? moduleTimes[moduleId] : 0;
+
+                return `
+                    <tr>
+                        <td><strong>${moduleNames[moduleId]}</strong></td>
+                        <td>${started}</td>
+                        <td>${completed}</td>
+                        <td>
+                            <div class="progress-cell">
+                                <div class="progress-mini-bar">
+                                    <div class="progress-mini-fill" style="width: ${completionRate}%"></div>
+                                </div>
+                                <span class="percentage-text">${completionRate}%</span>
+                            </div>
+                        </td>
+                        <td>${avgTime}m</td>
+                        <td style="color: ${dropoffRate > 50 ? '#666666' : '#999999'}">${dropoffRate}%</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Render insights and recommendations
+        function renderInsights(modules, completionRate, approvalRate) {
+            const insightsList = document.getElementById('insightsList');
+            const recommendationsList = document.getElementById('recommendationsList');
+
+            const insights = [];
+            const recommendations = [];
+
+            // Generate insights based on data
+            if (completionRate >= 80) {
+                insights.push({
+                    icon: '✓',
+                    title: 'High Completion Rate',
+                    description: 'Students are successfully completing the course with a ' + completionRate + '% completion rate.'
+                });
+            } else if (completionRate < 50) {
+                insights.push({
+                    icon: '!',
+                    title: 'Low Completion Rate',
+                    description: 'Only ' + completionRate + '% of modules are completed. Consider reviewing course difficulty.'
+                });
+                recommendations.push({
+                    icon: '○',
+                    title: 'Add More Support Materials',
+                    description: 'Provide additional resources, tutorials, or examples to help students progress.'
+                });
+            }
+
+            if (approvalRate >= 90) {
+                insights.push({
+                    icon: '★',
+                    title: 'Excellent Assignment Quality',
+                    description: approvalRate + '% of assignments are approved on first submission.'
+                });
+            } else if (approvalRate < 70) {
+                recommendations.push({
+                    icon: '○',
+                    title: 'Clarify Assignment Requirements',
+                    description: 'Low approval rate suggests students need clearer assignment guidelines.'
+                });
+            }
+
+            // Check for module-specific issues
+            const moduleIds = Object.keys(modules);
+            const inProgressModules = moduleIds.filter(id => 
+                modules[id].status === 'in-progress' || modules[id].status === 'awaiting-approval'
+            );
+
+            if (inProgressModules.length > 2) {
+                insights.push({
+                    icon: '◆',
+                    title: 'Multiple Active Modules',
+                    description: inProgressModules.length + ' modules currently in progress. Students are engaged.'
+                });
+            }
+
+            // Default insights if none generated
+            if (insights.length === 0) {
+                insights.push({
+                    icon: '○',
+                    title: 'Getting Started',
+                    description: 'Start tracking metrics as students progress through the course.'
+                });
+            }
+
+            if (recommendations.length === 0) {
+                recommendations.push({
+                    icon: '○',
+                    title: 'Monitor Student Progress',
+                    description: 'Regularly check assignment submissions and provide timely feedback.'
+                });
+                recommendations.push({
+                    icon: '○',
+                    title: 'Engage with Students',
+                    description: 'Reach out to students who haven\'t made progress in over a week.'
+                });
+            }
+
+            // Render insights
+            insightsList.innerHTML = insights.map(insight => `
+                <div class="insight-item">
+                    <div class="insight-icon">${insight.icon}</div>
+                    <div class="insight-content">
+                        <div class="insight-title">${insight.title}</div>
+                        <div class="insight-description">${insight.description}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render recommendations
+            recommendationsList.innerHTML = recommendations.map(rec => `
+                <div class="insight-item">
+                    <div class="insight-icon">${rec.icon}</div>
+                    <div class="insight-content">
+                        <div class="insight-title">${rec.title}</div>
+                        <div class="insight-description">${rec.description}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render empty state
+        function renderEmptyState() {
+            document.querySelector('.main-content').innerHTML = `
+                <div class="page-header">
+                    <h1>Course Analytics</h1>
+                    <p class="page-subtitle">No data available yet</p>
+                </div>
+                <div style="text-align: center; padding: 4rem 2rem; color: #666666;">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: 1rem; opacity: 0.3;">
+                        <path d="M3 3v18h18"/>
+                        <path d="M18 17V9M13 17V5M8 17v-3"/>
+                    </svg>
+                    <h3 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem; color: #000000;">No Analytics Data</h3>
+                    <p style="font-size: 0.9375rem;">Analytics will appear once students start engaging with the course.</p>
+                </div>
+            `;
+        }
+
+        // Initialize
+        loadAnalytics();
+    </script>
+</body>
+</html>

@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Courses - Pixel Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark: #1a1a1a;
+            --gray: #666666;
+            --gray-light: #999999;
+            --gray-bg: #f5f5f5;
+            --gray-border: #e0e0e0;
+            --accent: #4a4a4a;
+            --white: #ffffff;
+            --border: 1px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gray-bg);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: white;
+            border-bottom: var(--border) solid var(--gray-border);
+            padding: 1.5rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--dark);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: var(--dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            opacity: 0.6;
+        }
+
+        .nav-menu a.active {
+            color: var(--accent);
+            position: relative;
+        }
+
+        .nav-menu a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1.7rem;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
+        }
+
+        /* User Profile Dropdown */
+        .user-profile {
+            position: relative;
+        }
+
+        .profile-trigger {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            background: var(--gray-bg);
+        }
+
+        .profile-trigger:hover {
+            border-color: var(--gray-border);
+            background: white;
+        }
+
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--gray-border);
+        }
+
+        .profile-name {
+            font-weight: 500;
+            color: var(--dark);
+            font-size: 0.9rem;
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .profile-chevron {
+            width: 16px;
+            height: 16px;
+            stroke: var(--gray);
+            transition: transform 0.3s ease;
+        }
+
+        .profile-trigger.active .profile-chevron {
+            transform: rotate(180deg);
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: white;
+            border: 1px solid var(--gray-border);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .profile-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .profile-dropdown-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .profile-email {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+
+        .profile-dropdown-menu {
+            padding: 0.5rem;
+        }
+
+        .profile-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            color: var(--dark);
+        }
+
+        .profile-dropdown-item:hover {
+            background: var(--gray-bg);
+        }
+
+        .profile-dropdown-item svg {
+            width: 18px;
+            height: 18px;
+            stroke: var(--gray);
+        }
+
+        .profile-dropdown-item.logout {
+            color: #d32f2f;
+        }
+
+        .profile-dropdown-item.logout svg {
+            stroke: #d32f2f;
+        }
+
+        .profile-dropdown-item.logout:hover {
+            background: #ffebee;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 80px;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 3rem 2rem;
+        }
+
+        .page-header {
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--gray-border);
+            padding-bottom: 1rem;
+        }
+
+        .filter-tab {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .filter-tab:hover {
+            background: var(--gray-bg);
+            color: var(--dark);
+        }
+
+        .filter-tab.active {
+            background: var(--dark);
+            color: white;
+        }
+
+        .filter-tab .count {
+            display: inline-block;
+            margin-left: 0.5rem;
+            padding: 0.15rem 0.5rem;
+            background: rgba(0,0,0,0.1);
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .filter-tab.active .count {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Courses Grid */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 2rem;
+        }
+
+        .course-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--gray-border);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .course-thumbnail {
+            height: 200px;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--accent) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4rem;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .course-status-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.95);
+            color: var(--dark);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-radius: 20px;
+        }
+
+        .status-in-progress {
+            background: rgba(255, 193, 7, 0.95);
+            color: #000;
+        }
+
+        .status-completed {
+            background: rgba(76, 175, 80, 0.95);
+            color: white;
+        }
+
+        .status-not-started {
+            background: rgba(255,255,255,0.95);
+            color: var(--gray);
+        }
+
+        .course-content {
+            padding: 2rem;
+        }
+
+        .course-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--dark);
+        }
+
+        .course-desc {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .course-progress {
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .progress-label {
+            color: var(--gray);
+        }
+
+        .progress-percent {
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--gray-bg);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--dark) 0%, var(--accent) 100%);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .course-meta {
+            display: flex;
+            gap: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-border);
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .course-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .course-meta svg {
+            width: 16px;
+            height: 16px;
+            stroke: var(--gray-light);
+        }
+
+        .course-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.875rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: var(--dark);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent);
+        }
+
+        .btn-secondary {
+            background: var(--gray-bg);
+            color: var(--dark);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-border);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--gray-border);
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            stroke: var(--gray-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark);
+        }
+
+        .empty-state p {
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .empty-state .btn {
+            display: inline-flex;
+            width: auto;
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-tabs {
+                flex-wrap: wrap;
+            }
+
+            .course-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="../index.html" class="logo">Pixel Academy</a>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Explore Courses</a></li>
+                <li><a href="my-courses.html" class="active">My Courses</a></li>
+                <li class="user-profile">
+                    <div class="profile-trigger" onclick="toggleProfileDropdown()">
+                        <img src="" alt="User" class="profile-avatar" id="userAvatar">
+                        <span class="profile-name" id="userName">User</span>
+                        <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-dropdown-header">
+                            <div class="profile-name" id="userNameFull">Loading...</div>
+                            <div class="profile-email" id="userEmail">Loading...</div>
+                        </div>
+                        <div class="profile-dropdown-menu">
+                            <a href="dashboard.html" class="profile-dropdown-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="7" height="7"/>
+                                    <rect x="14" y="3" width="7" height="7"/>
+                                    <rect x="14" y="14" width="7" height="7"/>
+                                    <rect x="3" y="14" width="7" height="7"/>
+                                </svg>
+                                Dashboard
+                            </a>
+                            <a href="../admin/assignments.html" class="profile-dropdown-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                                </svg>
+                                📋 Admin Panel
+                            </a>
+                            <a href="settings.html" class="profile-dropdown-item">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"/>
+                                </svg>
+                                Settings
+                            </a>
+                            <div class="profile-dropdown-item logout" onclick="handleLogout()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                                </svg>
+                                Log Out
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>My Courses</h1>
+            <p class="page-subtitle">Track your learning progress and continue where you left off</p>
+        </div>
+
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">
+                All Courses <span class="count">1</span>
+            </button>
+            <button class="filter-tab" data-filter="in-progress">
+                In Progress <span class="count">1</span>
+            </button>
+            <button class="filter-tab" data-filter="completed">
+                Completed <span class="count">0</span>
+            </button>
+            <button class="filter-tab" data-filter="not-started">
+                Not Started <span class="count">0</span>
+            </button>
+        </div>
+
+        <div class="courses-grid" id="coursesGrid">
+            <!-- Courses will be loaded here dynamically -->
+            <div class="course-card" data-status="in-progress">
+                <div class="course-thumbnail">
+                    01
+                    <div class="course-status-badge status-in-progress">In Progress</div>
+                </div>
+                <div class="course-content">
+                    <h3 class="course-title">Design & Technology in the AI Era</h3>
+                    <p class="course-desc">A discussion-based course exploring how design, technology, and AI are reshaping the way we think and build.</p>
+                    
+                    <div class="course-progress">
+                        <div class="progress-header">
+                            <span class="progress-label">1 of 5 modules completed</span>
+                            <span class="progress-percent">20%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 20%"></div>
+                        </div>
+                    </div>
+
+                    <div class="course-meta">
+                        <span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            275 min total
+                        </span>
+                        <span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                            </svg>
+                            5 Modules
+                        </span>
+                        <span>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <polyline points="2 17 12 22 22 17"/>
+                                <polyline points="2 12 12 17 22 12"/>
+                            </svg>
+                            Discussion-based
+                        </span>
+                    </div>
+
+                    <div class="course-actions">
+                        <a href="../courses/design-technology-ai/lectures/module-01.html" class="btn btn-primary">
+                            Continue Learning
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="5 3 19 12 5 21 5 3"/>
+                            </svg>
+                        </a>
+                        <a href="../courses/design-technology-ai/overview.html" class="btn btn-secondary">
+                            Course Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty state (hidden by default, shown when filter has no results) -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+            <h3>No courses found</h3>
+            <p>You don't have any courses in this category yet.</p>
+            <a href="../index.html" class="btn btn-primary">
+                Explore Courses
+            </a>
+        </div>
+    </main>
+
+    <script src="../js/progress-tracker.js"></script>
+    <script>
+        // Check authentication and load user profile
+        window.addEventListener('load', () => {
+            const user = sessionStorage.getItem('pixelAcademyUser');
+            if (!user) {
+                window.location.href = '../login.html';
+                return;
+            }
+            
+            try {
+                const userData = JSON.parse(user);
+                const firstName = userData.name.split(' ')[0];
+                
+                // Update profile elements
+                document.getElementById('userName').textContent = firstName;
+                document.getElementById('userNameFull').textContent = userData.name;
+                document.getElementById('userEmail').textContent = userData.email;
+                document.getElementById('userAvatar').src = userData.picture || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"%3E%3Cpath d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/%3E%3C/svg%3E';
+                
+                // Load courses with real progress data
+                loadCourses();
+            } catch (e) {
+                console.error('Error loading user data:', e);
+            }
+        });
+        
+        function loadCourses() {
+            const courseProgress = window.progressTracker.getCourseProgress('design-technology-ai');
+            updateFilterCounts();
+            updateCourseCard(courseProgress);
+        }
+
+        function updateFilterCounts() {
+            const courseProgress = window.progressTracker.getCourseProgress('design-technology-ai');
+            
+            // Update tab counts
+            document.querySelector('[data-filter="all"] .count').textContent = '1';
+            
+            const inProgressCount = courseProgress.status === 'in-progress' ? 1 : 0;
+            const completedCount = courseProgress.status === 'completed' ? 1 : 0;
+            const notStartedCount = courseProgress.status === 'not-started' ? 1 : 0;
+            
+            document.querySelector('[data-filter="in-progress"] .count').textContent = inProgressCount;
+            document.querySelector('[data-filter="completed"] .count').textContent = completedCount;
+            document.querySelector('[data-filter="not-started"] .count').textContent = notStartedCount;
+        }
+
+        function updateCourseCard(courseProgress) {
+            const courseCard = document.querySelector('.course-card');
+            const progressPercent = courseProgress.overallProgress;
+            const completedModules = courseProgress.completedModules;
+            const totalModules = courseProgress.totalModules;
+            
+            // Update card status attribute
+            courseCard.dataset.status = courseProgress.status;
+            
+            // Update progress display
+            document.querySelector('.progress-label').textContent = `${completedModules}/${totalModules} modules`;
+            document.querySelector('.progress-percent').textContent = progressPercent + '%';
+            document.querySelector('.progress-fill').style.width = progressPercent + '%';
+            
+            // Update badge
+            const badge = document.querySelector('.course-badge');
+            if (courseProgress.status === 'completed') {
+                badge.textContent = 'Completed';
+                badge.style.background = '#4CAF50';
+                badge.style.color = 'white';
+            } else if (courseProgress.status === 'in-progress') {
+                badge.textContent = 'In Progress';
+                badge.style.background = '#2196F3';
+                badge.style.color = 'white';
+            } else {
+                badge.textContent = 'Not Started';
+                badge.style.background = '#e0e0e0';
+                badge.style.color = '#666';
+            }
+            
+            // Update button text
+            const continueBtn = document.querySelector('.btn-primary');
+            if (courseProgress.status === 'not-started') {
+                continueBtn.textContent = 'Start Course';
+            } else if (courseProgress.status === 'completed') {
+                continueBtn.textContent = 'Review Course';
+            } else {
+                continueBtn.innerHTML = `Continue Learning
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>`;
+            }
+        }
+        
+        // Toggle profile dropdown
+        function toggleProfileDropdown() {
+            const trigger = document.querySelector('.profile-trigger');
+            const dropdown = document.getElementById('profileDropdown');
+            trigger.classList.toggle('active');
+            dropdown.classList.toggle('active');
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const profile = document.querySelector('.user-profile');
+            if (profile && !profile.contains(e.target)) {
+                document.querySelector('.profile-trigger')?.classList.remove('active');
+                document.getElementById('profileDropdown')?.classList.remove('active');
+            }
+        });
+        
+        // Handle logout
+        function handleLogout() {
+            if (confirm('Are you sure you want to log out?')) {
+                sessionStorage.removeItem('pixelAcademyUser');
+                window.location.href = '../login.html';
+            }
+        }
+
+        // Filter functionality
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        const coursesGrid = document.getElementById('coursesGrid');
+        const emptyState = document.getElementById('emptyState');
+
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active tab
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Get filter value
+                const filter = tab.dataset.filter;
+
+                // Get all course cards
+                const courseCards = coursesGrid.querySelectorAll('.course-card');
+                let visibleCount = 0;
+
+                courseCards.forEach(card => {
+                    const status = card.dataset.status;
+                    
+                    if (filter === 'all' || status === filter) {
+                        card.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Show/hide empty state
+                if (visibleCount === 0) {
+                    coursesGrid.style.display = 'none';
+                    emptyState.style.display = 'block';
+                } else {
+                    coursesGrid.style.display = 'grid';
+                    emptyState.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

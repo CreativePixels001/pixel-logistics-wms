@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Academy - Learn Design & Become a Designer | CreativePixels</title>
+    <meta name="description" content="Master the art of design with Pixel Academy. Comprehensive courses in UI/UX, product design, design systems, and more. Start your design journey today.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #000000; --dark: #000000; --light: #FFFFFF; --gray: #666666; --border: 2px; }
+        body { font-family: 'Inter', sans-serif; background: white; color: var(--dark); line-height: 1.6; }
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.3; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: white; border-bottom: var(--border) solid black; padding: 1.5rem 0; transition: box-shadow 0.3s ease; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: black; text-decoration: none; }
+        .nav-menu { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-menu a { color: black; text-decoration: none; font-weight: 500; transition: opacity 0.3s ease; }
+        .nav-menu a:hover { opacity: 0.6; }
+        .cta-btn { padding: 0.75rem 1.5rem; background: black; color: white !important; border: var(--border) solid black; transition: all 0.3s ease; }
+        .cta-btn:hover { background: white; color: black !important; }
+        
+        .hero { padding: 10rem 0 6rem; background: black; color: white; text-align: center; }
+        .hero-badge { display: inline-block; padding: 0.5rem 1.5rem; background: white; color: black; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2rem; }
+        .hero-title { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; margin-bottom: 1.5rem; }
+        .hero-subtitle { font-size: 1.25rem; color: rgba(255, 255, 255, 0.8); max-width: 700px; margin: 0 auto 3rem; line-height: 1.8; }
+        .hero-stats { display: flex; justify-content: center; gap: 4rem; margin-top: 3rem; flex-wrap: wrap; }
+        .stat { text-align: center; }
+        .stat-number { font-size: 3rem; font-weight: 700; font-family: 'Space Grotesk', sans-serif; }
+        .stat-label { color: rgba(255, 255, 255, 0.7); margin-top: 0.5rem; }
+        
+        .section { padding: 6rem 0; }
+        .section-title { font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 3rem; text-align: center; }
+        
+        .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .course-card { background: white; border: var(--border) solid black; padding: 2.5rem; transition: all 0.3s ease; }
+        .course-card:hover { transform: translateY(-5px); box-shadow: 8px 8px 0 black; }
+        .course-icon { width: 60px; height: 60px; border: 2px solid black; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1.5rem; background: white; }
+        .course-icon svg { width: 28px; height: 28px; stroke: black; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+        .course-level { display: inline-block; padding: 0.35rem 0.75rem; background: rgba(0, 0, 0, 0.05); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 1rem; }
+        .course-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; }
+        .course-desc { color: var(--gray); margin-bottom: 1.5rem; line-height: 1.8; }
+        .course-meta { display: flex; gap: 1.5rem; margin-bottom: 1.5rem; font-size: 0.9rem; color: var(--gray); }
+        .course-meta span { display: flex; align-items: center; gap: 0.5rem; }
+        .course-meta svg { stroke: var(--gray); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+        .course-topics { margin-bottom: 1.5rem; }
+        .course-topics h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.75rem; }
+        .course-topics ul { list-style: none; color: var(--gray); }
+        .course-topics li { padding-left: 1.5rem; position: relative; margin-bottom: 0.5rem; }
+        .course-topics li:before { content: "→"; position: absolute; left: 0; }
+        .course-btn { display: inline-block; padding: 0.875rem 2rem; background: black; color: white; text-decoration: none; font-weight: 600; border: var(--border) solid black; transition: all 0.3s ease; text-align: center; }
+        .course-btn:hover { background: white; color: black; }
+        
+        .learning-paths { background: rgba(0, 0, 0, 0.02); padding: 6rem 0; }
+        .path-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .path-card { background: white; border: var(--border) solid black; padding: 2rem; }
+        .path-number { font-size: 3rem; font-weight: 700; color: rgba(0, 0, 0, 0.1); margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif; }
+        .path-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1rem; }
+        .path-desc { color: var(--gray); }
+        
+        .testimonials { padding: 6rem 0; }
+        .testimonial-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-top: 3rem; }
+        .testimonial { background: white; border: var(--border) solid black; padding: 2rem; }
+        .testimonial-text { font-size: 1.125rem; line-height: 1.8; margin-bottom: 1.5rem; font-style: italic; }
+        .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+        .author-avatar { width: 50px; height: 50px; background: black; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+        .author-info h4 { font-size: 1rem; font-weight: 600; }
+        .author-info p { font-size: 0.9rem; color: var(--gray); }
+        
+        .cta-section { padding: 6rem 0; background: black; color: white; text-align: center; }
+        .cta-section h2 { font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1.5rem; }
+        .cta-section p { font-size: 1.125rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+        .cta-white { display: inline-block; padding: 1rem 2.5rem; background: white; color: black; text-decoration: none; font-weight: 600; border: var(--border) solid white; transition: all 0.3s ease; }
+        .cta-white:hover { background: black; color: white; }
+        
+        footer { background: black; color: white; padding: 4rem 0 2rem; }
+        .footer-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+        .footer-brand h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .footer-brand p { color: rgba(255, 255, 255, 0.7); line-height: 1.8; margin-bottom: 1.5rem; }
+        .footer-social { display: flex; gap: 1rem; }
+        .social-link { width: 40px; height: 40px; border: var(--border) solid white; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .social-link:hover { background: white; }
+        .social-link:hover svg { stroke: black; }
+        .social-link svg { stroke: white; transition: stroke 0.3s ease; }
+        .footer-column h4 { margin-bottom: 1rem; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 0.75rem; }
+        .footer-links a { color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: color 0.3s ease; }
+        .footer-links a:hover { color: white; }
+        .footer-bottom { padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center; }
+        .footer-bottom p { color: rgba(255, 255, 255, 0.5); }
+        .footer-legal { display: flex; gap: 2rem; }
+        .footer-legal a { color: rgba(255, 255, 255, 0.5); text-decoration: none; transition: color 0.3s ease; }
+        .footer-legal a:hover { color: white; }
+        
+        @media (max-width: 968px) { 
+            .footer-grid { grid-template-columns: 1fr 1fr; } 
+            .footer-brand { grid-column: 1 / -1; } 
+            .hero-stats { gap: 2rem; }
+            .course-meta { flex-direction: column; gap: 0.5rem; }
+        }
+        @media (max-width: 640px) { 
+            .nav-menu { gap: 1rem; font-size: 0.9rem; } 
+            .footer-grid, .path-grid, .testimonial-grid { grid-template-columns: 1fr; } 
+            .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; } 
+            .footer-legal { flex-direction: column; gap: 0.5rem; }
+            .courses-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">CreativePixels</a>
+            <ul class="nav-menu">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="pixelgram.html">PixelGram</a></li>
+                <li><a href="pixel-world.html">Pixel World</a></li>
+                <li><a href="pixelverse.html">PixelVerse</a></li>
+                <li><a href="pixel-academy.html">Pixel Academy</a></li>
+                <li><a href="get-in-touch.html" class="cta-btn">Get in Touch</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">LEARN • UNDERSTAND • ENGAGE</div>
+            <h1 class="hero-title">Pixel Academy</h1>
+            <p class="hero-subtitle">A space to understand design, technology, and systems beyond tools — in the age of AI.</p>
+            
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-number">Invite-Based</div>
+                    <div class="stat-label">Learning</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">Small Groups</div>
+                    <div class="stat-label">Discussion-Led</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">Thoughtful</div>
+                    <div class="stat-label">Pacing</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Intro Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Learning Design for the Way Technology Works Today</h2>
+            <div style="max-width: 800px; margin: 0 auto; text-align: center; line-height: 1.9; color: #333;">
+                <p style="margin-bottom: 1.5rem;">Pixel Academy is not a traditional design school.</p>
+                <p style="margin-bottom: 1.5rem;">It is a learning space created for curious minds — professionals, educators, and thinkers — who want to understand how modern design and technology actually function in today's AI-driven world.</p>
+                <p style="margin-bottom: 1.5rem;">Here, we don't start with software or tools.<br>We start with thinking, systems, and human behavior — and then connect them to modern technology.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Philosophy Section -->
+    <section class="section" style="background: rgba(0, 0, 0, 0.02);">
+        <div class="container">
+            <h2 class="section-title">Why Pixel Academy Exists</h2>
+            <div style="max-width: 800px; margin: 0 auto; text-align: center; line-height: 1.9; color: #333;">
+                <p style="margin-bottom: 2rem;">Technology today is changing faster than ever — but understanding it doesn't require becoming a designer or a developer.</p>
+                <div style="margin-bottom: 2rem; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    <p style="margin-bottom: 0.75rem;"><strong>Pixel Academy exists to help people:</strong></p>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">→ Think clearly about design and systems</li>
+                        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">→ Understand how AI and interfaces shape decisions</li>
+                        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">→ Stay relevant across generations</li>
+                        <li style="margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative;">→ Engage confidently with modern technology</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 2rem; font-style: italic; color: #666;">Design, at its core, is not about screens.<br>It is about clarity, trust, and intention.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Courses Section -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title">Our Courses</h2>
+            
+            <div class="courses-grid">
+                <!-- Course 1: FLAGSHIP -->
+                <div class="course-card">
+                    <div class="course-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <span class="course-level">Flagship</span>
+                    <h3 class="course-title">Understanding Design & Technology in the AI Era</h3>
+                    <p class="course-desc">A conceptual course designed for professionals, educators, and curious learners who want to understand modern design, systems, and AI — without learning tools or software.</p>
+                    
+                    <div class="course-topics">
+                        <h4>You Will Understand:</h4>
+                        <ul>
+                            <li>How design thinking shapes modern technology</li>
+                            <li>Why interfaces feel simple but systems are complex</li>
+                            <li>How AI and prompts actually work</li>
+                            <li>The psychology behind user behavior</li>
+                            <li>How humans and AI collaborate meaningfully</li>
+                        </ul>
+                    </div>
+
+                    <div class="course-topics" style="margin-top: 1.5rem;">
+                        <h4>Format:</h4>
+                        <ul>
+                            <li>Conversational sessions</li>
+                            <li>1:1 or small groups</li>
+                            <li>Reflection-based learning</li>
+                        </ul>
+                    </div>
+                    
+                    <a href="courses/design-technology-ai/overview.html" class="course-btn">Request Access →</a>
+                </div>
+
+                <!-- Course 2: Optional / Next -->
+                <div class="course-card">
+                    <div class="course-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                    </div>
+                    <span class="course-level">Foundational</span>
+                    <h3 class="course-title">Design Thinking for Non-Designers</h3>
+                    <p class="course-desc">A foundational course for those who want to understand how design decisions are made — without becoming designers.</p>
+                    
+                    <div class="course-topics">
+                        <h4>Focus Areas:</h4>
+                        <ul>
+                            <li>Design as problem-solving</li>
+                            <li>User perspective & mental models</li>
+                            <li>Real-world systems (banking, healthcare, governance)</li>
+                            <li>Trust and usability in digital experiences</li>
+                        </ul>
+                    </div>
+                    
+                    <a href="get-in-touch.html" class="course-btn">Explore Course →</a>
+                </div>
+
+                <!-- Course 3: Future / Advanced -->
+                <div class="course-card">
+                    <div class="course-icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="3" y1="9" x2="21" y2="9"/>
+                            <line x1="9" y1="21" x2="9" y2="9"/>
+                        </svg>
+                    </div>
+                    <span class="course-level">Advanced</span>
+                    <h3 class="course-title">Systems & UX in the Modern World</h3>
+                    <p class="course-desc">An advanced exploration of how large systems, technology, and design thinking come together in enterprise and public platforms.</p>
+                    
+                    <div style="margin: 2rem 0; padding: 1.5rem; background: rgba(0,0,0,0.03); border-left: 3px solid black;">
+                        <p style="margin: 0; font-style: italic; color: #666;">This course is invite-only and designed for system architects, enterprise leaders, and advanced learners.</p>
+                    </div>
+                    
+                    <a href="get-in-touch.html" class="course-btn" style="background: white; color: black;">Invite-Only</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning Format Section -->
+        <div class="container">
+            <h2 class="section-title">Your Learning Path</h2>
+            
+            <div class="path-grid">
+                <div class="path-card">
+                    <div class="path-number">01</div>
+                    <h3 class="path-title">Start with Fundamentals</h3>
+                    <p class="path-desc">Build a strong foundation with our beginner courses covering design principles, tools, and methodologies.</p>
+                </div>
+                
+                <div class="path-card">
+                    <div class="path-number">02</div>
+                    <h3 class="path-title">Practice & Build Projects</h3>
+                    <p class="path-desc">Apply your knowledge through hands-on projects, exercises, and real-world design challenges.</p>
+                </div>
+                
+                <div class="path-card">
+                    <div class="path-number">03</div>
+                    <h3 class="path-title">Specialize & Master</h3>
+                    <p class="path-desc">Dive deep into advanced topics, develop expertise in specific areas, and build a professional portfolio.</p>
+                </div>
+                
+                <div class="path-card">
+                    <div class="path-number">04</div>
+                    <h3 class="path-title">Join the Community</h3>
+                    <p class="path-desc">Connect with fellow designers, get feedback, share work, and grow together in our vibrant community.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Students Say</h2>
+            
+            <div class="testimonial-grid">
+                <div class="testimonial">
+                    <p class="testimonial-text">"Pixel Academy transformed my career. The UI/UX course gave me the skills and confidence to land my dream job at a top tech company."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">PR</div>
+                        <div class="author-info">
+                            <h4>Priya Sharma</h4>
+                            <p>Product Designer at Google</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial">
+                    <p class="testimonial-text">"The instructors are world-class. Every lesson is packed with practical insights that I apply immediately in my work."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">RK</div>
+                        <div class="author-info">
+                            <h4>Rahul Kumar</h4>
+                            <p>Senior UX Designer at Amazon</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial">
+                    <p class="testimonial-text">"From complete beginner to professional designer in 6 months. The structured curriculum and supportive community made all the difference."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">AS</div>
+                        <div class="author-info">
+                            <h4>Anjali Singh</h4>
+                            <p>Freelance Designer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Learning That Respects Your Experience</h2>
+            <p>Pixel Academy is for those who don't want to chase technology —<br>but want to understand it deeply and use it wisely.</p>
+            <a href="get-in-touch.html" class="cta-white">Start a Conversation →</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>CreativePixels</h3>
+                    <p>Transforming thoughts into monetizable products through innovative design, machine learning, and creative problem-solving.</p>
+                    <p style="margin-top: 1rem; font-size: 0.95rem;"><strong>Email:</strong> <a href="mailto:connect@creativepixels.in" style="color: rgba(255,255,255,0.8); text-decoration: none;">connect@creativepixels.in</a></p>
+                    <p style="font-size: 0.95rem;"><strong>Call/WhatsApp:</strong> <a href="tel:+919004789969" style="color: rgba(255,255,255,0.8); text-decoration: none;">+91 90047 89969</a></p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                <rect x="2" y="9" width="4" height="12"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                            </svg>
+                        </a>
+                        <a href="mailto:connect@creativepixels.in" class="social-link" aria-label="Email">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about-us.html">About Us</a></li>
+                        <li><a href="our-approach.html">Our Approach</a></li>
+                        <li><a href="pixel-world.html">Pixel World</a></li>
+                        <li><a href="pixelgram.html">PixelGram</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="digital-transformation.html">Digital Transformation</a></li>
+                        <li><a href="ai-ml.html">AI & Machine Learning</a></li>
+                        <li><a href="product-design.html">Product Design</a></li>
+                        <li><a href="development.html">Development</a></li>
+                        <li><a href="consulting.html">Consulting</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="get-in-touch.html">Get in Touch</a></li>
+                        <li><a href="support.html">Support</a></li>
+                        <li><a href="partners.html">Partners</a></li>
+                        <li><a href="press-kit.html">Press Kit</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 CreativePixels. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
+                    <a href="cookie-policy.html">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            else navbar.style.boxShadow = 'none';
+        });
+    </script>
+</body>
+</html>
