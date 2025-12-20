@@ -1,7 +1,7 @@
 // Service Worker for Pixel Music
 // Handles background audio and provides offline capabilities
 
-const CACHE_NAME = 'pixel-music-v1.2.1';
+const CACHE_NAME = 'pixel-music-v1.3.0';
 const urlsToCache = [
     '/',
     '/index.html',
@@ -9,6 +9,9 @@ const urlsToCache = [
     '/app.js',
     '/auth.js',
     '/config.js',
+    '/radio.html',
+    '/radio.css',
+    '/radio.js',
     'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
     'https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css'
 ];
