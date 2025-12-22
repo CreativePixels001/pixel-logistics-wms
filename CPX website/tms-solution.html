@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transport Management System | CreativePixels Solutions</title>
+    <meta name="description" content="Complete transportation and logistics solution with AI-powered route optimization and real-time fleet tracking.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #000000;
+            --light: #FFFFFF;
+            --gray: #666666;
+            --border: 2px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: white;
+            color: var(--primary);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: white;
+            border-bottom: var(--border) solid black;
+            padding: 1.5rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: black;
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: black;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: var(--border) solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            border-color: black;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000000;
+            color: white;
+            text-align: center;
+            padding: 5rem 2rem 2rem;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+        }
+
+        .solution-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border: 2px solid white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.875rem 2rem;
+            background: white;
+            color: black;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid white;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
+        }
+
+        .cta-button:hover {
+            background: black;
+            color: white;
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            color: white;
+        }
+
+        .cta-button.secondary:hover {
+            background: white;
+            color: black;
+        }
+
+        /* App Screenshot Banner */
+        .app-screenshot {
+            padding: 0;
+            background: linear-gradient(to bottom, #fafafa 0%, white 100%);
+            overflow: hidden;
+        }
+
+        .screenshot-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            padding: 4rem 2rem;
+        }
+
+        .dashboard-image {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            display: block;
+        }
+
+        .screenshot-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, 
+                rgba(255,255,255,0.1) 0%, 
+                rgba(255,255,255,0.8) 100%);
+            pointer-events: none;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 3rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .section-intro {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            text-align: center;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--gray);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            border: var(--border) solid black;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: black;
+            color: white;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+            border-color: white;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--gray);
+            line-height: 1.8;
+        }
+
+        .feature-card:hover .feature-description {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.5rem 0;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--gray);
+        }
+
+        .impact-tag {
+            padding: 0.75rem 1rem;
+            background: rgba(0,0,0,0.05);
+            border-left: 3px solid black;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .benefits-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .benefit-item {
+            padding: 1.5rem;
+            background: white;
+            border: var(--border) solid black;
+        }
+
+        .benefit-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            opacity: 0.2;
+        }
+
+        .benefit-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-text {
+            color: var(--gray);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 4rem 2rem;
+            background: black;
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Visual Stats Section */
+        .visual-stats {
+            padding: 6rem 2rem;
+            background: white;
+        }
+
+        .visual-stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .stat-card {
+            border: 2px solid black;
+            padding: 2rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 8px 8px 0 black;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-description {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        .progress-bar-container {
+            margin-top: 1.5rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #f0f0f0;
+            border: 2px solid black;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: black;
+            animation: progressAnimation 2s ease-out;
+        }
+
+        @keyframes progressAnimation {
+            from { width: 0; }
+        }
+
+        /* Fleet Tracking Preview */
+        .tracking-preview {
+            padding: 6rem 2rem;
+            background: #fafafa;
+        }
+
+        .tracking-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tracking-interface {
+            border: 2px solid black;
+            background: white;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .tracking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid black;
+            margin-bottom: 2rem;
+        }
+
+        .tracking-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .tracking-status {
+            padding: 0.5rem 1rem;
+            border: 2px solid black;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .tracking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tracking-item {
+            padding: 1.5rem;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .tracking-item-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .tracking-item-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        /* Route Map Mockup */
+        .route-map {
+            border: 2px solid black;
+            height: 300px;
+            background: linear-gradient(135deg, #f5f5f5 25%, transparent 25%),
+                        linear-gradient(225deg, #f5f5f5 25%, transparent 25%),
+                        linear-gradient(45deg, #f5f5f5 25%, transparent 25%),
+                        linear-gradient(315deg, #f5f5f5 25%, #ffffff 25%);
+            background-size: 20px 20px;
+            position: relative;
+            margin-top: 2rem;
+            overflow: hidden;
+        }
+
+        .route-line {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 3px;
+            background: black;
+            transform: translateY(-50%);
+        }
+
+        .route-line::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, black 50%, transparent);
+            animation: routeAnimation 2s infinite;
+        }
+
+        @keyframes routeAnimation {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .route-point {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 3px solid black;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .route-point.start {
+            top: 50%;
+            left: 10%;
+        }
+
+        .route-point.end {
+            top: 50%;
+            left: 90%;
+            background: black;
+        }
+
+        /* Chart Section */
+        .chart-section {
+            padding: 6rem 2rem;
+            background: white;
+        }
+
+        .chart-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .chart-card {
+            border: 2px solid black;
+            padding: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 200px;
+            gap: 1rem;
+        }
+
+        .bar {
+            flex: 1;
+            background: black;
+            min-height: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .bar:hover {
+            opacity: 0.7;
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            padding: 2.5rem 2rem 1.5rem;
+            border-top: var(--border) solid black;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: black;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="home.html" class="logo">CPX</a>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="pixelgram.html">PixelGram</a></li>
+                <li><a href="pixel-world.html">Pixel World</a></li>
+                <li><a href="studio.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="solution-badge">LOGISTICS SOLUTION</div>
+            <h1 class="hero-title">Smart Logistics. Faster Delivery.</h1>
+            <p class="hero-subtitle">
+                AI-powered route optimization. 30% cost reduction. 98% on-time delivery.
+            </p>
+            <div>
+                <a href="http://localhost:8000/TMS/tms-login.html" class="cta-button" target="_blank">Live View →</a>
+                <a href="studio.html" class="cta-button secondary">Request Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h2 class="section-title">Advanced Transportation Intelligence</h2>
+        <p class="section-intro">
+            End-to-end logistics control. Real-time visibility. Data-driven decisions.
+        </p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-truck"></i></div>
+                <h3 class="feature-title">Live GPS Tracking</h3>
+                <ul class="feature-list">
+                    <li>• Real-time vehicle positions with sub-minute updates</li>
+                    <li>• Geofencing alerts for zone entry/exit monitoring</li>
+                    <li>• Historical route playback for performance analysis</li>
+                    <li>• Mobile driver apps with accurate customer ETAs</li>
+                </ul>
+                <div class="impact-tag">📉 60% reduction in support calls</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3 class="feature-title">AI-Powered Route Optimization</h3>
+                <ul class="feature-list">
+                    <li>• ML algorithms analyze traffic, weather, and time windows</li>
+                    <li>• Dynamic re-routing adjusts to real-time conditions</li>
+                    <li>• Optimizes for capacity, driver hours, and fuel efficiency</li>
+                    <li>• Maximizes deliveries per route automatically</li>
+                </ul>
+                <div class="impact-tag">💰 25-30% fuel savings, 35% faster deliveries</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <h3 class="feature-title">Fleet Management</h3>
+                <ul class="feature-list">
+                    <li>• Complete vehicle lifecycle tracking and documentation</li>
+                    <li>• Automated maintenance schedules and service reminders</li>
+                    <li>• Predictive analytics forecast potential failures</li>
+                    <li>• Utilization reports optimize fleet composition</li>
+                </ul>
+                <div class="impact-tag">🔧 45% reduction in unexpected breakdowns</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-bullseye"></i></div>
+                <h3 class="feature-title">Automated Dispatch</h3>
+                <ul class="feature-list">
+                    <li>• Intelligent order-to-vehicle matching by AI</li>
+                    <li>• Load optimization maximizes vehicle utilization</li>
+                    <li>• Drag-and-drop console for manual adjustments</li>
+                    <li>• Automated driver notifications and assignments</li>
+                </ul>
+                <div class="impact-tag">⏱️ 70% faster dispatch with higher accuracy</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-globe"></i></div>
+                <h3 class="feature-title">Customer Portal</h3>
+                <ul class="feature-list">
+                    <li>• Real-time shipment tracking and status updates</li>
+                    <li>• Automated SMS/email at key delivery milestones</li>
+                    <li>• Delivery preferences and special instructions</li>
+                    <li>• Electronic proof of delivery with signatures</li>
+                </ul>
+                <div class="impact-tag">📞 55% reduction in support inquiries</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-plug"></i></div>
+                <h3 class="feature-title">Analytics & Reporting</h3>
+                <ul class="feature-list">
+                    <li>• Track on-time rates, costs, utilization, performance</li>
+                    <li>• Predictive analytics for demand forecasting</li>
+                    <li>• Role-specific dashboards for all stakeholders</li>
+                    <li>• Automated report scheduling and distribution</li>
+                </ul>
+                <div class="impact-tag">💵 $50K-$200K annual cost savings identified</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="benefits-container">
+            <h2 class="section-title">Proven Business Results</h2>
+            <p class="section-intro">
+                Proven ROI. Real results. Digital transformation that drives growth.
+            </p>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-number">25%</div>
+                    <h3 class="benefit-title">Cost Savings</h3>
+                    <p class="benefit-text">AI route optimization reduces fuel consumption, while automated dispatch cuts labor costs and improves fleet utilization efficiency</p>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">35%</div>
+                    <h3 class="benefit-title">Faster Deliveries</h3>
+                    <p class="benefit-text">Intelligent routing and real-time traffic integration accelerate delivery times, enabling same-day service and competitive advantage</p>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">98%</div>
+                    <h3 class="benefit-title">On-Time Delivery</h3>
+                    <p class="benefit-text">Predictive ETA calculations and proactive issue resolution ensure consistent service levels and improved customer loyalty</p>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">100%</div>
+                    <h3 class="benefit-title">Fleet Visibility</h3>
+                    <p class="benefit-text">Real-time GPS tracking and comprehensive analytics provide complete operational transparency from dispatch to delivery completion</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Fleet Tracking -->
+    <section class="tracking-preview">
+        <div class="tracking-container">
+            <h2 class="section-title">Live Fleet Operations</h2>
+            <p class="section-intro">
+                Monitor everything. Control everything. From anywhere.
+            </p>
+            
+            <div class="tracking-interface">
+                <div class="tracking-header">
+                    <div class="tracking-title">Fleet Command Center</div>
+                    <div class="tracking-status">LIVE</div>
+                </div>
+                
+                <div class="tracking-grid">
+                    <div class="tracking-item">
+                        <div class="tracking-item-label">VEHICLES ON ROAD</div>
+                        <div class="tracking-item-value">147</div>
+                    </div>
+                    <div class="tracking-item">
+                        <div class="tracking-item-label">ACTIVE DELIVERIES</div>
+                        <div class="tracking-item-value">892</div>
+                    </div>
+                    <div class="tracking-item">
+                        <div class="tracking-item-label">ON-TIME RATE</div>
+                        <div class="tracking-item-value">98.4%</div>
+                    </div>
+                    <div class="tracking-item">
+                        <div class="tracking-item-label">AVG DELIVERY TIME</div>
+                        <div class="tracking-item-value">2.3h</div>
+                    </div>
+                </div>
+
+                <div class="route-map">
+                    <div class="route-line"></div>
+                    <div class="route-point start"></div>
+                    <div class="route-point end"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Analytics -->
+    <section class="chart-section">
+        <div class="chart-container">
+            <h2 class="section-title">Logistics Intelligence</h2>
+            <p class="section-intro">
+                Data-driven insights for continuous improvement.
+            </p>
+
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <div class="chart-title">Delivery Performance</div>
+                    <div class="bar-chart">
+                        <div class="bar" style="height: 88%;">
+                            <div class="bar-value">88%</div>
+                            <div class="bar-label">Mon</div>
+                        </div>
+                        <div class="bar" style="height: 92%;">
+                            <div class="bar-value">92%</div>
+                            <div class="bar-label">Tue</div>
+                        </div>
+                        <div class="bar" style="height: 96%;">
+                            <div class="bar-value">96%</div>
+                            <div class="bar-label">Wed</div>
+                        </div>
+                        <div class="bar" style="height: 94%;">
+                            <div class="bar-value">94%</div>
+                            <div class="bar-label">Thu</div>
+                        </div>
+                        <div class="bar" style="height: 98%;">
+                            <div class="bar-value">98%</div>
+                            <div class="bar-label">Fri</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-title">Fuel Efficiency Gains</div>
+                    <div class="bar-chart">
+                        <div class="bar" style="height: 72%;">
+                            <div class="bar-value">18%</div>
+                            <div class="bar-label">Week 1</div>
+                        </div>
+                        <div class="bar" style="height: 78%;">
+                            <div class="bar-value">22%</div>
+                            <div class="bar-label">Week 2</div>
+                        </div>
+                        <div class="bar" style="height: 85%;">
+                            <div class="bar-value">25%</div>
+                            <div class="bar-label">Week 3</div>
+                        </div>
+                        <div class="bar" style="height: 92%;">
+                            <div class="bar-value">28%</div>
+                            <div class="bar-label">Week 4</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Intelligence & Excellence -->
+    <section class="visual-stats">
+        <div class="visual-stats-container">
+            <h2 class="section-title">Intelligence & Excellence</h2>
+            <p class="section-intro" style="margin-bottom: 2rem;">Smart logistics powered by predictive AI and real-time optimization</p>
+            <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+                <div class="stat-card" style="padding: 1.25rem;">
+                    <div class="stat-label" style="font-size: 0.75rem;">ROUTE AI</div>
+                    <div class="stat-value" style="font-size: 2.25rem;">96%</div>
+                    <div class="stat-description" style="font-size: 0.875rem;">Optimized daily</div>
+                </div>
+
+                <div class="stat-card" style="padding: 1.25rem;">
+                    <div class="stat-label" style="font-size: 0.75rem;">FLEET USAGE</div>
+                    <div class="stat-value" style="font-size: 2.25rem;">89%</div>
+                    <div class="stat-description" style="font-size: 0.875rem;">Capacity utilized</div>
+                </div>
+
+                <div class="stat-card" style="padding: 1.25rem;">
+                    <div class="stat-label" style="font-size: 0.75rem;">SATISFACTION</div>
+                    <div class="stat-value" style="font-size: 2.25rem;">4.8/5</div>
+                    <div class="stat-description" style="font-size: 0.875rem;">Delivery rating</div>
+                </div>
+
+                <div class="stat-card" style="padding: 1.25rem;">
+                    <div class="stat-label" style="font-size: 0.75rem;">COST SAVED</div>
+                    <div class="stat-value" style="font-size: 2.25rem;">25%</div>
+                    <div class="stat-description" style="font-size: 0.875rem;">Per delivery</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Ready to Optimize Logistics?</h2>
+        <p>
+            Join businesses reducing costs with AI-powered fleet management.
+        </p>
+        <div>
+            <a href="http://localhost:8000/TMS/tms-login.html" class="cta-button" target="_blank">View Live Demo →</a>
+            <a href="studio.html" class="cta-button secondary">Contact Sales</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>CreativePixels</h3>
+                <p>Transforming enterprise operations through innovative digital solutions.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Solutions</h3>
+                <ul>
+                    <li><a href="wms-solution.html">Warehouse Management</a></li>
+                    <li><a href="tms-solution.html">Transport Management</a></li>
+                    <li><a href="pis-solution.html">Insurance Platform</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="pixelgram.html">PixelGram</a></li>
+                    <li><a href="pixel-world.html">Pixel World</a></li>
+                    <li><a href="studio.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 CreativePixels. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

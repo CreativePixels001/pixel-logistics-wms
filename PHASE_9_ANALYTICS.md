@@ -394,4 +394,4 @@ reports.generateReport();
 
 **Last Updated:** November 16, 2025  
 **Version:** 1.0.0  
-**Author:** DLT WMS Development Team
+**Author:** Pixel Logistics WMS Development Team

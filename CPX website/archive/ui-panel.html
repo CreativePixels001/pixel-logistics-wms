@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UI Panel Mockup</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Main UI Panel Styles -->
+    <link rel="stylesheet" href="ui-panel.css">
+    <!-- Optional: Google Fonts for bold text -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="ui-panel-container">
+        <!-- Import Panel -->
+        <section class="ui-panel">
+            <div class="ui-panel-title">DROP<br>HTML</div>
+            <div class="ui-panel-dropzone" id="dropzone">
+                <span>Drag &amp; drop HTML file here or click to upload</span>
+                <input type="file" id="fileInput" accept=".html,.htm" style="display:none;">
+            </div>
+            <button class="ui-panel-btn bold" id="importBtn" disabled>IMPORT</button>
+        </section>
+        <script>
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('fileInput');
+            const importBtn = document.getElementById('importBtn');
+            let selectedFile = null;
+
+            dropzone.addEventListener('click', () => fileInput.click());
+
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('dragover');
+            });
+
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('dragover');
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('dragover');
+                if (e.dataTransfer.files.length) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+
+            function handleFile(file) {
+                if (file && (file.name.endsWith('.html') || file.name.endsWith('.htm'))) {
+                    selectedFile = file;
+                    dropzone.querySelector('span').textContent = file.name;
+                    importBtn.disabled = false;
+                } else {
+                    dropzone.querySelector('span').textContent = 'Invalid file. Please select an HTML file.';
+                    importBtn.disabled = true;
+                }
+            }
+        </script>
+        <style>
+            .ui-panel-dropzone {
+                border: 2px dashed #aaa;
+                border-radius: 8px;
+                padding: 32px 12px;
+                text-align: center;
+                color: #888;
+                cursor: pointer;
+                margin-bottom: 12px;
+                transition: border-color 0.2s, background 0.2s;
+                position: relative;
+                font-family: inherit;
+            }
+            .ui-panel-dropzone.dragover {
+                border-color: #0078d4;
+                background: #f0f8ff;
+                color: #0078d4;
+            }
+            .ui-panel-dropzone input[type="file"] {
+                display: none;
+            }
+        </style>
+        <!-- Theme Panel -->
+        <section class="ui-panel">
+            <div class="ui-panel-label">SELECT<br>THEME</div>
+            <button class="ui-panel-btn bold">SELECT THEME</button>
+            <button class="ui-panel-btn">COLOR</button>
+            <div class="ui-panel-color"></div>
+            <button class="ui-panel-btn bold">TRANSFORM</button>
+        </section>
+        <!-- Export Panel -->
+        <section class="ui-panel">
+            <div class="ui-panel-label">EXPORT<br>HTML</div>
+            <button class="ui-panel-btn">EXPORT</button>
+            <button class="ui-panel-btn">EXPORT TO GIT</button>
+            <button class="ui-panel-btn bold">EXPORT</button>
+        </section>
+        <!-- Menu Links -->
+        <nav class="ui-panel">
+            <ul class="ui-panel-menu">
+                <li><a href="CPXInjector/ui-panel.html">CPX Injector</a></li>
+            </ul>
+        </nav>
+    </div>
+</body>
+</html>

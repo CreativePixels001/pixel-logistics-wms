@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction: Design in the Age of AI | Pixel Academy</title>
+    <meta name="description" content="Start your journey understanding design, technology, and systems in the AI era.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { 
+            --primary: #000000; 
+            --dark: #1a1a1a; 
+            --light: #FFFFFF; 
+            --gray: #666666;
+            --gray-light: #999999;
+            --gray-lighter: #cccccc;
+            --gray-dark: #333333;
+            --gray-bg: #f5f5f5;
+            --gray-border: #e0e0e0;
+            --accent: #4a4a4a;
+            --accent-light: #757575;
+            --border: 2px; 
+        }
+        body { font-family: 'Inter', sans-serif; background: white; color: var(--dark); line-height: 1.6; }
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.3; }
+        
+        /* Progress Bar */
+        .reading-progress { position: fixed; top: 80px; left: 0; width: 0%; height: 4px; background: linear-gradient(90deg, #1a1a1a, #666666); z-index: 999; transition: width 0.1s ease; }
+        
+        /* Word Highlight During Audio */
+        .word-highlight { background: linear-gradient(180deg, transparent 60%, rgba(102, 102, 102, 0.25) 60%); transition: background 0.2s ease; }
+        .current-sentence { background: rgba(102, 102, 102, 0.08); padding: 0.15rem 0.35rem; border-radius: 4px; }
+        
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: white; border-bottom: var(--border) solid var(--gray-border); padding: 1.5rem 0; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: var(--dark); text-decoration: none; }
+        .nav-menu { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-menu a { color: var(--dark); text-decoration: none; font-weight: 500; transition: color 0.3s ease; }
+        .nav-menu a:hover { opacity: 0.6; }
+        
+        /* User Profile Dropdown */
+        .user-profile { position: relative; }
+        .profile-trigger { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 1rem; border-radius: 50px; cursor: pointer; transition: all 0.3s ease; border: 1px solid transparent; background: var(--gray-bg); }
+        .profile-trigger:hover { border-color: var(--gray-border); background: white; }
+        .profile-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--gray-border); }
+        .profile-name { font-weight: 500; color: var(--dark); font-size: 0.9rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .profile-chevron { width: 16px; height: 16px; stroke: var(--gray); transition: transform 0.3s ease; }
+        .profile-trigger.active .profile-chevron { transform: rotate(180deg); }
+        
+        .profile-dropdown { position: absolute; top: calc(100% + 0.5rem); right: 0; background: white; border: 1px solid var(--gray-border); border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 220px; opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.3s ease; }
+        .profile-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
+        .profile-dropdown-header { padding: 1rem; border-bottom: 1px solid var(--gray-border); }
+        .profile-email { font-size: 0.85rem; color: var(--gray); margin-top: 0.25rem; }
+        .profile-dropdown-menu { padding: 0.5rem; }
+        .profile-dropdown-item { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; text-decoration: none; color: var(--dark); }
+        .profile-dropdown-item:hover { background: var(--gray-bg); }
+        .profile-dropdown-item svg { width: 18px; height: 18px; stroke: var(--gray); }
+        .profile-dropdown-item.logout { color: #d32f2f; }
+        .profile-dropdown-item.logout svg { stroke: #d32f2f; }
+        .profile-dropdown-item.logout:hover { background: #ffebee; }
+        
+        /* Audio Player - Bottom Fixed */
+        .audio-player-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            background: var(--dark);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+            border-top: 2px solid var(--gray-dark);
+        }
+        
+        .player-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .player-controls-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+        
+        .control-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+        
+        .play-button-main {
+            width: 50px;
+            height: 50px;
+            background: white;
+            color: var(--dark);
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .play-button-main:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(255,255,255,0.3);
+        }
+        
+        .play-button-main svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+        
+        .player-info-section {
+            flex: 1;
+        }
+        
+        .player-title-main {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .progress-bar-full {
+            flex: 1;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .progress-fill-full {
+            height: 100%;
+            background: white;
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+        
+        .time-display {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.8);
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .speed-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .speed-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        
+        .speed-btn:hover,
+        .speed-btn.active {
+            background: white;
+            color: var(--dark);
+        }
+        
+        @media (max-width: 968px) {
+            .player-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .speed-controls {
+                justify-content: center;
+            }
+        }
+        
+        .lecture-layout { display: grid; grid-template-columns: 300px 1fr; min-height: 100vh; margin-top: 80px; padding-bottom: 120px; }
+        
+        .sidebar { background: var(--gray-bg); border-right: var(--border) solid var(--gray-border); padding: 2rem; position: sticky; top: 80px; height: calc(100vh - 80px); overflow-y: auto; }
+        .sidebar h3 { font-size: 1.125rem; margin-bottom: 1.5rem; color: var(--dark); }
+        .lecture-list { list-style: none; }
+        .lecture-item { margin-bottom: 0.5rem; }
+        .lecture-link { display: flex; align-items: flex-start; gap: 1rem; padding: 1rem; text-decoration: none; color: var(--gray); transition: all 0.3s ease; border-radius: 4px; background: white; border: 1px solid var(--gray-border); }
+        .lecture-link:hover { background: var(--gray-bg); transform: translateX(4px); border-color: var(--gray); }
+        .lecture-link.active { background: var(--dark); color: white; border-color: var(--dark); }
+        .lecture-number { font-weight: 600; font-size: 0.85rem; min-width: 20px; }
+        .lecture-title-small { font-size: 0.9rem; line-height: 1.4; }
+        .lecture-link.active .lecture-title-small { color: white; }
+        .lecture-duration { font-size: 0.75rem; color: var(--gray); margin-top: 0.25rem; }
+        .lecture-link.active .lecture-duration { color: rgba(255,255,255,0.7); }
+        .lecture-status { font-size: 0.75rem; margin-top: 0.25rem; }
+        .status-complete { color: #00C853; font-weight: 600; }
+        .status-locked { color: #999; }
+        
+        .content-area { padding: 3rem; max-width: 900px; padding-bottom: 10rem; }
+        .breadcrumb { font-size: 0.9rem; margin-bottom: 2rem; color: var(--gray); }
+        .breadcrumb a { color: var(--gray); text-decoration: none; }
+        .breadcrumb a:hover { color: black; }
+        
+        .lecture-header { margin-bottom: 3rem; opacity: 0; animation: fadeInUp 0.8s ease forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .lecture-badge { display: inline-block; padding: 0.5rem 1rem; background: var(--gray-bg); color: var(--gray-dark); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1rem; border-radius: 4px; border: 1px solid var(--gray-border); }
+        .lecture-header h1 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 700; margin-bottom: 1rem; color: var(--dark); }
+        .lecture-meta { display: flex; gap: 2rem; color: var(--gray); font-size: 0.9rem; margin-top: 1.5rem; flex-wrap: wrap; }
+        
+        /* Animated Content Sections */
+        .content-section { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+        .content-section.visible { opacity: 1; transform: translateY(0); }
+        
+        .lecture-content { line-height: 1.9; color: var(--gray-dark); font-size: 1.05rem; }
+        .lecture-content h2 { font-size: 1.85rem; margin: 3.5rem 0 1.5rem; color: var(--dark); position: relative; padding-left: 1.5rem; }
+        .lecture-content h2:before { content: ""; position: absolute; left: 0; top: 0.5rem; width: 4px; height: 80%; background: var(--accent); }
+        .lecture-content h3 { font-size: 1.5rem; margin: 2.5rem 0 1rem; color: var(--dark); }
+        .lecture-content p { margin-bottom: 1.5rem; }
+        .lecture-content ul, .lecture-content ol { margin-bottom: 1.5rem; padding-left: 2rem; }
+        .lecture-content li { margin-bottom: 0.75rem; line-height: 1.8; }
+        .lecture-content strong { color: var(--dark); font-weight: 600; background: linear-gradient(180deg, transparent 60%, rgba(102,102,102,0.15) 60%); }
+        .lecture-content em { font-style: italic; color: var(--gray); }
+        
+        /* Visual Callouts */
+        .highlight-box { background: linear-gradient(135deg, var(--gray-bg) 0%, rgba(102,102,102,0.08) 100%); border-left: 4px solid var(--accent); padding: 1.75rem; margin: 2.5rem 0; border-radius: 0 8px 8px 0; position: relative; }
+        .highlight-box svg { position: absolute; top: 1.5rem; right: 1.5rem; width: 28px; height: 28px; opacity: 0.2; stroke: var(--gray); }
+        .highlight-box p { margin-bottom: 0; font-size: 1.05rem; }
+        .highlight-box strong { color: var(--dark); }
+        
+        /* Interactive Thought Questions */
+        .thought-question { background: white; border: var(--border) solid var(--gray-border); padding: 2rem; margin: 3rem 0; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; }
+        .thought-question:hover { transform: translateY(-4px); box-shadow: 6px 6px 0 var(--gray-lighter); border-color: var(--gray); }
+        .thought-question h4 { font-size: 1.125rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.75rem; color: var(--dark); }
+        .thought-question h4 svg { width: 24px; height: 24px; stroke: var(--accent); }
+        .thought-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--gray-border); color: var(--gray); font-style: italic; }
+        .thought-question.expanded .thought-answer { max-height: 500px; }
+        .expand-hint { font-size: 0.85rem; color: var(--gray); margin-top: 0.5rem; }
+        .thought-question.expanded .expand-hint { display: none; }
+        
+        /* Visual Timeline for Evolution Section */
+        .timeline { margin: 3rem 0; position: relative; }
+        .timeline:before { content: ""; position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--gray-dark) 0%, var(--gray-lighter) 100%); }
+        .timeline-item { position: relative; padding-left: 60px; margin-bottom: 3rem; }
+        .timeline-dot { position: absolute; left: 11px; top: 8px; width: 20px; height: 20px; background: white; border: 3px solid var(--gray); border-radius: 50%; }
+        .timeline-item.active .timeline-dot { background: var(--accent); border-color: var(--accent); }
+        .timeline-year { font-weight: 700; font-size: 1.125rem; color: var(--dark); margin-bottom: 0.5rem; font-family: 'Space Grotesk', sans-serif; }
+        .timeline-content { background: var(--gray-bg); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--gray-border); }
+        
+        /* Key Takeaways */
+        .key-takeaway { background: var(--dark); color: white; padding: 2.5rem; margin: 3rem 0; border-radius: 8px; position: relative; overflow: hidden; }
+        .key-takeaway svg { position: absolute; top: 2rem; right: 2rem; width: 48px; height: 48px; opacity: 0.15; stroke: white; }
+        .key-takeaway h3 { color: white; margin-bottom: 1rem; font-size: 1.5rem; }
+        .key-takeaway p { margin-bottom: 0; line-height: 1.8; color: rgba(255,255,255,0.95); }
+        
+        /* Completion Section */
+        .completion-card { background: linear-gradient(135deg, var(--gray-dark) 0%, var(--accent) 100%); color: white; padding: 3rem; border-radius: 12px; text-align: center; margin: 4rem 0; }
+        .completion-card svg { width: 56px; height: 56px; margin: 0 auto 1.5rem; display: block; stroke: white; }
+        .completion-card h3 { color: white; font-size: 2rem; margin-bottom: 1rem; }
+        .completion-card p { color: rgba(255,255,255,0.95); margin-bottom: 2rem; font-size: 1.125rem; }
+        .complete-btn { display: inline-block; padding: 1rem 3rem; background: white; color: var(--dark); text-decoration: none; font-weight: 700; border-radius: 6px; transition: all 0.3s ease; }
+        .complete-btn:hover { transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,0,0,0.2); background: var(--gray-bg); }
+        
+        .lecture-navigation { display: flex; justify-content: space-between; margin-top: 4rem; padding-top: 2rem; border-top: 2px solid var(--gray-border); }
+        .nav-btn { display: inline-flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; background: var(--dark); color: white; text-decoration: none; font-weight: 600; border: 2px solid var(--dark); transition: all 0.3s ease; border-radius: 6px; }
+        .nav-btn:hover { background: white; color: var(--dark); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+        .nav-btn.disabled { background: var(--gray-bg); color: var(--gray-lighter); border-color: var(--gray-border); pointer-events: none; }
+        
+        
+        @media (max-width: 968px) { 
+            .lecture-layout { grid-template-columns: 1fr; }
+            .sidebar { position: relative; height: auto; top: 0; border-right: none; border-bottom: var(--border) solid var(--gray-border); }
+            .content-area { padding: 2rem; padding-top: 8rem; }
+            .player-container {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .speed-controls {
+                justify-content: center;
+            }
+        }
+        @media (max-width: 640px) { 
+            .nav-menu { gap: 1rem; font-size: 0.9rem; }
+            .content-area { padding: 1.5rem; padding-top: 8rem; }
+            .lecture-meta { flex-direction: column; gap: 0.5rem; }
+            .lecture-content { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Reading Progress Bar -->
+    <div class="reading-progress" id="readingProgress"></div>
+    
+    <nav>
+        <div class="nav-container">
+            <a href="home.html" class="logo">CreativePixels</a>
+            <ul class="nav-menu">
+                <li><a href="pixel-academy.html">← Back to Academy</a></li>
+                <li><a href="course-design-technology-ai.html">Course Overview</a></li>
+                <li class="user-profile">
+                    <div class="profile-trigger" onclick="toggleProfileDropdown()">
+                        <img src="" alt="User" class="profile-avatar" id="userAvatar">
+                        <span class="profile-name" id="userName">User</span>
+                        <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </div>
+                    <div class="profile-dropdown" id="profileDropdown">
+                        <div class="profile-dropdown-header">
+                            <div class="profile-name" id="userNameFull">Loading...</div>
+                            <div class="profile-email" id="userEmail">Loading...</div>
+                        </div>
+                        <div class="profile-dropdown-menu">
+                            <a href="#" class="profile-dropdown-item" onclick="alert('Settings coming soon!'); return false;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24"/>
+                                </svg>
+                                Settings
+                            </a>
+                            <div class="profile-dropdown-item logout" onclick="handleLogout()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                                </svg>
+                                Log Out
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="lecture-layout">
+        <aside class="sidebar">
+            <h3>Course Modules</h3>
+            <ul class="lecture-list">
+                <li class="lecture-item">
+                    <a href="course-lecture-intro.html" class="lecture-link active">
+                        <span class="lecture-number">01</span>
+                        <div>
+                            <div class="lecture-title-small">Introduction: Design in the Age of AI</div>
+                            <div class="lecture-duration">45 min</div>
+                            <div class="lecture-status status-complete">● In Progress</div>
+                        </div>
+                    </a>
+                </li>
+                <li class="lecture-item">
+                    <a href="#" class="lecture-link">
+                        <span class="lecture-number">02</span>
+                        <div>
+                            <div class="lecture-title-small">How Interfaces Work</div>
+                            <div class="lecture-duration">50 min</div>
+                            <div class="lecture-status status-locked">🔒 Locked</div>
+                        </div>
+                    </a>
+                </li>
+                <li class="lecture-item">
+                    <a href="#" class="lecture-link">
+                        <span class="lecture-number">03</span>
+                        <div>
+                            <div class="lecture-title-small">Understanding AI & Prompts</div>
+                            <div class="lecture-duration">60 min</div>
+                            <div class="lecture-status status-locked">🔒 Locked</div>
+                        </div>
+                    </a>
+                </li>
+                <li class="lecture-item">
+                    <a href="#" class="lecture-link">
+                        <span class="lecture-number">04</span>
+                        <div>
+                            <div class="lecture-title-small">Systems Thinking</div>
+                            <div class="lecture-duration">55 min</div>
+                            <div class="lecture-status status-locked">🔒 Locked</div>
+                        </div>
+                    </a>
+                </li>
+                <li class="lecture-item">
+                    <a href="#" class="lecture-link">
+                        <span class="lecture-number">05</span>
+                        <div>
+                            <div class="lecture-title-small">Design in the Real World</div>
+                            <div class="lecture-duration">50 min</div>
+                            <div class="lecture-status status-locked">🔒 Locked</div>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <main class="content-area">
+            <div class="breadcrumb">
+                <a href="pixel-academy.html">Pixel Academy</a> / 
+                <a href="course-design-technology-ai.html">Understanding Design & Technology</a> / 
+                Module 01
+            </div>
+
+            <div class="lecture-header">
+                <div class="lecture-badge">Module 01</div>
+                <h1>Introduction: Design in the Age of AI</h1>
+                <div class="lecture-meta">
+                    <span>Reading: 45 minutes</span>
+                    <span>Discussion-based</span>
+                    <span>Conceptual</span>
+                </div>
+            </div>
+
+            <div class="lecture-content">
+                <div class="content-section">
+                    <p><strong>Welcome to Pixel Academy.</strong> This is not a typical design course. We won't start with software, color theory, or wireframes. Instead, we're going to explore something more fundamental: <em>how design and technology shape the way we think, decide, and live in the age of artificial intelligence.</em></p>
+                </div>
+
+                <div class="content-section">
+                    <h2>What Is Design, Really?</h2>
+                    
+                    <p>When most people hear "design," they think of visual aesthetics — logos, websites, beautiful interfaces. And yes, that's part of it. But at its core, design is about <strong>clarity, intention, and trust.</strong></p>
+
+                    <p>Design is the invisible force that determines:</p>
+                    <ul>
+                        <li>Why you instinctively know how to use your phone, even without a manual</li>
+                        <li>Why you trust (or don't trust) a banking app with your money</li>
+                        <li>Why some websites feel welcoming, while others feel confusing</li>
+                        <li>Why AI tools like ChatGPT respond the way they do to your prompts</li>
+                    </ul>
+
+                    <p>Design isn't just what things <em>look</em> like. It's how they <em>work</em>, how they <em>feel</em>, and most importantly — how they <em>guide human behavior.</em></p>
+                </div>
+
+                <div class="content-section highlight-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 18h6"/>
+                        <path d="M10 22h4"/>
+                        <path d="M12 2a7 7 0 0 1 7 7c0 2-1 3.9-3 5.5V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.5C6 13.9 5 12 5 9a7 7 0 0 1 7-7z"/>
+                    </svg>
+                    <p><strong>Key Insight:</strong> Good design is invisible. You don't notice it because it just makes sense. Bad design demands attention because something feels wrong.</p>
+                </div>
+
+                <div class="content-section">
+                    <h2>The Evolution: From Print to AI</h2>
+
+                    <p>Design has evolved dramatically over the decades. Let's walk through this journey together:</p>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">1. The Print Era (Pre-1990s)</div>
+                            <div class="timeline-content">
+                                <p>Design was mostly about physical materials — posters, brochures, product packaging. Decisions were permanent once printed. Designers had to get it right the first time.</p>
+                                <p style="margin-top: 1rem; font-style: italic; color: #666;">Think: Magazine layouts, billboard ads, product boxes you couldn't update after printing.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">2. The Digital Era (1990s-2010s)</div>
+                            <div class="timeline-content">
+                                <p>The internet changed everything. Suddenly, design became dynamic, interactive, and constantly evolving. Websites, apps, and interfaces introduced new challenges: navigation, user flow, responsiveness across devices.</p>
+                                <p style="margin-top: 1rem; font-style: italic; color: #666;">This era introduced <strong>UX (User Experience)</strong> — the realization that how someone <em>experiences</em> a product matters more than how it looks.</p>
+                            </div>
+                        </div>
+
+                        <div class="timeline-item active">
+                            <div class="timeline-dot"></div>
+                            <div class="timeline-year">3. The AI Era (2010s-Present)</div>
+                            <div class="timeline-content">
+                                <p>Today, we're living in a world where technology doesn't just respond to inputs — it <em>predicts, generates, and learns.</em></p>
+                                <ul style="margin-top: 1rem; list-style-position: inside;">
+                                    <li>Your phone suggests replies before you type</li>
+                                    <li>Netflix recommends shows based on what you watched before</li>
+                                    <li>ChatGPT generates entire articles from a few words</li>
+                                    <li>Design tools like Figma's AI features autocomplete your layouts</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <p>This shift introduces entirely new questions:</p>
+                    <ul>
+                        <li>Who is designing when AI generates content?</li>
+                        <li>How do we ensure AI-driven interfaces remain trustworthy?</li>
+                        <li>What role do humans play when machines can create?</li>
+                    </ul>
+                </div>
+
+                <div class="content-section thought-question" onclick="this.classList.toggle('expanded')">
+                    <h4>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            <circle cx="9" cy="10" r="1"/>
+                            <circle cx="12" cy="10" r="1"/>
+                            <circle cx="15" cy="10" r="1"/>
+                        </svg>
+                        Reflection Question
+                    </h4>
+                    <p>Think about the last time you used an AI tool (ChatGPT, image generators, auto-suggestions). Did you feel like you were <em>using</em> a tool, or <em>collaborating</em> with something? What's the difference?</p>
+                    <p class="expand-hint">Click to see our thoughts on this →</p>
+                    <div class="thought-answer">
+                        <p>Most people describe it as "collaboration" because AI doesn't just execute — it interprets, suggests, and sometimes surprises you. This is fundamentally different from traditional tools like Photoshop, which do exactly what you tell them. The shift from "tool" to "collaborator" changes the nature of creativity itself.</p>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h2>Why Understanding Systems Matters More Than Tools</h2>
+
+                    <p>Many design courses focus on teaching software: Figma, Photoshop, Illustrator. These are valuable skills, but they're not <em>understanding.</em></p>
+
+                    <p>Tools change. Figma didn't exist 15 years ago. ChatGPT didn't exist 3 years ago. The specific software you learn today might be obsolete in a decade.</p>
+
+                    <p>But <strong>systems thinking</strong> — understanding how things connect, how users think, how decisions flow through interfaces — that lasts forever.</p>
+                </div>
+
+                <div class="content-section highlight-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 18h6"/>
+                        <path d="M10 22h4"/>
+                        <path d="M12 2a7 7 0 0 1 7 7c0 2-1 3.9-3 5.5V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.5C6 13.9 5 12 5 9a7 7 0 0 1 7-7z"/>
+                    </svg>
+                    <p><strong>Example:</strong> You don't need to know how to code a banking app to understand why most banking apps ask for a PIN instead of a password. It's about <em>mental models</em> (people remember numbers tied to important things), <em>security</em> (short PINs are harder to phish), and <em>trust</em> (familiarity with ATMs carried over to apps).</p>
+                </div>
+
+                <div class="content-section">
+                    <p>When you understand the "why" behind design decisions, you can:</p>
+                    <ul>
+                        <li>Evaluate whether a product is well-designed, even if you didn't build it</li>
+                        <li>Engage critically with AI-generated content</li>
+                        <li>Make informed decisions about technology in your own work or life</li>
+                        <li>Stay relevant as tools evolve</li>
+                    </ul>
+                </div>
+
+                <div class="content-section key-takeaway">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <circle cx="12" cy="12" r="6"/>
+                        <circle cx="12" cy="12" r="2"/>
+                    </svg>
+                    <h3>Key Takeaway</h3>
+                    <p>Learning tools makes you a <em>user</em>. Understanding systems makes you a <em>thinker</em>. In the age of AI, thinking matters more than ever.</p>
+                </div>
+
+                <div class="content-section">
+                    <h2>Design as Shaping Behavior</h2>
+
+                    <p>Here's something crucial to understand: <strong>design is persuasive.</strong></p>
+
+                    <p>Every button placement, every color choice, every word on a screen is intentionally guiding you toward an action:</p>
+                    <ul>
+                        <li>E-commerce sites use scarcity ("Only 2 left!") to nudge you to buy now</li>
+                        <li>Social media apps use infinite scroll to keep you engaged</li>
+                        <li>Dark patterns trick you into subscriptions you didn't want</li>
+                    </ul>
+
+                    <p>This isn't inherently good or bad — it's just reality. The question is: <em>Are these designs serving the user, or exploiting them?</em></p>
+
+                    <p>Understanding design means understanding power. It means recognizing when you're being guided (for your benefit) vs. manipulated (for someone else's).</p>
+                </div>
+
+                <div class="content-section thought-question" onclick="this.classList.toggle('expanded')">
+                    <h4>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            <circle cx="9" cy="10" r="1"/>
+                            <circle cx="12" cy="10" r="1"/>
+                            <circle cx="15" cy="10" r="1"/>
+                        </svg>
+                        Reflection Question
+                    </h4>
+                    <p>Can you think of a digital experience where you felt <em>guided</em> (like a helpful GPS) vs. one where you felt <em>manipulated</em> (like a pushy salesperson)? What made the difference?</p>
+                    <p class="expand-hint">Click to explore this idea →</p>
+                    <div class="thought-answer">
+                        <p><strong>Guided:</strong> Google Maps shows you the fastest route and lets you choose. It respects your time and autonomy.</p>
+                        <p><strong>Manipulated:</strong> Some websites hide the "unsubscribe" button or use pre-checked boxes for paid upgrades. The design is working against you, not for you.</p>
+                        <p style="margin-top: 1rem;">The difference? <em>Intent and transparency.</em> Good design empowers users to make informed choices. Bad design tricks them into actions they didn't want.</p>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h2>What's Next?</h2>
+
+                    <p>In the upcoming modules, we'll dive deeper into:</p>
+                    <ul>
+                        <li><strong>Module 02:</strong> How interfaces work — the psychology behind buttons, navigation, and trust</li>
+                        <li><strong>Module 03:</strong> Understanding AI and prompts — how to collaborate meaningfully with AI tools</li>
+                        <li><strong>Module 04:</strong> Systems thinking — how large, complex platforms (banking, healthcare) balance simplicity and power</li>
+                        <li><strong>Module 05:</strong> Real-world case studies — examining what works, what doesn't, and why</li>
+                    </ul>
+
+                    <p>By the end of this course, you won't just know <em>about</em> design and AI — you'll <em>understand</em> them. You'll see the invisible forces shaping your digital experiences. And you'll engage with technology not as a passive consumer, but as a <strong>thoughtful, informed participant.</strong></p>
+                </div>
+
+                <div class="content-section highlight-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 18h6"/>
+                        <path d="M10 22h4"/>
+                        <path d="M12 2a7 7 0 0 1 7 7c0 2-1 3.9-3 5.5V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.5C6 13.9 5 12 5 9a7 7 0 0 1 7-7z"/>
+                    </svg>
+                    <p><strong>Remember:</strong> This course values understanding over speed. Take your time. Reflect on the questions. There are no exams, no grades — just ideas worth thinking about.</p>
+                </div>
+
+                <div class="content-section">
+                    <p><em>Welcome to Pixel Academy. Let's begin.</em></p>
+                </div>
+
+                <!-- Completion Card -->
+                <div class="content-section completion-card">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <h3>You've Completed Module 01!</h3>
+                    <p>You've taken the first step in understanding design and technology in the AI era.</p>
+                    <a href="#" class="complete-btn" onclick="markComplete(); return false;">Mark as Complete</a>
+                </div>
+            </div>
+
+            <div class="lecture-navigation">
+                <a href="course-design-technology-ai.html" class="nav-btn">
+                    ← Back to Course Overview
+                </a>
+                <a href="#" class="nav-btn disabled">
+                    Next Lecture →
+                </a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Audio Player - Bottom Fixed -->
+    <div class="audio-player-bottom">
+        <div class="player-container">
+            <!-- Left: Play Controls -->
+            <div class="player-controls-group">
+                <button class="control-btn" onclick="skipBackward()" title="Rewind 10s">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+                        <text x="9" y="14" font-size="8" fill="currentColor">10</text>
+                    </svg>
+                </button>
+                
+                <button class="play-button-main" id="playButton" onclick="togglePlay()">
+                    <svg id="playIcon" viewBox="0 0 24 24">
+                        <path d="M8 5v14l11-7z"/>
+                    </svg>
+                </button>
+                
+                <button class="control-btn" onclick="skipForward()" title="Forward 10s">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/>
+                        <text x="9" y="14" font-size="8" fill="currentColor">10</text>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Center: Progress & Info -->
+            <div class="player-info-section">
+                <div class="player-title-main">Module 01: Introduction - Design in the Age of AI</div>
+                <div class="progress-container">
+                    <span class="time-display">
+                        <span id="currentTime">0:00</span> / <span id="totalTime">45:00</span>
+                    </span>
+                    <div class="progress-bar-full" onclick="seekAudio(event)">
+                        <div class="progress-fill-full" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right: Speed Controls -->
+            <div class="speed-controls">
+                <button class="speed-btn" onclick="setSpeed(0.75)">0.75x</button>
+                <button class="speed-btn active" onclick="setSpeed(1)">1x</button>
+                <button class="speed-btn" onclick="setSpeed(1.25)">1.25x</button>
+                <button class="speed-btn" onclick="setSpeed(1.5)">1.5x</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check authentication and load user profile
+        window.addEventListener('load', () => {
+            const user = sessionStorage.getItem('pixelAcademyUser');
+            if (!user) {
+                // Not logged in, redirect to login page
+                window.location.href = 'academy-login.html';
+                return;
+            }
+            
+            // Display user info in header
+            try {
+                const userData = JSON.parse(user);
+                console.log('Logged in as:', userData.name);
+                
+                // Update profile elements
+                document.getElementById('userName').textContent = userData.name.split(' ')[0]; // First name only
+                document.getElementById('userNameFull').textContent = userData.name;
+                document.getElementById('userEmail').textContent = userData.email;
+                document.getElementById('userAvatar').src = userData.picture || 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23666"%3E%3Cpath d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/%3E%3C/svg%3E';
+            } catch (e) {
+                console.error('Error parsing user data:', e);
+            }
+        });
+        
+        // Toggle profile dropdown
+        function toggleProfileDropdown() {
+            const trigger = document.querySelector('.profile-trigger');
+            const dropdown = document.getElementById('profileDropdown');
+            trigger.classList.toggle('active');
+            dropdown.classList.toggle('active');
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const profile = document.querySelector('.user-profile');
+            if (profile && !profile.contains(e.target)) {
+                document.querySelector('.profile-trigger')?.classList.remove('active');
+                document.getElementById('profileDropdown')?.classList.remove('active');
+            }
+        });
+        
+        // Handle logout
+        function handleLogout() {
+            if (confirm('Are you sure you want to log out?')) {
+                sessionStorage.removeItem('pixelAcademyUser');
+                window.location.href = 'academy-login.html';
+            }
+        }
+
+        // Reading Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('readingProgress').style.width = scrolled + '%';
+        });
+
+        // Scroll Animation for Content Sections
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.content-section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Audio Player State
+        let currentTime = 0;
+        let totalTime = 2700; // 45 minutes
+        let isPlaying = false;
+        let currentSpeed = 1;
+        let currentUtterance = null;
+        let timeInterval = null;
+        let lectureText = '';
+        let charPosition = 0; // Track position in text for resume
+        
+        function togglePlay() {
+            if (isPlaying) {
+                pauseAudio();
+            } else {
+                playAudio();
+            }
+        }
+        
+        function playAudio() {
+            if (!('speechSynthesis' in window)) {
+                alert('Text-to-speech not supported in your browser. Please use Chrome, Edge, or Safari.');
+                return;
+            }
+            
+            console.log('▶️ Playing audio');
+            isPlaying = true;
+            
+            // Update UI
+            const playIcon = document.getElementById('playIcon');
+            playIcon.innerHTML = '<path d="M6 4h4v16H6zM14 4h4v16h-4z"/>';
+            
+            // Get lecture content if not already loaded
+            if (!lectureText) {
+                const content = document.querySelector('.lecture-content');
+                lectureText = '';
+                content.querySelectorAll('p, h2, h3, li').forEach(el => {
+                    if (!el.closest('.thought-answer') && !el.closest('.highlight-box') && !el.closest('.complete-btn')) {
+                        lectureText += el.textContent + '. ';
+                    }
+                });
+                console.log(`📝 Loaded ${lectureText.length} characters`);
+            }
+            
+            // Get remaining text from current position
+            const remainingText = lectureText.substring(charPosition);
+            
+            if (!remainingText || remainingText.length < 10) {
+                // Restart from beginning
+                charPosition = 0;
+                currentTime = 0;
+                playAudio();
+                return;
+            }
+            
+            // Create speech utterance
+            const utterance = new SpeechSynthesisUtterance(remainingText);
+            utterance.rate = currentSpeed;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+            
+            // Select voice
+            const voices = speechSynthesis.getVoices();
+            const voice = voices.find(v => 
+                v.name.includes('Google') || 
+                v.name.includes('Samantha') || 
+                v.name.includes('Daniel') ||
+                v.name.includes('Karen')
+            ) || voices.find(v => v.lang.startsWith('en')) || voices[0];
+            
+            if (voice) {
+                utterance.voice = voice;
+                console.log(`🎤 Voice: ${voice.name}`);
+            }
+            
+            // Event handlers
+            utterance.onstart = () => {
+                console.log('✅ Speech started');
+            };
+            
+            utterance.onend = () => {
+                console.log('⏹️ Speech completed');
+                charPosition = 0;
+                currentTime = 0;
+                pauseAudio();
+                alert('🎉 Module completed! Mark it as complete to continue.');
+            };
+            
+            utterance.onerror = (e) => {
+                if (e.error !== 'interrupted' && e.error !== 'canceled') {
+                    console.error('❌ Error:', e.error);
+                }
+            };
+            
+            utterance.onboundary = (event) => {
+                if (event.name === 'word' && isPlaying) {
+                    charPosition += event.charLength || 1;
+                }
+            };
+            
+            currentUtterance = utterance;
+            speechSynthesis.speak(utterance);
+            
+            // Start time tracking
+            timeInterval = setInterval(() => {
+                if (isPlaying) {
+                    currentTime++;
+                    updateTimeDisplay();
+                    updateProgressBar();
+                }
+            }, 1000);
+        }
+        
+        function pauseAudio() {
+            console.log('⏸️ Pausing audio');
+            isPlaying = false;
+            
+            // Stop speech
+            speechSynthesis.cancel();
+            
+            // Clear interval
+            if (timeInterval) {
+                clearInterval(timeInterval);
+                timeInterval = null;
+            }
+            
+            // Update UI
+            const playIcon = document.getElementById('playIcon');
+            playIcon.innerHTML = '<path d="M8 5v14l11-7z"/>';
+        }
+        
+        function skipBackward() {
+            currentTime = Math.max(0, currentTime - 10);
+            // Estimate character position (rough calculation)
+            const totalChars = lectureText.length;
+            charPosition = Math.max(0, Math.floor((currentTime / totalTime) * totalChars));
+            
+            updateTimeDisplay();
+            updateProgressBar();
+            
+            if (isPlaying) {
+                speechSynthesis.cancel();
+                setTimeout(() => playAudio(), 100);
+            }
+            console.log('⏪ -10 seconds');
+        }
+        
+        function skipForward() {
+            currentTime = Math.min(totalTime, currentTime + 10);
+            // Estimate character position
+            const totalChars = lectureText.length;
+            charPosition = Math.min(totalChars, Math.floor((currentTime / totalTime) * totalChars));
+            
+            updateTimeDisplay();
+            updateProgressBar();
+            
+            if (isPlaying) {
+                speechSynthesis.cancel();
+                setTimeout(() => playAudio(), 100);
+            }
+            console.log('⏩ +10 seconds');
+        }
+        
+        function updateTimeDisplay() {
+            const min = Math.floor(currentTime / 60);
+            const sec = Math.floor(currentTime % 60);
+            document.getElementById('currentTime').textContent = `${min}:${sec.toString().padStart(2, '0')}`;
+        }
+        
+        function updateProgressBar() {
+            const progress = (currentTime / totalTime) * 100;
+            document.getElementById('progressFill').style.width = Math.min(progress, 100) + '%';
+        }
+        
+        function setSpeed(speed) {
+            currentSpeed = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === speed + 'x') {
+                    btn.classList.add('active');
+                }
+            });
+            
+            if (isPlaying) {
+                speechSynthesis.cancel();
+                setTimeout(() => playAudio(), 100);
+            }
+            console.log('🎚️ Speed:', speed + 'x');
+        }
+        
+        function seekAudio(event) {
+            const bar = event.currentTarget;
+            const percent = event.offsetX / bar.offsetWidth;
+            currentTime = Math.floor(totalTime * percent);
+            
+            // Estimate character position
+            const totalChars = lectureText.length;
+            charPosition = Math.floor(percent * totalChars);
+            
+            updateTimeDisplay();
+            updateProgressBar();
+            
+            if (isPlaying) {
+                speechSynthesis.cancel();
+                setTimeout(() => playAudio(), 100);
+            }
+        }
+        
+        function markComplete() {
+            alert('🎉 Congratulations! Module 01 marked as complete.\n\nYou\'ve taken the first step in understanding design and technology in the AI era.\n\nModule 02 will be available soon!');
+            pauseAudio();
+        }
+        
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            console.log('✅ Page loaded - Module 1 content ready');
+            if (document.getElementById('currentTime')) {
+                document.getElementById('currentTime').textContent = '0:00';
+            }
+            if (document.getElementById('totalTime')) {
+                document.getElementById('totalTime').textContent = '45:00';
+            }
+        });
+    </script>
+
+</body>
+</html>

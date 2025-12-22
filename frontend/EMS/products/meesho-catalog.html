@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meesho Products - Pixel Commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <style>
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--bg-light);
+            padding: 0.25rem;
+            border-radius: var(--radius-md);
+        }
+
+        .view-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all var(--transition-fast);
+        }
+
+        .view-btn.active {
+            background: var(--bg-white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Filters Bar */
+        .filters-bar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            background: var(--bg-white);
+            min-width: 150px;
+        }
+
+        /* Product Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .product-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all var(--transition-normal);
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            padding: 0.25rem 0.625rem;
+            background: var(--bg-white);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .product-badge.in-stock {
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .product-badge.low-stock {
+            color: var(--warning-color);
+            border: 1px solid var(--warning-color);
+        }
+
+        .product-badge.out-stock {
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+        }
+
+        .product-info {
+            padding: 1.25rem;
+        }
+
+        .product-title {
+            font-weight: 700;
+            font-size: 0.9375rem;
+            margin-bottom: 0.5rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .product-asin {
+            font-family: monospace;
+            background: var(--bg-light);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .product-pricing {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .product-stock {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-white);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all var(--transition-fast);
+        }
+
+        .action-btn:hover {
+            background: var(--bg-light);
+        }
+
+        .action-btn.primary {
+            background: var(--primary-color);
+            color: var(--text-white);
+            border-color: var(--primary-color);
+        }
+
+        .action-btn.primary:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Table View */
+        .products-table {
+            display: none;
+        }
+
+        .products-table.active {
+            display: block;
+            width: 100%;
+        }
+
+        .products-grid.active {
+            display: grid;
+        }
+
+        .products-grid:not(.active) {
+            display: none;
+        }
+
+        .table-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            background: var(--bg-light);
+        }
+
+        .stock-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .stock-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .stock-dot.green {
+            background: var(--success-color);
+        }
+
+        .stock-dot.orange {
+            background: var(--warning-color);
+        }
+
+        .stock-dot.red {
+            background: var(--error-color);
+        }
+
+        /* Quick Edit Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+        }
+
+        .close-btn:hover {
+            background: var(--bg-light);
+        }
+
+        .modal-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .form-actions .btn {
+            flex: 1;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            opacity: 0.3;
+        }
+
+        .empty-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-text {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span>Pixel Commerce</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Meesho</div>
+                    <a href="../platforms/meesho.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Meesho Dashboard
+                    </a>
+                    <a href="meesho-catalog.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Products
+                    </a>
+                    <a href="../orders/meesho-orders.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Orders
+                    </a>
+                    <a href="../inventory/meesho-stock.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Inventory
+                    </a>
+                    <a href="../analytics/meesho-analytics.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="20" x2="12" y2="10"/>
+                            <line x1="18" y1="20" x2="18" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="16"/>
+                        </svg>
+                        Analytics
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="../settings/account.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search products by title, ASIN..." id="searchInput">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" title="Sync Products" onclick="syncProducts()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 4 23 10 17 10"/>
+                            <polyline points="1 20 1 14 7 14"/>
+                            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                        </svg>
+                    </button>
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">S</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Seller Name</span>
+                            <span class="user-role" id="userRole">Meesho Seller</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Meesho Products</h1>
+                        <p class="page-subtitle">Manage your product catalog • <span id="productCount">8</span> products</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-secondary" onclick="bulkUpload()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            Bulk Upload
+                        </button>
+                        <button class="btn btn-primary" onclick="window.location.href='add-product.html'">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Add Product
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background: #E8F5E9;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#2E7D32" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">Active Products</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background: #FFF3E0;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#F57C00" stroke-width="2">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                    <line x1="12" y1="9" x2="12" y2="13"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Low Stock</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background: #E3F2FD;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#1976D2" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value">₹1,24,500</div>
+                        <div class="stat-label">Total Inventory Value</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background: #F3E5F5;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#7B1FA2" stroke-width="2">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                                    <polyline points="17 6 23 6 23 12"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value">₹18,450</div>
+                        <div class="stat-label">Avg. Product Value</div>
+                    </div>
+                </div>
+
+                <!-- Filters & View Toggle -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <div class="filters-bar">
+                        <div class="filter-group">
+                            <label style="font-size: 0.875rem; font-weight: 600;">Category:</label>
+                            <select class="filter-select" id="categoryFilter" onchange="filterProducts()">
+                                <option value="all">All Categories</option>
+                                <option value="electronics">Electronics</option>
+                                <option value="fashion">Fashion</option>
+                                <option value="home">Home & Kitchen</option>
+                                <option value="sports">Sports</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label style="font-size: 0.875rem; font-weight: 600;">Stock:</label>
+                            <select class="filter-select" id="stockFilter" onchange="filterProducts()">
+                                <option value="all">All Stock Levels</option>
+                                <option value="in-stock">In Stock</option>
+                                <option value="low-stock">Low Stock</option>
+                                <option value="out-stock">Out of Stock</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="view-toggle">
+                        <button class="view-btn active" onclick="switchView('grid')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="vertical-align: middle;">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                            Grid
+                        </button>
+                        <button class="view-btn" onclick="switchView('table')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" style="vertical-align: middle;">
+                                <line x1="8" y1="6" x2="21" y2="6"/>
+                                <line x1="8" y1="12" x2="21" y2="12"/>
+                                <line x1="8" y1="18" x2="21" y2="18"/>
+                                <line x1="3" y1="6" x2="3.01" y2="6"/>
+                                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                                <line x1="3" y1="18" x2="3.01" y2="18"/>
+                            </svg>
+                            Table
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Products Grid View -->
+                <div class="products-grid active" id="gridView">
+                    <!-- Product Card 1 -->
+                    <div class="product-card" data-category="electronics" data-stock="in-stock">
+                        <div class="product-image">
+                            <img src="https://via.placeholder.com/280x200/f5f5f5/000?text=Wireless+Headphones" alt="Product">
+                            <span class="product-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Wireless Bluetooth Headphones with Noise Cancellation</h3>
+                            <div class="product-meta">
+                                <span>ASIN: <span class="product-asin">B08XYZ1234</span></span>
+                                <span class="badge badge-meesho">Meesho</span>
+                            </div>
+                            <div class="product-pricing">
+                                <div class="product-price">₹1,299</div>
+                                <div class="product-stock" style="color: var(--success-color);">Stock: 45</div>
+                            </div>
+                            <div class="product-actions">
+                                <button class="action-btn" onclick="editProduct('B08XYZ1234')">Edit</button>
+                                <button class="action-btn primary" onclick="viewDetails('B08XYZ1234')">View</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 2 -->
+                    <div class="product-card" data-category="fashion" data-stock="in-stock">
+                        <div class="product-image">
+                            <img src="https://via.placeholder.com/280x200/f5f5f5/000?text=Cotton+T-Shirt" alt="Product">
+                            <span class="product-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Men's Premium Cotton T-Shirt - Pack of 3</h3>
+                            <div class="product-meta">
+                                <span>ASIN: <span class="product-asin">B09ABC5678</span></span>
+                                <span class="badge badge-meesho">Meesho</span>
+                            </div>
+                            <div class="product-pricing">
+                                <div class="product-price">₹799</div>
+                                <div class="product-stock" style="color: var(--success-color);">Stock: 120</div>
+                            </div>
+                            <div class="product-actions">
+                                <button class="action-btn" onclick="editProduct('B09ABC5678')">Edit</button>
+                                <button class="action-btn primary" onclick="viewDetails('B09ABC5678')">View</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 3 -->
+                    <div class="product-card" data-category="electronics" data-stock="low-stock">
+                        <div class="product-image">
+                            <img src="https://via.placeholder.com/280x200/f5f5f5/000?text=Smart+Watch" alt="Product">
+                            <span class="product-badge low-stock">Low Stock</span>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Fitness Smart Watch with Heart Rate Monitor</h3>
+                            <div class="product-meta">
+                                <span>ASIN: <span class="product-asin">B07DEF9012</span></span>
+                                <span class="badge badge-meesho">Meesho</span>
+                            </div>
+                            <div class="product-pricing">
+                                <div class="product-price">₹2,499</div>
+                                <div class="product-stock" style="color: var(--warning-color);">Stock: 8</div>
+                            </div>
+                            <div class="product-actions">
+                                <button class="action-btn" onclick="editProduct('B07DEF9012')">Edit</button>
+                                <button class="action-btn primary" onclick="viewDetails('B07DEF9012')">View</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 4 -->
+                    <div class="product-card" data-category="home" data-stock="in-stock">
+                        <div class="product-image">
+                            <img src="https://via.placeholder.com/280x200/f5f5f5/000?text=Water+Bottle" alt="Product">
+                            <span class="product-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Stainless Steel Water Bottle 1 Liter</h3>
+                            <div class="product-meta">
+                                <span>ASIN: <span class="product-asin">B06GHI3456</span></span>
+                                <span class="badge badge-meesho">Meesho</span>
+                            </div>
+                            <div class="product-pricing">
+                                <div class="product-price">₹399</div>
+                                <div class="product-stock" style="color: var(--success-color);">Stock: 85</div>
+                            </div>
+                            <div class="product-actions">
+                                <button class="action-btn" onclick="editProduct('B06GHI3456')">Edit</button>
+                                <button class="action-btn primary" onclick="viewDetails('B06GHI3456')">View</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 5 -->
+                    <div class="product-card" data-category="sports" data-stock="in-stock">
+                        <div class="product-image">
+                            <img src="https://via.placeholder.com/280x200/f5f5f5/000?text=Yoga+Mat" alt="Product">
+                            <span class="product-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Anti-Slip Yoga Mat with Carrying Bag</h3>
+                            <div class="product-meta">
+                                <span>ASIN: <span class="product-asin">B05JKL7890</span></span>
+                                <span class="badge badge-meesho">Meesho</span>
+                            </div>
+                            <div class="product-pricing">
+                                <div class="product-price">₹599</div>
+                                <div class="product-stock" style="color: var(--success-color);">Stock: 62</div>
+                            </div>
+                            <div class="product-actions">
+                                <button class="action-btn" onclick="editProduct('B05JKL7890')">Edit</button>
+                                <button class="action-btn primary" onclick="viewDetails('B05JKL7890')">View</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 6 -->
+                    <div class="product-card" data-category="electronics" data-stock="low-stock">
+                        <div class="product-image">
+                            <img src="https://via.placeholder.com/280x200/f5f5f5/000?text=Phone+Case" alt="Product">
+                            <span class="product-badge low-stock">Low Stock</span>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Premium Silicone Phone Case - Multiple Colors</h3>
+                            <div class="product-meta">
+                                <span>ASIN: <span class="product-asin">B04MNO2345</span></span>
+                                <span class="badge badge-meesho">Meesho</span>
+                            </div>
+                            <div class="product-pricing">
+                                <div class="product-price">₹199</div>
+                                <div class="product-stock" style="color: var(--warning-color);">Stock: 12</div>
+                            </div>
+                            <div class="product-actions">
+                                <button class="action-btn" onclick="editProduct('B04MNO2345')">Edit</button>
+                                <button class="action-btn primary" onclick="viewDetails('B04MNO2345')">View</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 7 -->
+                    <div class="product-card" data-category="home" data-stock="in-stock">
+                        <div class="product-image">
+                            <img src="https://via.placeholder.com/280x200/f5f5f5/000?text=LED+Bulb" alt="Product">
+                            <span class="product-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Energy Saving LED Bulb 9W - Pack of 4</h3>
+                            <div class="product-meta">
+                                <span>ASIN: <span class="product-asin">B03PQR6789</span></span>
+                                <span class="badge badge-meesho">Meesho</span>
+                            </div>
+                            <div class="product-pricing">
+                                <div class="product-price">₹449</div>
+                                <div class="product-stock" style="color: var(--success-color);">Stock: 150</div>
+                            </div>
+                            <div class="product-actions">
+                                <button class="action-btn" onclick="editProduct('B03PQR6789')">Edit</button>
+                                <button class="action-btn primary" onclick="viewDetails('B03PQR6789')">View</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Card 8 -->
+                    <div class="product-card" data-category="fashion" data-stock="in-stock">
+                        <div class="product-image">
+                            <img src="https://via.placeholder.com/280x200/f5f5f5/000?text=Sports+Shoes" alt="Product">
+                            <span class="product-badge in-stock">In Stock</span>
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title">Men's Running Sports Shoes - Lightweight</h3>
+                            <div class="product-meta">
+                                <span>ASIN: <span class="product-asin">B02STU0123</span></span>
+                                <span class="badge badge-meesho">Meesho</span>
+                            </div>
+                            <div class="product-pricing">
+                                <div class="product-price">₹1,899</div>
+                                <div class="product-stock" style="color: var(--success-color);">Stock: 38</div>
+                            </div>
+                            <div class="product-actions">
+                                <button class="action-btn" onclick="editProduct('B02STU0123')">Edit</button>
+                                <button class="action-btn primary" onclick="viewDetails('B02STU0123')">View</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Products Table View -->
+                <div class="products-table" id="tableView">
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Product Name</th>
+                                    <th>ASIN</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><img src="https://via.placeholder.com/60x60/f5f5f5/000?text=WH" alt="" class="table-image"></td>
+                                    <td>Wireless Bluetooth Headphones</td>
+                                    <td><span class="product-asin">B08XYZ1234</span></td>
+                                    <td>Electronics</td>
+                                    <td><strong>₹1,299</strong></td>
+                                    <td>45</td>
+                                    <td>
+                                        <span class="stock-indicator">
+                                            <span class="stock-dot green"></span>
+                                            In Stock
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn" onclick="editProduct('B08XYZ1234')" style="margin-right: 0.5rem;">Edit</button>
+                                        <button class="action-btn primary" onclick="viewDetails('B08XYZ1234')">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://via.placeholder.com/60x60/f5f5f5/000?text=TS" alt="" class="table-image"></td>
+                                    <td>Men's Premium Cotton T-Shirt</td>
+                                    <td><span class="product-asin">B09ABC5678</span></td>
+                                    <td>Fashion</td>
+                                    <td><strong>₹799</strong></td>
+                                    <td>120</td>
+                                    <td>
+                                        <span class="stock-indicator">
+                                            <span class="stock-dot green"></span>
+                                            In Stock
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn" onclick="editProduct('B09ABC5678')" style="margin-right: 0.5rem;">Edit</button>
+                                        <button class="action-btn primary" onclick="viewDetails('B09ABC5678')">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://via.placeholder.com/60x60/f5f5f5/000?text=SW" alt="" class="table-image"></td>
+                                    <td>Fitness Smart Watch</td>
+                                    <td><span class="product-asin">B07DEF9012</span></td>
+                                    <td>Electronics</td>
+                                    <td><strong>₹2,499</strong></td>
+                                    <td>8</td>
+                                    <td>
+                                        <span class="stock-indicator">
+                                            <span class="stock-dot orange"></span>
+                                            Low Stock
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn" onclick="editProduct('B07DEF9012')" style="margin-right: 0.5rem;">Edit</button>
+                                        <button class="action-btn primary" onclick="viewDetails('B07DEF9012')">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://via.placeholder.com/60x60/f5f5f5/000?text=WB" alt="" class="table-image"></td>
+                                    <td>Stainless Steel Water Bottle</td>
+                                    <td><span class="product-asin">B06GHI3456</span></td>
+                                    <td>Home</td>
+                                    <td><strong>₹399</strong></td>
+                                    <td>85</td>
+                                    <td>
+                                        <span class="stock-indicator">
+                                            <span class="stock-dot green"></span>
+                                            In Stock
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn" onclick="editProduct('B06GHI3456')" style="margin-right: 0.5rem;">Edit</button>
+                                        <button class="action-btn primary" onclick="viewDetails('B06GHI3456')">View</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><img src="https://via.placeholder.com/60x60/f5f5f5/000?text=YM" alt="" class="table-image"></td>
+                                    <td>Anti-Slip Yoga Mat</td>
+                                    <td><span class="product-asin">B05JKL7890</span></td>
+                                    <td>Sports</td>
+                                    <td><strong>₹599</strong></td>
+                                    <td>62</td>
+                                    <td>
+                                        <span class="stock-indicator">
+                                            <span class="stock-dot green"></span>
+                                            In Stock
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button class="action-btn" onclick="editProduct('B05JKL7890')" style="margin-right: 0.5rem;">Edit</button>
+                                        <button class="action-btn primary" onclick="viewDetails('B05JKL7890')">View</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Quick Edit Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Quick Edit Product</h3>
+                <button class="close-btn" onclick="closeModal()">×</button>
+            </div>
+            <form class="modal-form" id="editForm">
+                <div class="form-group">
+                    <label class="form-label">Product Title</label>
+                    <input type="text" class="form-input" id="editTitle" value="Wireless Bluetooth Headphones">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Price (₹)</label>
+                    <input type="number" class="form-input" id="editPrice" value="1299">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Stock Quantity</label>
+                    <input type="number" class="form-input" id="editStock" value="45">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <select class="form-input" id="editCategory">
+                        <option value="electronics" selected>Electronics</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="home">Home & Kitchen</option>
+                        <option value="sports">Sports</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Load user info
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('emsUser') || '{}');
+            if (user.name) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userRole').textContent = 'Meesho Seller';
+                document.getElementById('userAvatar').textContent = user.name.charAt(0);
+            }
+        });
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Switch between grid and table view
+        function switchView(view) {
+            const gridView = document.getElementById('gridView');
+            const tableView = document.getElementById('tableView');
+            const viewBtns = document.querySelectorAll('.view-btn');
+
+            viewBtns.forEach(btn => btn.classList.remove('active'));
+
+            if (view === 'grid') {
+                gridView.classList.add('active');
+                tableView.classList.remove('active');
+                viewBtns[0].classList.add('active');
+            } else {
+                gridView.classList.remove('active');
+                tableView.classList.add('active');
+                viewBtns[1].classList.add('active');
+            }
+        }
+
+        // Filter products
+        function filterProducts() {
+            const category = document.getElementById('categoryFilter').value;
+            const stock = document.getElementById('stockFilter').value;
+            const cards = document.querySelectorAll('.product-card');
+
+            cards.forEach(card => {
+                const cardCategory = card.dataset.category;
+                const cardStock = card.dataset.stock;
+
+                let showCategory = category === 'all' || cardCategory === category;
+                let showStock = stock === 'all' || cardStock === stock;
+
+                if (showCategory && showStock) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Search products
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.product-card');
+
+            cards.forEach(card => {
+                const title = card.querySelector('.product-title').textContent.toLowerCase();
+                const asin = card.querySelector('.product-asin').textContent.toLowerCase();
+
+                if (title.includes(searchTerm) || asin.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // Edit product
+        function editProduct(asin) {
+            document.getElementById('editModal').classList.add('show');
+            showToast('Opening edit form for ASIN: ' + asin, 'info');
+        }
+
+        // View product details
+        function viewDetails(asin) {
+            showToast('Viewing details for ASIN: ' + asin, 'info');
+            // In real app: window.location.href = 'product-details.html?asin=' + asin;
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('editModal').classList.remove('show');
+        }
+
+        // Edit form submit
+        document.getElementById('editForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            closeModal();
+            showToast('Product updated successfully!', 'success');
+        });
+
+        // Sync products
+        function syncProducts() {
+            showToast('Syncing products with Meesho...', 'info');
+            setTimeout(() => {
+                showToast('Products synced successfully!', 'success');
+            }, 2000);
+        }
+
+        // Bulk upload
+        function bulkUpload() {
+            showToast('Opening bulk upload wizard...', 'info');
+            // In real app: window.location.href = 'bulk-upload.html';
+        }
+
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">×</button>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

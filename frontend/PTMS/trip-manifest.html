@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Trip Manifest - Daily Trip Sheet Management">
+  <title>Trip Manifest - PTMS | Pixel Logistics</title>
+  
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tms-dashboard.css">
+  <link rel="stylesheet" href="../css/ptms-optimized.css">
+  <link rel="stylesheet" href="../css/side-panel.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">People Transport Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <!-- Search Trigger Button -->
+      <button class="search-trigger" onclick="openSearch()" aria-label="Search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <span>Search</span>
+        <kbd class="search-kbd-compact">⌘K</kbd>
+      </button>
+      
+      <!-- Theme Toggle Button -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <!-- Global Search Modal -->
+      <div class="search-modal" id="searchModal" style="display: none;">
+        <div class="search-modal-overlay" onclick="closeSearch()"></div>
+        <div class="search-modal-content">
+          <div class="search-input-wrapper">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" class="search-input" id="globalSearchInput" placeholder="Search employees, routes, trips..." autocomplete="off">
+            <button class="search-close" onclick="closeSearch()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="search-suggestions" id="searchSuggestions"></div>
+        </div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">HR Manager</div>
+          <div class="user-role">Transport Coordinator</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">HM</div>
+        <div class="user-dropdown" id="userDropdown">
+          <a href="#" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="ptms-login.html" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    
+    <!-- Sidebar Component -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Trip Manifest</h1>
+          <p class="page-description">Daily trip sheets and passenger manifests</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-secondary" onclick="exportManifest()" style="border: 1px solid var(--color-black); color: var(--color-black); background: transparent;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export PDF
+          </button>
+          <button class="btn btn-primary" onclick="openCreateManifestPanel()" style="background: var(--color-black); color: white; border: 1px solid var(--color-black);">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Create Manifest
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--color-black);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">Today's Trips</div>
+            <div class="stat-value">64</div>
+            <div class="stat-trend neutral">
+              <span>Across 3 shifts</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--color-black);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">Completed</div>
+            <div class="stat-value">28</div>
+            <div class="stat-trend positive">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+              <span>43.8% complete</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--color-black);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">In Progress</div>
+            <div class="stat-value">32</div>
+            <div class="stat-trend neutral">
+              <span>Currently active</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--color-black);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">Total Passengers</div>
+            <div class="stat-value">2,487</div>
+            <div class="stat-trend neutral">
+              <span>Scheduled today</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="card" style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            Filters
+          </h2>
+        </div>
+        <div class="card-content">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div>
+              <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--color-black);">Date</label>
+              <input type="date" class="form-input" id="dateFilter" value="2025-11-23" onchange="filterManifests()" style="border: 1px solid var(--color-grey-light); padding: 0.5rem; border-radius: 4px; width: 100%;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--color-black);">Shift</label>
+              <select class="form-select" id="shiftFilter" onchange="filterManifests()" style="border: 1px solid var(--color-grey-light); padding: 0.5rem; border-radius: 4px; width: 100%;">
+                <option value="">All Shifts</option>
+                <option value="morning">Morning (6 AM - 2 PM)</option>
+                <option value="evening">Evening (2 PM - 10 PM)</option>
+                <option value="night">Night (10 PM - 6 AM)</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--color-black);">Route</label>
+              <select class="form-select" id="routeFilter" onchange="filterManifests()" style="border: 1px solid var(--color-grey-light); padding: 0.5rem; border-radius: 4px; width: 100%;">
+                <option value="">All Routes</option>
+                <option value="RT-001">RT-001 - Andheri - Goregaon</option>
+                <option value="RT-002">RT-002 - Powai - Vikhroli</option>
+                <option value="RT-003">RT-003 - Manesar - Sector 18</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; color: var(--color-black);">Status</label>
+              <select class="form-select" id="statusFilter" onchange="filterManifests()" style="border: 1px solid var(--color-grey-light); padding: 0.5rem; border-radius: 4px; width: 100%;">
+                <option value="">All Status</option>
+                <option value="scheduled">Scheduled</option>
+                <option value="in-progress">In Progress</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trips Table -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            Trip Manifests
+          </h2>
+        </div>
+        <div class="card-content" style="padding: 0;">
+          <div style="overflow-x: auto;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--color-black); border-bottom: 2px solid var(--color-grey-lightest);">TRIP ID</th>
+                  <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--color-black); border-bottom: 2px solid var(--color-grey-lightest);">ROUTE</th>
+                  <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--color-black); border-bottom: 2px solid var(--color-grey-lightest);">SHIFT</th>
+                  <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--color-black); border-bottom: 2px solid var(--color-grey-lightest);">VEHICLE</th>
+                  <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--color-black); border-bottom: 2px solid var(--color-grey-lightest);">DRIVER</th>
+                  <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--color-black); border-bottom: 2px solid var(--color-grey-lightest);">PASSENGERS</th>
+                  <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--color-black); border-bottom: 2px solid var(--color-grey-lightest);">START TIME</th>
+                  <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--color-black); border-bottom: 2px solid var(--color-grey-lightest);">STATUS</th>
+                  <th style="padding: 1rem; text-align: left; font-weight: 600; color: var(--color-black); border-bottom: 2px solid var(--color-grey-lightest);">ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom: 1px solid var(--color-grey-lightest);">
+                  <td style="padding: 1rem;">TM-001</td>
+                  <td style="padding: 1rem;">
+                    <div style="font-weight: 500;">RT-001</div>
+                    <div style="font-size: 0.75rem; color: var(--color-grey);">Andheri - Goregaon - Malad</div>
+                  </td>
+                  <td style="padding: 1rem;">
+                    <span class="badge" style="background: var(--color-black, #000); color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">MORNING</span>
+                  </td>
+                  <td style="padding: 1rem;">Bus-MH01</td>
+                  <td style="padding: 1rem;">Rajesh Kumar</td>
+                  <td style="padding: 1rem;">
+                    <div style="font-weight: 500;">45/45</div>
+                    <div style="font-size: 0.75rem; color: var(--color-grey);">100% occupied</div>
+                  </td>
+                  <td style="padding: 1rem;">06:00 AM</td>
+                  <td style="padding: 1rem;">
+                    <span class="badge badge-success" style="background: var(--color-black, #000); color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">COMPLETED</span>
+                  </td>
+                  <td style="padding: 1rem;">
+                    <button class="btn btn-sm btn-secondary" onclick="viewManifest('TM-001')">View</button>
+                  </td>
+                </tr>
+
+                <tr style="border-bottom: 1px solid var(--color-grey-lightest);">
+                  <td style="padding: 1rem;">TM-002</td>
+                  <td style="padding: 1rem;">
+                    <div style="font-weight: 500;">RT-002</div>
+                    <div style="font-size: 0.75rem; color: var(--color-grey);">Powai - Vikhroli - Ghatkopar</div>
+                  </td>
+                  <td style="padding: 1rem;">
+                    <span class="badge" style="background: var(--color-black, #000); color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">MORNING</span>
+                  </td>
+                  <td style="padding: 1rem;">Bus-MH02</td>
+                  <td style="padding: 1rem;">Anil Sharma</td>
+                  <td style="padding: 1rem;">
+                    <div style="font-weight: 500;">38/45</div>
+                    <div style="font-size: 0.75rem; color: var(--color-grey);">84% occupied</div>
+                  </td>
+                  <td style="padding: 1rem;">06:15 AM</td>
+                  <td style="padding: 1rem;">
+                    <span class="badge" style="background: var(--color-text-secondary); color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">IN PROGRESS</span>
+                  </td>
+                  <td style="padding: 1rem;">
+                    <button class="btn btn-sm btn-secondary" onclick="viewManifest('TM-002')">View</button>
+                  </td>
+                </tr>
+
+                <tr style="border-bottom: 1px solid var(--color-grey-lightest);">
+                  <td style="padding: 1rem;">TM-003</td>
+                  <td style="padding: 1rem;">
+                    <div style="font-weight: 500;">RT-003</div>
+                    <div style="font-size: 0.75rem; color: var(--color-grey);">Manesar - Sector 18 - DLF</div>
+                  </td>
+                  <td style="padding: 1rem;">
+                    <span class="badge" style="background: var(--color-text-secondary); color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">EVENING</span>
+                  </td>
+                  <td style="padding: 1rem;">Bus-DL01</td>
+                  <td style="padding: 1rem;">Suresh Yadav</td>
+                  <td style="padding: 1rem;">
+                    <div style="font-weight: 500;">42/45</div>
+                    <div style="font-size: 0.75rem; color: var(--color-grey);">93% occupied</div>
+                  </td>
+                  <td style="padding: 1rem;">02:00 PM</td>
+                  <td style="padding: 1rem;">
+                    <span class="badge" style="background: var(--color-border); color: var(--color-text); padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">SCHEDULED</span>
+                  </td>
+                  <td style="padding: 1rem;">
+                    <button class="btn btn-sm btn-secondary" onclick="viewManifest('TM-003')">View</button>
+                  </td>
+                </tr>
+
+                <tr style="border-bottom: 1px solid var(--color-grey-lightest);">
+                  <td style="padding: 1rem;">TM-004</td>
+                  <td style="padding: 1rem;">
+                    <div style="font-weight: 500;">RT-004</div>
+                    <div style="font-size: 0.75rem; color: var(--color-grey);">Marathahalli - Koramangala</div>
+                  </td>
+                  <td style="padding: 1rem;">
+                    <span class="badge" style="background: var(--color-black, #000); color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">MORNING</span>
+                  </td>
+                  <td style="padding: 1rem;">Bus-KA01</td>
+                  <td style="padding: 1rem;">Venkat Reddy</td>
+                  <td style="padding: 1rem;">
+                    <div style="font-weight: 500;">35/45</div>
+                    <div style="font-size: 0.75rem; color: var(--color-grey);">78% occupied</div>
+                  </td>
+                  <td style="padding: 1rem;">06:30 AM</td>
+                  <td style="padding: 1rem;">
+                    <span class="badge badge-success" style="background: var(--color-black, #000); color: #fff; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 500;">COMPLETED</span>
+                  </td>
+                  <td style="padding: 1rem;">
+                    <button class="btn btn-sm btn-secondary" onclick="viewManifest('TM-004')">View</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Create Manifest Side Panel -->
+  <div class="side-panel" id="createManifestPanel">
+    <div class="side-panel-overlay" onclick="closeCreateManifestPanel()"></div>
+    <div class="side-panel-content">
+      <div class="side-panel-header">
+        <h2>Create Trip Manifest</h2>
+        <button class="side-panel-close" onclick="closeCreateManifestPanel()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="side-panel-body">
+        <form id="manifestForm">
+          <div class="form-group">
+            <label for="manifestDate">Trip Date *</label>
+            <input type="date" id="manifestDate" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="manifestShift">Shift *</label>
+            <select id="manifestShift" class="form-select" required>
+              <option value="">Select shift</option>
+              <option value="morning">Morning (6 AM - 2 PM)</option>
+              <option value="evening">Evening (2 PM - 10 PM)</option>
+              <option value="night">Night (10 PM - 6 AM)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="manifestRoute">Route *</label>
+            <select id="manifestRoute" class="form-select" required>
+              <option value="">Select route</option>
+              <option value="RT-001">RT-001 - Andheri - Goregaon - Malad</option>
+              <option value="RT-002">RT-002 - Powai - Vikhroli - Ghatkopar</option>
+              <option value="RT-003">RT-003 - Manesar - Sector 18 - DLF</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="manifestVehicle">Vehicle *</label>
+            <select id="manifestVehicle" class="form-select" required>
+              <option value="">Select vehicle</option>
+              <option value="Bus-MH01">Bus-MH01 (45 seats)</option>
+              <option value="Bus-MH02">Bus-MH02 (45 seats)</option>
+              <option value="Bus-DL01">Bus-DL01 (45 seats)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="manifestDriver">Driver *</label>
+            <select id="manifestDriver" class="form-select" required>
+              <option value="">Select driver</option>
+              <option value="DRV-001">Rajesh Kumar</option>
+              <option value="DRV-002">Anil Sharma</option>
+              <option value="DRV-003">Suresh Yadav</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="manifestStartTime">Start Time *</label>
+            <input type="time" id="manifestStartTime" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="manifestNotes">Notes (Optional)</label>
+            <textarea id="manifestNotes" class="form-textarea" rows="3" placeholder="Add any special instructions..."></textarea>
+          </div>
+        </form>
+      </div>
+      
+      <div class="side-panel-footer">
+        <button class="btn btn-secondary" onclick="closeCreateManifestPanel()">Cancel</button>
+        <button class="btn btn-primary" onclick="saveManifest()">Create Manifest</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    }
+
+    // User Menu Toggle
+    function toggleUserMenu() {
+      const dropdown = document.getElementById('userDropdown');
+      dropdown.classList.toggle('show');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const userMenu = document.querySelector('.user-menu');
+      const dropdown = document.getElementById('userDropdown');
+      if (!userMenu.contains(event.target)) {
+        dropdown.classList.remove('show');
+      }
+    });
+
+    // Search Modal
+    function openSearch() {
+      document.getElementById('searchModal').style.display = 'flex';
+      document.getElementById('globalSearchInput').focus();
+    }
+
+    function closeSearch() {
+      document.getElementById('searchModal').style.display = 'none';
+    }
+
+    // Create Manifest Panel
+    function openCreateManifestPanel() {
+      document.getElementById('createManifestPanel').classList.add('active');
+      document.getElementById('manifestDate').value = new Date().toISOString().split('T')[0];
+    }
+
+    function closeCreateManifestPanel() {
+      document.getElementById('createManifestPanel').classList.remove('active');
+      document.getElementById('manifestForm').reset();
+    }
+
+    function saveManifest() {
+      alert('Manifest created successfully!');
+      closeCreateManifestPanel();
+    }
+
+    function filterManifests() {
+      // Implement filter logic
+      console.log('Filtering manifests...');
+    }
+
+    function viewManifest(id) {
+      alert('Opening manifest: ' + id);
+    }
+
+    function exportManifest() {
+      alert('Exporting manifest as PDF...');
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        openSearch();
+      }
+      if (e.key === 'Escape') {
+        closeSearch();
+        closeCreateManifestPanel();
+      }
+    });
+
+    // Initialize theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
+
+  <script src="js/ptms-data.js"></script>
+  <script src="js/ptms-app.js"></script>
+  <script src="js/components-loader.js"></script>
+
+</body>
+</html>

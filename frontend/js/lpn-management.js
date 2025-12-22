@@ -1,4 +1,4 @@
-// DLT WMS - LPN Management Module JavaScript
+// Pixel WMS - LPN Management Module JavaScript
 // Handles LPN generation, nesting, consolidation, and lifecycle
 
 let generatedLPNList = [];

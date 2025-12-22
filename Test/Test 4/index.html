@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dorksense - Neobrutalist Experience</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-pink': '#FF10F0',
+                        'neon-cyan': '#00F0FF',
+                        'neon-yellow': '#FFF000',
+                        'neon-green': '#39FF14',
+                        'brutal-black': '#0A0A0A',
+                        'neon-orange': '#FF6B00',
+                        'neon-purple': '#B026FF',
+                    },
+                    animation: {
+                        'spin-slow': 'spin 8s linear infinite',
+                        'spin-reverse': 'spin-reverse 6s linear infinite',
+                        'wiggle': 'wiggle 1s ease-in-out infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                    },
+                    keyframes: {
+                        'spin-reverse': {
+                            'from': { transform: 'rotate(360deg)' },
+                            'to': { transform: 'rotate(0deg)' },
+                        },
+                        'wiggle': {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&display=swap');
+        
+        * {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        body {
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #0A0A0A 0%, #1a1a1a 100%);
+        }
+
+        .brutal-shadow {
+            box-shadow: 8px 8px 0px rgba(0, 0, 0, 0.9);
+        }
+
+        .brutal-shadow-hover {
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .brutal-shadow-hover:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 12px 12px 0px rgba(0, 0, 0, 0.9);
+        }
+
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tilt-card {
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        .glitch {
+            position: relative;
+            animation: glitch-skew 2s infinite;
+        }
+
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            20% { transform: skew(0deg); }
+            22% { transform: skew(-2deg); }
+            24% { transform: skew(0deg); }
+            100% { transform: skew(0deg); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .rotate-in {
+            animation: rotateIn 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        @keyframes rotateIn {
+            from {
+                transform: rotate(-180deg) scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: rotate(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .neon-border {
+            position: relative;
+            background: linear-gradient(45deg, #FF10F0, #00F0FF, #FFF000, #39FF14);
+            background-size: 300% 300%;
+            animation: gradient-shift 3s ease infinite;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .text-stroke {
+            -webkit-text-stroke: 3px #000;
+            paint-order: stroke fill;
+        }
+
+        .brutal-border {
+            border: 4px solid #000;
+        }
+
+        .morph {
+            animation: morph 8s ease-in-out infinite;
+        }
+
+        @keyframes morph {
+            0%, 100% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+            50% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+        }
+
+        .parallax {
+            transition: transform 0.3s ease-out;
+        }
+
+        .zigzag {
+            clip-path: polygon(
+                0 0, 100% 0, 100% 5%, 95% 10%, 100% 15%, 100% 100%, 0 100%, 0 15%, 5% 10%, 0 5%
+            );
+        }
+
+        .pulse-border {
+            animation: pulse-border 2s infinite;
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-width: 4px; }
+            50% { border-width: 8px; }
+        }
+
+        .text-glitch {
+            position: relative;
+        }
+
+        .text-glitch::before,
+        .text-glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .text-glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 #FF10F0;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        .text-glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 #00F0FF;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(10px, 9999px, 31px, 0); }
+            20% { clip: rect(70px, 9999px, 71px, 0); }
+            40% { clip: rect(50px, 9999px, 90px, 0); }
+            60% { clip: rect(30px, 9999px, 60px, 0); }
+            80% { clip: rect(80px, 9999px, 20px, 0); }
+            100% { clip: rect(40px, 9999px, 80px, 0); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 119px, 0); }
+            20% { clip: rect(90px, 9999px, 40px, 0); }
+            40% { clip: rect(10px, 9999px, 85px, 0); }
+            60% { clip: rect(50px, 9999px, 100px, 0); }
+            80% { clip: rect(20px, 9999px, 70px, 0); }
+            100% { clip: rect(95px, 9999px, 30px, 0); }
+        }
+
+        .stagger-in {
+            animation: staggerIn 0.6s ease-out backwards;
+        }
+
+        @keyframes staggerIn {
+            from {
+                opacity: 0;
+                transform: translateX(-100px) rotate(-5deg);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) rotate(0);
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0A0A0A;
+            border-left: 4px solid #000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #FF10F0;
+            border: 2px solid #000;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00F0FF;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        @keyframes particle-float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .shake {
+            animation: shake 0.5s infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+
+        .rainbow-border {
+            position: relative;
+            background: linear-gradient(90deg, #FF10F0, #00F0FF, #FFF000, #39FF14, #FF10F0);
+            background-size: 400% 400%;
+            animation: rainbow-shift 3s ease infinite;
+        }
+
+        @keyframes rainbow-shift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .zoom-crazy {
+            animation: zoom-crazy 2s ease-in-out infinite;
+        }
+
+        @keyframes zoom-crazy {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .slide-diagonal {
+            animation: slide-diagonal 20s linear infinite;
+        }
+
+        @keyframes slide-diagonal {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100vw, 100vh); }
+        }
+
+        .text-3d {
+            text-shadow: 
+                3px 3px 0 #FF10F0,
+                6px 6px 0 #00F0FF,
+                9px 9px 0 #FFF000,
+                12px 12px 0 #39FF14;
+        }
+
+        .crazy-spin {
+            animation: crazy-spin 4s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        }
+
+        @keyframes crazy-spin {
+            0% { transform: rotate(0deg) scale(1); }
+            25% { transform: rotate(90deg) scale(1.2); }
+            50% { transform: rotate(180deg) scale(1); }
+            75% { transform: rotate(270deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+
+        .wave-text {
+            display: inline-block;
+        }
+
+        .wave-text span {
+            display: inline-block;
+            animation: wave 1.5s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .disco-ball {
+            animation: disco 2s linear infinite;
+        }
+
+        @keyframes disco {
+            0% { filter: hue-rotate(0deg) brightness(1); }
+            50% { filter: hue-rotate(180deg) brightness(1.5); }
+            100% { filter: hue-rotate(360deg) brightness(1); }
+        }
+
+        .glitch-intense {
+            animation: glitch-intense 0.3s infinite;
+        }
+
+        @keyframes glitch-intense {
+            0% { transform: translate(0); }
+            20% { transform: translate(-5px, 5px); }
+            40% { transform: translate(-5px, -5px); }
+            60% { transform: translate(5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            100% { transform: translate(0); }
+        }
+
+        .perspective-3d {
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .rotate-3d {
+            animation: rotate-3d 10s linear infinite;
+        }
+
+        @keyframes rotate-3d {
+            0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+            33% { transform: rotateX(360deg) rotateY(0deg) rotateZ(0deg); }
+            66% { transform: rotateX(360deg) rotateY(360deg) rotateZ(0deg); }
+            100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+        }
+
+        .pixelate {
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        .text-outline-rainbow {
+            background: linear-gradient(45deg, #FF10F0, #00F0FF, #FFF000, #39FF14);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 2s ease infinite;
+        }
+
+        @keyframes vhs-glitch {
+            0% { 
+                clip-path: inset(0 0 0 0);
+                transform: translate(0);
+            }
+            10% { 
+                clip-path: inset(10% 0 85% 0);
+                transform: translate(5px, 0);
+            }
+            20% { 
+                clip-path: inset(80% 0 0 0);
+                transform: translate(-5px, 0);
+            }
+            30% { 
+                clip-path: inset(50% 0 30% 0);
+                transform: translate(0, 5px);
+            }
+            100% { 
+                clip-path: inset(0 0 0 0);
+                transform: translate(0);
+            }
+        }
+
+        .vhs-effect {
+            animation: vhs-glitch 4s infinite;
+        }
+
+        .breathing {
+            animation: breathing 3s ease-in-out infinite;
+        }
+
+        @keyframes breathing {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .text-vibrate {
+            animation: vibrate 0.1s linear infinite;
+        }
+
+        @keyframes vibrate {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
+        }
+
+        /* Cyberpunk grid */
+        .cyber-grid {
+            background-image: 
+                linear-gradient(rgba(255, 16, 240, 0.3) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.3) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+        }
+
+        @keyframes grid-move {
+            0% { background-position: 0 0; }
+            100% { background-position: 50px 50px; }
+        }
+
+        .holographic {
+            background: linear-gradient(135deg, 
+                rgba(255, 16, 240, 0.8) 0%,
+                rgba(0, 240, 255, 0.8) 25%,
+                rgba(255, 240, 0, 0.8) 50%,
+                rgba(57, 255, 20, 0.8) 75%,
+                rgba(255, 16, 240, 0.8) 100%);
+            background-size: 200% 200%;
+            animation: holographic-shift 3s ease infinite;
+        }
+
+        @keyframes holographic-shift {
+            0% { background-position: 0% 0%; }
+            50% { background-position: 100% 100%; }
+            100% { background-position: 0% 0%; }
+        }
+    </style>
+</head>
+<body class="bg-brutal-black text-white relative">
+    
+    <!-- Particle System Canvas -->
+    <canvas id="particleCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+    
+    <!-- Cyberpunk Grid Background -->
+    <div class="fixed inset-0 cyber-grid pointer-events-none z-0 opacity-30"></div>
+    
+    <!-- Cursor Trail -->
+    <div id="cursorTrail" class="fixed pointer-events-none z-50"></div>
+    
+    <!-- Mind-bending Spiral -->
+    <canvas id="spiralCanvas" class="fixed inset-0 pointer-events-none z-1 opacity-20"></canvas>
+    
+    <!-- Reality Distortion Field -->
+    <div id="distortionField" class="fixed inset-0 pointer-events-none z-49"></div>
+    
+    <!-- Noise Texture Overlay -->
+    <div class="fixed inset-0 pointer-events-none opacity-5 z-50" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.9%22 numOctaves=%224%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-40 rainbow-border brutal-border border-b-4 p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="text-glitch text-4xl font-bold text-brutal-black" data-text="dorksense" style="font-family: 'Bebas Neue', cursive;">
+                dorksense
+            </div>
+            <div class="hidden md:flex space-x-4">
+                <a href="#hero" class="bg-neon-pink brutal-border text-brutal-black px-6 py-2 font-bold brutal-shadow-hover hover:scale-105">HOME</a>
+                <a href="#features" class="bg-neon-yellow brutal-border text-brutal-black px-6 py-2 font-bold brutal-shadow-hover hover:scale-105">FEATURES</a>
+                <a href="#gallery" class="bg-neon-green brutal-border text-brutal-black px-6 py-2 font-bold brutal-shadow-hover hover:scale-105">GALLERY</a>
+                <a href="#contact" class="bg-white brutal-border text-brutal-black px-6 py-2 font-bold brutal-shadow-hover hover:scale-105">CONTACT</a>
+            </div>
+            <button id="menuBtn" class="md:hidden bg-neon-pink brutal-border text-brutal-black px-4 py-2 font-bold">
+                MENU
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed top-20 left-0 right-0 bg-neon-cyan brutal-border border-t-4 p-6 z-30 transform -translate-y-full transition-transform duration-300">
+        <div class="flex flex-col space-y-4">
+            <a href="#hero" class="bg-neon-pink brutal-border text-brutal-black px-6 py-3 font-bold text-center brutal-shadow">HOME</a>
+            <a href="#features" class="bg-neon-yellow brutal-border text-brutal-black px-6 py-3 font-bold text-center brutal-shadow">FEATURES</a>
+            <a href="#gallery" class="bg-neon-green brutal-border text-brutal-black px-6 py-3 font-bold text-center brutal-shadow">GALLERY</a>
+            <a href="#contact" class="bg-white brutal-border text-brutal-black px-6 py-3 font-bold text-center brutal-shadow">CONTACT</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="hero" class="min-h-screen flex items-center justify-center pt-20 px-4 relative overflow-hidden">
+        <!-- Animated Background Shapes -->
+        <div class="absolute top-20 left-10 w-32 h-32 bg-neon-pink brutal-border rotate-45 crazy-spin" style="animation-delay: 0s;"></div>
+        <div class="absolute bottom-20 right-10 w-48 h-48 bg-neon-cyan brutal-border morph disco-ball" style="animation-delay: 1s;"></div>
+        <div class="absolute top-1/2 right-1/4 w-24 h-24 bg-neon-yellow brutal-border rounded-full zoom-crazy" style="animation-delay: 2s;"></div>
+        <div class="absolute bottom-1/3 left-1/4 w-40 h-40 bg-neon-green brutal-border zigzag floating shake" style="animation-delay: 1.5s;"></div>
+        <div class="absolute top-1/3 left-1/2 w-36 h-36 rainbow-border brutal-border animate-spin-slow"></div>
+        <div class="absolute bottom-1/2 right-1/3 w-28 h-28 bg-neon-orange brutal-border rounded-full animate-bounce-slow"></div>
+
+        <div class="container mx-auto text-center relative z-10">
+            <h1 class="text-6xl md:text-9xl font-black mb-8 rotate-in" style="font-family: 'Bebas Neue', cursive;">
+                <span class="inline-block bg-neon-pink brutal-border px-8 py-4 transform -rotate-2 brutal-shadow text-brutal-black zoom-crazy text-3d">
+                    DORK
+                </span>
+                <span class="inline-block bg-neon-cyan brutal-border px-8 py-4 transform rotate-2 brutal-shadow text-brutal-black ml-4 zoom-crazy text-3d" style="animation-delay: 0.5s;">
+                    SENSE
+                </span>
+            </h1>
+            <p class="text-2xl md:text-4xl mb-12 scroll-reveal font-bold">
+                <span class="bg-white brutal-border text-brutal-black px-6 py-3 inline-block transform -rotate-1 brutal-shadow wave-text" id="waveText">
+                    EMBRACE THE CHAOS
+                </span>
+            </p>
+            <div class="flex flex-col md:flex-row gap-6 justify-center scroll-reveal">
+                <button class="bg-neon-yellow brutal-border text-brutal-black px-12 py-6 text-2xl font-black brutal-shadow-hover transform hover:-rotate-2 transition-all hover:shake pulse-border">
+                    GET STARTED
+                </button>
+                <button class="bg-neon-green brutal-border text-brutal-black px-12 py-6 text-2xl font-black brutal-shadow-hover transform hover:rotate-2 transition-all hover:disco-ball pulse-border">
+                    LEARN MORE
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 px-4 bg-gradient-to-br from-brutal-black to-gray-900 relative">
+        <div class="container mx-auto">
+            <h2 class="text-5xl md:text-7xl font-black text-center mb-16 scroll-reveal" style="font-family: 'Bebas Neue', cursive;">
+                <span class="bg-neon-pink brutal-border px-8 py-4 inline-block transform rotate-1 brutal-shadow">
+                    FEATURES
+                </span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature Card 1 -->
+                <div class="scroll-reveal tilt-card bg-neon-cyan brutal-border p-8 brutal-shadow-hover transform hover:scale-105 transition-all">
+                    <div class="bg-neon-pink brutal-border w-20 h-20 mb-6 flex items-center justify-center transform -rotate-12">
+                        <svg class="w-12 h-12 text-brutal-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl font-black mb-4 text-brutal-black">COMMUNITY</h3>
+                    <p class="text-brutal-black font-bold text-lg">Join thousands of dorks worldwide in the most chaotic community ever created.</p>
+                </div>
+
+                <!-- Feature Card 2 -->
+                <div class="scroll-reveal tilt-card bg-neon-yellow brutal-border p-8 brutal-shadow-hover transform hover:scale-105 transition-all" style="animation-delay: 0.2s;">
+                    <div class="bg-neon-green brutal-border w-20 h-20 mb-6 flex items-center justify-center transform rotate-12">
+                        <svg class="w-12 h-12 text-brutal-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"></path>
+                            <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl font-black mb-4 text-brutal-black">SPEED</h3>
+                    <p class="text-brutal-black font-bold text-lg">Lightning-fast performance that'll make your head spin in the best way possible.</p>
+                </div>
+
+                <!-- Feature Card 3 -->
+                <div class="scroll-reveal tilt-card bg-neon-green brutal-border p-8 brutal-shadow-hover transform hover:scale-105 transition-all" style="animation-delay: 0.4s;">
+                    <div class="bg-neon-cyan brutal-border w-20 h-20 mb-6 flex items-center justify-center transform -rotate-6">
+                        <svg class="w-12 h-12 text-brutal-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl font-black mb-4 text-brutal-black">POWER</h3>
+                    <p class="text-brutal-black font-bold text-lg">Unleash the full potential of your creativity with our powerful tools.</p>
+                </div>
+
+                <!-- Feature Card 4 -->
+                <div class="scroll-reveal tilt-card bg-neon-pink brutal-border p-8 brutal-shadow-hover transform hover:scale-105 transition-all" style="animation-delay: 0.6s;">
+                    <div class="bg-neon-yellow brutal-border w-20 h-20 mb-6 flex items-center justify-center transform rotate-6">
+                        <svg class="w-12 h-12 text-brutal-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl font-black mb-4 text-brutal-black">CUSTOMIZABLE</h3>
+                    <p class="text-brutal-black font-bold text-lg">Make it yours with endless customization options and wild possibilities.</p>
+                </div>
+
+                <!-- Feature Card 5 -->
+                <div class="scroll-reveal tilt-card bg-white brutal-border p-8 brutal-shadow-hover transform hover:scale-105 transition-all" style="animation-delay: 0.8s;">
+                    <div class="bg-neon-pink brutal-border w-20 h-20 mb-6 flex items-center justify-center transform -rotate-12">
+                        <svg class="w-12 h-12 text-brutal-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl font-black mb-4 text-brutal-black">SECURE</h3>
+                    <p class="text-brutal-black font-bold text-lg">Your data is protected with military-grade encryption and brutal security.</p>
+                </div>
+
+                <!-- Feature Card 6 -->
+                <div class="scroll-reveal tilt-card bg-neon-cyan brutal-border p-8 brutal-shadow-hover transform hover:scale-105 transition-all" style="animation-delay: 1s;">
+                    <div class="bg-neon-green brutal-border w-20 h-20 mb-6 flex items-center justify-center transform rotate-12">
+                        <svg class="w-12 h-12 text-brutal-black" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="text-3xl font-black mb-4 text-brutal-black">ANALYTICS</h3>
+                    <p class="text-brutal-black font-bold text-lg">Track everything with detailed analytics that actually make sense.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery/Stats Section -->
+    <section id="gallery" class="py-20 px-4 bg-brutal-black relative overflow-hidden">
+        <div class="container mx-auto">
+            <h2 class="text-5xl md:text-7xl font-black text-center mb-16 scroll-reveal" style="font-family: 'Bebas Neue', cursive;">
+                <span class="bg-neon-yellow brutal-border px-8 py-4 inline-block transform -rotate-1 brutal-shadow text-brutal-black">
+                    CRAZY STATS
+                </span>
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+                <!-- Stat 1 -->
+                <div class="scroll-reveal bg-neon-pink brutal-border p-8 text-center brutal-shadow transform hover:scale-110 transition-all">
+                    <div class="text-6xl font-black mb-4 text-brutal-black" style="font-family: 'Bebas Neue', cursive;">99K+</div>
+                    <div class="text-xl font-bold text-brutal-black">USERS</div>
+                </div>
+
+                <!-- Stat 2 -->
+                <div class="scroll-reveal bg-neon-cyan brutal-border p-8 text-center brutal-shadow transform hover:scale-110 transition-all" style="animation-delay: 0.2s;">
+                    <div class="text-6xl font-black mb-4 text-brutal-black" style="font-family: 'Bebas Neue', cursive;">500+</div>
+                    <div class="text-xl font-bold text-brutal-black">PROJECTS</div>
+                </div>
+
+                <!-- Stat 3 -->
+                <div class="scroll-reveal bg-neon-yellow brutal-border p-8 text-center brutal-shadow transform hover:scale-110 transition-all" style="animation-delay: 0.4s;">
+                    <div class="text-6xl font-black mb-4 text-brutal-black" style="font-family: 'Bebas Neue', cursive;">24/7</div>
+                    <div class="text-xl font-bold text-brutal-black">SUPPORT</div>
+                </div>
+
+                <!-- Stat 4 -->
+                <div class="scroll-reveal bg-neon-green brutal-border p-8 text-center brutal-shadow transform hover:scale-110 transition-all" style="animation-delay: 0.6s;">
+                    <div class="text-6xl font-black mb-4 text-brutal-black" style="font-family: 'Bebas Neue', cursive;">100%</div>
+                    <div class="text-xl font-bold text-brutal-black">DORK</div>
+                </div>
+            </div>
+
+            <!-- Testimonials -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="scroll-reveal bg-white brutal-border p-8 brutal-shadow-hover">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 bg-neon-pink brutal-border rounded-full flex items-center justify-center font-black text-2xl text-brutal-black mr-4">
+                            J
+                        </div>
+                        <div>
+                            <div class="font-black text-xl text-brutal-black">JANE DOE</div>
+                            <div class="text-gray-600 font-bold">Designer</div>
+                        </div>
+                    </div>
+                    <p class="text-brutal-black font-bold text-lg">"This is absolutely insane! I've never seen anything like it. 10/10 would dork again."</p>
+                </div>
+
+                <div class="scroll-reveal bg-white brutal-border p-8 brutal-shadow-hover" style="animation-delay: 0.2s;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 bg-neon-cyan brutal-border rounded-full flex items-center justify-center font-black text-2xl text-brutal-black mr-4">
+                            B
+                        </div>
+                        <div>
+                            <div class="font-black text-xl text-brutal-black">BOB SMITH</div>
+                            <div class="text-gray-600 font-bold">Developer</div>
+                        </div>
+                    </div>
+                    <p class="text-brutal-black font-bold text-lg">"My eyes hurt from all the colors, but in the best way possible. This is pure chaos!"</p>
+                </div>
+
+                <div class="scroll-reveal bg-white brutal-border p-8 brutal-shadow-hover" style="animation-delay: 0.4s;">
+                    <div class="flex items-center mb-4">
+                        <div class="w-16 h-16 bg-neon-yellow brutal-border rounded-full flex items-center justify-center font-black text-2xl text-brutal-black mr-4">
+                            A
+                        </div>
+                        <div>
+                            <div class="font-black text-xl text-brutal-black">ALEX JONES</div>
+                            <div class="text-gray-600 font-bold">Artist</div>
+                        </div>
+                    </div>
+                    <p class="text-brutal-black font-bold text-lg">"Finally, a design that matches my energy! Dorksense is the future!"</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 px-4 bg-gradient-to-br from-gray-900 to-brutal-black">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-5xl md:text-7xl font-black text-center mb-16 scroll-reveal" style="font-family: 'Bebas Neue', cursive;">
+                <span class="bg-neon-green brutal-border px-8 py-4 inline-block transform rotate-1 brutal-shadow text-brutal-black">
+                    GET IN TOUCH
+                </span>
+            </h2>
+
+            <div class="scroll-reveal bg-neon-cyan brutal-border p-8 md:p-12 brutal-shadow">
+                <form class="space-y-6">
+                    <div>
+                        <label class="block text-2xl font-black mb-2 text-brutal-black">NAME</label>
+                        <input type="text" class="w-full brutal-border p-4 text-xl font-bold text-brutal-black focus:outline-none focus:ring-4 focus:ring-neon-pink" placeholder="Your dork name">
+                    </div>
+
+                    <div>
+                        <label class="block text-2xl font-black mb-2 text-brutal-black">EMAIL</label>
+                        <input type="email" class="w-full brutal-border p-4 text-xl font-bold text-brutal-black focus:outline-none focus:ring-4 focus:ring-neon-pink" placeholder="dork@example.com">
+                    </div>
+
+                    <div>
+                        <label class="block text-2xl font-black mb-2 text-brutal-black">MESSAGE</label>
+                        <textarea rows="6" class="w-full brutal-border p-4 text-xl font-bold text-brutal-black focus:outline-none focus:ring-4 focus:ring-neon-pink resize-none" placeholder="Tell us your wildest ideas..."></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-neon-pink brutal-border text-brutal-black px-12 py-6 text-3xl font-black brutal-shadow-hover transform hover:-rotate-1 transition-all">
+                        SEND IT!
+                    </button>
+                </form>
+            </div>
+
+            <!-- Social Links -->
+            <div class="flex flex-wrap justify-center gap-6 mt-12 scroll-reveal">
+                <a href="#" class="bg-neon-yellow brutal-border px-8 py-4 font-black text-brutal-black text-xl brutal-shadow-hover transform hover:rotate-3 transition-all">
+                    TWITTER
+                </a>
+                <a href="#" class="bg-neon-pink brutal-border px-8 py-4 font-black text-brutal-black text-xl brutal-shadow-hover transform hover:-rotate-3 transition-all">
+                    INSTAGRAM
+                </a>
+                <a href="#" class="bg-neon-green brutal-border px-8 py-4 font-black text-brutal-black text-xl brutal-shadow-hover transform hover:rotate-3 transition-all">
+                    GITHUB
+                </a>
+                <a href="#" class="bg-white brutal-border px-8 py-4 font-black text-brutal-black text-xl brutal-shadow-hover transform hover:-rotate-3 transition-all">
+                    DISCORD
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-brutal-black brutal-border border-t-4 border-neon-cyan py-12 px-4">
+        <div class="container mx-auto text-center">
+            <div class="text-4xl font-black mb-4 text-neon-pink" style="font-family: 'Bebas Neue', cursive;">
+                DORKSENSE
+            </div>
+            <p class="text-xl font-bold text-white mb-6">
+                &copy; 2025 - EMBRACE THE CHAOS
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="#" class="text-neon-cyan font-bold hover:underline">PRIVACY</a>
+                <span class="text-white">|</span>
+                <a href="#" class="text-neon-yellow font-bold hover:underline">TERMS</a>
+                <span class="text-white">|</span>
+                <a href="#" class="text-neon-green font-bold hover:underline">ABOUT</a>
+                <span class="text-white">|</span>
+                <a href="#" class="text-neon-pink font-bold hover:underline">CAREERS</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating Action Button -->
+    <a href="#hero" class="fixed bottom-8 right-8 bg-neon-pink brutal-border w-16 h-16 flex items-center justify-center brutal-shadow-hover transform hover:scale-110 transition-all z-40 floating">
+        <svg class="w-8 h-8 text-brutal-black" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clip-rule="evenodd"></path>
+        </svg>
+    </a>
+
+    <!-- Sound Toggle Button -->
+    <button id="soundToggle" class="fixed bottom-8 left-8 bg-neon-cyan brutal-border w-16 h-16 flex items-center justify-center brutal-shadow-hover transform hover:scale-110 transition-all z-40 floating" style="animation-delay: 0.5s;">
+        <svg class="w-8 h-8 text-brutal-black" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z" clip-rule="evenodd"></path>
+        </svg>
+    </button>
+
+    <!-- Chaos Mode Button -->
+    <button id="chaosBtn" class="fixed top-24 right-8 bg-neon-yellow brutal-border px-6 py-3 font-black text-brutal-black brutal-shadow-hover transform hover:rotate-6 transition-all z-40 animate-wiggle hidden md:block">
+        CHAOS MODE
+    </button>
+
+    <!-- Reality Break Button -->
+    <button id="realityBtn" class="fixed top-24 left-8 bg-neon-purple brutal-border px-6 py-3 font-black text-white brutal-shadow-hover transform hover:-rotate-6 transition-all z-40 breathing hidden md:block">
+        BREAK REALITY
+    </button>
+
+    <!-- Dimension Shift Counter -->
+    <div id="dimensionCounter" class="fixed top-40 left-1/2 transform -translate-x-1/2 bg-black brutal-border px-8 py-4 font-black text-neon-cyan text-2xl z-40 hidden" style="font-family: 'Bebas Neue', cursive;">
+        DIMENSION: <span id="dimCount">0</span>
+    </div>
+
+    <script>
+        // Scroll Reveal Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuBtn?.addEventListener('click', () => {
+            mobileMenu.classList.toggle('-translate-y-full');
+        });
+
+        // Close mobile menu on link click
+        document.querySelectorAll('#mobileMenu a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('-translate-y-full');
+            });
+        });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 3D Tilt Effect for Cards
+        document.querySelectorAll('.tilt-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+            });
+        });
+
+        // Parallax effect on scroll
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallaxElements = document.querySelectorAll('.floating');
+            
+            parallaxElements.forEach(el => {
+                const speed = 0.5;
+                el.style.transform = `translateY(${scrolled * speed}px)`;
+            });
+        });
+
+        // Number counter animation for stats
+        const animateValue = (element, start, end, duration) => {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                
+                if (element.textContent.includes('K')) {
+                    element.textContent = value + 'K+';
+                } else if (element.textContent.includes('%')) {
+                    element.textContent = value + '%';
+                } else if (element.textContent.includes('/')) {
+                    element.textContent = '24/7';
+                } else {
+                    element.textContent = value + '+';
+                }
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        };
+
+        // Trigger counter animation when stats section is visible
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const statElements = entry.target.querySelectorAll('.text-6xl');
+                    statElements.forEach((stat, index) => {
+                        const text = stat.textContent;
+                        if (text.includes('99K')) {
+                            animateValue(stat, 0, 99, 2000);
+                        } else if (text.includes('500')) {
+                            animateValue(stat, 0, 500, 2000);
+                        } else if (text.includes('100')) {
+                            animateValue(stat, 0, 100, 2000);
+                        }
+                    });
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const gallerySection = document.getElementById('gallery');
+        if (gallerySection) {
+            statsObserver.observe(gallerySection);
+        }
+
+        // Add stagger animation to feature cards
+        document.querySelectorAll('#features .tilt-card').forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+            card.classList.add('stagger-in');
+        });
+
+        // Random color shift on hero shapes
+        setInterval(() => {
+            const shapes = document.querySelectorAll('#hero > div');
+            shapes.forEach(shape => {
+                const colors = ['bg-neon-pink', 'bg-neon-cyan', 'bg-neon-yellow', 'bg-neon-green'];
+                const currentColor = colors.find(c => shape.classList.contains(c));
+                const newColor = colors[Math.floor(Math.random() * colors.length)];
+                if (currentColor !== newColor) {
+                    shape.classList.remove(currentColor);
+                    shape.classList.add(newColor);
+                }
+            });
+        }, 5000);
+
+        // Form submission
+        document.querySelector('form')?.addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thanks for being a dork! We\'ll get back to you soon! 🎉');
+        });
+
+        // Particle Canvas Background
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const particles = [];
+        const colors = ['#FF10F0', '#00F0FF', '#FFF000', '#39FF14', '#FF6B00', '#B026FF'];
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 8 + 2;
+                this.speedY = -Math.random() * 3 - 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = Math.random() * 4 - 2;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+                this.rotation += this.rotationSpeed;
+                
+                if (this.y < -50) {
+                    this.y = canvas.height + 50;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.rotation * Math.PI / 180);
+                ctx.fillStyle = this.color;
+                ctx.strokeStyle = '#000';
+                ctx.lineWidth = 2;
+                
+                // Draw different shapes
+                const shape = Math.floor(Math.random() * 3);
+                if (shape === 0) {
+                    ctx.fillRect(-this.size/2, -this.size/2, this.size, this.size);
+                    ctx.strokeRect(-this.size/2, -this.size/2, this.size, this.size);
+                } else if (shape === 1) {
+                    ctx.beginPath();
+                    ctx.arc(0, 0, this.size/2, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.stroke();
+                } else {
+                    ctx.beginPath();
+                    ctx.moveTo(0, -this.size/2);
+                    ctx.lineTo(this.size/2, this.size/2);
+                    ctx.lineTo(-this.size/2, this.size/2);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.stroke();
+                }
+                ctx.restore();
+            }
+        }
+
+        // Create particles
+        for (let i = 0; i < 50; i++) {
+            particles.push(new Particle());
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+
+        animateParticles();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // Cursor Trail Effect
+        const cursorTrail = document.getElementById('cursorTrail');
+        const trailElements = [];
+        const maxTrailElements = 15;
+
+        for (let i = 0; i < maxTrailElements; i++) {
+            const trail = document.createElement('div');
+            trail.className = 'absolute w-3 h-3 brutal-border pointer-events-none';
+            trail.style.backgroundColor = colors[i % colors.length];
+            trail.style.opacity = (maxTrailElements - i) / maxTrailElements;
+            trail.style.transform = 'translate(-50%, -50%)';
+            trail.style.transition = 'all 0.1s ease-out';
+            cursorTrail.appendChild(trail);
+            trailElements.push(trail);
+        }
+
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            trailElements.forEach((trail, index) => {
+                setTimeout(() => {
+                    trail.style.left = mouseX + 'px';
+                    trail.style.top = mouseY + 'px';
+                }, index * 20);
+            });
+        });
+
+        // Wave text animation
+        const waveText = document.getElementById('waveText');
+        if (waveText) {
+            const text = waveText.textContent;
+            waveText.innerHTML = '';
+            text.split('').forEach((char, index) => {
+                const span = document.createElement('span');
+                span.textContent = char === ' ' ? '\u00A0' : char;
+                span.style.animationDelay = `${index * 0.1}s`;
+                waveText.appendChild(span);
+            });
+        }
+
+        // Click explosion effect
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
+                createExplosion(e.clientX, e.clientY);
+            }
+        });
+
+        function createExplosion(x, y) {
+            const particleCount = 20;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'fixed brutal-border pointer-events-none z-50';
+                particle.style.width = '10px';
+                particle.style.height = '10px';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                const angle = (Math.PI * 2 * i) / particleCount;
+                const velocity = 5 + Math.random() * 5;
+                const vx = Math.cos(angle) * velocity;
+                const vy = Math.sin(angle) * velocity;
+                
+                document.body.appendChild(particle);
+                
+                let posX = x;
+                let posY = y;
+                let opacity = 1;
+                
+                const animate = () => {
+                    posX += vx;
+                    posY += vy;
+                    opacity -= 0.02;
+                    
+                    particle.style.left = posX + 'px';
+                    particle.style.top = posY + 'px';
+                    particle.style.opacity = opacity;
+                    
+                    if (opacity > 0) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        particle.remove();
+                    }
+                };
+                
+                animate();
+            }
+        }
+
+        // Konami code easter egg
+        let konamiCode = [];
+        const konamiSequence = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+        
+        document.addEventListener('keydown', (e) => {
+            konamiCode.push(e.keyCode);
+            konamiCode.splice(-konamiSequence.length - 1, konamiCode.length - konamiSequence.length);
+            
+            if (konamiCode.join('').includes(konamiSequence.join(''))) {
+                activateChaosMode();
+            }
+        });
+
+        function activateChaosMode() {
+            document.body.style.animation = 'disco 0.5s linear infinite';
+            alert('🎉 CHAOS MODE ACTIVATED! 🎉');
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 10000);
+        }
+
+        // Random element shaking on scroll
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            if (Math.abs(scrollTop - lastScrollTop) > 100) {
+                const randomElement = document.querySelectorAll('.brutal-shadow-hover')[Math.floor(Math.random() * document.querySelectorAll('.brutal-shadow-hover').length)];
+                if (randomElement) {
+                    randomElement.classList.add('shake');
+                    setTimeout(() => {
+                        randomElement.classList.remove('shake');
+                    }, 500);
+                }
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // Crazy hover effects for nav links
+        document.querySelectorAll('nav a, nav button').forEach(link => {
+            link.addEventListener('mouseenter', () => {
+                link.style.transform = `rotate(${Math.random() * 10 - 5}deg) scale(1.1)`;
+            });
+            link.addEventListener('mouseleave', () => {
+                link.style.transform = '';
+            });
+        });
+
+        // Sound effects system
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let soundEnabled = false;
+
+        function playBeep(frequency = 440, duration = 100) {
+            if (!soundEnabled) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'square';
+            
+            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration / 1000);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + duration / 1000);
+        }
+
+        document.getElementById('soundToggle')?.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            playBeep(soundEnabled ? 880 : 440, 150);
+            const btn = document.getElementById('soundToggle');
+            btn.style.backgroundColor = soundEnabled ? '#39FF14' : '#00F0FF';
+        });
+
+        // Add sound to interactive elements
+        document.querySelectorAll('button, a').forEach(el => {
+            el.addEventListener('click', () => {
+                playBeep(Math.random() * 400 + 400, 50);
+            });
+            el.addEventListener('mouseenter', () => {
+                playBeep(Math.random() * 200 + 600, 30);
+            });
+        });
+
+        // Chaos Mode activation
+        let chaosMode = false;
+        document.getElementById('chaosBtn')?.addEventListener('click', () => {
+            chaosMode = !chaosMode;
+            if (chaosMode) {
+                activateChaosMode();
+                document.getElementById('chaosBtn').textContent = 'STOP CHAOS';
+                document.getElementById('chaosBtn').classList.add('shake');
+            } else {
+                deactivateChaosMode();
+                document.getElementById('chaosBtn').textContent = 'CHAOS MODE';
+                document.getElementById('chaosBtn').classList.remove('shake');
+            }
+        });
+
+        let chaosInterval;
+        function activateChaosMode() {
+            document.body.style.animation = 'disco 0.5s linear infinite';
+            
+            chaosInterval = setInterval(() => {
+                // Random element transformations
+                const elements = document.querySelectorAll('.brutal-shadow-hover, .tilt-card');
+                const randomEl = elements[Math.floor(Math.random() * elements.length)];
+                if (randomEl) {
+                    randomEl.style.transform = `rotate(${Math.random() * 360}deg) scale(${Math.random() * 0.5 + 0.8})`;
+                    setTimeout(() => {
+                        randomEl.style.transform = '';
+                    }, 1000);
+                }
+                
+                // Random color changes
+                const shapes = document.querySelectorAll('#hero > div.absolute');
+                shapes.forEach(shape => {
+                    const bgColors = ['bg-neon-pink', 'bg-neon-cyan', 'bg-neon-yellow', 'bg-neon-green', 'bg-neon-orange', 'bg-neon-purple'];
+                    shape.className = shape.className.replace(/bg-neon-\w+/, bgColors[Math.floor(Math.random() * bgColors.length)]);
+                });
+                
+                // Sound effects
+                playBeep(Math.random() * 800 + 200, 100);
+                
+                // Random explosions
+                if (Math.random() > 0.7) {
+                    createExplosion(Math.random() * window.innerWidth, Math.random() * window.innerHeight);
+                }
+            }, 500);
+        }
+
+        function deactivateChaosMode() {
+            document.body.style.animation = '';
+            clearInterval(chaosInterval);
+        }
+
+        // Screen shake on certain interactions
+        function shakeScreen() {
+            document.body.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 500);
+        }
+
+        // Easter egg: Triple click anywhere
+        let clickCount = 0;
+        let clickTimer;
+        document.addEventListener('click', (e) => {
+            clickCount++;
+            clearTimeout(clickTimer);
+            
+            if (clickCount === 3) {
+                shakeScreen();
+                playBeep(1000, 200);
+                createExplosion(e.clientX, e.clientY);
+                clickCount = 0;
+            }
+            
+            clickTimer = setTimeout(() => {
+                clickCount = 0;
+            }, 500);
+        });
+
+        // Magnetic effect for buttons
+        document.querySelectorAll('button, a.brutal-shadow-hover').forEach(el => {
+            el.addEventListener('mousemove', (e) => {
+                const rect = el.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                
+                const angle = Math.atan2(y, x);
+                const distance = Math.min(Math.sqrt(x * x + y * y), 20);
+                
+                const offsetX = Math.cos(angle) * distance * 0.3;
+                const offsetY = Math.sin(angle) * distance * 0.3;
+                
+                el.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                el.style.transform = '';
+            });
+        });
+
+        // Extreme parallax on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const shapes = document.querySelectorAll('#hero > div.absolute');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            shapes.forEach((shape, index) => {
+                const speed = (index + 1) * 20;
+                const x = (mouseX - 0.5) * speed;
+                const y = (mouseY - 0.5) * speed;
+                shape.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        // Auto-scroll to sections with animations
+        let autoScrollEnabled = false;
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'a' && e.ctrlKey) {
+                e.preventDefault();
+                autoScrollEnabled = !autoScrollEnabled;
+                if (autoScrollEnabled) {
+                    autoScroll();
+                }
+            }
+        });
+
+        function autoScroll() {
+            if (!autoScrollEnabled) return;
+            const sections = ['hero', 'features', 'gallery', 'contact'];
+            let currentIndex = 0;
+            
+            setInterval(() => {
+                if (!autoScrollEnabled) return;
+                currentIndex = (currentIndex + 1) % sections.length;
+                document.getElementById(sections[currentIndex])?.scrollIntoView({ behavior: 'smooth' });
+            }, 5000);
+        }
+
+        // Matrix rain effect (easter egg)
+        let matrixMode = false;
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'm' && e.ctrlKey) {
+                e.preventDefault();
+                matrixMode = !matrixMode;
+                if (matrixMode) {
+                    startMatrixRain();
+                } else {
+                    stopMatrixRain();
+                }
+            }
+        });
+
+        let matrixInterval;
+        function startMatrixRain() {
+            const characters = 'DORKSENSE01';
+            matrixInterval = setInterval(() => {
+                const matrix = document.createElement('div');
+                matrix.textContent = characters[Math.floor(Math.random() * characters.length)];
+                matrix.className = 'fixed text-neon-green font-bold text-2xl pointer-events-none z-50';
+                matrix.style.left = Math.random() * window.innerWidth + 'px';
+                matrix.style.top = '-30px';
+                document.body.appendChild(matrix);
+                
+                let pos = -30;
+                const fall = setInterval(() => {
+                    pos += 5;
+                    matrix.style.top = pos + 'px';
+                    matrix.style.opacity = 1 - (pos / window.innerHeight);
+                    
+                    if (pos > window.innerHeight) {
+                        clearInterval(fall);
+                        matrix.remove();
+                    }
+                }, 50);
+            }, 100);
+        }
+
+        function stopMatrixRain() {
+            clearInterval(matrixInterval);
+            document.querySelectorAll('.text-neon-green').forEach(el => {
+                if (el.className.includes('fixed')) el.remove();
+            });
+        }
+
+        console.log('🎨 DORKSENSE LOADED! 🎨');
+        console.log('💡 Tips:');
+        console.log('- Triple click for explosions');
+        console.log('- Ctrl+M for Matrix mode');
+        console.log('- Click CHAOS MODE for madness');
+        console.log('- Konami code (↑↑↓↓←→←→BA) for secret');
+        console.log('- BREAK REALITY button for dimension shifts');
+        console.log('- Type "DORK" anywhere for easter egg');
+        console.log('- Shake device (mobile) for surprises');
+
+        // Hypnotic Spiral Canvas
+        const spiralCanvas = document.getElementById('spiralCanvas');
+        const spiralCtx = spiralCanvas.getContext('2d');
+        spiralCanvas.width = window.innerWidth;
+        spiralCanvas.height = window.innerHeight;
+
+        let spiralAngle = 0;
+        function drawSpiral() {
+            spiralCtx.clearRect(0, 0, spiralCanvas.width, spiralCanvas.height);
+            spiralCtx.strokeStyle = '#FF10F0';
+            spiralCtx.lineWidth = 2;
+            
+            spiralCtx.save();
+            spiralCtx.translate(spiralCanvas.width / 2, spiralCanvas.height / 2);
+            spiralCtx.rotate(spiralAngle);
+            
+            for (let i = 0; i < 6; i++) {
+                spiralCtx.beginPath();
+                spiralCtx.moveTo(0, 0);
+                
+                for (let r = 0; r < 500; r += 5) {
+                    const angle = (r / 50) + (i * Math.PI / 3);
+                    const x = r * Math.cos(angle);
+                    const y = r * Math.sin(angle);
+                    spiralCtx.lineTo(x, y);
+                }
+                
+                const hue = (i * 60 + spiralAngle * 50) % 360;
+                spiralCtx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+                spiralCtx.stroke();
+            }
+            
+            spiralCtx.restore();
+            spiralAngle += 0.01;
+            requestAnimationFrame(drawSpiral);
+        }
+        drawSpiral();
+
+        // Reality Distortion Field
+        const distortionField = document.getElementById('distortionField');
+        let distortionActive = false;
+
+        function createDistortionWave(x, y) {
+            const wave = document.createElement('div');
+            wave.className = 'absolute rounded-full brutal-border';
+            wave.style.left = x + 'px';
+            wave.style.top = y + 'px';
+            wave.style.width = '20px';
+            wave.style.height = '20px';
+            wave.style.borderColor = '#FF10F0';
+            wave.style.transform = 'translate(-50%, -50%)';
+            distortionField.appendChild(wave);
+            
+            let size = 20;
+            let opacity = 1;
+            const expand = setInterval(() => {
+                size += 20;
+                opacity -= 0.05;
+                wave.style.width = size + 'px';
+                wave.style.height = size + 'px';
+                wave.style.opacity = opacity;
+                
+                if (opacity <= 0) {
+                    clearInterval(expand);
+                    wave.remove();
+                }
+            }, 30);
+        }
+
+        // Reality Break Mode
+        let dimensionLevel = 0;
+        let realityBroken = false;
+
+        document.getElementById('realityBtn')?.addEventListener('click', () => {
+            realityBroken = !realityBroken;
+            
+            if (realityBroken) {
+                activateRealityBreak();
+            } else {
+                deactivateRealityBreak();
+            }
+        });
+
+        function activateRealityBreak() {
+            dimensionLevel++;
+            document.getElementById('dimensionCounter').classList.remove('hidden');
+            document.getElementById('dimCount').textContent = dimensionLevel;
+            document.getElementById('realityBtn').textContent = 'RESTORE REALITY';
+            document.getElementById('realityBtn').classList.add('glitch-intense', 'text-vibrate');
+            
+            // Invert colors
+            document.body.style.filter = 'invert(1) hue-rotate(' + (dimensionLevel * 45) + 'deg)';
+            
+            // Gravity effect - elements fall
+            document.querySelectorAll('.brutal-shadow-hover, .tilt-card').forEach((el, index) => {
+                setTimeout(() => {
+                    el.style.transition = 'all 2s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+                    el.style.transform = 'translateY(1000px) rotate(720deg)';
+                    
+                    setTimeout(() => {
+                        el.style.transform = '';
+                    }, 2000);
+                }, index * 100);
+            });
+            
+            // Reality fragments
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    createDistortionWave(
+                        Math.random() * window.innerWidth,
+                        Math.random() * window.innerHeight
+                    );
+                }, i * 100);
+            }
+            
+            // Glitch all text
+            document.querySelectorAll('h1, h2, h3, p, button, a').forEach(el => {
+                el.classList.add('vhs-effect');
+            });
+            
+            // Sound chaos
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    playBeep(Math.random() * 1000 + 200, 100);
+                }, i * 100);
+            }
+            
+            // Screen shake
+            document.body.style.animation = 'shake 0.5s infinite';
+        }
+
+        function deactivateRealityBreak() {
+            document.getElementById('realityBtn').textContent = 'BREAK REALITY';
+            document.getElementById('realityBtn').classList.remove('glitch-intense', 'text-vibrate');
+            document.body.style.filter = '';
+            document.body.style.animation = '';
+            
+            document.querySelectorAll('.vhs-effect').forEach(el => {
+                el.classList.remove('vhs-effect');
+            });
+        }
+
+        // Typewriter easter egg
+        let typedSequence = '';
+        const secretCode = 'DORK';
+        
+        document.addEventListener('keypress', (e) => {
+            typedSequence += e.key.toUpperCase();
+            typedSequence = typedSequence.slice(-4);
+            
+            if (typedSequence === secretCode) {
+                triggerDorkMode();
+            }
+        });
+
+        function triggerDorkMode() {
+            // Everything becomes a dork
+            const dorkEmoji = '🤓';
+            document.querySelectorAll('button, a, h1, h2, h3').forEach(el => {
+                el.textContent = dorkEmoji + ' ' + el.textContent + ' ' + dorkEmoji;
+            });
+            
+            // Confetti explosion
+            for (let i = 0; i < 100; i++) {
+                setTimeout(() => {
+                    createExplosion(
+                        Math.random() * window.innerWidth,
+                        Math.random() * window.innerHeight
+                    );
+                }, i * 50);
+            }
+            
+            playBeep(880, 100);
+            setTimeout(() => playBeep(1046, 100), 150);
+            setTimeout(() => playBeep(1318, 200), 300);
+        }
+
+        // Gravity shift on device orientation (mobile)
+        if (window.DeviceOrientationEvent) {
+            window.addEventListener('deviceorientation', (e) => {
+                const tiltX = e.gamma; // -90 to 90
+                const tiltY = e.beta;  // -180 to 180
+                
+                document.querySelectorAll('.floating').forEach(el => {
+                    el.style.transform = `translate(${tiltX}px, ${tiltY / 2}px)`;
+                });
+            });
+        }
+
+        // Psychedelic color cycle for hero title
+        let colorCycleInterval;
+        function startColorCycle() {
+            const colors = ['bg-neon-pink', 'bg-neon-cyan', 'bg-neon-yellow', 'bg-neon-green', 'bg-neon-orange', 'bg-neon-purple'];
+            let index = 0;
+            
+            colorCycleInterval = setInterval(() => {
+                document.querySelectorAll('h1 span').forEach(span => {
+                    const currentColor = colors.find(c => span.classList.contains(c));
+                    if (currentColor) {
+                        span.classList.remove(currentColor);
+                        span.classList.add(colors[(index + 1) % colors.length]);
+                    }
+                });
+                index = (index + 1) % colors.length;
+            }, 1000);
+        }
+
+        // Double tap anywhere for color cycle
+        let lastTap = 0;
+        document.addEventListener('touchend', (e) => {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            
+            if (tapLength < 500 && tapLength > 0) {
+                startColorCycle();
+                setTimeout(() => clearInterval(colorCycleInterval), 10000);
+            }
+            lastTap = currentTime;
+        });
+
+        // Infinite zoom illusion
+        let zoomLevel = 1;
+        document.addEventListener('wheel', (e) => {
+            if (e.ctrlKey || e.metaKey) {
+                e.preventDefault();
+                zoomLevel += e.deltaY * -0.001;
+                zoomLevel = Math.max(0.5, Math.min(3, zoomLevel));
+                
+                document.querySelectorAll('#hero > div.absolute').forEach((el, index) => {
+                    const scale = zoomLevel + (index * 0.1);
+                    el.style.transform = `scale(${scale})`;
+                });
+            }
+        }, { passive: false });
+
+        // Text that follows cursor
+        const cursorText = document.createElement('div');
+        cursorText.className = 'fixed pointer-events-none z-50 font-black text-2xl text-neon-pink brutal-border bg-black px-4 py-2 hidden';
+        cursorText.style.transition = 'all 0.1s ease';
+        document.body.appendChild(cursorText);
+
+        let cursorMessages = ['DORK!', 'CHAOS!', 'WOW!', 'INSANE!', 'BRUTAL!', '🔥', '💥', '⚡', '✨'];
+        let messageIndex = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.98) {
+                cursorText.textContent = cursorMessages[messageIndex % cursorMessages.length];
+                cursorText.style.left = (e.clientX + 20) + 'px';
+                cursorText.style.top = (e.clientY - 20) + 'px';
+                cursorText.classList.remove('hidden');
+                messageIndex++;
+                
+                setTimeout(() => {
+                    cursorText.classList.add('hidden');
+                }, 500);
+            }
+        });
+
+        // Glitch bomb - randomly glitch elements
+        setInterval(() => {
+            if (Math.random() > 0.95) {
+                const elements = document.querySelectorAll('h1, h2, h3, button, .brutal-shadow-hover');
+                const randomEl = elements[Math.floor(Math.random() * elements.length)];
+                
+                if (randomEl) {
+                    randomEl.classList.add('glitch-intense');
+                    setTimeout(() => {
+                        randomEl.classList.remove('glitch-intense');
+                    }, 300);
+                }
+            }
+        }, 2000);
+
+        // Resize canvas on window resize
+        window.addEventListener('resize', () => {
+            spiralCanvas.width = window.innerWidth;
+            spiralCanvas.height = window.innerHeight;
+        });
+
+        // Time-based automatic effects
+        setInterval(() => {
+            // Random distortion waves
+            if (Math.random() > 0.8) {
+                createDistortionWave(
+                    Math.random() * window.innerWidth,
+                    Math.random() * window.innerHeight
+                );
+            }
+        }, 3000);
+
+        // The ultimate easter egg - speak to activate
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const recognition = new SpeechRecognition();
+            
+            recognition.continuous = true;
+            recognition.lang = 'en-US';
+            
+            recognition.onresult = (event) => {
+                const last = event.results.length - 1;
+                const command = event.results[last][0].transcript.toLowerCase();
+                
+                if (command.includes('chaos')) {
+                    document.getElementById('chaosBtn')?.click();
+                } else if (command.includes('reality')) {
+                    document.getElementById('realityBtn')?.click();
+                } else if (command.includes('explode')) {
+                    for (let i = 0; i < 20; i++) {
+                        createExplosion(
+                            Math.random() * window.innerWidth,
+                            Math.random() * window.innerHeight
+                        );
+                    }
+                }
+            };
+            
+            // Uncomment to enable voice control
+            // recognition.start();
+        }
+
+        // Final mind-bending effect: perspective shift on scroll
+        let lastScrollPosition = 0;
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.pageYOffset;
+            const rotateX = (scrollPos - lastScrollPosition) * 0.1;
+            
+            document.querySelectorAll('.tilt-card').forEach((card, index) => {
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${Math.sin(scrollPos / 100 + index) * 10}deg)`;
+            });
+            
+            lastScrollPosition = scrollPos;
+        }, { passive: true });
+
+        console.log('🌀 REALITY.EXE HAS STOPPED WORKING 🌀');
+        console.log('🧠 YOUR MIND IS NOW OURS 🧠');
+    </script>
+</body>
+</html>

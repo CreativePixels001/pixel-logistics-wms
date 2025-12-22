@@ -1,0 +1,369 @@
+{
+  "id": "warehouse-process",
+  "name": "Warehouse Process Audit",
+  "category": "Logistics - Warehouse",
+  "description": "Operational process audit covering receiving, storage, picking, packing, and shipping procedures",
+  "version": "1.0",
+  "items": [
+    {
+      "id": "wp-01",
+      "question": "Are incoming shipments verified against purchase orders?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-02",
+      "question": "Is received inventory inspected for damage before acceptance?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "wp-03",
+      "question": "Are damaged items properly documented and segregated?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "wp-04",
+      "question": "Is receiving documentation completed accurately and on time?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-05",
+      "question": "Are receiving area protocols followed (staging, sorting)?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "wp-06",
+      "question": "Are all inventory items properly labeled with SKU/barcodes?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "wp-07",
+      "question": "Is inventory organized using a logical system (ABC, FIFO)?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-08",
+      "question": "Are high-turnover items stored in accessible locations?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-09",
+      "question": "Is FIFO (First In First Out) principle followed for perishables?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-10",
+      "question": "Are expiry dates monitored and managed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-11",
+      "question": "Is inventory tracked in real-time using WMS/ERP system?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-12",
+      "question": "Are cycle counts performed regularly?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-13",
+      "question": "Do physical counts match system records within acceptable variance?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-14",
+      "question": "Are discrepancies investigated and resolved promptly?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-15",
+      "question": "Is annual full inventory audit conducted?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-16",
+      "question": "Are pick lists generated accurately from orders?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-17",
+      "question": "Do pickers verify item quantities during picking?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-18",
+      "question": "Are batch picking or zone picking methods used efficiently?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-19",
+      "question": "Is pick accuracy rate above 98%?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-20",
+      "question": "Are mispicks documented and analyzed for trends?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-21",
+      "question": "Are packing materials appropriate for products?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "wp-22",
+      "question": "Is packing process standardized with SOPs?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-23",
+      "question": "Are fragile items packed with adequate cushioning?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "wp-24",
+      "question": "Are shipping labels printed clearly and accurately?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-25",
+      "question": "Is quality check performed before sealing packages?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-26",
+      "question": "Are shipments sorted by carrier and route?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-27",
+      "question": "Are shipping manifests generated and matched to loads?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-28",
+      "question": "Is loading sequence optimized for delivery routes?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-29",
+      "question": "Are carriers provided with complete documentation?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-30",
+      "question": "Is proof of shipment captured and archived?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-31",
+      "question": "Are return procedures clearly defined and followed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-32",
+      "question": "Are returned items inspected and categorized (resaleable/defective)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "wp-33",
+      "question": "Is restocking completed within defined timeframes?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-34",
+      "question": "Are damaged returns properly disposed or sent for repair?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-35",
+      "question": "Is customer return data tracked for quality insights?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-36",
+      "question": "Are KPIs tracked (order accuracy, cycle time, throughput)?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-37",
+      "question": "Is warehouse capacity utilization monitored?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-38",
+      "question": "Are performance reports reviewed weekly/monthly?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-39",
+      "question": "Is continuous improvement culture in place?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-40",
+      "question": "Are equipment maintenance schedules documented and followed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-41",
+      "question": "Are standard operating procedures (SOPs) documented?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-42",
+      "question": "Are SOPs easily accessible to all staff?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-43",
+      "question": "Are process changes communicated effectively to team?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-44",
+      "question": "Is there a process for handling exceptions and escalations?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "wp-45",
+      "question": "Overall warehouse process efficiency rating satisfactory?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    }
+  ]
+}

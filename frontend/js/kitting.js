@@ -1,4 +1,4 @@
-// DLT WMS - Kitting & Assembly Module JavaScript
+// Pixel WMS - Kitting & Assembly Module JavaScript
 // Handles kit building, component picking, assembly operations, and kit disassembly
 
 let currentOperation = null;

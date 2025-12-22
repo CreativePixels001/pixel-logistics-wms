@@ -1,0 +1,68 @@
+{
+  "2": [
+    {
+      "path": "inline_images/page_2_img_1.jpg",
+      "position": 1,
+      "width": 291,
+      "height": 259,
+      "type": "landscape"
+    }
+  ],
+  "3": [
+    {
+      "path": "inline_images/page_3_img_1.jpg",
+      "position": 1,
+      "width": 469,
+      "height": 312,
+      "type": "landscape"
+    }
+  ],
+  "4": [
+    {
+      "path": "inline_images/page_4_img_1.jpg",
+      "position": 1,
+      "width": 259,
+      "height": 336,
+      "type": "portrait"
+    },
+    {
+      "path": "inline_images/page_4_img_2.jpg",
+      "position": 2,
+      "width": 620,
+      "height": 371,
+      "type": "landscape"
+    }
+  ],
+  "6": [
+    {
+      "path": "inline_images/page_6_img_1.jpg",
+      "position": 1,
+      "width": 510,
+      "height": 591,
+      "type": "portrait"
+    },
+    {
+      "path": "inline_images/page_6_img_2.jpg",
+      "position": 2,
+      "width": 528,
+      "height": 367,
+      "type": "landscape"
+    },
+    {
+      "path": "inline_images/page_6_img_3.jpg",
+      "position": 3,
+      "width": 530,
+      "height": 304,
+      "type": "landscape"
+    }
+  ],
+  "8": [
+    {
+      "path": "inline_images/page_8_img_1.jpg",
+      "position": 1,
+      "width": 592,
+      "height": 390,
+      "type": "landscape"
+    }
+  ]
+}

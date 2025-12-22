@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Booking Flow</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { padding: 10px 20px; margin: 10px; }
+        #log { background: #f0f0f0; padding: 10px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Booking Flow Test</h1>
+    <button onclick="testHandleBooking()">Test handleBooking Function</button>
+    <button onclick="testSessionStorage()">Test SessionStorage</button>
+    <button onclick="checkScriptLoaded()">Check Script Loaded</button>
+    
+    <div id="log"></div>
+    
+    <script src="js/booking-flow.js"></script>
+    <script>
+        function log(msg) {
+            document.getElementById('log').innerHTML += msg + '<br>';
+            console.log(msg);
+        }
+        
+        function checkScriptLoaded() {
+            log('Checking if booking-flow.js loaded...');
+            log('handleBooking exists: ' + (typeof handleBooking !== 'undefined'));
+            log('currentTrip: ' + JSON.stringify(currentTrip));
+            log('tripConfig: ' + (typeof tripConfig !== 'undefined'));
+        }
+        
+        function testSessionStorage() {
+            log('Testing sessionStorage...');
+            sessionStorage.setItem('test', 'value');
+            log('SessionStorage works: ' + (sessionStorage.getItem('test') === 'value'));
+        }
+        
+        function testHandleBooking() {
+            log('Testing handleBooking...');
+            if (typeof handleBooking === 'undefined') {
+                log('ERROR: handleBooking function not found!');
+                return;
+            }
+            log('handleBooking function exists!');
+        }
+        
+        window.onload = function() {
+            log('Page loaded');
+            checkScriptLoaded();
+        };
+    </script>
+</body>
+</html>

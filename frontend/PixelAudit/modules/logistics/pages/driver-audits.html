@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Audits - PixelAudit Logistics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../assets/css/global.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .dashboard-layout { display: flex; min-height: 100vh; }
+        .main-content { flex: 1; margin-left: 260px; }
+        .page-content { padding: 2rem; max-width: 1400px; }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: #666666;
+        }
+
+        .breadcrumb a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1rem;
+            color: #666666;
+        }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .template-card {
+            background: #ffffff;
+            border: 2px solid #e5e5e5;
+            border-radius: 4px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .template-card:hover {
+            border-color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .template-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .template-icon {
+            width: 56px;
+            height: 56px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .template-icon svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .template-info {
+            flex: 1;
+        }
+
+        .template-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 0.25rem;
+        }
+
+        .template-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: #999999;
+        }
+
+        .template-description {
+            font-size: 0.875rem;
+            color: #666666;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .template-stats {
+            display: flex;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: #f5f5f5;
+            border-radius: 3px;
+            margin-bottom: 1rem;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #666666;
+            margin-top: 0.25rem;
+        }
+
+        .template-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #333333;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #e5e5e5;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebarContainer"></div>
+
+        <main class="main-content">
+            <div id="headerContainer"></div>
+
+            <div class="page-content">
+                <div class="breadcrumb">
+                    <a href="../../../dashboard.html">Dashboard</a>
+                    <span>/</span>
+                    <a href="logistics-dashboard.html">Logistics</a>
+                    <span>/</span>
+                    <span>Driver Audits</span>
+                </div>
+
+                <div class="page-header">
+                    <h1 class="page-title">👤 Driver Audits</h1>
+                    <p class="page-subtitle">Safety inspections, process audits, and operational compliance for drivers</p>
+                </div>
+
+                <div class="template-grid" id="templateGrid">
+                    <!-- Templates will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/components.js"></script>
+    <script src="../js/templates.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load components
+            document.getElementById('sidebarContainer').innerHTML = renderSidebar('dashboard');
+            document.getElementById('headerContainer').innerHTML = renderHeader();
+            
+            // Load driver templates
+            const templates = LogisticsTemplates.getTemplatesByCategory('driver');
+            const grid = document.getElementById('templateGrid');
+            
+            templates.forEach(template => {
+                const card = document.createElement('div');
+                card.className = 'template-card';
+                card.innerHTML = `
+                    <div class="template-header">
+                        <div class="template-icon">
+                            ${LogisticsTemplates.getTemplateIcon('driver')}
+                        </div>
+                        <div class="template-info">
+                            <h3 class="template-title">${template.name}</h3>
+                            <div class="template-meta">
+                                <span>${template.items} items</span>
+                                <span>•</span>
+                                <span>${LogisticsTemplates.getEstimatedTime(template.items)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="template-description">
+                        ${getTemplateDescription(template.id)}
+                    </div>
+                    
+                    <div class="template-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${template.items}</div>
+                            <div class="stat-label">Items</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${getCriticalCount(template.id)}</div>
+                            <div class="stat-label">Critical</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">${getPhotoCount(template.id)}</div>
+                            <div class="stat-label">Photos</div>
+                        </div>
+                    </div>
+                    
+                    <div class="template-actions">
+                        <a href="logistics-create-audit.html?template=${template.id}" class="btn btn-primary">Start Audit</a>
+                        <button class="btn btn-secondary" onclick="previewTemplate('${template.id}')">Preview</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        });
+        
+        function getTemplateDescription(templateId) {
+            const descriptions = {
+                'driver-compliance': 'Comprehensive compliance audit for driver documentation, licensing, and regulatory requirements',
+                'driver-safety': 'Safety-focused audit evaluating driver behavior, vehicle operation, and safety practices'
+            };
+            return descriptions[templateId] || 'Quality audit checklist for driver operations';
+        }
+        
+        function getCriticalCount(templateId) {
+            const critical = {
+                'driver-compliance': 25,
+                'driver-safety': 20
+            };
+            return critical[templateId] || 0;
+        }
+        
+        function getPhotoCount(templateId) {
+            const photos = {
+                'driver-compliance': 5,
+                'driver-safety': 8
+            };
+            return photos[templateId] || 0;
+        }
+        
+        function previewTemplate(templateId) {
+            window.location.href = `template-preview.html?id=${templateId}`;
+        }
+    </script>
+</body>
+</html>

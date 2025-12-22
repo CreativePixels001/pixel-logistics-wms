@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - PixelAudit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/landing.css">
+</head>
+<body>
+    <div class="container" style="padding: 80px 24px;">
+        <a href="index.html" class="btn btn-secondary" style="margin-bottom: 32px; display: inline-flex;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Home
+        </a>
+
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h1 style="font-size: 3rem; margin-bottom: 24px; text-align: center;">Get in Touch</h1>
+            <p class="text-muted" style="font-size: 1.25rem; margin-bottom: 64px; text-align: center;">
+                Have questions? We'd love to hear from you.
+            </p>
+
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-bottom: 48px;">
+                <div class="glass-card" style="padding: 32px; text-align: center;">
+                    <div style="width: 64px; height: 64px; background: var(--color-white); color: var(--color-black); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: var(--shadow-neon-white);">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                    </div>
+                    <h3 style="margin-bottom: 8px;">Email Us</h3>
+                    <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 16px;">For general inquiries</p>
+                    <a href="mailto:support@pixelaudit.com" style="color: var(--color-white); font-weight: 600;">support@pixelaudit.com</a>
+                </div>
+
+                <div class="glass-card" style="padding: 32px; text-align: center;">
+                    <div style="width: 64px; height: 64px; background: var(--color-white); color: var(--color-black); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: var(--shadow-neon-white);">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 style="margin-bottom: 8px;">Live Chat</h3>
+                    <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 16px;">Quick responses</p>
+                    <a href="#" style="color: var(--color-white); font-weight: 600;">Start Chat</a>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 48px; margin-bottom: 32px;">
+                <h2 style="margin-bottom: 32px; text-align: center;">Send us a Message</h2>
+                
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label class="form-label">Your Name</label>
+                        <input type="text" class="form-input" placeholder="Vishal Sharma" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-input" placeholder="vishal@auditpro.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Subject</label>
+                        <select class="form-select" required>
+                            <option value="">Choose a topic...</option>
+                            <option value="general">General Inquiry</option>
+                            <option value="support">Technical Support</option>
+                            <option value="sales">Sales Question</option>
+                            <option value="billing">Billing Issue</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="partnership">Partnership Opportunity</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Message</label>
+                        <textarea class="form-textarea" placeholder="Tell us how we can help you..." rows="6" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">
+                        Send Message
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;">
+                <div class="glass-card" style="padding: 24px; text-align: center;">
+                    <h4 style="margin-bottom: 8px;">Sales</h4>
+                    <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 8px;">For pricing & demos</p>
+                    <a href="mailto:sales@pixelaudit.com" style="color: var(--color-white); font-size: 0.875rem;">sales@pixelaudit.com</a>
+                </div>
+
+                <div class="glass-card" style="padding: 24px; text-align: center;">
+                    <h4 style="margin-bottom: 8px;">Support</h4>
+                    <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 8px;">For technical help</p>
+                    <a href="mailto:support@pixelaudit.com" style="color: var(--color-white); font-size: 0.875rem;">support@pixelaudit.com</a>
+                </div>
+
+                <div class="glass-card" style="padding: 24px; text-align: center;">
+                    <h4 style="margin-bottom: 8px;">Careers</h4>
+                    <p class="text-muted" style="font-size: 0.875rem; margin-bottom: 8px;">Join our team</p>
+                    <a href="mailto:careers@pixelaudit.com" style="color: var(--color-white); font-size: 0.875rem;">careers@pixelaudit.com</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We\'ll get back to you within 24 hours.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Store - Pixel Commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <style>
+        .platform-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .platform-card {
+            background: #fff;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .platform-card:hover {
+            border-color: #000;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .platform-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: #f5f5f5;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .platform-icon svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        .platform-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #000;
+        }
+
+        .platform-description {
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .platform-features {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .platform-features li {
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .platform-features li:before {
+            content: "✓";
+            font-weight: 700;
+            color: #000;
+        }
+
+        .connect-btn {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .connect-btn:hover {
+            background: #333;
+        }
+
+        .platform-card.connected {
+            border-color: #000;
+            background: #f9f9f9;
+        }
+
+        .connected-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            background: #000;
+            color: #fff;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .info-section {
+            background: #f5f5f5;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .info-section h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #000;
+        }
+
+        .info-section p {
+            font-size: 0.875rem;
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .steps-list {
+            list-style: none;
+            padding: 0;
+            counter-reset: step-counter;
+        }
+
+        .steps-list li {
+            counter-increment: step-counter;
+            padding: 1rem 0;
+            font-size: 0.875rem;
+            color: #666;
+            display: flex;
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .steps-list li:before {
+            content: counter(step-counter);
+            background: #000;
+            color: #fff;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span>Pixel Commerce</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Platforms</div>
+                    <a href="amazon.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        Amazon
+                    </a>
+                    <a href="flipkart.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                        </svg>
+                        Flipkart
+                    </a>
+                    <a href="meesho.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Meesho
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="header-right">
+                    <a href="../notifications.html" class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge" id="notificationBadge">0</span>
+                    </a>
+                    <div class="user-menu">
+                        <div class="user-avatar">S</div>
+                        <div class="user-info">
+                            <span class="user-name">Seller Name</span>
+                            <span class="user-role">Multi-Platform Seller</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Connect Your Store</h1>
+                        <p class="page-subtitle">Choose a platform to integrate with Pixel Commerce</p>
+                    </div>
+                    <div class="page-actions">
+                        <a href="../dashboard.html" class="btn btn-secondary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="15 18 9 12 15 6"/>
+                            </svg>
+                            Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Info Section -->
+                <div class="info-section">
+                    <h3>How to Connect Your Store</h3>
+                    <ol class="steps-list">
+                        <li>
+                            <div>
+                                <strong>Choose a Platform</strong><br>
+                                Select the e-commerce platform you want to integrate below
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Enter Credentials</strong><br>
+                                Provide your seller account credentials or API keys
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Sync Products</strong><br>
+                                Import your existing products and inventory
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                <strong>Start Managing</strong><br>
+                                Access all platform features from one dashboard
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+                <!-- Platform Grid -->
+                <div class="platform-grid">
+                    <!-- Amazon -->
+                    <div class="platform-card connected" onclick="window.location.href='amazon.html'">
+                        <span class="connected-badge">✓ Connected</span>
+                        <div class="platform-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                                <circle cx="9" cy="21" r="1"/>
+                                <circle cx="20" cy="21" r="1"/>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                            </svg>
+                        </div>
+                        <h2 class="platform-name">Amazon</h2>
+                        <p class="platform-description">
+                            India's largest online marketplace with millions of active customers
+                        </p>
+                        <ul class="platform-features">
+                            <li>FBA & FBM Support</li>
+                            <li>Real-time Order Sync</li>
+                            <li>Inventory Management</li>
+                            <li>Analytics & Reports</li>
+                        </ul>
+                        <button class="connect-btn">Manage Amazon Store</button>
+                    </div>
+
+                    <!-- Flipkart -->
+                    <div class="platform-card connected" onclick="window.location.href='flipkart.html'">
+                        <span class="connected-badge">✓ Connected</span>
+                        <div class="platform-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                                <line x1="3" y1="6" x2="21" y2="6"/>
+                            </svg>
+                        </div>
+                        <h2 class="platform-name">Flipkart</h2>
+                        <p class="platform-description">
+                            Leading Indian e-commerce platform with extensive reach
+                        </p>
+                        <ul class="platform-features">
+                            <li>Flipkart Assured</li>
+                            <li>Order Tracking</li>
+                            <li>Stock Alerts</li>
+                            <li>Performance Metrics</li>
+                        </ul>
+                        <button class="connect-btn">Manage Flipkart Store</button>
+                    </div>
+
+                    <!-- Meesho -->
+                    <div class="platform-card connected" onclick="window.location.href='meesho.html'">
+                        <span class="connected-badge">✓ Connected</span>
+                        <div class="platform-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            </svg>
+                        </div>
+                        <h2 class="platform-name">Meesho</h2>
+                        <p class="platform-description">
+                            Fast-growing social commerce platform for resellers
+                        </p>
+                        <ul class="platform-features">
+                            <li>Zero Commission</li>
+                            <li>Quick Onboarding</li>
+                            <li>Logistics Support</li>
+                            <li>Marketing Tools</li>
+                        </ul>
+                        <button class="connect-btn">Manage Meesho Store</button>
+                    </div>
+                </div>
+
+                <!-- Additional Info -->
+                <div class="info-section" style="margin-top: 2rem;">
+                    <h3>Need Help?</h3>
+                    <p>
+                        <strong>For assistance with platform integration:</strong><br>
+                        • Check our detailed setup guides for each platform<br>
+                        • Contact support at support@pixelcommerce.com<br>
+                        • Watch video tutorials in the Help Center
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/notification-service.js"></script>
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.notificationService) {
+                window.notificationService.init();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Route Planning - AI-Optimized Employee Shuttle Routes">
+  <title>Route Planning - PTMS | Pixel Logistics</title>
+  
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tms-dashboard.css">
+  <link rel="stylesheet" href="../css/ptms-optimized.css">
+  <link rel="stylesheet" href="../css/side-panel.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">People Transport Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <!-- Search Trigger Button -->
+      <button class="search-trigger" onclick="openSearch()" aria-label="Search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <span>Search</span>
+        <kbd class="search-kbd-compact">⌘K</kbd>
+      </button>
+      
+      <!-- Theme Toggle Button -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <!-- Global Search Modal -->
+      <div class="search-modal" id="searchModal" style="display: none;">
+        <div class="search-modal-overlay" onclick="closeSearch()"></div>
+        <div class="search-modal-content">
+          <div class="search-input-wrapper">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" class="search-input" id="globalSearchInput" placeholder="Search employees, routes, trips..." autocomplete="off">
+            <button class="search-close" onclick="closeSearch()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="search-suggestions" id="searchSuggestions"></div>
+        </div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">HR Manager</div>
+          <div class="user-role">Transport Coordinator</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">HM</div>
+        <div class="user-dropdown" id="userDropdown">
+          <a href="#" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="ptms-login.html" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    
+    <!-- Sidebar -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Route Planning</h1>
+          <p class="page-subtitle">AI-optimized routes for employee shuttle management</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-secondary" onclick="optimizeAllRoutes()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M12 1v6m0 6v6m-7-7h6m2 0h6"></path>
+            </svg>
+            Optimize All Routes
+          </button>
+          <button class="btn btn-primary" onclick="openCreateRoutePanel()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Create New Route
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--color-black);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <circle cx="12" cy="10" r="3"></circle>
+              <path d="M12 2v6M12 14v8"></path>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">Active Routes</div>
+            <div class="stat-value">32</div>
+            <div class="stat-trend positive">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              </svg>
+              <span>+3 from last week</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--color-black);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">Employees Covered</div>
+            <div class="stat-value">2,847</div>
+            <div class="stat-trend neutral">
+              <span>Across all shifts</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--color-black);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">Avg Travel Time</div>
+            <div class="stat-value">38 min</div>
+            <div class="stat-trend positive">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+              </svg>
+              <span>-5 min optimized</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon" style="background: var(--color-black);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+              <rect x="1" y="3" width="15" height="13"></rect>
+              <circle cx="5.5" cy="18.5" r="2.5"></circle>
+              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+            </svg>
+          </div>
+          <div class="stat-content">
+            <div class="stat-label">Vehicle Utilization</div>
+            <div class="stat-value">87%</div>
+            <div class="stat-trend positive">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              </svg>
+              <span>+4% this month</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="card" style="margin-top: 1.5rem; margin-bottom: 1.5rem;">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+            </svg>
+            Filters
+          </h2>
+        </div>
+        <div class="card-content">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <div>
+              <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">Shift</label>
+              <select class="form-select" id="shiftFilter" onchange="filterRoutes()">
+                <option value="">All Shifts</option>
+                <option value="morning">Morning (7:00 AM - 4:00 PM)</option>
+                <option value="evening">Evening (4:00 PM - 12:00 AM)</option>
+                <option value="night">Night (12:00 AM - 7:00 AM)</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">Location</label>
+              <select class="form-select" id="locationFilter" onchange="filterRoutes()">
+                <option value="">All Locations</option>
+                <option value="mumbai">Mumbai - Andheri Plant</option>
+                <option value="delhi">Delhi - Manesar Facility</option>
+                <option value="bangalore">Bangalore - Whitefield Office</option>
+                <option value="chennai">Chennai - Mahindra City</option>
+                <option value="pune">Pune - Chakan Plant</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">Status</label>
+              <select class="form-select" id="statusFilter" onchange="filterRoutes()">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="optimizing">Optimizing</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div>
+              <label style="display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem;">Vehicle Type</label>
+              <select class="form-select" id="vehicleFilter" onchange="filterRoutes()">
+                <option value="">All Vehicles</option>
+                <option value="bus">Bus (45 seats)</option>
+                <option value="minibus">Mini Bus (20 seats)</option>
+                <option value="cab">Cab (4 seats)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Routes Table -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="10" r="3"></circle>
+              <path d="M12 2v6M12 14v8"></path>
+            </svg>
+            All Routes
+          </h2>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn-icon" title="Refresh">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+            </button>
+            <button class="btn-icon" title="Export">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Route ID</th>
+                <th>Route Name</th>
+                <th>Shift</th>
+                <th>Location</th>
+                <th>Employees</th>
+                <th>Stops</th>
+                <th>Distance</th>
+                <th>Duration</th>
+                <th>Vehicle</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="routesTableBody">
+              <tr onclick="viewRouteDetails('RT-001')">
+                <td><span class="text-mono">RT-001</span></td>
+                <td>Andheri - Goregaon - Malad</td>
+                <td><span class="badge badge-outline">Morning</span></td>
+                <td>Mumbai</td>
+                <td>89</td>
+                <td>12</td>
+                <td>28.5 km</td>
+                <td>45 min</td>
+                <td>Bus-MH01</td>
+                <td><span class="status-badge status-active">Active</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="btn-icon" onclick="event.stopPropagation(); editRoute('RT-001')" title="Edit">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                      </svg>
+                    </button>
+                    <button class="btn-icon" onclick="event.stopPropagation(); optimizeRoute('RT-001')" title="Optimize">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr onclick="viewRouteDetails('RT-002')">
+                <td><span class="text-mono">RT-002</span></td>
+                <td>Powai - Vikhroli - Ghatkopar</td>
+                <td><span class="badge badge-outline">Morning</span></td>
+                <td>Mumbai</td>
+                <td>76</td>
+                <td>10</td>
+                <td>22.3 km</td>
+                <td>38 min</td>
+                <td>Bus-MH02</td>
+                <td><span class="status-badge status-active">Active</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="btn-icon" onclick="event.stopPropagation(); editRoute('RT-002')" title="Edit">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                      </svg>
+                    </button>
+                    <button class="btn-icon" onclick="event.stopPropagation(); optimizeRoute('RT-002')" title="Optimize">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr onclick="viewRouteDetails('RT-003')">
+                <td><span class="text-mono">RT-003</span></td>
+                <td>Manesar - Sector 18 - DLF</td>
+                <td><span class="badge badge-outline">Evening</span></td>
+                <td>Delhi</td>
+                <td>92</td>
+                <td>15</td>
+                <td>35.2 km</td>
+                <td>52 min</td>
+                <td>Bus-DL01</td>
+                <td><span class="status-badge status-optimizing">Optimizing</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="btn-icon" onclick="event.stopPropagation(); editRoute('RT-003')" title="Edit">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                      </svg>
+                    </button>
+                    <button class="btn-icon" onclick="event.stopPropagation(); optimizeRoute('RT-003')" title="Optimize">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr onclick="viewRouteDetails('RT-004')">
+                <td><span class="text-mono">RT-004</span></td>
+                <td>Whitefield - Marathahalli - Koramangala</td>
+                <td><span class="badge badge-outline">Morning</span></td>
+                <td>Bangalore</td>
+                <td>68</td>
+                <td>8</td>
+                <td>19.8 km</td>
+                <td>35 min</td>
+                <td>Bus-KA01</td>
+                <td><span class="status-badge status-active">Active</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="btn-icon" onclick="event.stopPropagation(); editRoute('RT-004')" title="Edit">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                      </svg>
+                    </button>
+                    <button class="btn-icon" onclick="event.stopPropagation(); optimizeRoute('RT-004')" title="Optimize">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr onclick="viewRouteDetails('RT-005')">
+                <td><span class="text-mono">RT-005</span></td>
+                <td>Chakan - Hinjewadi - Pimpri</td>
+                <td><span class="badge badge-outline">Night</span></td>
+                <td>Pune</td>
+                <td>54</td>
+                <td>9</td>
+                <td>31.5 km</td>
+                <td>48 min</td>
+                <td>Bus-MH03</td>
+                <td><span class="status-badge status-active">Active</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="btn-icon" onclick="event.stopPropagation(); editRoute('RT-005')" title="Edit">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                      </svg>
+                    </button>
+                    <button class="btn-icon" onclick="event.stopPropagation(); optimizeRoute('RT-005')" title="Optimize">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path d="M12 1v6m0 6v6"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Create Route Side Panel -->
+  <div class="side-panel" id="createRoutePanel">
+    <div class="side-panel-overlay" onclick="closeCreateRoutePanel()"></div>
+    <div class="side-panel-content">
+      <div class="side-panel-header">
+        <h2>Create New Route</h2>
+        <button class="btn-icon" onclick="closeCreateRoutePanel()" aria-label="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="side-panel-body">
+        <form class="panel-form" id="createRouteForm">
+          
+          <div class="form-group">
+            <label for="routeName">Route Name *</label>
+            <input type="text" id="routeName" class="form-input" placeholder="e.g., Andheri - Goregaon - Malad" required>
+          </div>
+
+          <div class="form-group">
+            <label for="shift">Shift *</label>
+            <select id="shift" class="form-select" required>
+              <option value="">Select shift</option>
+              <option value="morning">Morning (7:00 AM - 4:00 PM)</option>
+              <option value="evening">Evening (4:00 PM - 12:00 AM)</option>
+              <option value="night">Night (12:00 AM - 7:00 AM)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="location">Facility Location *</label>
+            <select id="location" class="form-select" required>
+              <option value="">Select location</option>
+              <option value="mumbai">Mumbai - Andheri Plant</option>
+              <option value="delhi">Delhi - Manesar Facility</option>
+              <option value="bangalore">Bangalore - Whitefield Office</option>
+              <option value="chennai">Chennai - Mahindra City</option>
+              <option value="pune">Pune - Chakan Plant</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="vehicleType">Vehicle Type *</label>
+            <select id="vehicleType" class="form-select" required>
+              <option value="">Select vehicle type</option>
+              <option value="bus">Bus (45 seats)</option>
+              <option value="minibus">Mini Bus (20 seats)</option>
+              <option value="cab">Cab (4 seats)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="startPoint">Start Point *</label>
+            <input type="text" id="startPoint" class="form-input" placeholder="Starting location" required>
+            <small style="color: var(--color-gray-600); font-size: 0.75rem;">First pickup point for the route</small>
+          </div>
+
+          <div class="form-group">
+            <label for="endPoint">End Point *</label>
+            <input type="text" id="endPoint" class="form-input" placeholder="Destination" required>
+            <small style="color: var(--color-gray-600); font-size: 0.75rem;">Final destination (usually office/plant)</small>
+          </div>
+
+          <div class="form-group">
+            <label for="intermediateStops">Intermediate Stops</label>
+            <textarea id="intermediateStops" class="form-textarea" rows="3" placeholder="Enter stops (one per line)"></textarea>
+            <small style="color: var(--color-gray-600); font-size: 0.75rem;">Add pickup/drop points between start and end</small>
+          </div>
+
+          <div class="form-group">
+            <label for="estimatedDistance">Estimated Distance (km)</label>
+            <input type="number" id="estimatedDistance" class="form-input" step="0.1" placeholder="e.g., 28.5">
+          </div>
+
+          <div class="form-group">
+            <label for="estimatedDuration">Estimated Duration (minutes)</label>
+            <input type="number" id="estimatedDuration" class="form-input" placeholder="e.g., 45">
+          </div>
+
+          <div class="form-group">
+            <label for="maxEmployees">Maximum Employees</label>
+            <input type="number" id="maxEmployees" class="form-input" placeholder="Based on vehicle capacity">
+          </div>
+
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" id="enableOptimization" style="width: auto;">
+              <span>Enable AI Route Optimization</span>
+            </label>
+            <small style="color: var(--color-gray-600); font-size: 0.75rem;">Automatically optimize route for shortest path and time</small>
+          </div>
+
+          <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+              <input type="checkbox" id="activeStatus" checked style="width: auto;">
+              <span>Set as Active</span>
+            </label>
+          </div>
+
+        </form>
+      </div>
+      
+      <div class="side-panel-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeCreateRoutePanel()">Cancel</button>
+        <button type="submit" class="btn btn-primary" onclick="saveRoute()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Create Route
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/theme.js"></script>
+  <script>
+    // Open Create Route Panel
+    function openCreateRoutePanel() {
+      document.getElementById('createRoutePanel').classList.add('active');
+      document.getElementById('routeName').focus();
+    }
+
+    // Close Create Route Panel
+    function closeCreateRoutePanel() {
+      document.getElementById('createRoutePanel').classList.remove('active');
+      document.getElementById('createRouteForm').reset();
+    }
+
+    // Save Route
+    function saveRoute() {
+      const form = document.getElementById('createRouteForm');
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const routeData = {
+        name: document.getElementById('routeName').value,
+        shift: document.getElementById('shift').value,
+        location: document.getElementById('location').value,
+        vehicleType: document.getElementById('vehicleType').value,
+        startPoint: document.getElementById('startPoint').value,
+        endPoint: document.getElementById('endPoint').value,
+        intermediateStops: document.getElementById('intermediateStops').value.split('\n').filter(s => s.trim()),
+        estimatedDistance: document.getElementById('estimatedDistance').value,
+        estimatedDuration: document.getElementById('estimatedDuration').value,
+        maxEmployees: document.getElementById('maxEmployees').value,
+        enableOptimization: document.getElementById('enableOptimization').checked,
+        active: document.getElementById('activeStatus').checked
+      };
+
+      console.log('Creating route:', routeData);
+      
+      // TODO: API call to create route
+      // fetch('/api/v1/ptms/routes', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(routeData)
+      // })
+
+      // Show success message
+      alert('Route created successfully!');
+      closeCreateRoutePanel();
+    }
+
+    // Filter Routes
+    function filterRoutes() {
+      const shift = document.getElementById('shiftFilter').value;
+      const location = document.getElementById('locationFilter').value;
+      const status = document.getElementById('statusFilter').value;
+      const vehicle = document.getElementById('vehicleFilter').value;
+      
+      console.log('Filtering routes:', { shift, location, status, vehicle });
+      // TODO: Implement filtering logic
+    }
+
+    // Optimize All Routes
+    function optimizeAllRoutes() {
+      if (confirm('This will optimize all active routes. Continue?')) {
+        console.log('Optimizing all routes...');
+        // TODO: API call to optimize routes
+        alert('Route optimization started. This may take a few minutes.');
+      }
+    }
+
+    // Edit Route
+    function editRoute(routeId) {
+      console.log('Editing route:', routeId);
+      // TODO: Load route data and open edit panel
+    }
+
+    // Optimize Single Route
+    function optimizeRoute(routeId) {
+      console.log('Optimizing route:', routeId);
+      // TODO: API call to optimize single route
+      alert(`Optimizing route ${routeId}...`);
+    }
+
+    // View Route Details
+    function viewRouteDetails(routeId) {
+      console.log('Viewing route details:', routeId);
+      // TODO: Navigate to route details page or open modal
+    }
+
+    // User Menu Toggle
+    function toggleUserMenu() {
+      const dropdown = document.getElementById('userMenuDropdown');
+      dropdown.classList.toggle('active');
+    }
+
+    // Close user menu when clicking outside
+    document.addEventListener('click', function(event) {
+      const userMenu = document.querySelector('.user-menu');
+      const dropdown = document.getElementById('userMenuDropdown');
+      if (!userMenu.contains(event.target)) {
+        dropdown.classList.remove('active');
+      }
+    });
+
+    // Search functionality (placeholder)
+    function openSearch() {
+      console.log('Opening search...');
+      // TODO: Implement search modal
+    }
+
+    // Keyboard shortcut for search
+    document.addEventListener('keydown', function(event) {
+      if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+        event.preventDefault();
+        openSearch();
+      }
+    });
+  </script>
+
+  <script src="js/ptms-data.js"></script>
+  <script src="js/ptms-app.js"></script>
+  <script src="js/components-loader.js"></script>
+</body>
+</html>

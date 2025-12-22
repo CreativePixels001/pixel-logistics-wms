@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Understanding Design & Technology in the AI Era | Pixel Academy</title>
+    <meta name="description" content="A conceptual course for professionals and curious learners to understand modern design, systems, and AI.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #000000; --dark: #000000; --light: #FFFFFF; --gray: #666666; --border: 2px; }
+        body { font-family: 'Inter', sans-serif; background: white; color: var(--dark); line-height: 1.6; }
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.3; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: white; border-bottom: var(--border) solid black; padding: 1.5rem 0; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: black; text-decoration: none; }
+        .nav-menu { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-menu a { color: black; text-decoration: none; font-weight: 500; transition: opacity 0.3s ease; }
+        .nav-menu a:hover { opacity: 0.6; }
+        .cta-btn { padding: 0.75rem 1.5rem; background: black; color: white !important; border: var(--border) solid black; transition: all 0.3s ease; }
+        .cta-btn:hover { background: white; color: black !important; }
+        
+        .course-hero { padding: 10rem 0 4rem; background: black; color: white; }
+        .breadcrumb { font-size: 0.9rem; margin-bottom: 1.5rem; color: rgba(255,255,255,0.7); }
+        .breadcrumb a { color: rgba(255,255,255,0.7); text-decoration: none; }
+        .breadcrumb a:hover { color: white; }
+        .course-badge { display: inline-block; padding: 0.5rem 1rem; background: white; color: black; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
+        .course-hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; margin-bottom: 1.5rem; max-width: 900px; }
+        .course-hero p { font-size: 1.25rem; color: rgba(255,255,255,0.8); max-width: 800px; margin-bottom: 2rem; line-height: 1.8; }
+        
+        .course-meta-bar { display: flex; gap: 3rem; flex-wrap: wrap; margin-top: 2rem; }
+        .meta-item { display: flex; align-items: center; gap: 0.75rem; }
+        .meta-item svg { width: 20px; height: 20px; stroke: white; fill: none; stroke-width: 2; }
+        
+        .section { padding: 6rem 0; }
+        .section-alt { background: rgba(0,0,0,0.02); }
+        .section-title { font-size: clamp(1.75rem, 4vw, 2.25rem); font-weight: 700; margin-bottom: 2rem; }
+        
+        .two-column { display: grid; grid-template-columns: 2fr 1fr; gap: 4rem; margin-top: 3rem; }
+        
+        .content-box { background: white; border: var(--border) solid black; padding: 2.5rem; margin-bottom: 2rem; }
+        .content-box h3 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+        .content-box ul { list-style: none; }
+        .content-box li { padding-left: 1.5rem; position: relative; margin-bottom: 1rem; color: var(--gray); line-height: 1.8; }
+        .content-box li:before { content: "→"; position: absolute; left: 0; color: black; }
+        
+        .curriculum { margin-top: 2rem; }
+        .curriculum-week { background: white; border: var(--border) solid black; padding: 2rem; margin-bottom: 1rem; }
+        .curriculum-week h4 { font-size: 1.25rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; }
+        .week-number { display: inline-block; width: 40px; height: 40px; background: black; color: white; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 600; }
+        .curriculum-week ul { list-style: none; color: var(--gray); }
+        .curriculum-week li { padding-left: 1.5rem; position: relative; margin-bottom: 0.75rem; }
+        .curriculum-week li:before { content: "•"; position: absolute; left: 0; }
+        
+        .sidebar-sticky { position: sticky; top: 120px; }
+        .info-card { background: white; border: var(--border) solid black; padding: 2rem; margin-bottom: 2rem; }
+        .info-card h4 { font-size: 1.125rem; margin-bottom: 1.5rem; }
+        .info-list { list-style: none; }
+        .info-list li { padding: 0.75rem 0; border-bottom: 1px solid rgba(0,0,0,0.1); display: flex; justify-content: space-between; align-items: center; }
+        .info-list li:last-child { border-bottom: none; }
+        .info-label { color: var(--gray); font-size: 0.9rem; }
+        .info-value { font-weight: 600; }
+        
+        .cta-box { background: black; color: white; padding: 2.5rem; text-align: center; }
+        .cta-box h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .cta-box p { color: rgba(255,255,255,0.8); margin-bottom: 2rem; }
+        .btn-white { display: inline-block; padding: 1rem 2.5rem; background: white; color: black; text-decoration: none; font-weight: 600; border: 2px solid white; transition: all 0.3s ease; }
+        .btn-white:hover { background: black; color: white; }
+        
+        .btn-black { display: inline-block; padding: 1rem 2.5rem; background: black; color: white; text-decoration: none; font-weight: 600; border: 2px solid black; transition: all 0.3s ease; }
+        .btn-black:hover { background: white; color: black; }
+        
+        footer { background: black; color: white; padding: 4rem 0 2rem; }
+        .footer-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+        .footer-brand h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .footer-brand p { color: rgba(255, 255, 255, 0.7); line-height: 1.8; margin-bottom: 1.5rem; }
+        .footer-column h4 { margin-bottom: 1rem; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 0.75rem; }
+        .footer-links a { color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: color 0.3s ease; }
+        .footer-links a:hover { color: white; }
+        .footer-bottom { padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center; }
+        .footer-bottom p { color: rgba(255, 255, 255, 0.5); }
+        
+        @media (max-width: 968px) { 
+            .two-column { grid-template-columns: 1fr; }
+            .sidebar-sticky { position: relative; top: 0; }
+            .footer-grid { grid-template-columns: 1fr 1fr; } 
+            .footer-brand { grid-column: 1 / -1; }
+        }
+        @media (max-width: 640px) { 
+            .nav-menu { gap: 1rem; font-size: 0.9rem; } 
+            .footer-grid { grid-template-columns: 1fr; }
+            .course-meta-bar { gap: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="home.html" class="logo">CreativePixels</a>
+            <ul class="nav-menu">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="pixel-academy.html">Pixel Academy</a></li>
+                <li><a href="get-in-touch.html" class="cta-btn">Get in Touch</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="course-hero">
+        <div class="container">
+            <div class="breadcrumb">
+                <a href="pixel-academy.html">Pixel Academy</a> / Course Detail
+            </div>
+            <div class="course-badge">FLAGSHIP COURSE</div>
+            <h1>Understanding Design & Technology in the AI Era</h1>
+            <p>A conceptual course designed for professionals, educators, and curious learners who want to understand modern design, systems, and AI — without learning tools or software.</p>
+            
+            <div class="course-meta-bar">
+                <div class="meta-item">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>Self-paced</span>
+                </div>
+                <div class="meta-item">
+                    <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    <span>Small Groups / 1:1</span>
+                </div>
+                <div class="meta-item">
+                    <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                    <span>Discussion-Based</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="two-column">
+                <div>
+                    <h2 class="section-title">What You Will Understand</h2>
+                    
+                    <div class="content-box">
+                        <h3>Core Concepts</h3>
+                        <ul>
+                            <li>How design thinking shapes modern technology and why it matters beyond aesthetics</li>
+                            <li>Why interfaces feel simple but systems underneath are incredibly complex</li>
+                            <li>How AI and prompts actually work — demystifying the "magic" of generative tools</li>
+                            <li>The psychology behind user behavior and decision-making in digital spaces</li>
+                            <li>How humans and AI collaborate meaningfully in creative and analytical work</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-box">
+                        <h3>Learning Format</h3>
+                        <ul>
+                            <li><strong>Conversational sessions</strong> — Not lectures, but dialogues that encourage thinking</li>
+                            <li><strong>1:1 or small groups</strong> — Intimate settings where your questions matter</li>
+                            <li><strong>Reflection-based learning</strong> — Time to process, not just consume</li>
+                            <li><strong>Real-world examples</strong> — Banking, healthcare, governance, everyday apps</li>
+                            <li><strong>No tools required</strong> — Pure conceptual understanding</li>
+                        </ul>
+                    </div>
+
+                    <h2 class="section-title" style="margin-top: 4rem;">Course Curriculum</h2>
+                    
+                    <div class="curriculum">
+                        <div class="curriculum-week">
+                            <h4>
+                                <span class="week-number">01</span>
+                                <span>Introduction: Design in the Age of AI</span>
+                            </h4>
+                            <ul>
+                                <li>What is design beyond screens and colors?</li>
+                                <li>Evolution from print to digital to AI-driven interfaces</li>
+                                <li>Why understanding systems matters more than tools</li>
+                                <li>The role of design in shaping human behavior</li>
+                            </ul>
+                        </div>
+
+                        <div class="curriculum-week">
+                            <h4>
+                                <span class="week-number">02</span>
+                                <span>How Interfaces Work</span>
+                            </h4>
+                            <ul>
+                                <li>The psychology of buttons, menus, and navigation</li>
+                                <li>Mental models: How users think vs. how systems work</li>
+                                <li>Case study: Why some apps feel "right" and others don't</li>
+                                <li>Trust and clarity in digital experiences</li>
+                            </ul>
+                        </div>
+
+                        <div class="curriculum-week">
+                            <h4>
+                                <span class="week-number">03</span>
+                                <span>Understanding AI & Prompts</span>
+                            </h4>
+                            <ul>
+                                <li>How AI actually processes information (without technical jargon)</li>
+                                <li>Why prompts matter — the art of asking the right questions</li>
+                                <li>Limitations and possibilities of generative AI</li>
+                                <li>Human + AI collaboration: Who does what?</li>
+                            </ul>
+                        </div>
+
+                        <div class="curriculum-week">
+                            <h4>
+                                <span class="week-number">04</span>
+                                <span>Systems Thinking</span>
+                            </h4>
+                            <ul>
+                                <li>How large systems (banking, healthcare) are designed</li>
+                                <li>Balancing simplicity for users with complexity for systems</li>
+                                <li>Security, privacy, and trust in modern platforms</li>
+                                <li>Why good design is invisible</li>
+                            </ul>
+                        </div>
+
+                        <div class="curriculum-week">
+                            <h4>
+                                <span class="week-number">05</span>
+                                <span>Design in the Real World</span>
+                            </h4>
+                            <ul>
+                                <li>Case studies: Government portals, e-commerce, health apps</li>
+                                <li>What makes digital experiences accessible to all</li>
+                                <li>Designing for trust and inclusivity</li>
+                                <li>The future: Where design and AI are heading</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-sticky">
+                    <div class="info-card">
+                        <h4>Course Information</h4>
+                        <ul class="info-list">
+                            <li>
+                                <span class="info-label">Format</span>
+                                <span class="info-value">Discussion-Based</span>
+                            </li>
+                            <li>
+                                <span class="info-label">Sessions</span>
+                                <span class="info-value">5 Modules</span>
+                            </li>
+                            <li>
+                                <span class="info-label">Duration</span>
+                                <span class="info-value">Self-Paced</span>
+                            </li>
+                            <li>
+                                <span class="info-label">Group Size</span>
+                                <span class="info-value">1:1 or Small</span>
+                            </li>
+                            <li>
+                                <span class="info-label">Prerequisites</span>
+                                <span class="info-value">None</span>
+                            </li>
+                            <li>
+                                <span class="info-label">Tools Needed</span>
+                                <span class="info-value">None</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>Who This Is For</h4>
+                        <ul style="list-style: none;">
+                            <li style="margin-bottom: 1rem; color: #666; line-height: 1.7;">✓ Professionals curious about design and tech</li>
+                            <li style="margin-bottom: 1rem; color: #666; line-height: 1.7;">✓ Educators wanting to understand modern systems</li>
+                            <li style="margin-bottom: 1rem; color: #666; line-height: 1.7;">✓ Anyone who wants to engage confidently with AI</li>
+                            <li style="margin-bottom: 1rem; color: #666; line-height: 1.7;">✓ Those who value understanding over speed</li>
+                        </ul>
+                    </div>
+
+                    <div class="cta-content">
+                        <h2>Ready to Begin?</h2>
+                        <p>Start your learning journey with thoughtful, discussion-led sessions.</p>
+                        <a href="academy-login.html" class="btn-white">Start Course →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section section-alt">
+        <div class="container" style="text-align: center;">
+            <h2 class="section-title">About the Mentor</h2>
+            <div style="max-width: 700px; margin: 0 auto;">
+                <div style="width: 80px; height: 80px; background: black; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.5rem; margin: 0 auto 1.5rem; font-family: 'Space Grotesk', sans-serif;">AK</div>
+                <h3 style="font-size: 1.25rem; margin-bottom: 0.5rem;">Ashish Kumar</h3>
+                <p style="color: #666; margin-bottom: 1.5rem;">Design Thinker & System Builder</p>
+                <p style="line-height: 1.9; color: #333;">Ashish works at the intersection of design, technology, and real-world systems. His approach focuses on clarity, relevance, and practical understanding — helping learners see technology not as something to fear, but something to engage with thoughtfully.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>CreativePixels</h3>
+                    <p>Transforming thoughts into monetizable products through innovative design, machine learning, and creative problem-solving.</p>
+                    <p style="margin-top: 1rem; font-size: 0.95rem;"><strong>Email:</strong> <a href="mailto:connect@creativepixels.in" style="color: rgba(255,255,255,0.8); text-decoration: none;">connect@creativepixels.in</a></p>
+                    <p style="font-size: 0.95rem;"><strong>Call/WhatsApp:</strong> <a href="tel:+919004789969" style="color: rgba(255,255,255,0.8); text-decoration: none;">+91 90047 89969</a></p>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about-us.html">About Us</a></li>
+                        <li><a href="our-approach.html">Our Approach</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="ai-ml.html">AI & Machine Learning</a></li>
+                        <li><a href="product-design.html">Product Design</a></li>
+                        <li><a href="development.html">Development</a></li>
+                        <li><a href="consulting.html">Consulting</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h4>Connect</h4>
+                    <ul class="footer-links">
+                        <li><a href="get-in-touch.html">Contact Us</a></li>
+                        <li><a href="support.html">Support</a></li>
+                        <li><a href="partners.html">Partners</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 CreativePixels. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

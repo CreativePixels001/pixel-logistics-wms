@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html class="no-js ss-preload" lang="en">
+<head>
+
+    <!--- basic page needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>Checkout - Creative Pixels</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- mobile specific metas
+    ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS
+    ================================================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/vendor.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/custom-enhancements.css">
+    <link rel="stylesheet" href="css/checkout.css">
+
+    <!-- favicons
+    ================================================== -->
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <!-- Stripe JS -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+</head>
+
+<body id="top">
+
+
+    <!-- # preloader
+    ================================================== -->
+    <div id="preloader">
+        <div id="loader">
+        </div>
+    </div>
+
+
+    <!-- # page wrap
+    ================================================== -->
+    <div class="s-pagewrap">
+
+        <div class="circles">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+
+        <!-- ## site header 
+        ================================================== -->
+        <header class="s-header">
+
+            <div class="header-mobile">
+                <span class="mobile-home-link"><a href="index.html">CreativePixel's.</a></span>
+                <a class="mobile-menu-toggle" href="#0"><span>Menu</span></a>
+            </div>
+
+            <div class="row wide main-nav-wrap">
+                <div class="nav-logo">
+                    <a href="index.html">
+                        <span class="logo-text">CreativePixel's</span>
+                    </a>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="Low/UX Study /motherboard.html">Pixel Connect</a></li>
+                        <li><a href="ecosystem.html">Pixel Eco System</a></li>
+                        <li><a href="studio.html">Pixel Studio</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+        </header> <!-- end s-header -->
+
+
+        <!-- ## main content
+        ==================================================- -->
+        <main class="s-content">
+
+
+            <!-- ### checkout section
+            ================================================== -->
+            <section id="checkout" class="s-checkout">
+                <div class="row">
+                    <div class="column lg-12">
+                        <div class="checkout-header">
+                            <h1>Complete Your Purchase</h1>
+                            <p>Secure checkout powered by Stripe</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row checkout-container">
+                    
+                    <!-- Order Summary -->
+                    <div class="column lg-5 md-12 checkout-summary">
+                        <div class="summary-card">
+                            <h2>Order Summary</h2>
+                            
+                            <div class="product-details">
+                                <h3 id="productTitle">Loading...</h3>
+                                <p id="productDescription"></p>
+                            </div>
+
+                            <div class="pricing-options">
+                                <h4>Choose Payment Plan</h4>
+                                
+                                <label class="pricing-option">
+                                    <input type="radio" name="pricingPlan" value="onetime" checked>
+                                    <div class="option-content">
+                                        <div class="option-header">
+                                            <span class="plan-name">One-time Purchase</span>
+                                            <span class="plan-price" id="onetimePrice">$2,499</span>
+                                        </div>
+                                        <p class="plan-description">Lifetime license with 1 year of updates</p>
+                                    </div>
+                                </label>
+
+                                <label class="pricing-option">
+                                    <input type="radio" name="pricingPlan" value="monthly">
+                                    <div class="option-content">
+                                        <div class="option-header">
+                                            <span class="plan-name">Monthly Subscription</span>
+                                            <span class="plan-price" id="monthlyPrice">$249/mo</span>
+                                        </div>
+                                        <p class="plan-description">Cancel anytime, includes all updates</p>
+                                    </div>
+                                </label>
+
+                                <label class="pricing-option">
+                                    <input type="radio" name="pricingPlan" value="annual">
+                                    <div class="option-content">
+                                        <div class="option-header">
+                                            <span class="plan-name">Annual Subscription</span>
+                                            <span class="plan-price" id="annualPrice">$2,390/yr</span>
+                                        </div>
+                                        <p class="plan-description">
+                                            <span class="save-badge">Save 20%</span>
+                                            Best value for growing businesses
+                                        </p>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="order-total">
+                                <div class="total-row subtotal">
+                                    <span>Subtotal</span>
+                                    <span id="subtotal">$2,499</span>
+                                </div>
+                                <div class="total-row tax">
+                                    <span>Tax (18% GST)</span>
+                                    <span id="tax">$449.82</span>
+                                </div>
+                                <div class="total-row grand-total">
+                                    <span>Total</span>
+                                    <span id="grandTotal">$2,948.82</span>
+                                </div>
+                            </div>
+
+                            <div class="secure-badge">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L4 6v6c0 5 4 9 8 11 4-2 8-6 8-11V6l-8-4z" stroke="currentColor" stroke-width="2"/></svg>
+                                <span>Secure payment with 256-bit encryption</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Form -->
+                    <div class="column lg-7 md-12 checkout-form">
+                        <div class="form-card">
+                            <h2>Payment Information</h2>
+                            
+                            <form id="payment-form">
+                                
+                                <!-- Customer Details -->
+                                <div class="form-section">
+                                    <h3>Contact Details</h3>
+                                    
+                                    <div class="form-group">
+                                        <label for="email">Email Address *</label>
+                                        <input type="email" id="email" name="email" required placeholder="you@company.com">
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="firstName">First Name *</label>
+                                            <input type="text" id="firstName" name="firstName" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="lastName">Last Name *</label>
+                                            <input type="text" id="lastName" name="lastName" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="company">Company Name</label>
+                                        <input type="text" id="company" name="company">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="phone">Phone Number *</label>
+                                        <input type="tel" id="phone" name="phone" required placeholder="+91 88001 23456">
+                                    </div>
+                                </div>
+
+                                <!-- Billing Address -->
+                                <div class="form-section">
+                                    <h3>Billing Address</h3>
+                                    
+                                    <div class="form-group">
+                                        <label for="address">Street Address *</label>
+                                        <input type="text" id="address" name="address" required>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="city">City *</label>
+                                            <input type="text" id="city" name="city" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="state">State *</label>
+                                            <input type="text" id="state" name="state" required>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="zipCode">Zip Code *</label>
+                                            <input type="text" id="zipCode" name="zipCode" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="country">Country *</label>
+                                            <select id="country" name="country" required>
+                                                <option value="IN">India</option>
+                                                <option value="US">United States</option>
+                                                <option value="GB">United Kingdom</option>
+                                                <option value="CA">Canada</option>
+                                                <option value="AU">Australia</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Card Details -->
+                                <div class="form-section">
+                                    <h3>Card Details</h3>
+                                    
+                                    <div class="form-group">
+                                        <label for="card-element">Credit or Debit Card *</label>
+                                        <div id="card-element" class="stripe-element">
+                                            <!-- Stripe Card Element will be inserted here -->
+                                        </div>
+                                        <div id="card-errors" role="alert"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Terms -->
+                                <div class="form-section">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="terms" required>
+                                        <span>I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a></span>
+                                    </label>
+                                </div>
+
+                                <!-- Submit Button -->
+                                <button type="submit" id="submit-button" class="btn btn--primary btn-submit">
+                                    <span class="btn-text">Complete Purchase</span>
+                                    <span class="btn-loader" style="display: none;">
+                                        <svg width="20" height="20" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" stroke-width="4" fill="none"/></svg>
+                                    </span>
+                                </button>
+
+                                <div class="payment-methods">
+                                    <p>We accept</p>
+                                    <div class="method-icons">
+                                        <span>Visa</span>
+                                        <span>Mastercard</span>
+                                        <span>Amex</span>
+                                        <span>UPI</span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div> <!-- end checkout-container -->
+            </section> <!-- end s-checkout -->
+
+
+        </main> <!-- end s-content -->
+
+
+        <!-- ## footer
+        ================================================== -->
+        <footer class="s-footer">
+
+            <div class="row">
+                <div class="column ss-copyright">
+                    <span>© Copyright CreativePixel's 2025</span> 
+                    <span>Design by <a href="#">CPX Ing.</a> </span>
+                </div>
+
+                <div class="ss-go-top">
+                    <a class="smoothscroll" title="Back to Top" href="#top">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill-rule="evenodd" clip-rule="evenodd"><path d="M11 2.206l-6.235 7.528-.765-.645 7.521-9 7.479 9-.764.646-6.236-7.53v21.884h-1v-21.883z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+        </footer> <!-- end s-footer -->
+
+    </div> <!-- end -s-pagewrap -->
+
+
+    <!-- Java Script
+    ================================================== -->
+    <script src="js/plugins.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/form-validation.js" defer></script>
+    <script src="https://js.stripe.com/v3/" defer></script>
+    <script src="js/stripe-payment.js" defer></script>
+    <script src="js/checkout.js" defer></script>
+    <script src="js/form-validation.js" defer></script>
+
+</body>
+</html>

@@ -29,7 +29,7 @@ Once the repository is created, **come back here** and I'll run the commands aut
 Or you can run this command yourself:
 
 ```bash
-cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS"
+cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel ecosystem"
 git push -u origin main
 ```
 

@@ -1,0 +1,217 @@
+{
+  "id": "loading-unloading",
+  "name": "Loading & Unloading Safety Audit",
+  "category": "Logistics - Warehouse",
+  "description": "Safety audit for dock operations, loading bays, and material transfer activities",
+  "version": "1.0",
+  "items": [
+    {
+      "id": "lu-01",
+      "question": "Are dock levelers operational and properly maintained?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "lu-02",
+      "question": "Are dock plates secured to prevent shifting during loading?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "lu-03",
+      "question": "Are wheel chocks used on all vehicles during loading/unloading?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "lu-04",
+      "question": "Are dock bumpers in good condition?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "lu-05",
+      "question": "Is dock area adequately lit for safe operations?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "lu-06",
+      "question": "Are dock doors equipped with safety interlocks?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "lu-07",
+      "question": "Are warning lights/signals used to indicate active loading?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "lu-08",
+      "question": "Is communication system between dock and driver functional?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "lu-09",
+      "question": "Are loading bay floor surfaces even and slip-resistant?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "lu-10",
+      "question": "Are edge protection barriers installed at dock edges?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "lu-11",
+      "question": "Are loads secured and stable before transport?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "lu-12",
+      "question": "Are straps, chains, or nets used to secure loads in vehicles?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "lu-13",
+      "question": "Is weight distribution balanced in loaded vehicles?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "lu-14",
+      "question": "Are fragile items marked and handled accordingly?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "lu-15",
+      "question": "Is vehicle weight capacity not exceeded?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "lu-16",
+      "question": "Are forklifts operated only by certified personnel?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "lu-17",
+      "question": "Are forklift pre-operation inspections documented?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "lu-18",
+      "question": "Are pedestrian and forklift traffic lanes marked?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "lu-19",
+      "question": "Are conveyors guarded and emergency stops accessible?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "lu-20",
+      "question": "Are pallet jacks in good working condition?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "lu-21",
+      "question": "Do workers wear appropriate PPE (helmets, vests, boots)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "lu-22",
+      "question": "Are safety protocols communicated to all personnel?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "lu-23",
+      "question": "Are personnel trained on proper lifting techniques?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "lu-24",
+      "question": "Is there adequate supervision during loading/unloading?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "lu-25",
+      "question": "Are weather-related hazards addressed (rain, ice)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "lu-26",
+      "question": "Overall loading/unloading safety practices satisfactory?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    }
+  ]
+}

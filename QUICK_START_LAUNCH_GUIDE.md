@@ -42,7 +42,7 @@
 npm install -g netlify-cli
 
 # 2. Navigate to project
-cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS/frontend"
+cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS/frontend"
 
 # 3. Login and deploy
 netlify login
@@ -57,7 +57,7 @@ netlify deploy --prod
 npm install -g vercel
 
 # 2. Navigate and deploy
-cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS/frontend"
+cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS/frontend"
 vercel --prod
 
 # Done! Live URL provided instantly
@@ -366,7 +366,7 @@ Conversion Rates:
 ### "Demo Environment Not Working"
 ```bash
 # Quick fix: Use local server
-cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS/frontend"
+cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS/frontend"
 python3 -m http.server 8080
 # Open: http://localhost:8080
 ```
@@ -418,7 +418,7 @@ python3 -m http.server 8080
 1. **☐ Deploy Demo** (10 min)
    ```bash
    npm install -g netlify-cli
-   cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS/frontend"
+   cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS/frontend"
    netlify login
    netlify deploy --prod
    ```

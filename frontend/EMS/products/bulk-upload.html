@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bulk Product Upload - Pixel Commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <style>
+        .upload-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .upload-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .upload-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #E0E0E0;
+            z-index: 0;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #E0E0E0;
+            margin: 0 auto 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #999;
+            transition: all 0.3s;
+        }
+
+        .step.active .step-circle {
+            background: #000;
+            border-color: #000;
+            color: #fff;
+        }
+
+        .step.completed .step-circle {
+            background: #000;
+            border-color: #000;
+            color: #fff;
+        }
+
+        .step.completed .step-circle::before {
+            content: "✓";
+        }
+
+        .step-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #999;
+        }
+
+        .step.active .step-title {
+            color: #000;
+        }
+
+        .upload-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid #E0E0E0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .platform-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .platform-option {
+            border: 2px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .platform-option:hover {
+            border-color: #666;
+        }
+
+        .platform-option.selected {
+            border-color: #000;
+            background: #f9f9f9;
+        }
+
+        .platform-option input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+
+        .platform-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .platform-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .platform-name {
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 0.25rem;
+        }
+
+        .platform-count {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .upload-zone {
+            border: 2px dashed #E0E0E0;
+            border-radius: 12px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: #000;
+            background: #f5f5f5;
+        }
+
+        .upload-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
+            opacity: 0.3;
+        }
+
+        .upload-text {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-formats {
+            display: inline-flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .format-badge {
+            padding: 0.375rem 0.75rem;
+            background: #f5f5f5;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #666;
+        }
+
+        .template-download {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .template-card {
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .template-card:hover {
+            border-color: #000;
+            background: #fafafa;
+        }
+
+        .template-icon {
+            width: 40px;
+            height: 40px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .template-info {
+            flex: 1;
+        }
+
+        .template-name {
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 0.25rem;
+        }
+
+        .template-desc {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .file-preview {
+            margin-top: 1.5rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #000;
+            margin-bottom: 0.25rem;
+        }
+
+        .file-meta {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .icon-btn-small {
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icon-btn-small:hover {
+            background: #000;
+            border-color: #000;
+            color: #fff;
+        }
+
+        .icon-btn-small svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .mapping-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+        .mapping-table th {
+            background: #f5f5f5;
+            padding: 0.875rem;
+            text-align: left;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #000;
+            border-bottom: 2px solid #E0E0E0;
+        }
+
+        .mapping-table td {
+            padding: 0.875rem;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .mapping-table select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+
+        .sample-data {
+            font-size: 0.875rem;
+            color: #666;
+            font-family: 'Courier New', monospace;
+        }
+
+        .validation-results {
+            margin-top: 1.5rem;
+        }
+
+        .validation-item {
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+            padding: 0.875rem;
+            background: #f5f5f5;
+            border-left: 3px solid #000;
+            border-radius: 6px;
+            margin-bottom: 0.75rem;
+        }
+
+        .validation-item.error {
+            background: #fff5f5;
+            border-color: #000;
+        }
+
+        .validation-item.warning {
+            background: #fffdf5;
+            border-color: #666;
+        }
+
+        .validation-item.success {
+            background: #f5fff5;
+            border-color: #000;
+        }
+
+        .validation-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .validation-text {
+            flex: 1;
+            font-size: 0.875rem;
+        }
+
+        .validation-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .validation-desc {
+            color: #666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #E0E0E0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #000;
+            transition: width 0.3s;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 2px solid #E0E0E0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span>Pixel Commerce</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <a href="bulk-upload.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        Bulk Upload
+                    </a>
+                    <a href="../orders/unified-orders.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Unified Orders
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Platforms</div>
+                    <a href="../platforms/amazon.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        Amazon
+                    </a>
+                    <a href="../platforms/flipkart.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                        </svg>
+                        Flipkart
+                    </a>
+                    <a href="../platforms/meesho.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Meesho
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="header-right">
+                    <a href="../notifications.html" class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge" id="notificationBadge">0</span>
+                    </a>
+                    <div class="user-menu">
+                        <div class="user-avatar">S</div>
+                        <div class="user-info">
+                            <span class="user-name">Seller Name</span>
+                            <span class="user-role">Multi-Platform Seller</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Bulk Product Upload</h1>
+                        <p class="page-subtitle">Upload products to multiple platforms simultaneously</p>
+                    </div>
+                    <div class="page-actions">
+                        <a href="../dashboard.html" class="btn btn-secondary">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="15 18 9 12 15 6"/>
+                            </svg>
+                            Back
+                        </a>
+                    </div>
+                </div>
+
+                <div class="upload-container">
+                    <!-- Progress Steps -->
+                    <div class="upload-steps">
+                        <div class="step active" id="step1">
+                            <div class="step-circle">1</div>
+                            <div class="step-title">Select Platforms</div>
+                        </div>
+                        <div class="step" id="step2">
+                            <div class="step-circle">2</div>
+                            <div class="step-title">Upload File</div>
+                        </div>
+                        <div class="step" id="step3">
+                            <div class="step-circle">3</div>
+                            <div class="step-title">Map Fields</div>
+                        </div>
+                        <div class="step" id="step4">
+                            <div class="step-circle">4</div>
+                            <div class="step-title">Validate & Confirm</div>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Platform Selection -->
+                    <div class="upload-section" id="section1">
+                        <div class="section-header">
+                            <h2 class="section-title">Select Target Platforms</h2>
+                        </div>
+                        
+                        <div class="platform-selector">
+                            <div class="platform-option selected" onclick="togglePlatform('amazon', this)">
+                                <div class="platform-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                                        <circle cx="9" cy="21" r="1"/>
+                                        <circle cx="20" cy="21" r="1"/>
+                                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                                    </svg>
+                                </div>
+                                <div class="platform-name">Amazon</div>
+                                <div class="platform-count">1,234 products</div>
+                            </div>
+
+                            <div class="platform-option selected" onclick="togglePlatform('flipkart', this)">
+                                <div class="platform-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+                                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                                        <line x1="3" y1="6" x2="21" y2="6"/>
+                                    </svg>
+                                </div>
+                                <div class="platform-name">Flipkart</div>
+                                <div class="platform-count">987 products</div>
+                            </div>
+
+                            <div class="platform-option selected" onclick="togglePlatform('meesho', this)">
+                                <div class="platform-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                    </svg>
+                                </div>
+                                <div class="platform-name">Meesho</div>
+                                <div class="platform-count">756 products</div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="goToStep(2)">
+                                Continue
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: File Upload -->
+                    <div class="upload-section hidden" id="section2">
+                        <div class="section-header">
+                            <h2 class="section-title">Upload Product File</h2>
+                        </div>
+
+                        <!-- Template Download -->
+                        <div style="margin-bottom: 2rem;">
+                            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #000;">Download Template</h3>
+                            <div class="template-download">
+                                <div class="template-card" onclick="downloadTemplate('csv')">
+                                    <div class="template-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" width="20" height="20">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                            <polyline points="14 2 14 8 20 8"/>
+                                        </svg>
+                                    </div>
+                                    <div class="template-info">
+                                        <div class="template-name">CSV Template</div>
+                                        <div class="template-desc">Standard format for all platforms</div>
+                                    </div>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" width="20" height="20">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7 10 12 15 17 10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                </div>
+
+                                <div class="template-card" onclick="downloadTemplate('excel')">
+                                    <div class="template-icon">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" width="20" height="20">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                            <polyline points="14 2 14 8 20 8"/>
+                                            <line x1="16" y1="13" x2="8" y2="13"/>
+                                            <line x1="16" y1="17" x2="8" y2="17"/>
+                                        </svg>
+                                    </div>
+                                    <div class="template-info">
+                                        <div class="template-name">Excel Template</div>
+                                        <div class="template-desc">With validation & formulas</div>
+                                    </div>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" width="20" height="20">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="7 10 12 15 17 10"/>
+                                        <line x1="12" y1="15" x2="12" y2="3"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Upload Zone -->
+                        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+                            <div class="upload-icon">
+                                <svg viewBox="0 0 64 64" fill="none" stroke="#000" stroke-width="2">
+                                    <path d="M32 8v40M16 24l16-16 16 16M8 48h48"/>
+                                </svg>
+                            </div>
+                            <div class="upload-text">Drop your file here or click to browse</div>
+                            <div class="upload-hint">Maximum file size: 10MB</div>
+                            <div class="upload-formats">
+                                <span class="format-badge">CSV</span>
+                                <span class="format-badge">XLSX</span>
+                                <span class="format-badge">XLS</span>
+                            </div>
+                            <input type="file" id="fileInput" accept=".csv,.xlsx,.xls" style="display: none;" onchange="handleFileSelect(event)">
+                        </div>
+
+                        <!-- File Preview -->
+                        <div class="file-preview hidden" id="filePreview">
+                            <!-- File items will be inserted here -->
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="goToStep(1)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="15 18 9 12 15 6"/>
+                                </svg>
+                                Back
+                            </button>
+                            <button class="btn btn-primary" id="continueStep2" disabled onclick="goToStep(3)">
+                                Continue
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Field Mapping -->
+                    <div class="upload-section hidden" id="section3">
+                        <div class="section-header">
+                            <h2 class="section-title">Map Your Fields</h2>
+                        </div>
+
+                        <p style="color: #666; margin-bottom: 1.5rem;">
+                            Map the columns from your file to the corresponding product fields
+                        </p>
+
+                        <table class="mapping-table">
+                            <thead>
+                                <tr>
+                                    <th>Your Column</th>
+                                    <th>Sample Data</th>
+                                    <th>Map To Field</th>
+                                    <th>Required</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mappingTableBody">
+                                <!-- Mapping rows will be inserted here -->
+                            </tbody>
+                        </table>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="goToStep(2)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="15 18 9 12 15 6"/>
+                                </svg>
+                                Back
+                            </button>
+                            <button class="btn btn-primary" onclick="goToStep(4)">
+                                Continue
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Validation & Confirm -->
+                    <div class="upload-section hidden" id="section4">
+                        <div class="section-header">
+                            <h2 class="section-title">Validation Results</h2>
+                        </div>
+
+                        <!-- Stats -->
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-value" id="totalProducts">150</div>
+                                <div class="stat-label">Total Products</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="validProducts">147</div>
+                                <div class="stat-label">Valid Products</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="errorCount">3</div>
+                                <div class="stat-label">Errors</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="warningCount">8</div>
+                                <div class="stat-label">Warnings</div>
+                            </div>
+                        </div>
+
+                        <!-- Validation Results -->
+                        <div class="validation-results">
+                            <h3 style="font-size: 1rem; font-weight: 600; margin-bottom: 1rem; color: #000;">Issues Found</h3>
+                            
+                            <div class="validation-item error">
+                                <div class="validation-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="15" y1="9" x2="9" y2="15"/>
+                                        <line x1="9" y1="9" x2="15" y2="15"/>
+                                    </svg>
+                                </div>
+                                <div class="validation-text">
+                                    <div class="validation-title">Missing Required Field</div>
+                                    <div class="validation-desc">Row 45: Product SKU is required but missing</div>
+                                </div>
+                            </div>
+
+                            <div class="validation-item error">
+                                <div class="validation-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="15" y1="9" x2="9" y2="15"/>
+                                        <line x1="9" y1="9" x2="15" y2="15"/>
+                                    </svg>
+                                </div>
+                                <div class="validation-text">
+                                    <div class="validation-title">Invalid Price</div>
+                                    <div class="validation-desc">Row 87: Price must be greater than 0</div>
+                                </div>
+                            </div>
+
+                            <div class="validation-item error">
+                                <div class="validation-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="15" y1="9" x2="9" y2="15"/>
+                                        <line x1="9" y1="9" x2="15" y2="15"/>
+                                    </svg>
+                                </div>
+                                <div class="validation-text">
+                                    <div class="validation-title">Duplicate SKU</div>
+                                    <div class="validation-desc">Row 112: SKU "PROD-123" already exists in Amazon</div>
+                                </div>
+                            </div>
+
+                            <div class="validation-item warning">
+                                <div class="validation-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                        <line x1="12" y1="9" x2="12" y2="13"/>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                    </svg>
+                                </div>
+                                <div class="validation-text">
+                                    <div class="validation-title">Missing Image</div>
+                                    <div class="validation-desc">Row 23: No product image URL provided (optional but recommended)</div>
+                                </div>
+                            </div>
+
+                            <div class="validation-item warning">
+                                <div class="validation-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                        <line x1="12" y1="9" x2="12" y2="13"/>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                    </svg>
+                                </div>
+                                <div class="validation-text">
+                                    <div class="validation-title">Short Description</div>
+                                    <div class="validation-desc">Row 34: Product description is less than 50 characters</div>
+                                </div>
+                            </div>
+
+                            <div class="validation-item success">
+                                <div class="validation-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <div class="validation-text">
+                                    <div class="validation-title">Ready to Upload</div>
+                                    <div class="validation-desc">147 products are valid and ready for upload</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-secondary" onclick="goToStep(3)">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="15 18 9 12 15 6"/>
+                                </svg>
+                                Back
+                            </button>
+                            <button class="btn btn-secondary" onclick="downloadErrorReport()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Download Error Report
+                            </button>
+                            <button class="btn btn-primary" onclick="startUpload()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                Upload Valid Products (147)
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Upload Progress Section (Hidden initially) -->
+                    <div class="upload-section hidden" id="uploadProgress">
+                        <div class="section-header">
+                            <h2 class="section-title">Uploading Products...</h2>
+                        </div>
+
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+
+                        <div class="progress-stats">
+                            <span id="progressText">Uploading... 0 of 147 products</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+
+                        <div class="stats-grid" style="margin-top: 2rem;">
+                            <div class="stat-card">
+                                <div class="stat-value" id="uploadedCount">0</div>
+                                <div class="stat-label">Uploaded</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="pendingCount">147</div>
+                                <div class="stat-label">Pending</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="failedCount">0</div>
+                                <div class="stat-label">Failed</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value" id="timeRemaining">~2 min</div>
+                                <div class="stat-label">Time Remaining</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Success Section (Hidden initially) -->
+                    <div class="upload-section hidden" id="successSection">
+                        <div style="text-align: center; padding: 2rem;">
+                            <div style="width: 80px; height: 80px; background: #000; border-radius: 50%; margin: 0 auto 1.5rem; display: flex; align-items: center; justify-content: center;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" width="40" height="40">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                            <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: #000;">Upload Completed!</h2>
+                            <p style="color: #666; margin-bottom: 2rem;">Your products have been successfully uploaded to the selected platforms</p>
+
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-value">147</div>
+                                    <div class="stat-label">Successfully Uploaded</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">3</div>
+                                    <div class="stat-label">Platforms</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">0</div>
+                                    <div class="stat-label">Failed</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">2m 34s</div>
+                                    <div class="stat-label">Time Taken</div>
+                                </div>
+                            </div>
+
+                            <div class="action-buttons">
+                                <button class="btn btn-secondary" onclick="window.location.reload()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                    Upload More Products
+                                </button>
+                                <button class="btn btn-primary" onclick="window.location.href='../dashboard.html'">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="7" height="7"/>
+                                        <rect x="14" y="3" width="7" height="7"/>
+                                        <rect x="14" y="14" width="7" height="7"/>
+                                        <rect x="3" y="14" width="7" height="7"/>
+                                    </svg>
+                                    Go to Dashboard
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/notification-service.js"></script>
+    <script>
+        const selectedPlatforms = new Set(['amazon', 'flipkart', 'meesho']);
+        let uploadedFile = null;
+        let fileData = null;
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function togglePlatform(platform, element) {
+            if (selectedPlatforms.has(platform)) {
+                selectedPlatforms.delete(platform);
+                element.classList.remove('selected');
+            } else {
+                selectedPlatforms.add(platform);
+                element.classList.add('selected');
+            }
+        }
+
+        function goToStep(stepNumber) {
+            // Hide all sections
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`section${i}`).classList.add('hidden');
+                document.getElementById(`step${i}`).classList.remove('active', 'completed');
+            }
+
+            // Show current section
+            document.getElementById(`section${stepNumber}`).classList.remove('hidden');
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+
+            // Mark previous steps as completed
+            for (let i = 1; i < stepNumber; i++) {
+                document.getElementById(`step${i}`).classList.add('completed');
+            }
+
+            // Load mapping table if on step 3
+            if (stepNumber === 3 && fileData) {
+                loadMappingTable();
+            }
+        }
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            uploadedFile = file;
+
+            // Show file preview
+            const preview = document.getElementById('filePreview');
+            preview.classList.remove('hidden');
+            preview.innerHTML = `
+                <div class="file-item">
+                    <div class="file-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" width="20" height="20">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-meta">${(file.size / 1024).toFixed(2)} KB • ${new Date().toLocaleDateString()}</div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="icon-btn-small" onclick="removeFile()" title="Remove">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            // Enable continue button
+            document.getElementById('continueStep2').disabled = false;
+
+            // Simulate file parsing
+            parseFile(file);
+        }
+
+        function removeFile() {
+            uploadedFile = null;
+            fileData = null;
+            document.getElementById('filePreview').classList.add('hidden');
+            document.getElementById('fileInput').value = '';
+            document.getElementById('continueStep2').disabled = true;
+        }
+
+        function parseFile(file) {
+            // Simulate CSV parsing
+            fileData = {
+                headers: ['SKU', 'Product Name', 'Price', 'Stock', 'Category', 'Brand', 'Description', 'Image URL'],
+                sampleData: [
+                    ['PROD-001', 'Wireless Mouse', '599', '150', 'Electronics', 'TechPro', 'Ergonomic wireless mouse with USB receiver', 'https://example.com/mouse.jpg'],
+                    ['PROD-002', 'Bluetooth Headphones', '1299', '75', 'Electronics', 'AudioMax', 'Noise cancelling wireless headphones', 'https://example.com/headphones.jpg'],
+                    ['PROD-003', 'USB Cable', '199', '500', 'Accessories', 'ConnectPlus', '1 meter USB Type-C cable', 'https://example.com/cable.jpg']
+                ]
+            };
+        }
+
+        function loadMappingTable() {
+            const tbody = document.getElementById('mappingTableBody');
+            const fieldOptions = [
+                'SKU', 'Product Name', 'Price', 'Stock Quantity', 'Category', 
+                'Brand', 'Description', 'Image URL', 'Weight', 'Dimensions', 
+                'HSN Code', 'Tax Rate', '-- Do not import --'
+            ];
+
+            tbody.innerHTML = fileData.headers.map((header, index) => `
+                <tr>
+                    <td><strong>${header}</strong></td>
+                    <td><span class="sample-data">${fileData.sampleData[0][index]}</span></td>
+                    <td>
+                        <select>
+                            ${fieldOptions.map(option => 
+                                `<option ${option === header ? 'selected' : ''}>${option}</option>`
+                            ).join('')}
+                        </select>
+                    </td>
+                    <td>${['SKU', 'Product Name', 'Price', 'Stock'].includes(header) ? 'Yes' : 'No'}</td>
+                </tr>
+            `).join('');
+        }
+
+        function downloadTemplate(type) {
+            const templateData = 'SKU,Product Name,Price,Stock,Category,Brand,Description,Image URL\nPROD-001,Sample Product,999,100,Electronics,BrandName,Product description here,https://example.com/image.jpg';
+            const blob = new Blob([templateData], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `product_upload_template.${type}`;
+            a.click();
+        }
+
+        function downloadErrorReport() {
+            const errorReport = 'Row,Issue,Description\n45,Missing SKU,Product SKU is required\n87,Invalid Price,Price must be greater than 0\n112,Duplicate SKU,SKU already exists';
+            const blob = new Blob([errorReport], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'upload_errors.csv';
+            a.click();
+        }
+
+        function startUpload() {
+            // Hide validation section, show progress
+            document.getElementById('section4').classList.add('hidden');
+            document.getElementById('uploadProgress').classList.remove('hidden');
+
+            // Simulate upload progress
+            let progress = 0;
+            let uploaded = 0;
+            const total = 147;
+
+            const interval = setInterval(() => {
+                progress += Math.random() * 10;
+                uploaded = Math.floor((progress / 100) * total);
+
+                if (progress >= 100) {
+                    progress = 100;
+                    uploaded = total;
+                    clearInterval(interval);
+
+                    // Show success section
+                    setTimeout(() => {
+                        document.getElementById('uploadProgress').classList.add('hidden');
+                        document.getElementById('successSection').classList.remove('hidden');
+                    }, 500);
+                }
+
+                document.getElementById('progressFill').style.width = progress + '%';
+                document.getElementById('progressText').textContent = `Uploading... ${uploaded} of ${total} products`;
+                document.getElementById('progressPercent').textContent = Math.floor(progress) + '%';
+                document.getElementById('uploadedCount').textContent = uploaded;
+                document.getElementById('pendingCount').textContent = total - uploaded;
+
+                const timeLeft = Math.ceil(((100 - progress) / 100) * 120); // 2 minutes total
+                document.getElementById('timeRemaining').textContent = timeLeft > 60 
+                    ? `~${Math.ceil(timeLeft / 60)} min` 
+                    : `${timeLeft} sec`;
+            }, 200);
+        }
+
+        // Drag and drop functionality
+        const uploadZone = document.getElementById('uploadZone');
+        
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('fileInput').files = files;
+                handleFileSelect({ target: { files } });
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.notificationService) {
+                window.notificationService.init();
+            }
+        });
+    </script>
+</body>
+</html>

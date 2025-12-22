@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warehouse Management System | CreativePixels Solutions</title>
+    <meta name="description" content="End-to-end warehouse operations platform with real-time inventory tracking and intelligent automation.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #000000;
+            --light: #FFFFFF;
+            --gray: #666666;
+            --border: 2px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: white;
+            color: var(--primary);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: white;
+            border-bottom: var(--border) solid black;
+            padding: 1.5rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: black;
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: black;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border: var(--border) solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            border-color: black;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000000;
+            color: white;
+            text-align: center;
+            padding: 5rem 2rem 2rem;
+        }
+
+        .hero-content {
+            max-width: 1000px;
+        }
+
+        .solution-badge {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            border: 2px solid white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            margin-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 0.875rem 2rem;
+            background: white;
+            color: black;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid white;
+            transition: all 0.3s ease;
+            margin: 0 0.5rem;
+        }
+
+        .cta-button:hover {
+            background: black;
+            color: white;
+        }
+
+        .cta-button.secondary {
+            background: transparent;
+            color: white;
+        }
+
+        .cta-button.secondary:hover {
+            background: white;
+            color: black;
+        }
+
+        /* App Screenshot Banner */
+        .app-screenshot {
+            padding: 0;
+            background: linear-gradient(to bottom, #fafafa 0%, white 100%);
+            overflow: hidden;
+        }
+
+        .screenshot-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            position: relative;
+            padding: 2.5rem 2rem;
+        }
+
+        .dashboard-image {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            display: block;
+        }
+
+        .screenshot-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, 
+                rgba(255,255,255,0.1) 0%, 
+                rgba(255,255,255,0.8) 100%);
+            pointer-events: none;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 3rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .section-intro {
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            text-align: center;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: var(--gray);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .feature-card {
+            border: var(--border) solid black;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: black;
+            color: white;
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1);
+            border-color: white;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 1.5rem 0;
+        }
+
+        .feature-list li {
+            padding: 0.5rem 0;
+            font-size: 0.9375rem;
+            line-height: 1.6;
+            color: var(--gray);
+        }
+
+        .feature-card:hover .feature-list li {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .impact-tag {
+            padding: 0.75rem 1rem;
+            background: rgba(0,0,0,0.05);
+            border-left: 3px solid black;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 1rem;
+        }
+
+        .feature-card:hover .impact-tag {
+            background: rgba(255,255,255,0.1);
+            border-left-color: white;
+            color: white;
+        }
+
+        .feature-description {
+            color: var(--gray);
+            line-height: 1.8;
+        }
+
+        .feature-card:hover .feature-description {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 3rem 2rem;
+            background: #fafafa;
+        }
+
+        .benefits-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .benefit-item {
+            padding: 2rem;
+            background: white;
+            border: var(--border) solid black;
+        }
+
+        .benefit-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            opacity: 0.2;
+        }
+
+        .benefit-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-text {
+            color: var(--gray);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 4rem 2rem;
+            background: black;
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Visual Stats Section */
+        .visual-stats {
+            padding: 3rem 2rem;
+            background: white;
+        }
+
+        .visual-stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .stat-card {
+            border: 2px solid black;
+            padding: 2rem;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 8px 8px 0 black;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        .stat-value {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1;
+        }
+
+        .stat-description {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            margin-top: 1.5rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #f0f0f0;
+            border: 2px solid black;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: black;
+            animation: progressAnimation 2s ease-out;
+        }
+
+        @keyframes progressAnimation {
+            from { width: 0; }
+        }
+
+        /* Tracking Interface Mockup */
+        .tracking-preview {
+            padding: 6rem 2rem;
+            background: #fafafa;
+        }
+
+        .tracking-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tracking-interface {
+            border: 2px solid black;
+            background: white;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .tracking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid black;
+            margin-bottom: 2rem;
+        }
+
+        .tracking-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .tracking-status {
+            padding: 0.5rem 1rem;
+            border: 2px solid black;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .tracking-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tracking-item {
+            padding: 1.5rem;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .tracking-item-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .tracking-item-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: black;
+        }
+
+        .timeline-event {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-event::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0.25rem;
+            width: 10px;
+            height: 10px;
+            background: black;
+            border: 2px solid white;
+            box-shadow: 0 0 0 2px black;
+        }
+
+        .timeline-event.active::before {
+            background: white;
+        }
+
+        .timeline-time {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-description {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+
+        /* Chart Visualization */
+        .chart-section {
+            padding: 6rem 2rem;
+            background: white;
+        }
+
+        .chart-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .chart-card {
+            border: 2px solid black;
+            padding: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: 200px;
+            gap: 1rem;
+        }
+
+        .bar {
+            flex: 1;
+            background: black;
+            min-height: 20px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .bar:hover {
+            opacity: 0.7;
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        /* Pricing Section */
+        .pricing-section {
+            padding: 2.5rem 2rem;
+            background: #f8f8f8;
+            border-top: 2px solid #000;
+            border-bottom: 2px solid #000;
+        }
+
+        .pricing-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid #000;
+            padding: 1.75rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 8px 8px 0 #000;
+        }
+
+        .pricing-badge {
+            background: #000;
+            color: #fff;
+            padding: 0.4rem 0.875rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .price-period {
+            color: #666;
+            font-size: 0.8rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9375rem;
+        }
+
+        .pricing-features li:before {
+            content: "✓";
+            color: #000;
+            font-weight: bold;
+            margin-right: 0.75rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            z-index: 999;
+        }
+
+        .action-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #000;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-decoration: none;
+            color: #000;
+        }
+
+        .action-btn:hover {
+            background: #000;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .action-btn.primary {
+            background: #000;
+            color: #fff;
+        }
+
+        .action-btn.primary:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Corporate Stats Section */
+        .corporate-stats {
+            padding: 2.5rem 2rem;
+            background: #000;
+            color: #fff;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .stat-number {
+            font-size: 2.75rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            padding: 2.5rem 2rem 1.5rem;
+            border-top: var(--border) solid black;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: black;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="home.html" class="logo">CPX</a>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="pixelgram.html">PixelGram</a></li>
+                <li><a href="pixel-world.html">Pixel World</a></li>
+                <li><a href="studio.html">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="solution-badge">ENTERPRISE WMS</div>
+            <h1 class="hero-title">Digital Warehouse.<br>Real Results.</h1>
+            <p class="hero-subtitle">
+                AI-powered warehouse operations. 40% faster fulfillment. 99% accuracy.
+            </p>
+            <div>
+                <a href="http://localhost:8000/WMS/landing.html" class="cta-button" target="_blank">Live View →</a>
+                <a href="studio.html" class="cta-button secondary">Request Demo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h2 class="section-title">Core Capabilities</h2>
+        <p class="section-intro">
+            Complete digital transformation for modern warehouses. Automated workflows, intelligent routing, real-time visibility.
+        </p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-box"></i></div>
+                <h3 class="feature-title">Smart Inventory</h3>
+                <ul class="feature-list">
+                    <li>• Real-time stock tracking across all locations</li>
+                    <li>• AI-powered demand forecasting</li>
+                    <li>• Automated reorder points</li>
+                    <li>• 35% reduction in excess inventory</li>
+                </ul>
+                <div class="impact-tag">Business Impact: Eliminates stockouts, reduces carrying costs</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+                <h3 class="feature-title">Automated Processing</h3>
+                <ul class="feature-list">
+                    <li>• Intelligent picking routes (-40% travel time)</li>
+                    <li>• Smart batch processing</li>
+                    <li>• Auto carrier integration</li>
+                    <li>• Same-day shipping capability</li>
+                </ul>
+                <div class="impact-tag">Business Impact: Faster fulfillment, lower labor costs</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <h3 class="feature-title">Analytics & AI</h3>
+                <ul class="feature-list">
+                    <li>• Live performance dashboards</li>
+                    <li>• Predictive demand patterns</li>
+                    <li>• Custom KPI tracking</li>
+                    <li>• Data-driven decision making</li>
+                </ul>
+                <div class="impact-tag">Business Impact: 45% efficiency improvement</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-bullseye"></i></div>
+                <h3 class="feature-title">Space Optimization</h3>
+                <ul class="feature-list">
+                    <li>• AI-powered slotting algorithms</li>
+                    <li>• Dynamic bin assignment</li>
+                    <li>• Vertical space maximization</li>
+                    <li>• 25-30% capacity increase</li>
+                </ul>
+                <div class="impact-tag">Business Impact: More storage, same footprint</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-globe"></i></div>
+                <h3 class="feature-title">Multi-Warehouse</h3>
+                <ul class="feature-list">
+                    <li>• Unified network visibility</li>
+                    <li>• Intelligent stock allocation</li>
+                    <li>• Auto inter-warehouse transfers</li>
+                    <li>• Enterprise-wide reporting</li>
+                </ul>
+                <div class="impact-tag">Business Impact: Centralized control, distributed execution</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-plug"></i></div>
+                <h3 class="feature-title">Seamless Integration</h3>
+                <ul class="feature-list">
+                    <li>• ERP/E-commerce connectors</li>
+                    <li>• RESTful API architecture</li>
+                    <li>• Real-time data sync</li>
+                    <li>• Single source of truth</li>
+                </ul>
+                <div class="impact-tag">Business Impact: Eliminates manual entry, ensures accuracy</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits">
+        <div class="benefits-container">
+            <h2 class="section-title">Why Businesses Choose Us</h2>
+            <p class="section-intro">
+                Proven ROI. Real results. Digital transformation that drives growth.
+            </p>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-number">40%</div>
+                    <h3 class="benefit-title">Faster Fulfillment</h3>
+                    <p class="benefit-text">Same-day shipping. Higher throughput. Happy customers.</p>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">99%</div>
+                    <h3 class="benefit-title">Order Accuracy</h3>
+                    <p class="benefit-text">Zero stockouts. Minimal returns. Perfect execution.</p>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">30%</div>
+                    <h3 class="benefit-title">Cost Savings</h3>
+                    <p class="benefit-text">Lower labor costs. Optimized space. Reduced errors.</p>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">24/7</div>
+                    <h3 class="benefit-title">Real-Time Control</h3>
+                    <p class="benefit-text">Cloud access. Instant insights. Always connected.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Real-Time Tracking Preview -->
+    <section class="tracking-preview">
+        <div class="tracking-container">
+            <h2 class="section-title">Live Operations Dashboard</h2>
+            <p class="section-intro">
+                Monitor everything. Control everything. From anywhere.
+            </p>
+            
+            <div class="tracking-interface">
+                <div class="tracking-header">
+                    <div class="tracking-title">Warehouse Dashboard</div>
+                    <div class="tracking-status">LIVE</div>
+                </div>
+                
+                <div class="tracking-grid">
+                    <div class="tracking-item">
+                        <div class="tracking-item-label">ACTIVE ORDERS</div>
+                        <div class="tracking-item-value">2,847</div>
+                    </div>
+                    <div class="tracking-item">
+                        <div class="tracking-item-label">IN TRANSIT</div>
+                        <div class="tracking-item-value">1,234</div>
+                    </div>
+                    <div class="tracking-item">
+                        <div class="tracking-item-label">COMPLETED TODAY</div>
+                        <div class="tracking-item-value">5,891</div>
+                    </div>
+                    <div class="tracking-item">
+                        <div class="tracking-item-label">INVENTORY ACCURACY</div>
+                        <div class="tracking-item-value">99.2%</div>
+                    </div>
+                </div>
+
+                <div class="timeline">
+                    <div class="timeline-event active">
+                        <div class="timeline-time">Just now</div>
+                        <div class="timeline-description">Order #WMS-10847 picked and packed - Zone A3</div>
+                    </div>
+                    <div class="timeline-event active">
+                        <div class="timeline-time">2 minutes ago</div>
+                        <div class="timeline-description">Inventory replenishment completed - Sector B</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="timeline-time">5 minutes ago</div>
+                        <div class="timeline-description">Batch shipment dispatched - 347 units</div>
+                    </div>
+                    <div class="timeline-event">
+                        <div class="timeline-time">12 minutes ago</div>
+                        <div class="timeline-description">Quality check completed - SKU-9876</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Performance Charts -->
+    <section class="chart-section">
+        <div class="chart-container">
+            <h2 class="section-title">Performance Analytics</h2>
+            <p class="section-intro">Data-driven insights for continuous improvement</p>
+
+            <div class="chart-grid">
+                <div class="chart-card">
+                    <div class="chart-title">Order Fulfillment Rate</div>
+                    <div class="bar-chart">
+                        <div class="bar" style="height: 75%;">
+                            <div class="bar-value">75%</div>
+                            <div class="bar-label">Mon</div>
+                        </div>
+                        <div class="bar" style="height: 85%;">
+                            <div class="bar-value">85%</div>
+                            <div class="bar-label">Tue</div>
+                        </div>
+                        <div class="bar" style="height: 92%;">
+                            <div class="bar-value">92%</div>
+                            <div class="bar-label">Wed</div>
+                        </div>
+                        <div class="bar" style="height: 88%;">
+                            <div class="bar-value">88%</div>
+                            <div class="bar-label">Thu</div>
+                        </div>
+                        <div class="bar" style="height: 95%;">
+                            <div class="bar-value">95%</div>
+                            <div class="bar-label">Fri</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-title">Warehouse Utilization</div>
+                    <div class="bar-chart">
+                        <div class="bar" style="height: 82%;">
+                            <div class="bar-value">82%</div>
+                            <div class="bar-label">Zone A</div>
+                        </div>
+                        <div class="bar" style="height: 76%;">
+                            <div class="bar-value">76%</div>
+                            <div class="bar-label">Zone B</div>
+                        </div>
+                        <div class="bar" style="height: 91%;">
+                            <div class="bar-value">91%</div>
+                            <div class="bar-label">Zone C</div>
+                        </div>
+                        <div class="bar" style="height: 68%;">
+                            <div class="bar-value">68%</div>
+                            <div class="bar-label">Zone D</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Intelligence & Excellence -->
+    <section class="visual-stats">
+        <div class="visual-stats-container">
+            <h2 class="section-title">Intelligence & Excellence</h2>
+            <p class="section-intro" style="margin-bottom: 2rem;">AI-driven insights powering tomorrow's warehouse operations today</p>
+            <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+                <div class="stat-card" style="padding: 1.25rem;">
+                    <div class="stat-label" style="font-size: 0.75rem;">EFFICIENCY</div>
+                    <div class="stat-value" style="font-size: 2.25rem;">94%</div>
+                    <div class="stat-description" style="font-size: 0.875rem;">Daily performance</div>
+                </div>
+
+                <div class="stat-card" style="padding: 1.25rem;">
+                    <div class="stat-label" style="font-size: 0.75rem;">ACCURACY</div>
+                    <div class="stat-value" style="font-size: 2.25rem;">99.7%</div>
+                    <div class="stat-description" style="font-size: 0.875rem;">Error-free orders</div>
+                </div>
+
+                <div class="stat-card" style="padding: 1.25rem;">
+                    <div class="stat-label" style="font-size: 0.75rem;">UTILIZATION</div>
+                    <div class="stat-value" style="font-size: 2.25rem;">87%</div>
+                    <div class="stat-description" style="font-size: 0.875rem;">Space optimized</div>
+                </div>
+
+                <div class="stat-card" style="padding: 1.25rem;">
+                    <div class="stat-label" style="font-size: 0.75rem;">PROCESSING</div>
+                    <div class="stat-value" style="font-size: 2.25rem;">2.3m</div>
+                    <div class="stat-description" style="font-size: 0.875rem;">Avg completion</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Corporate Stats Section -->
+    <section class="corporate-stats">
+        <div class="stats-container">
+            <h2 class="section-title" style="color: white;">Proven Enterprise Results</h2>
+            <p class="section-intro" style="color: rgba(255,255,255,0.8);">Real metrics from companies using our WMS platform</p>
+            
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Active Warehouses</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50M+</div>
+                    <div class="stat-label">Orders Processed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">99.8%</div>
+                    <div class="stat-label">Uptime SLA</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">40%</div>
+                    <div class="stat-label">Cost Reduction</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing-section">
+        <div class="pricing-container">
+            <h2 class="section-title">Simple, Transparent Pricing</h2>
+            <p class="section-intro">Choose the plan that fits your warehouse operations</p>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-badge">FREE DEMO</div>
+                    <h3>Trial</h3>
+                    <div class="price">$1</div>
+                    <div class="price-period">Demo access only</div>
+                    <ul class="pricing-features">
+                        <li>14-day full access</li>
+                        <li>Sample data included</li>
+                        <li>All core features</li>
+                        <li>Email support</li>
+                        <li>Training videos</li>
+                    </ul>
+                    <a href="#" class="cta-button" onclick="alert('Demo signup coming soon!'); return false;">Try Free Demo</a>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-badge">MOST POPULAR</div>
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <div class="price-period">Contact for pricing</div>
+                    <ul class="pricing-features">
+                        <li>Unlimited users</li>
+                        <li>All features included</li>
+                        <li>Custom integrations</li>
+                        <li>24/7 priority support</li>
+                        <li>Dedicated account manager</li>
+                        <li>Training & onboarding</li>
+                        <li>SLA guarantee</li>
+                    </ul>
+                    <a href="#" class="cta-button" onclick="alert('Enterprise signup coming soon!'); return false;">Contact Sales</a>
+                </div>
+
+                <div class="pricing-card">
+                    <div class="pricing-badge">WHITE LABEL</div>
+                    <h3>Custom</h3>
+                    <div class="price">Quote</div>
+                    <div class="price-period">Tailored solution</div>
+                    <ul class="pricing-features">
+                        <li>Full customization</li>
+                        <li>Your branding</li>
+                        <li>Source code access</li>
+                        <li>Dedicated infrastructure</li>
+                        <li>Custom development</li>
+                        <li>Premium support</li>
+                    </ul>
+                    <a href="get-in-touch.html" class="cta-button">Get Quote</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Ready to Go Digital?</h2>
+        <p>Join businesses transforming warehouse operations with AI-powered automation.</p>
+        <div>
+            <a href="http://localhost:8000/WMS/landing.html" class="cta-button" target="_blank">View Live Demo →</a>
+            <a href="studio.html" class="cta-button secondary">Contact Sales</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>CreativePixels</h3>
+                <p>Transforming enterprise operations through innovative digital solutions.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Solutions</h3>
+                <ul>
+                    <li><a href="wms-solution.html">Warehouse Management</a></li>
+                    <li><a href="tms-solution.html">Transport Management</a></li>
+                    <li><a href="pis-solution.html">Insurance Platform</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="pixelgram.html">PixelGram</a></li>
+                    <li><a href="pixel-world.html">Pixel World</a></li>
+                    <li><a href="studio.html">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 CreativePixels. All rights reserved.</p>
+        </div>
+    </footer>
+    <!-- Floating Action Buttons -->
+    <div class="action-buttons">
+        <a href="#" class="action-btn" onclick="navigator.share ? navigator.share({title: 'WMS Solution', url: window.location.href}) : alert('Share: ' + window.location.href); return false;" title="Share">
+            <i class="fa-solid fa-share-nodes"></i>
+        </a>
+        <a href="#" class="action-btn" onclick="alert('Enterprise purchase coming soon!'); return false;" title="Purchase">
+            <i class="fa-solid fa-cart-shopping"></i>
+        </a>
+        <a href="#" class="action-btn primary" onclick="alert('Free demo signup coming soon!'); return false;" title="Free Demo">
+            <i class="fa-solid fa-play"></i>
+        </a>
+    </div>
+</body>
+</html>

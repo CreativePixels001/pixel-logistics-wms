@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Articles - PixelFact</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Noto+Serif+Devanagari:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0A0A0A;
+            --white: #FFFFFF;
+            --gray-50: #FAFAFA;
+            --gray-100: #F5F5F5;
+            --gray-200: #E8E8E8;
+            --gray-500: #737373;
+            --gray-700: #404040;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--white);
+            color: var(--black);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            z-index: 1000;
+            padding: 20px 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--black);
+            text-decoration: none;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 100px auto 0;
+            padding: 60px 40px;
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+
+        .article-card {
+            text-decoration: none;
+            color: var(--black);
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .article-category {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gray-500);
+            margin-bottom: 15px;
+        }
+
+        .article-headline {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 12px;
+        }
+
+        .article-preview {
+            font-size: 0.95rem;
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        .footer {
+            background: var(--black);
+            color: var(--white);
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        @media (max-width: 1024px) {
+            .articles-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="landing.html" class="logo">PixelFact</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title" id="page-title">All Articles</h1>
+        <div class="articles-grid" id="articles-grid"></div>
+    </div>
+
+    <footer class="footer">
+        <p>2024 © PIXELFACT</p>
+    </footer>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const category = urlParams.get('category');
+        const language = urlParams.get('language');
+
+        async function loadArticles() {
+            try {
+                const response = await fetch('magazine_articles.json');
+                const data = await response.json();
+                
+                let filtered = data.articles;
+                let title = 'All Articles';
+
+                if (category) {
+                    filtered = filtered.filter(a => a.category.toLowerCase() === category.toLowerCase());
+                    title = category.charAt(0).toUpperCase() + category.slice(1) + ' Articles';
+                }
+
+                if (language) {
+                    filtered = filtered.filter(a => a.language.toLowerCase() === language.toLowerCase());
+                    title = language === 'hindi' ? 'हिंदी लेख' : 'English Articles';
+                }
+
+                document.getElementById('page-title').textContent = title;
+
+                const grid = document.getElementById('articles-grid');
+                grid.innerHTML = filtered.map(article => `
+                    <a href="article.html?id=${article.id}" class="article-card">
+                        <img src="${article.inline_images && article.inline_images.length > 0 ? article.inline_images[0].path : article.image}" 
+                             alt="${article.headline}" class="article-image">
+                        <div class="article-category">${article.category}</div>
+                        <h2 class="article-headline">${article.headline}</h2>
+                        <p class="article-preview">${article.preview}</p>
+                    </a>
+                `).join('');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        loadArticles();
+    </script>
+</body>
+</html>

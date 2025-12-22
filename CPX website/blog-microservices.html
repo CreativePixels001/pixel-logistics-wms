@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Building Scalable Microservices Architecture - CreativePixels Blog</title>
+    <meta name="description" content="From ancient libraries to cloud-native systems - the evolution of software architecture through the decades and how microservices solve modern scaling challenges.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #000000; --dark: #000000; --light: #FFFFFF; --gray: #666666; --border: 2px; }
+        body { font-family: 'Inter', sans-serif; background: white; color: var(--dark); line-height: 1.8; }
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.3; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: white; border-bottom: var(--border) solid black; padding: 1.5rem 0; transition: box-shadow 0.3s ease; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: black; text-decoration: none; }
+        .nav-menu { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-menu a { color: black; text-decoration: none; font-weight: 500; transition: opacity 0.3s ease; }
+        .nav-menu a:hover { opacity: 0.6; }
+        .cta-btn { padding: 0.75rem 1.5rem; background: black; color: white !important; border: var(--border) solid black; transition: all 0.3s ease; }
+        .cta-btn:hover { background: white; color: black !important; }
+        
+        .hero { padding: 10rem 0 4rem; background: white; border-bottom: var(--border) solid black; }
+        .hero-badge { display: inline-block; padding: 0.5rem 1rem; background: black; color: white; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
+        .hero-title { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; margin-bottom: 1.5rem; max-width: 900px; }
+        .hero-meta { display: flex; gap: 2rem; align-items: center; color: var(--gray); margin-bottom: 2rem; flex-wrap: wrap; }
+        .author { display: flex; align-items: center; gap: 0.75rem; }
+        .author-avatar { width: 48px; height: 48px; background: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.25rem; }
+        .author-info h4 { font-size: 1rem; font-weight: 600; color: black; margin-bottom: 0.25rem; }
+        .author-info p { font-size: 0.875rem; }
+        
+        .featured-image { width: 100%; height: 500px; background: rgba(0, 0, 0, 0.05); display: flex; align-items: center; justify-content: center; color: black; margin: 3rem 0; }
+        .featured-image p { font-size: 2rem; font-weight: 700; }
+        
+        .article-content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+        .article-content p { font-size: 1.125rem; margin-bottom: 1.5rem; color: #333; }
+        .article-content h2 { font-size: 2rem; font-weight: 700; margin: 3rem 0 1.5rem; }
+        .article-content h3 { font-size: 1.5rem; font-weight: 600; margin: 2.5rem 0 1rem; }
+        .article-content strong { font-weight: 700; color: black; }
+        .article-content em { font-style: italic; }
+        
+        .pullquote { background: rgba(0, 0, 0, 0.03); border-left: 4px solid black; padding: 2rem; margin: 3rem 0; font-size: 1.375rem; font-weight: 500; font-style: italic; line-height: 1.6; }
+        
+        .article-content ul, .article-content ol { margin: 1.5rem 0 1.5rem 2rem; }
+        .article-content li { margin-bottom: 0.75rem; font-size: 1.125rem; color: #333; }
+        
+        .code-block { background: rgba(0, 0, 0, 0.05); border: var(--border) solid black; padding: 1.5rem; margin: 2rem 0; font-family: 'Courier New', monospace; font-size: 0.95rem; overflow-x: auto; }
+        
+        .image-caption { text-align: center; color: var(--gray); font-size: 0.95rem; margin-top: 0.75rem; font-style: italic; }
+        
+        .share-section { border-top: var(--border) solid black; border-bottom: var(--border) solid black; padding: 2rem 0; margin: 4rem 0; text-align: center; }
+        .share-section h4 { font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; }
+        .share-buttons { display: flex; gap: 1rem; justify-content: center; }
+        .share-btn { padding: 0.75rem 1.5rem; background: white; border: var(--border) solid black; color: black; text-decoration: none; font-weight: 600; transition: all 0.3s ease; }
+        .share-btn:hover { background: black; color: white; }
+        
+        .related-posts { padding: 6rem 0; background: rgba(0, 0, 0, 0.02); }
+        .related-title { font-size: 2rem; font-weight: 700; margin-bottom: 3rem; text-align: center; }
+        .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        .related-card { background: white; border: var(--border) solid black; padding: 2rem; transition: all 0.3s ease; }
+        .related-card:hover { transform: translateY(-5px); background: black; color: white; }
+        .related-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; }
+        .related-card p { color: var(--gray); font-size: 0.95rem; }
+        .related-card:hover p { color: rgba(255, 255, 255, 0.7); }
+        .related-card a { color: black; font-weight: 600; text-decoration: none; border-bottom: var(--border) solid black; padding-bottom: 2px; display: inline-block; margin-top: 1rem; }
+        .related-card:hover a { color: white; border-color: white; }
+        
+        .cta-section { padding: 6rem 0; background: black; color: white; text-align: center; }
+        .cta-section h2 { font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1.5rem; }
+        .cta-section p { font-size: 1.125rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+        .cta-white { display: inline-block; padding: 1rem 2.5rem; background: white; color: black; text-decoration: none; font-weight: 600; border: var(--border) solid white; transition: all 0.3s ease; }
+        .cta-white:hover { background: black; color: white; }
+        
+        footer { background: black; color: white; padding: 4rem 0 2rem; }
+        .footer-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+        .footer-brand h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .footer-brand p { color: rgba(255, 255, 255, 0.7); line-height: 1.8; margin-bottom: 1.5rem; }
+        .footer-social { display: flex; gap: 1rem; }
+        .social-link { width: 40px; height: 40px; border: var(--border) solid white; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .social-link:hover { background: white; }
+        .social-link:hover svg { stroke: black; }
+        .social-link svg { stroke: white; transition: stroke 0.3s ease; }
+        .footer-column h4 { margin-bottom: 1rem; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 0.75rem; }
+        .footer-links a { color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: color 0.3s ease; }
+        .footer-links a:hover { color: white; }
+        .footer-bottom { padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center; }
+        .footer-bottom p { color: rgba(255, 255, 255, 0.5); }
+        .footer-legal { display: flex; gap: 2rem; }
+        .footer-legal a { color: rgba(255, 255, 255, 0.5); text-decoration: none; transition: color 0.3s ease; }
+        .footer-legal a:hover { color: white; }
+        
+        @media (max-width: 968px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-brand { grid-column: 1 / -1; } .featured-image { height: 350px; } .hero-meta { flex-direction: column; align-items: flex-start; gap: 1rem; } }
+        @media (max-width: 640px) { .nav-menu { gap: 1rem; font-size: 0.9rem; } .footer-grid, .related-grid { grid-template-columns: 1fr; } .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; } .footer-legal { flex-direction: column; gap: 0.5rem; } .featured-image { height: 250px; } .article-content { padding: 2rem 1rem 4rem; } .share-buttons { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">CreativePixels</a>
+            <ul class="nav-menu">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="pixelgram.html">PixelGram</a></li>
+                <li><a href="pixel-world.html">Pixel World</a></li>
+                <li><a href="pixelverse.html">PixelVerse</a></li>
+                <li><a href="get-in-touch.html" class="cta-btn">Get in Touch</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">CLOUD & ARCHITECTURE</div>
+            <h1 class="hero-title">Building Scalable Microservices Architecture</h1>
+            <div class="hero-meta">
+                <div class="author">
+                    <div class="author-avatar">PT</div>
+                    <div class="author-info">
+                        <h4>Pixel Talk</h4>
+                        <p>December 10, 2025 • 8 min read</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="featured-image">
+        <p>Microservices Evolution</p>
+    </div>
+
+    <article class="article-content">
+        <p>Imagine the ancient Library of Alexandria—a single, magnificent structure housing all the world's knowledge. When fire consumed it, centuries of human wisdom vanished in flames. Now picture a modern digital library: knowledge distributed across thousands of servers worldwide, each piece independent yet connected, resilient to any single point of failure. This transformation from monolith to distributed system mirrors one of the most significant shifts in software architecture history.</p>
+
+        <p>Welcome to the story of microservices—a journey that began in dusty server rooms of the 1990s and culminated in the cloud-native revolution of the 2010s.</p>
+
+        <h2>The Monolithic Age: When Everything Lived in One Place</h2>
+
+        <p>Let me introduce you to Sarah, a senior developer at a growing e-commerce company in 2008. Her company's entire platform—shopping cart, payment processing, inventory management, user accounts, recommendation engine—existed as a single application running on a single server cluster.</p>
+
+        <p>When Black Friday arrived that year, their servers couldn't handle the traffic spike. The entire site crashed. Not just the shopping cart—everything. Because when one piece of a monolithic application fails, it all fails. It's like having all your eggs in one very fragile basket.</p>
+
+        <p>But worse than the crashes was the development nightmare. Sarah's team of 50 developers all worked on the same codebase. A small change to the checkout process required testing and redeploying the entire application. Updates that should have taken hours consumed days. Each deployment was an anxiety-filled event that required system downtime and prayer.</p>
+
+        <p>This was the reality of software development in the 2000s. Applications were built like medieval castles—impressive, but inflexible and difficult to modify without risking structural collapse.</p>
+
+        <div class="pullquote">
+            "The shift from monolithic to microservices architecture wasn't just technical—it was philosophical. We stopped building castles and started building cities."
+        </div>
+
+        <h2>The 2010s: The Cloud Changes Everything</h2>
+
+        <p>Then came Amazon Web Services, Google Cloud, and Microsoft Azure. Suddenly, computing power wasn't something you bought and installed in a server room—it was something you rented by the hour. This changed everything.</p>
+
+        <p>In 2012, Sarah's company made a bold decision. They began breaking their monolithic application into smaller, independent services. The shopping cart became its own service. Payment processing split off. Inventory management stood alone. Each service could be deployed, scaled, and updated independently.</p>
+
+        <p>The transformation wasn't easy. It took three years of careful planning and execution. But by 2015, something remarkable had happened. During that year's Black Friday, traffic increased 300% compared to 2008. The site didn't crash. When the recommendation engine struggled under load, they simply spun up more instances of that specific service. The rest of the platform hummed along perfectly.</p>
+
+        <h3>What Made Microservices Possible</h3>
+
+        <p>The microservices revolution required several technological advances to converge:</p>
+
+        <ul>
+            <li><strong>Containerization (Docker, 2013):</strong> Imagine being able to package an entire application—code, dependencies, configurations—into a standardized container that runs identically everywhere. Docker made this possible, solving the age-old problem of "it works on my machine."</li>
+            <li><strong>Orchestration (Kubernetes, 2014):</strong> Managing dozens or hundreds of containers manually would be impossible. Kubernetes automated deployment, scaling, and management, acting like an intelligent traffic controller for services.</li>
+            <li><strong>Cloud Infrastructure:</strong> The 2010s saw cloud providers mature from basic virtual machines to sophisticated platforms offering databases, message queues, load balancers, and monitoring—all as managed services.</li>
+            <li><strong>API-First Design:</strong> Services needed to communicate efficiently. RESTful APIs and later GraphQL provided standardized ways for microservices to talk to each other.</li>
+        </ul>
+
+        <h2>Real-World Transformations</h2>
+
+        <p>Let's examine how different industries solved decade-old problems with microservices architecture:</p>
+
+        <p><strong>Banking in the 2010s:</strong> A major retail bank had a core banking system built in the 1980s—literally running COBOL code on mainframes. They couldn't replace it (too risky, too expensive), but they couldn't compete with nimble fintech startups either. Their solution? Build new microservices around the legacy system. Mobile banking, instant transfers, AI-powered fraud detection—all as modern microservices that communicated with the old core system through carefully designed APIs. They got innovation without the risk of replacing everything at once.</p>
+
+        <p><strong>Healthcare Evolution:</strong> A hospital network struggled with patient data spread across incompatible systems—one for appointments, another for lab results, another for prescriptions. In 2016, they began building microservices that created a unified patient view. Each department kept their existing systems, but new microservices aggregated the data intelligently. Doctors finally saw complete patient histories without logging into five different systems.</p>
+
+        <p><strong>Retail Resilience:</strong> Remember Sarah's e-commerce company? By 2018, they had 47 independent microservices. When a bug in the product review service was discovered, they fixed and deployed it in 20 minutes—without touching anything else. Their development team, now 200 strong, worked in small squads, each owning specific services. Features that once took months now shipped in weeks.</p>
+
+        <h2>The Architecture of Scale</h2>
+
+        <p>But microservices aren't just about splitting applications into pieces. They represent a fundamental rethinking of how software systems work. Consider these principles that emerged:</p>
+
+        <p><strong>Single Responsibility:</strong> Each microservice does one thing and does it well. The payment service handles payments. The inventory service manages stock. The user service manages accounts. This isn't just good organization—it's about isolating failure. When one service has problems, others continue functioning.</p>
+
+        <p><strong>Independent Deployment:</strong> Remember when updating one feature meant deploying your entire application? With microservices, each service has its own deployment pipeline. Teams can ship updates dozens of times per day without coordination overhead or system-wide risk.</p>
+
+        <p><strong>Technology Diversity:</strong> Different problems need different tools. In a monolith, you're married to one technology stack. With microservices, your payment service might use Python for its excellent financial libraries, while your image processing service uses Node.js for its performance, and your real-time chat uses Go for its concurrency model. Choose the right tool for each job.</p>
+
+        <p><strong>Decentralized Data:</strong> Each service owns its data. No more massive centralized databases where every table depends on every other table. Services communicate through well-defined APIs, maintaining their own data stores optimized for their specific needs.</p>
+
+        <div class="pullquote">
+            "Microservices taught us that resilience comes not from perfection, but from the ability to fail gracefully. Build systems that expect failure and handle it elegantly."
+        </div>
+
+        <h2>The Challenges We Overcame</h2>
+
+        <p>Let's be honest—microservices introduced new complexities. Sarah's team discovered this quickly:</p>
+
+        <p><strong>Distributed System Complexity:</strong> With a monolith, when something breaks, you know where to look. With microservices, a single user request might flow through ten different services. When something goes wrong, finding the culprit requires sophisticated monitoring and tracing tools. The industry responded with observability platforms like Datadog, New Relic, and Prometheus.</p>
+
+        <p><strong>Network Reliability:</strong> In a monolith, functions call each other directly in memory. With microservices, every interaction crosses a network. Networks fail, they have latency, they get congested. Solutions emerged: circuit breakers to prevent cascading failures, retry logic with exponential backoff, service meshes like Istio to handle communication complexity.</p>
+
+        <p><strong>Data Consistency:</strong> When services own their data, keeping everything consistent becomes challenging. The solution? We stopped trying to achieve perfect consistency and embraced eventual consistency. We designed systems that work correctly even when data is temporarily inconsistent—and we got better at it.</p>
+
+        <p><strong>Testing Complexity:</strong> How do you test a system of 50 interconnected services? The answer involved contract testing, service virtualization, and sophisticated integration test environments. It was harder than testing monoliths, but it enabled continuous deployment at scale.</p>
+
+        <h2>The Cultural Shift</h2>
+
+        <p>Here's what most technical articles miss: microservices required organizational change as much as architectural change. The old model—separate teams for development, testing, operations—couldn't work when you had dozens of services being updated constantly.</p>
+
+        <p>Enter DevOps and the "you build it, you run it" philosophy. Teams became end-to-end responsible for their services. If a service failed at 3 AM, the team that built it got the call. This created powerful incentives for reliability, monitoring, and good design.</p>
+
+        <p>Sarah's company reorganized around services rather than functions. Instead of a "backend team" and a "frontend team," they had a "payments team" owning the entire payment service stack, a "search team" owning search functionality, and so on. Teams became smaller, more autonomous, and paradoxically more productive.</p>
+
+        <h2>Looking Forward: The Next Evolution</h2>
+
+        <p>As we move deeper into the 2020s, microservices continue evolving. Serverless functions take the concept further—why manage services when you can just write functions that the cloud provider runs on demand? Edge computing distributes services even closer to users. Service meshes abstract away networking complexity.</p>
+
+        <p>But the fundamental lesson remains: build systems that embrace change, expect failure, and scale gracefully. Whether you call it microservices, serverless, or whatever comes next, these principles endure.</p>
+
+        <p>From ancient libraries to cloud-native architectures, humanity has always sought better ways to organize knowledge and capability. The Library of Alexandria fell in a day. Modern distributed systems withstand hurricanes, earthquakes, and yes, even Black Friday traffic.</p>
+
+        <p>That's progress worth celebrating.</p>
+
+        <h2>Getting Started: A Practical Path</h2>
+
+        <p>If you're considering microservices for your organization, start small. Don't try to break everything apart at once. Identify a single bounded context—maybe user authentication or product catalog. Build it as an independent service. Learn from it. Then expand gradually.</p>
+
+        <p>And remember: microservices aren't always the answer. If you're a small team building a simple application, a well-designed monolith might serve you better. Architecture should solve real problems, not follow trends.</p>
+
+        <p>The goal isn't microservices. The goal is building systems that serve users reliably, scale efficiently, and evolve gracefully. Sometimes that means microservices. Sometimes it doesn't. The wisdom is knowing the difference.</p>
+
+        <div class="share-section">
+            <h4>Share This Article</h4>
+            <div class="share-buttons">
+                <a href="#" class="share-btn">Share on LinkedIn</a>
+                <a href="#" class="share-btn">Share on Twitter</a>
+                <a href="#" class="share-btn">Copy Link</a>
+            </div>
+        </div>
+    </article>
+
+    <section class="related-posts">
+        <div class="container">
+            <h2 class="related-title">Related Articles</h2>
+            <div class="related-grid">
+                <div class="related-card">
+                    <h3>The Future of AI in Enterprise Applications</h3>
+                    <p>Discover how AI is transforming enterprise software from counting stones to thinking machines.</p>
+                    <a href="blog-ai-enterprise.html">Read More →</a>
+                </div>
+                <div class="related-card">
+                    <h3>Design Systems: Why Every Product Team Needs One</h3>
+                    <p>The evolution from medieval manuscripts to modern design languages.</p>
+                    <a href="blog-design-systems.html">Read More →</a>
+                </div>
+                <div class="related-card">
+                    <h3>Digital Transformation: A Practical Guide</h3>
+                    <p>Journey through the decades from analog to digital business operations.</p>
+                    <a href="blog-digital-transformation.html">Read More →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Need Help Scaling Your Architecture?</h2>
+            <p>Let's discuss how microservices and cloud-native architecture can solve your scalability challenges.</p>
+            <a href="get-in-touch.html" class="cta-white">Start the Conversation →</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>CreativePixels</h3>
+                    <p>Transforming thoughts into monetizable products through innovative design, machine learning, and creative problem-solving.</p>
+                    <p style="margin-top: 1rem; font-size: 0.95rem;"><strong>Email:</strong> <a href="mailto:connect@creativepixels.in" style="color: rgba(255,255,255,0.8); text-decoration: none;">connect@creativepixels.in</a></p>
+                    <p style="font-size: 0.95rem;"><strong>Call/WhatsApp:</strong> <a href="tel:+919004789969" style="color: rgba(255,255,255,0.8); text-decoration: none;">+91 90047 89969</a></p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                <rect x="2" y="9" width="4" height="12"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about-us.html">About Us</a></li>
+                        <li><a href="our-approach.html">Our Approach</a></li>
+                        <li><a href="pixel-world.html">Pixel World</a></li>
+                        <li><a href="pixelgram.html">PixelGram</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="digital-transformation.html">Digital Transformation</a></li>
+                        <li><a href="ai-ml.html">AI & Machine Learning</a></li>
+                        <li><a href="product-design.html">Product Design</a></li>
+                        <li><a href="development.html">Development</a></li>
+                        <li><a href="consulting.html">Consulting</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="get-in-touch.html">Get in Touch</a></li>
+                        <li><a href="support.html">Support</a></li>
+                        <li><a href="partners.html">Partners</a></li>
+                        <li><a href="press-kit.html">Press Kit</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 CreativePixels. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
+                    <a href="cookie-policy.html">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            else navbar.style.boxShadow = 'none';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Transportation Management System - Next-Gen Freight & Logistics Solution">
+  <title>Pixel Logistics - TMS Dashboard</title>
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#000000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Pixel TMS">
+  <link rel="apple-touch-icon" href="../icons/icon-192x192.png">
+  
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tms-dashboard.css">
+  <link rel="stylesheet" href="../css/side-panel.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Transportation Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <!-- Search Trigger Button -->
+      <button class="search-trigger" onclick="openSearch()" aria-label="Search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <span>Search</span>
+        <kbd class="search-kbd-compact">⌘K</kbd>
+      </button>
+      
+      <!-- Theme Toggle Button -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <!-- Global Search Modal (Hidden by default) -->
+      <div class="search-modal" id="searchModal" style="display: none;">
+        <div class="search-modal-overlay" onclick="closeSearch()"></div>
+        <div class="search-modal-content">
+          <div class="search-input-wrapper">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" class="search-input" id="globalSearchInput" placeholder="Search shipments..." autocomplete="off">
+            <button class="search-close" onclick="closeSearch()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="search-suggestions" id="searchSuggestions"></div>
+        </div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">Transport Manager</div>
+          <div class="user-role">Fleet Operations</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">TM</div>
+        <div class="user-dropdown" id="userDropdown">
+          <a href="#" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="landing.html" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="layout">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">
+          <span>Transportation</span>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="tms-dashboard.html" class="sidebar-link active">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span class="sidebar-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-shipments.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"/>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                  <circle cx="5.5" cy="18.5" r="2.5"/>
+                  <circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+              </span>
+              <span class="sidebar-text">Shipments</span>
+              <span class="badge">248</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-tracking.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="10" r="3"/>
+                  <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/>
+                </svg>
+              </span>
+              <span class="sidebar-text">Live Tracking</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-routes.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+              </span>
+              <span class="sidebar-text">Route Optimization</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">
+          <span>Management</span>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="tms-carriers.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span class="sidebar-text">Carriers</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-fleet.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+              </span>
+              <span class="sidebar-text">Fleet Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-compliance.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              </span>
+              <span class="sidebar-text">DOT Compliance</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title">
+          <span>Analytics</span>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="20" x2="12" y2="10"></line>
+                  <line x1="18" y1="20" x2="18" y2="4"></line>
+                  <line x1="6" y1="20" x2="6" y2="16"></line>
+                </svg>
+              </span>
+              <span class="sidebar-text">Reports</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="#" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                </svg>
+              </span>
+              <span class="sidebar-text">Cost Analysis</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Quick Status -->
+      <div class="sidebar-status">
+        <div class="status-title">System Status</div>
+        <div class="status-item">
+          <div class="status-indicator online"></div>
+          <span>GPS Tracking: Online</span>
+        </div>
+        <div class="status-item">
+          <div class="status-indicator online"></div>
+          <span>Route API: Active</span>
+        </div>
+        <div class="status-item">
+          <div class="status-indicator warning"></div>
+          <span>3 Alerts Pending</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <div class="content-wrapper">
+        
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <h1 class="page-title">Transportation Dashboard</h1>
+            <p class="page-description">Real-time freight and carrier management overview</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-secondary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              Export Data
+            </button>
+            <button class="btn btn-primary" onclick="showQuickShipment()">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Create Shipment
+            </button>
+          </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-4 mb-xl">
+          <div class="stat-card" data-stat="active-shipments">
+            <div class="stat-label">Active Shipments</div>
+            <div class="stat-value">248</div>
+            <div class="stat-change">+12% from yesterday</div>
+          </div>
+
+          <div class="stat-card" data-stat="ontime-delivery">
+            <div class="stat-label">On-Time Delivery</div>
+            <div class="stat-value">98.4%</div>
+            <div class="stat-change">Above target by 3.4%</div>
+          </div>
+
+          <div class="stat-card" data-stat="monthly-cost">
+            <div class="stat-label">Freight Cost (MTD)</div>
+            <div class="stat-value">$42.8K</div>
+            <div class="stat-change">$8.2K saved this month</div>
+          </div>
+
+          <div class="stat-card" data-stat="pending-deliveries">
+            <div class="stat-label">Active Carriers</div>
+            <div class="stat-value">142</div>
+            <div class="stat-change">5 new this week</div>
+          </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="dashboard-grid">
+          
+          <!-- Active Shipments Table -->
+          <div class="card card-large">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px;">
+              <h3 class="card-title" style="font-size: 14px; margin: 0;">Active Shipments</h3>
+              <a href="#" style="font-size: 12px; color: rgba(0,0,0,0.6); text-decoration: none; font-weight: 500;">View All →</a>
+            </div>
+            <div class="card-body" style="padding: 0;">
+              <div class="table-container">
+                <table class="table shipments-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 140px;">Shipment ID</th>
+                      <th style="width: 240px;">Origin → Destination</th>
+                      <th style="width: 150px;">Carrier</th>
+                      <th style="width: 130px;">Status</th>
+                      <th style="width: 150px;">ETA</th>
+                      <th style="width: 120px;">Progress</th>
+                      <th style="width: 80px; text-align: center;">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="shipment-id">#SH-2024-1847</span></td>
+                      <td>
+                        <div class="route-info">
+                          <strong>Chicago, IL</strong> → <strong>New York, NY</strong>
+                        </div>
+                      </td>
+                      <td>Swift Freight</td>
+                      <td><span class="status-badge status-in-transit">In Transit</span></td>
+                      <td>Nov 20, 2:30 PM</td>
+                      <td>
+                        <div class="progress-bar">
+                          <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                        <span class="progress-text">65%</span>
+                      </td>
+                      <td style="text-align: center;">
+                        <button class="btn-icon" title="Track">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="10" r="3"/>
+                            <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><span class="shipment-id">#SH-2024-1846</span></td>
+                      <td>
+                        <div class="route-info">
+                          <strong>Los Angeles, CA</strong> → <strong>Seattle, WA</strong>
+                        </div>
+                      </td>
+                      <td>National Express</td>
+                      <td><span class="status-badge status-in-transit">In Transit</span></td>
+                      <td>Nov 19, 5:00 PM</td>
+                      <td>
+                        <div class="progress-bar">
+                          <div class="progress-fill" style="width: 85%"></div>
+                        </div>
+                        <span class="progress-text">85%</span>
+                      </td>
+                      <td style="text-align: center;">
+                        <button class="btn-icon" title="Track">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="10" r="3"/>
+                            <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><span class="shipment-id">#SH-2024-1845</span></td>
+                      <td>
+                        <div class="route-info">
+                          <strong>Dallas, TX</strong> → <strong>Miami, FL</strong>
+                        </div>
+                      </td>
+                      <td>Rapid Logistics</td>
+                      <td><span class="status-badge status-pending">Pending Pickup</span></td>
+                      <td>Nov 21, 10:00 AM</td>
+                      <td>
+                        <div class="progress-bar">
+                          <div class="progress-fill" style="width: 10%"></div>
+                        </div>
+                        <span class="progress-text">10%</span>
+                      </td>
+                      <td style="text-align: center;">
+                        <button class="btn-icon" title="Track">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="10" r="3"/>
+                            <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><span class="shipment-id">#SH-2024-1844</span></td>
+                      <td>
+                        <div class="route-info">
+                          <strong>Boston, MA</strong> → <strong>Atlanta, GA</strong>
+                        </div>
+                      </td>
+                      <td>QuickHaul Inc.</td>
+                      <td><span class="status-badge status-delivered">Delivered</span></td>
+                      <td>Nov 18, 3:45 PM</td>
+                      <td>
+                        <div class="progress-bar">
+                          <div class="progress-fill" style="width: 100%"></div>
+                        </div>
+                        <span class="progress-text">100%</span>
+                      </td>
+                      <td style="text-align: center;">
+                        <button class="btn-icon" title="Details">
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Carrier Performance -->
+          <div class="card">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px;">
+              <h3 class="card-title" style="font-size: 14px; margin: 0;">Top Carriers</h3>
+              <a href="#" style="font-size: 12px; color: rgba(0,0,0,0.6); text-decoration: none; font-weight: 500;">View All →</a>
+            </div>
+            <div class="card-body">
+              <div class="carrier-list carrier-rankings-list">
+                <div class="carrier-item">
+                  <div class="carrier-rank">1</div>
+                  <div class="carrier-info">
+                    <div class="carrier-name">Swift Freight LLC</div>
+                    <div class="carrier-stats">
+                      <span>98.5% On-Time</span> • <span>42 Shipments</span>
+                    </div>
+                  </div>
+                  <div class="carrier-score">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    4.9
+                  </div>
+                </div>
+
+                <div class="carrier-item">
+                  <div class="carrier-rank">2</div>
+                  <div class="carrier-info">
+                    <div class="carrier-name">National Express</div>
+                    <div class="carrier-stats">
+                      <span>97.8% On-Time</span> • <span>38 Shipments</span>
+                    </div>
+                  </div>
+                  <div class="carrier-score">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    4.8
+                  </div>
+                </div>
+
+                <div class="carrier-item">
+                  <div class="carrier-rank">3</div>
+                  <div class="carrier-info">
+                    <div class="carrier-name">Rapid Logistics</div>
+                    <div class="carrier-stats">
+                      <span>96.2% On-Time</span> • <span>35 Shipments</span>
+                    </div>
+                  </div>
+                  <div class="carrier-score">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    4.7
+                  </div>
+                </div>
+
+                <div class="carrier-item">
+                  <div class="carrier-rank">4</div>
+                  <div class="carrier-info">
+                    <div class="carrier-name">QuickHaul Inc.</div>
+                    <div class="carrier-stats">
+                      <span>95.5% On-Time</span> • <span>29 Shipments</span>
+                    </div>
+                  </div>
+                  <div class="carrier-score">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    4.6
+                  </div>
+                </div>
+
+                <div class="carrier-item">
+                  <div class="carrier-rank">5</div>
+                  <div class="carrier-info">
+                    <div class="carrier-name">Metro Transport</div>
+                    <div class="carrier-stats">
+                      <span>94.8% On-Time</span> • <span>26 Shipments</span>
+                    </div>
+                  </div>
+                  <div class="carrier-score">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                    4.5
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Route Optimization Status -->
+          <div class="card">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px;">
+              <h3 class="card-title" style="font-size: 14px; margin: 0;">Route Optimization</h3>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn btn-sm" onclick="refreshOptimization()" title="Refresh optimization data">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="23 4 23 10 17 10"/>
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                  </svg>
+                  Refresh
+                </button>
+                <button class="btn btn-sm" onclick="viewOptimizationDetails()" title="View detailed analytics">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="20" x2="12" y2="10"/>
+                    <line x1="18" y1="20" x2="18" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="16"/>
+                  </svg>
+                  Analytics
+                </button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="optimization-header" style="padding: 0.75rem 1rem; background: var(--color-background); border-radius: 6px; margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                  <span style="font-size: 0.75rem; color: var(--color-text-secondary); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Today's Savings</span>
+                  <span style="font-size: 0.75rem; color: var(--color-text-secondary);">Last updated: <strong>5 mins ago</strong></span>
+                </div>
+              </div>
+              <div class="optimization-stats">
+                <div class="optimization-item">
+                  <div class="optimization-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                  </div>
+                  <div class="optimization-value">342 mi</div>
+                  <div class="optimization-label">Distance Saved</div>
+                </div>
+
+                <div class="optimization-item">
+                  <div class="optimization-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                  </div>
+                  <div class="optimization-value">4.2 hrs</div>
+                  <div class="optimization-label">Time Saved</div>
+                </div>
+
+                <div class="optimization-item">
+                  <div class="optimization-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                  </div>
+                  <div class="optimization-value">$1,248</div>
+                  <div class="optimization-label">Cost Saved</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Alerts -->
+          <div class="card">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 16px;">
+              <h3 class="card-title" style="font-size: 14px; margin: 0;">Recent Alerts</h3>
+              <span style="font-size: 12px; color: rgba(0,0,0,0.6); font-weight: 500;">Requires attention</span>
+            </div>
+            <div class="card-body">
+              <div class="alert-list alerts-list">
+                <div class="alert-item alert-warning">
+                  <div class="alert-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                      <line x1="12" y1="9" x2="12" y2="13"/>
+                      <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                  </div>
+                  <div class="alert-content">
+                    <div class="alert-title">Delayed Shipment</div>
+                    <div class="alert-message">#SH-2024-1843 - Weather delay in Denver</div>
+                    <div class="alert-time">15 mins ago</div>
+                  </div>
+                </div>
+
+                <div class="alert-item alert-info">
+                  <div class="alert-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <line x1="12" y1="16" x2="12" y2="12"/>
+                      <line x1="12" y1="8" x2="12.01" y2="8"/>
+                    </svg>
+                  </div>
+                  <div class="alert-content">
+                    <div class="alert-title">DOT Inspection Due</div>
+                    <div class="alert-message">Vehicle #TRK-442 - Inspection in 3 days</div>
+                    <div class="alert-time">2 hours ago</div>
+                  </div>
+                </div>
+
+                <div class="alert-item alert-success">
+                  <div class="alert-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </div>
+                  <div class="alert-content">
+                    <div class="alert-title">Early Delivery</div>
+                    <div class="alert-message">#SH-2024-1840 arrived 2 hours early</div>
+                    <div class="alert-time">5 hours ago</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </main>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script src="../js/tms-dashboard.js"></script>
+  
+  <script>
+    // Toggle User Menu
+    function toggleUserMenu() {
+      const dropdown = document.getElementById('userDropdown');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.user-menu')) {
+        const dropdown = document.getElementById('userDropdown');
+        if (dropdown) dropdown.style.display = 'none';
+      }
+    });
+
+    // Theme Toggle
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem('theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+
+    // Load saved theme
+    if (localStorage.getItem('theme') === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+
+    // Quick Shipment Modal
+    function showQuickShipment() {
+      openCreatePanel('Shipment', null, async (shipmentData) => {
+        console.log('Creating shipment:', shipmentData);
+        alert('Shipment created successfully!');
+        // Refresh dashboard stats
+        loadRecentActivity();
+      });
+    }
+
+    // Refresh Optimization Data
+    function refreshOptimization() {
+      const optimizationStats = document.querySelectorAll('.optimization-value');
+      const lastUpdated = document.querySelector('.optimization-header strong');
+      
+      // Add loading animation
+      optimizationStats.forEach(stat => {
+        stat.style.opacity = '0.5';
+      });
+      
+      // Simulate API call
+      setTimeout(() => {
+        // Generate random savings (simulated real-time data)
+        const distance = 300 + Math.floor(Math.random() * 100);
+        const time = 3.5 + (Math.random() * 1.5);
+        const cost = 1100 + Math.floor(Math.random() * 400);
+        
+        optimizationStats[0].textContent = `${distance} mi`;
+        optimizationStats[1].textContent = `${time.toFixed(1)} hrs`;
+        optimizationStats[2].textContent = `$${cost.toLocaleString()}`;
+        
+        // Update timestamp
+        if (lastUpdated) {
+          lastUpdated.textContent = 'just now';
+        }
+        
+        // Fade back in
+        optimizationStats.forEach(stat => {
+          stat.style.opacity = '1';
+          stat.style.transition = 'opacity 0.3s ease';
+        });
+        
+        // Show success message
+        showToast('Optimization data refreshed successfully', 'success');
+      }, 1000);
+    }
+
+    // View Optimization Details
+    function viewOptimizationDetails() {
+      const modal = `
+        <div class="modal-overlay" onclick="closeOptimizationModal()">
+          <div class="modal-content" onclick="event.stopPropagation()" style="max-width: 800px;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; border-bottom: 1px solid var(--color-border);">
+              <div>
+                <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700;">Route Optimization Analytics</h2>
+                <p style="margin: 0.25rem 0 0; font-size: 0.875rem; color: var(--color-text-secondary);">Detailed performance metrics and trends</p>
+              </div>
+              <button onclick="closeOptimizationModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--color-text-secondary);">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 1.5rem;">
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="padding: 1rem; background: var(--color-background); border-radius: 8px; text-align: center;">
+                  <div style="font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 0.5rem; font-weight: 600; text-transform: uppercase;">This Week</div>
+                  <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">2,184 mi</div>
+                  <div style="font-size: 0.75rem; color: var(--color-text-secondary);">Distance saved</div>
+                </div>
+                <div style="padding: 1rem; background: var(--color-background); border-radius: 8px; text-align: center;">
+                  <div style="font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 0.5rem; font-weight: 600; text-transform: uppercase;">This Week</div>
+                  <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">28.4 hrs</div>
+                  <div style="font-size: 0.75rem; color: var(--color-text-secondary);">Time saved</div>
+                </div>
+                <div style="padding: 1rem; background: var(--color-background); border-radius: 8px; text-align: center;">
+                  <div style="font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 0.5rem; font-weight: 600; text-transform: uppercase;">This Week</div>
+                  <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem;">$8,642</div>
+                  <div style="font-size: 0.75rem; color: var(--color-text-secondary);">Cost saved</div>
+                </div>
+              </div>
+              <div style="margin-bottom: 1.5rem;">
+                <h3 style="font-size: 0.875rem; font-weight: 700; margin-bottom: 0.75rem;">Optimization Strategies Applied</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                  <div style="padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 6px; display: flex; justify-content: space-between;">
+                    <span style="font-size: 0.875rem;">Multi-stop consolidation</span>
+                    <strong style="font-size: 0.875rem;">42 routes</strong>
+                  </div>
+                  <div style="padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 6px; display: flex; justify-content: space-between;">
+                    <span style="font-size: 0.875rem;">Traffic-aware routing</span>
+                    <strong style="font-size: 0.875rem;">38 routes</strong>
+                  </div>
+                  <div style="padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 6px; display: flex; justify-content: space-between;">
+                    <span style="font-size: 0.875rem;">Fuel-efficient pathfinding</span>
+                    <strong style="font-size: 0.875rem;">51 routes</strong>
+                  </div>
+                  <div style="padding: 0.75rem; border: 1px solid var(--color-border); border-radius: 6px; display: flex; justify-content: space-between;">
+                    <span style="font-size: 0.875rem;">Time-window optimization</span>
+                    <strong style="font-size: 0.875rem;">29 routes</strong>
+                  </div>
+                </div>
+              </div>
+              <div style="padding: 1rem; background: var(--color-background); border-radius: 8px;">
+                <div style="font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 0.5rem; font-weight: 600;">Performance Trend</div>
+                <div style="font-size: 0.875rem; margin-bottom: 0.5rem;">Average optimization improvement: <strong>18.2%</strong></div>
+                <div style="font-size: 0.875rem;">Routes optimized today: <strong>24 out of 28</strong> (85.7%)</div>
+              </div>
+            </div>
+            <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid var(--color-border); display: flex; justify-content: flex-end; gap: 0.5rem;">
+              <button onclick="closeOptimizationModal()" class="btn btn-secondary">Close</button>
+              <button onclick="exportOptimizationReport()" class="btn btn-primary">Export Report</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.insertAdjacentHTML('beforeend', modal);
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeOptimizationModal() {
+      const modal = document.querySelector('.modal-overlay');
+      if (modal) {
+        modal.remove();
+        document.body.style.overflow = 'auto';
+      }
+    }
+
+    function exportOptimizationReport() {
+      showToast('Generating optimization report...', 'info');
+      setTimeout(() => {
+        showToast('Report exported successfully!', 'success');
+        closeOptimizationModal();
+      }, 1500);
+    }
+
+    // Toast notification helper
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position: fixed;
+        top: 90px;
+        right: 20px;
+        background: ${type === 'success' ? '#000' : type === 'error' ? '#d32f2f' : '#666'};
+        color: white;
+        padding: 0.75rem 1.25rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        z-index: 10000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+      `;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+      }, 10);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Initialize dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('TMS Dashboard loaded successfully');
+      
+      // Animate stat cards on load
+      const statCards = document.querySelectorAll('.stat-card');
+      statCards.forEach((card, index) => {
+        setTimeout(() => {
+          card.style.opacity = '0';
+          card.style.transform = 'translateY(20px)';
+          requestAnimationFrame(() => {
+            card.style.transition = 'all 0.4s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+          });
+        }, index * 100);
+      });
+    });
+  </script>
+  <script src="../js/tms-common.js"></script>
+  <script src="../js/tms-side-panel.js"></script>
+  <script src="../js/tms-api-integration.js"></script>
+  <script src="../js/tms-dashboard.js"></script>
+</body>
+</html>

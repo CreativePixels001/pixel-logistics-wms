@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renewal Payment - Pixel Safe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f9fafb;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #000;
+        }
+        
+        .page-header {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            color: #6b7280;
+            font-size: 1.125rem;
+        }
+        
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .payment-section {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            padding: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .ncb-banner {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .ncb-banner h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .price-breakdown {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+        }
+        
+        .price-row:not(:last-child) {
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .price-row.total {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #000;
+        }
+        
+        .discount {
+            color: #059669;
+        }
+        
+        .info-card {
+            background: #f9fafb;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+        
+        .info-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .info-label {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        .info-value {
+            font-weight: 600;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #000;
+        }
+        
+        .payment-methods {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .payment-method {
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .payment-method:hover {
+            border-color: #d1d5db;
+        }
+        
+        .payment-method.selected {
+            border-color: #000;
+            background: #f9fafb;
+        }
+        
+        .payment-method input[type="radio"] {
+            width: auto;
+        }
+        
+        .payment-icon {
+            width: 48px;
+            height: 48px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .payment-details {
+            flex: 1;
+        }
+        
+        .payment-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        
+        .payment-desc {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        button {
+            width: 100%;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #000;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .security-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-top: 1rem;
+            justify-content: center;
+        }
+        
+        @media (max-width: 1024px) {
+            .payment-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                <span>Pixel Safe</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1>Renewal Payment</h1>
+            <p class="subtitle">Complete your policy renewal</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="payment-grid">
+            <!-- Left Column: Payment Form -->
+            <div>
+                <div class="payment-section">
+                    <div class="section-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                            <line x1="1" y1="10" x2="23" y2="10"/>
+                        </svg>
+                        Choose Payment Method
+                    </div>
+                    
+                    <div class="payment-methods">
+                        <label class="payment-method selected" onclick="selectPaymentMethod('card')">
+                            <input type="radio" name="payment" value="card" checked>
+                            <div class="payment-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                    <line x1="1" y1="10" x2="23" y2="10"/>
+                                </svg>
+                            </div>
+                            <div class="payment-details">
+                                <div class="payment-name">Credit / Debit Card</div>
+                                <div class="payment-desc">Visa, Mastercard, RuPay</div>
+                            </div>
+                        </label>
+                        
+                        <label class="payment-method" onclick="selectPaymentMethod('upi')">
+                            <input type="radio" name="payment" value="upi">
+                            <div class="payment-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
+                                    <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
+                                    <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>
+                                </svg>
+                            </div>
+                            <div class="payment-details">
+                                <div class="payment-name">UPI</div>
+                                <div class="payment-desc">Google Pay, PhonePe, Paytm</div>
+                            </div>
+                        </label>
+                        
+                        <label class="payment-method" onclick="selectPaymentMethod('netbanking')">
+                            <input type="radio" name="payment" value="netbanking">
+                            <div class="payment-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    <polyline points="9 22 9 12 15 12 15 22"/>
+                                </svg>
+                            </div>
+                            <div class="payment-details">
+                                <div class="payment-name">Net Banking</div>
+                                <div class="payment-desc">All major banks supported</div>
+                            </div>
+                        </label>
+                    </div>
+                    
+                    <div id="cardForm" style="display: block;">
+                        <div class="form-group">
+                            <label>Card Number</label>
+                            <input type="text" placeholder="1234 5678 9012 3456" maxlength="19" id="cardNumber">
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label>Expiry Date</label>
+                                <input type="text" placeholder="MM/YY" maxlength="5" id="cardExpiry">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>CVV</label>
+                                <input type="text" placeholder="123" maxlength="3" id="cardCVV">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Cardholder Name</label>
+                            <input type="text" placeholder="Name on card" id="cardName">
+                        </div>
+                    </div>
+                    
+                    <div id="upiForm" style="display: none;">
+                        <div class="form-group">
+                            <label>UPI ID</label>
+                            <input type="text" placeholder="yourname@upi" id="upiId">
+                        </div>
+                    </div>
+                    
+                    <div id="netbankingForm" style="display: none;">
+                        <div class="form-group">
+                            <label>Select Bank</label>
+                            <select id="bankSelect">
+                                <option value="">Choose your bank</option>
+                                <option value="sbi">State Bank of India</option>
+                                <option value="hdfc">HDFC Bank</option>
+                                <option value="icici">ICICI Bank</option>
+                                <option value="axis">Axis Bank</option>
+                                <option value="kotak">Kotak Mahindra Bank</option>
+                                <option value="other">Other Banks</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-primary" onclick="processPayment()">
+                        Pay Now
+                    </button>
+                    
+                    <div class="security-badge">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                        Secured by 256-bit SSL encryption
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Right Column: Order Summary -->
+            <div>
+                <div class="payment-section">
+                    <div class="section-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                        Renewal Summary
+                    </div>
+                    
+                    <div id="ncbBanner" class="ncb-banner" style="display: none;">
+                        <h3>🎉 No Claim Bonus Applied!</h3>
+                        <p>You've saved money on your renewal for maintaining a claim-free policy.</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-row">
+                            <span class="info-label">Policy Number</span>
+                            <span class="info-value" id="policyNumber">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Plan</span>
+                            <span class="info-value" id="planName">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Insured Person</span>
+                            <span class="info-value" id="insuredPerson">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Coverage Amount</span>
+                            <span class="info-value" id="coverAmount">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Renewal Period</span>
+                            <span class="info-value" id="renewalPeriod">1 Year</span>
+                        </div>
+                    </div>
+                    
+                    <div class="price-breakdown">
+                        <div class="price-row">
+                            <span>Base Premium</span>
+                            <span id="basePremium">₹0</span>
+                        </div>
+                        <div class="price-row" id="discountRow" style="display: none;">
+                            <span>No Claim Bonus (20%)</span>
+                            <span class="discount" id="discountAmount">-₹0</span>
+                        </div>
+                        <div class="price-row">
+                            <span>GST (18%)</span>
+                            <span id="gstAmount">₹0</span>
+                        </div>
+                        <div class="price-row total">
+                            <span>Total Amount</span>
+                            <span id="totalAmount">₹0</span>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-secondary" onclick="window.location.href='my-policies.html'">
+                        ← Back to My Policies
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="renewal-payment.js"></script>
+</body>
+</html>

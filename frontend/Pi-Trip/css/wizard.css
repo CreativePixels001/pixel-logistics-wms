@@ -1,0 +1,812 @@
+/* ===================================
+   Pi-Trip - Trip Wizard Styles
+   Step-by-step trip customization
+   ================================== */
+
+/* Wizard Page */
+.wizard-page {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--gray-900) 0%, var(--black) 100%);
+    overflow: hidden;
+}
+
+/* Wizard Container */
+.wizard-container {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background: var(--white);
+    display: flex;
+    flex-direction: column;
+}
+
+/* Close Button */
+.wizard-close {
+    position: absolute;
+    top: var(--spacing-lg);
+    right: var(--spacing-lg);
+    z-index: 100;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background: var(--gray-100);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-base);
+}
+
+.wizard-close:hover {
+    background: var(--gray-200);
+    transform: rotate(90deg);
+}
+
+.wizard-close svg {
+    stroke: var(--gray-700);
+}
+
+/* Progress Bar */
+.wizard-progress {
+    padding: var(--spacing-xl) var(--spacing-lg);
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.progress-bar {
+    height: 4px;
+    background: var(--gray-200);
+    border-radius: var(--radius-full);
+    margin-bottom: var(--spacing-xl);
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--black);
+    border-radius: var(--radius-full);
+    transition: width 0.3s ease;
+    width: 16.66%; /* 1/6 steps */
+}
+
+.progress-steps {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.progress-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--gray-200);
+    color: var(--gray-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: var(--font-size-sm);
+    transition: all var(--transition-base);
+}
+
+.progress-step.active .step-circle {
+    background: var(--black);
+    color: var(--white);
+}
+
+.progress-step.completed .step-circle {
+    background: var(--gray-700);
+    color: var(--white);
+}
+
+.progress-step span {
+    font-size: var(--font-size-xs);
+    color: var(--gray-500);
+    font-weight: 600;
+}
+
+.progress-step.active span {
+    color: var(--black);
+}
+
+/* Wizard Content */
+.wizard-content {
+    flex: 1;
+    padding: var(--spacing-3xl) var(--spacing-lg);
+    overflow-y: auto;
+}
+
+.wizard-step {
+    display: none;
+    animation: fadeInUp 0.4s ease;
+}
+
+.wizard-step.active {
+    display: block;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Step Header */
+.step-header {
+    text-align: center;
+    margin-bottom: var(--spacing-3xl);
+}
+
+.step-header h1 {
+    font-size: var(--font-size-3xl);
+    font-weight: 800;
+    margin-bottom: var(--spacing-sm);
+    color: var(--black);
+}
+
+.step-header p {
+    font-size: var(--font-size-lg);
+    color: var(--gray-600);
+}
+
+/* Search Box */
+.search-box {
+    position: relative;
+    margin-bottom: var(--spacing-xl);
+}
+
+.search-box svg {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    stroke: var(--gray-400);
+}
+
+.search-box input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    font-size: var(--font-size-base);
+    transition: all var(--transition-base);
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--black);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Route Grid */
+.route-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.route-option {
+    padding: var(--spacing-lg);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    position: relative;
+}
+
+.route-option:hover {
+    border-color: var(--black);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.route-option.selected {
+    border-color: var(--black);
+    background: var(--gray-50);
+}
+
+.route-option-badge {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    padding: 0.25rem 0.75rem;
+    background: var(--black);
+    color: var(--white);
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+}
+
+.route-option-badge.popular {
+    background: #3b82f6;
+}
+
+.route-option-badge.custom {
+    background: #10b981;
+}
+
+.route-option h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    color: var(--black);
+}
+
+.route-option-meta {
+    display: flex;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-md);
+}
+
+.route-option-price {
+    font-weight: 700;
+    color: var(--black);
+}
+
+/* Trip Mode Selection */
+.trip-mode {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.mode-btn {
+    padding: var(--spacing-xl);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    background: var(--white);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    text-align: center;
+}
+
+.mode-btn:hover {
+    border-color: var(--gray-400);
+    transform: translateY(-4px);
+}
+
+.mode-btn.active {
+    border-color: var(--black);
+    background: var(--gray-50);
+}
+
+.mode-btn svg {
+    stroke: var(--gray-600);
+}
+
+.mode-btn.active svg {
+    stroke: var(--black);
+}
+
+.mode-btn span {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    color: var(--black);
+}
+
+.mode-btn small {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+}
+
+/* Guest Counter */
+.guest-counter {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.guest-counter label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    color: var(--black);
+}
+
+.counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-lg);
+}
+
+.counter button {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--gray-300);
+    background: var(--white);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.counter button:hover {
+    border-color: var(--black);
+    background: var(--gray-50);
+}
+
+.counter input {
+    width: 80px;
+    text-align: center;
+    font-size: var(--font-size-2xl);
+    font-weight: 800;
+    border: none;
+    color: var(--black);
+}
+
+/* Friend Input */
+.invite-friends label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    color: var(--black);
+}
+
+.friend-input {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.friend-input input {
+    flex: 1;
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+}
+
+.friend-input input:focus {
+    outline: none;
+    border-color: var(--black);
+}
+
+.friend-input button {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: var(--black);
+    color: var(--white);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.friend-input button:hover {
+    background: var(--gray-800);
+}
+
+.friends-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.friend-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    background: var(--gray-100);
+    border-radius: var(--radius-md);
+}
+
+.friend-item button {
+    background: none;
+    border: none;
+    color: var(--gray-600);
+    cursor: pointer;
+    padding: 0.25rem;
+}
+
+.friend-item button:hover {
+    color: var(--black);
+}
+
+.hint {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--gray-500);
+    font-style: italic;
+}
+
+/* Date Selection */
+.date-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+
+.date-field label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    color: var(--black);
+}
+
+.date-field input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+}
+
+.date-field input:focus {
+    outline: none;
+    border-color: var(--black);
+}
+
+.duration-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-lg);
+    background: var(--gray-100);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--spacing-xl);
+}
+
+.duration-display svg {
+    stroke: var(--black);
+}
+
+.duration-display span {
+    font-weight: 700;
+    font-size: var(--font-size-lg);
+    color: var(--black);
+}
+
+.quick-dates {
+    text-align: center;
+}
+
+.quick-dates p {
+    margin-bottom: var(--spacing-md);
+    color: var(--gray-600);
+}
+
+.quick-date-btns {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.quick-date-btns button {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.quick-date-btns button:hover {
+    border-color: var(--black);
+    background: var(--gray-50);
+}
+
+/* Vehicle Selection */
+.vehicle-mode {
+    display: flex;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.vehicle-mode-btn {
+    flex: 1;
+    padding: var(--spacing-lg);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    background: var(--white);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+}
+
+.vehicle-mode-btn:hover {
+    border-color: var(--gray-400);
+}
+
+.vehicle-mode-btn.active {
+    border-color: var(--black);
+    background: var(--gray-50);
+}
+
+.vehicle-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.vehicle-card {
+    padding: var(--spacing-xl);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.vehicle-card:hover {
+    border-color: var(--black);
+    transform: translateY(-4px);
+}
+
+.vehicle-card.selected {
+    border-color: var(--black);
+    background: var(--gray-50);
+}
+
+.vehicle-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.vehicle-card h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    margin-bottom: var(--spacing-xs);
+}
+
+.vehicle-card p {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+}
+
+.rental-card {
+    padding: var(--spacing-lg);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.rental-card:hover {
+    border-color: var(--black);
+    transform: translateY(-4px);
+}
+
+.rental-card.selected {
+    border-color: var(--black);
+    background: var(--gray-50);
+}
+
+.rental-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.rental-header h3 {
+    font-size: var(--font-size-base);
+    font-weight: 700;
+}
+
+.rental-price {
+    font-size: var(--font-size-xl);
+    font-weight: 800;
+    color: var(--black);
+}
+
+.rental-price small {
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--gray-600);
+}
+
+.rental-features {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.rental-features span {
+    font-size: var(--font-size-xs);
+    color: var(--gray-700);
+}
+
+/* Trip Details Form */
+.trip-details-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: var(--spacing-xl);
+}
+
+.form-group label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    color: var(--black);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-base);
+    font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--black);
+}
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.checkbox-label:hover {
+    border-color: var(--gray-400);
+}
+
+.checkbox-label input:checked + span {
+    font-weight: 700;
+}
+
+.checkbox-label:has(input:checked) {
+    border-color: var(--black);
+    background: var(--gray-50);
+}
+
+/* Trip Summary */
+.trip-summary, .cost-breakdown {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-label {
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+.summary-value {
+    font-weight: 700;
+    color: var(--black);
+}
+
+/* Wizard Navigation */
+.wizard-navigation {
+    padding: var(--spacing-lg);
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    background: var(--white);
+}
+
+.btn-nav {
+    padding: 1rem 2rem;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: var(--font-size-base);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    border: none;
+}
+
+.btn-back {
+    background: var(--gray-100);
+    color: var(--gray-700);
+}
+
+.btn-back:hover {
+    background: var(--gray-200);
+}
+
+.btn-next {
+    background: var(--black);
+    color: var(--white);
+}
+
+.btn-next:hover {
+    background: var(--gray-800);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .wizard-container {
+        max-width: 100%;
+    }
+
+    .progress-steps {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    .progress-step span {
+        display: none;
+    }
+
+    .route-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .trip-mode {
+        grid-template-columns: 1fr;
+    }
+
+    .date-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .vehicle-mode {
+        flex-direction: column;
+    }
+
+    .checkbox-group {
+        grid-template-columns: 1fr;
+    }
+}

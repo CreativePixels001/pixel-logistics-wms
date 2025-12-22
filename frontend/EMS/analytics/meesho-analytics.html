@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meesho Analytics - Pixel Commerce</title>
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Analytics Specific Styles */
+        .date-range-selector {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--bg-light);
+            padding: 0.25rem;
+            border-radius: var(--radius-md);
+            margin-bottom: 1.5rem;
+        }
+
+        .date-range-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: all var(--transition-fast);
+        }
+
+        .date-range-btn.active {
+            background: var(--bg-white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .chart-container {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+        .chart-legend {
+            display: flex;
+            gap: 1.5rem;
+            font-size: 0.875rem;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .chart-canvas {
+            width: 100%;
+            height: 300px;
+            position: relative;
+        }
+
+        .chart-grid {
+            position: relative;
+            height: 100%;
+            border-left: 2px solid var(--border-color);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .chart-bars {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            height: 100%;
+            padding: 1rem 0.5rem 0.5rem 0.5rem;
+        }
+
+        .bar-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            max-width: 60px;
+        }
+
+        .bar {
+            width: 100%;
+            background: var(--primary-color);
+            border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+            transition: all var(--transition-normal);
+            position: relative;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .bar-label {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .metric-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+        }
+
+        .metric-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .metric-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-change {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .metric-change.positive {
+            color: #10b981;
+        }
+
+        .metric-change.negative {
+            color: #ef4444;
+        }
+
+        .product-performance-table {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .performance-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .performance-table thead {
+            background: var(--bg-light);
+        }
+
+        .performance-table th {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .performance-table td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .performance-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .performance-table tbody tr:hover {
+            background: var(--bg-light);
+        }
+
+        .product-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .product-rank {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .product-rank.top {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .trend-indicator.up {
+            color: #10b981;
+        }
+
+        .trend-indicator.down {
+            color: #ef4444;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-light);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: var(--radius-full);
+            transition: width var(--transition-normal);
+        }
+
+        .split-view {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .breakdown-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+        }
+
+        .breakdown-label {
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .breakdown-value {
+            font-weight: 800;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span>Pixel Commerce</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Meesho</div>
+                    <a href="../platforms/meesho.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Meesho Dashboard
+                    </a>
+                    <a href="../products/meesho-catalog.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Products
+                    </a>
+                    <a href="../orders/meesho-orders.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Orders
+                    </a>
+                    <a href="../inventory/meesho-stock.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                        Inventory
+                    </a>
+                    <a href="meesho-analytics.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        Analytics
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="../settings/account.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="platform-switcher" onclick="showPlatformMenu()">
+                        <span id="currentPlatform">Meesho</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search analytics...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">AU</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Admin User</span>
+                            <span class="user-role" id="userRole">ONNGEO</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Analytics - ONNGEO</h1>
+                        <p class="page-subtitle">Performance insights for Titan Robot Action Figures</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-secondary" onclick="exportReport()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Export Report
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Date Range Selector -->
+                <div class="date-range-selector">
+                    <button class="date-range-btn" onclick="setDateRange('7d')">Last 7 Days</button>
+                    <button class="date-range-btn active" onclick="setDateRange('30d')">Last 30 Days</button>
+                    <button class="date-range-btn" onclick="setDateRange('90d')">Last 90 Days</button>
+                    <button class="date-range-btn" onclick="setDateRange('year')">This Year</button>
+                    <button class="date-range-btn" onclick="setDateRange('custom')">Custom Range</button>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <div>
+                                <div class="metric-value">₹1,24,500</div>
+                                <div class="metric-label">Total Revenue</div>
+                                <div class="metric-change positive">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 12px; height: 12px;">
+                                        <polyline points="18 15 12 9 6 15"/>
+                                    </svg>
+                                    +18.2% vs last period
+                                </div>
+                            </div>
+                            <div class="metric-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <div>
+                                <div class="metric-value">528</div>
+                                <div class="metric-label">Total Orders</div>
+                                <div class="metric-change positive">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 12px; height: 12px;">
+                                        <polyline points="18 15 12 9 6 15"/>
+                                    </svg>
+                                    +12.5% vs last period
+                                </div>
+                            </div>
+                            <div class="metric-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <div>
+                                <div class="metric-value">₹236</div>
+                                <div class="metric-label">Avg Order Value</div>
+                                <div class="metric-change positive">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 12px; height: 12px;">
+                                        <polyline points="18 15 12 9 6 15"/>
+                                    </svg>
+                                    +5.8% vs last period
+                                </div>
+                            </div>
+                            <div class="metric-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <div>
+                                <div class="metric-value">2.8%</div>
+                                <div class="metric-label">Conversion Rate</div>
+                                <div class="metric-change positive">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 12px; height: 12px;">
+                                        <polyline points="18 15 12 9 6 15"/>
+                                    </svg>
+                                    +0.3% vs last period
+                                </div>
+                            </div>
+                            <div class="metric-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sales Trend Chart -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h2 class="chart-title">Sales Trend (Last 30 Days)</h2>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <span class="legend-dot" style="background: var(--primary-color);"></span>
+                                <span>Revenue</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-dot" style="background: #94a3b8;"></span>
+                                <span>Orders</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chart-canvas">
+                        <div class="chart-grid">
+                            <div class="chart-bars">
+                                <div class="bar-group">
+                                    <div class="bar" style="height: 45%;">
+                                        <span class="bar-value">₹4.2k</span>
+                                    </div>
+                                    <div class="bar-label">Week 1</div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar" style="height: 62%;">
+                                        <span class="bar-value">₹5.8k</span>
+                                    </div>
+                                    <div class="bar-label">Week 2</div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar" style="height: 78%;">
+                                        <span class="bar-value">₹7.3k</span>
+                                    </div>
+                                    <div class="bar-label">Week 3</div>
+                                </div>
+                                <div class="bar-group">
+                                    <div class="bar" style="height: 95%;">
+                                        <span class="bar-value">₹8.9k</span>
+                                    </div>
+                                    <div class="bar-label">Week 4</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Split View: Daily Performance & Revenue Breakdown -->
+                <div class="split-view">
+                    <!-- Daily Performance Chart -->
+                    <div class="chart-container" style="margin-bottom: 0;">
+                        <div class="chart-header">
+                            <h2 class="chart-title">Daily Performance</h2>
+                        </div>
+                        <div class="chart-canvas" style="height: 200px;">
+                            <div class="chart-grid">
+                                <div class="chart-bars">
+                                    <div class="bar-group">
+                                        <div class="bar" style="height: 35%;"><span class="bar-value">₹1.2k</span></div>
+                                        <div class="bar-label">Mon</div>
+                                    </div>
+                                    <div class="bar-group">
+                                        <div class="bar" style="height: 48%;"><span class="bar-value">₹1.6k</span></div>
+                                        <div class="bar-label">Tue</div>
+                                    </div>
+                                    <div class="bar-group">
+                                        <div class="bar" style="height: 55%;"><span class="bar-value">₹1.9k</span></div>
+                                        <div class="bar-label">Wed</div>
+                                    </div>
+                                    <div class="bar-group">
+                                        <div class="bar" style="height: 42%;"><span class="bar-value">₹1.4k</span></div>
+                                        <div class="bar-label">Thu</div>
+                                    </div>
+                                    <div class="bar-group">
+                                        <div class="bar" style="height: 68%;"><span class="bar-value">₹2.3k</span></div>
+                                        <div class="bar-label">Fri</div>
+                                    </div>
+                                    <div class="bar-group">
+                                        <div class="bar" style="height: 85%;"><span class="bar-value">₹2.9k</span></div>
+                                        <div class="bar-label">Sat</div>
+                                    </div>
+                                    <div class="bar-group">
+                                        <div class="bar" style="height: 72%;"><span class="bar-value">₹2.5k</span></div>
+                                        <div class="bar-label">Sun</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Revenue Breakdown -->
+                    <div class="chart-container" style="margin-bottom: 0;">
+                        <div class="chart-header">
+                            <h2 class="chart-title">Revenue Breakdown</h2>
+                        </div>
+                        <div class="breakdown-list">
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">FBA Sales</span>
+                                <span class="breakdown-value">₹78,425</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">FBM Sales</span>
+                                <span class="breakdown-value">₹46,075</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Shipping</span>
+                                <span class="breakdown-value">₹8,240</span>
+                            </div>
+                            <div class="breakdown-item">
+                                <span class="breakdown-label">Fees</span>
+                                <span class="breakdown-value">-₹8,240</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Performing Products -->
+                <div class="product-performance-table">
+                    <div class="table-header">
+                        <h2 class="chart-title">Top Performing Products</h2>
+                    </div>
+                    <table class="performance-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Units Sold</th>
+                                <th>Revenue</th>
+                                <th>Profit Margin</th>
+                                <th>Trend</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="product-cell">
+                                        <span class="product-rank top">1</span>
+                                        <div>
+                                            <div style="font-weight: 600;">ONNGEO Black Titan Robot</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-secondary);">SKU-BLK-001</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-weight: 600;">187</td>
+                                <td style="font-weight: 600;">₹74,613</td>
+                                <td style="font-weight: 600;">28.5%</td>
+                                <td>
+                                    <span class="trend-indicator up">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                                            <polyline points="18 15 12 9 6 15"/>
+                                        </svg>
+                                        +24%
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar" style="width: 95%;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-cell">
+                                        <span class="product-rank top">2</span>
+                                        <div>
+                                            <div style="font-weight: 600;">ONNGEO Pink Titan Robot</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-secondary);">SKU-PNK-001</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-weight: 600;">152</td>
+                                <td style="font-weight: 600;">₹60,648</td>
+                                <td style="font-weight: 600;">26.2%</td>
+                                <td>
+                                    <span class="trend-indicator up">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                                            <polyline points="18 15 12 9 6 15"/>
+                                        </svg>
+                                        +18%
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar" style="width: 82%;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-cell">
+                                        <span class="product-rank top">3</span>
+                                        <div>
+                                            <div style="font-weight: 600;">ONNGEO Orange Titan Robot</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-secondary);">SKU-ORG-001</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-weight: 600;">128</td>
+                                <td style="font-weight: 600;">₹51,072</td>
+                                <td style="font-weight: 600;">25.8%</td>
+                                <td>
+                                    <span class="trend-indicator up">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                                            <polyline points="18 15 12 9 6 15"/>
+                                        </svg>
+                                        +15%
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar" style="width: 68%;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-cell">
+                                        <span class="product-rank">4</span>
+                                        <div>
+                                            <div style="font-weight: 600;">ONNGEO Green Titan Robot</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-secondary);">SKU-GRN-001</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-weight: 600;">95</td>
+                                <td style="font-weight: 600;">₹37,905</td>
+                                <td style="font-weight: 600;">24.5%</td>
+                                <td>
+                                    <span class="trend-indicator up">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                                            <polyline points="18 15 12 9 6 15"/>
+                                        </svg>
+                                        +8%
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar" style="width: 51%;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="product-cell">
+                                        <span class="product-rank">5</span>
+                                        <div>
+                                            <div style="font-weight: 600;">ONNGEO Purple Titan Robot</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-secondary);">SKU-PUR-001</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-weight: 600;">82</td>
+                                <td style="font-weight: 600;">₹32,718</td>
+                                <td style="font-weight: 600;">23.8%</td>
+                                <td>
+                                    <span class="trend-indicator down">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 14px; height: 14px;">
+                                            <polyline points="6 9 12 15 18 9"/>
+                                        </svg>
+                                        -2%
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar" style="width: 44%;"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function showPlatformMenu() {
+            alert('Platform switcher - Coming soon!\n\nAvailable platforms:\n• Meesho\n• Flipkart (Coming Soon)\n• Meesho (Coming Soon)');
+        }
+
+        function setDateRange(range) {
+            // Remove active class from all buttons
+            document.querySelectorAll('.date-range-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Here you would typically fetch data for the selected range
+            console.log('Date range selected:', range);
+        }
+
+        function exportReport() {
+            alert('Export Report\n\nGenerating comprehensive analytics report...\n\nFormats available:\n• PDF\n• Excel\n• CSV');
+        }
+    </script>
+</body>
+</html>

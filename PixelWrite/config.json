@@ -1,0 +1,109 @@
+{
+  "api_config": {
+    "provider": "openai",
+    "api_key": "YOUR_API_KEY_HERE",
+    "model": "gpt-4",
+    "max_tokens": 2000,
+    "temperature": 0.7
+  },
+  "generation_settings": {
+    "articles_per_day": 2,
+    "schedule_times": ["09:00", "18:00"],
+    "min_word_count": 800,
+    "max_word_count": 1500,
+    "reading_time_wpm": 200
+  },
+  "categories": {
+    "enabled": ["Technology", "Science", "Business", "India"],
+    "weights": {
+      "Technology": 0.4,
+      "Science": 0.2,
+      "Business": 0.2,
+      "India": 0.2
+    }
+  },
+  "topics": {
+    "trending": [
+      "Artificial Intelligence",
+      "Machine Learning",
+      "Quantum Computing",
+      "Space Exploration",
+      "Electric Vehicles",
+      "Blockchain",
+      "5G/6G Networks",
+      "Cybersecurity",
+      "Cloud Computing",
+      "IoT",
+      "Robotics",
+      "Biotechnology",
+      "Renewable Energy",
+      "AR/VR",
+      "Autonomous Vehicles"
+    ],
+    "india_specific": [
+      "Indian Startups",
+      "Digital India",
+      "UPI Innovation",
+      "Indian Space Program",
+      "Make in India Tech",
+      "Indian AI Research"
+    ]
+  },
+  "news_sources": {
+    "apis": [
+      "newsapi.org",
+      "techcrunch.com/api",
+      "theverge.com/rss"
+    ],
+    "rss_feeds": [
+      "https://techcrunch.com/feed/",
+      "https://www.theverge.com/rss/index.xml",
+      "https://www.wired.com/feed/rss",
+      "https://arstechnica.com/feed/",
+      "https://www.technologyreview.com/feed/"
+    ],
+    "indian_sources": [
+      "https://economictimes.indiatimes.com/tech/rss",
+      "https://www.livemint.com/rss/technology"
+    ]
+  },
+  "quality_checks": {
+    "min_readability_score": 60,
+    "plagiarism_check": false,
+    "fact_check": false,
+    "grammar_check": true,
+    "seo_optimization": true
+  },
+  "output": {
+    "format": "json",
+    "save_to_file": true,
+    "output_directory": "../frontend/PixelFact/data/generated",
+    "integrate_with_pixelfact": true,
+    "auto_publish": false
+  },
+  "seo": {
+    "meta_description_length": 160,
+    "target_keywords_per_article": 5,
+    "include_tags": true,
+    "generate_slug": true
+  },
+  "authors": {
+    "ai_writers": [
+      {
+        "name": "Pixel AI Writer",
+        "expertise": "Technology",
+        "bio": "AI-powered tech journalist"
+      },
+      {
+        "name": "Tech Insight Bot",
+        "expertise": "Science",
+        "bio": "Automated science reporter"
+      }
+    ]
+  },
+  "logging": {
+    "enabled": true,
+    "level": "INFO",
+    "log_file": "logs/pixelwrite.log"
+  }
+}

@@ -1,7 +1,7 @@
 # Authentication System Guide
 
 ## Overview
-Complete authentication system implemented for DLT WMS with login, registration, session management, and user profile features.
+Complete authentication system implemented for Pixel WMS with login, registration, session management, and user profile features.
 
 ## Demo Credentials
 

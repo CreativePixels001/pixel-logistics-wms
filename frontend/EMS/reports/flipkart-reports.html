@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics - Flipkart - Pixel Commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #000;
+            --secondary: #333;
+            --tertiary: #666;
+            --border: #e5e7eb;
+            --bg: #fff;
+            --bg-secondary: #f9fafb;
+            --gray-dark: #1a1a1a;
+            --gray-medium: #4a4a4a;
+            --gray-light: #9ca3af;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--primary);
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.125rem;
+            font-weight: 800;
+        }
+
+        .logo svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .header-title {
+            font-size: 0.875rem;
+            color: var(--tertiary);
+            border-left: 1px solid var(--border);
+            padding-left: 16px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--bg-secondary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg);
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #333 0%, #000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg);
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            color: var(--tertiary);
+            font-size: 0.875rem;
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 180px;
+        }
+
+        .filter-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--tertiary);
+            text-transform: uppercase;
+        }
+
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.875rem;
+            background: var(--bg);
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Report Tabs */
+        .report-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .report-tab {
+            padding: 12px 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: var(--tertiary);
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .report-tab:hover {
+            color: var(--primary);
+        }
+
+        .report-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--tertiary);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.875rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .stat-change {
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-change.positive {
+            color: var(--gray-dark);
+        }
+
+        .stat-change.negative {
+            color: var(--gray-medium);
+        }
+
+        .stat-change svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Report Content */
+        .report-content {
+            display: none;
+        }
+
+        .report-content.active {
+            display: block;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .chart-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-secondary);
+        }
+
+        .icon-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Bar Chart */
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            height: 300px;
+            padding: 20px 0;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 4px 4px 0 0;
+            position: relative;
+            min-height: 20px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+        }
+
+        .bar-label {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            color: var(--tertiary);
+            white-space: nowrap;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Data Table */
+        .data-table-container {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .table-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-title {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .table-search {
+            position: relative;
+        }
+
+        .table-search input {
+            padding: 6px 12px 6px 32px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-family: inherit;
+            width: 250px;
+        }
+
+        .table-search svg {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            color: var(--tertiary);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead {
+            background: var(--bg-secondary);
+        }
+
+        .data-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--tertiary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table td {
+            padding: 14px 16px;
+            font-size: 0.875rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-high {
+            background: #1a1a1a;
+            color: var(--bg);
+        }
+
+        .badge-medium {
+            background: #d1d5db;
+            color: #000;
+        }
+
+        .badge-low {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                min-width: 100%;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bar-chart {
+                height: 200px;
+            }
+
+            .table-search input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <path d="M3 9h18"/>
+                    <path d="M9 21V9"/>
+                </svg>
+                <span>Pixel Commerce</span>
+            </div>
+            <div class="header-title">Reports & Analytics - Flipkart</div>
+        </div>
+        <div class="header-right">
+            <button class="btn" onclick="window.location.href='../platforms/flipkart-dashboard.html'">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Dashboard
+            </button>
+            <div class="user-avatar">AS</div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Reports & Analytics</h1>
+            <p class="page-subtitle">Comprehensive insights into your Flipkart business performance</p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label class="filter-label">Date Range</label>
+                <select class="filter-select" id="dateRange" onchange="updateReports()">
+                    <option value="today">Today</option>
+                    <option value="yesterday">Yesterday</option>
+                    <option value="7days">Last 7 Days</option>
+                    <option value="30days" selected>Last 30 Days</option>
+                    <option value="thismonth">This Month</option>
+                    <option value="lastmonth">Last Month</option>
+                    <option value="thisyear">This Year</option>
+                    <option value="custom">Custom Range</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Category</label>
+                <select class="filter-select" id="category" onchange="updateReports()">
+                    <option value="all">All Categories</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="fashion">Fashion</option>
+                    <option value="home">Home & Kitchen</option>
+                    <option value="books">Books</option>
+                    <option value="sports">Sports</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label class="filter-label">Warehouse</label>
+                <select class="filter-select" id="warehouse" onchange="updateReports()">
+                    <option value="all">All Warehouses</option>
+                    <option value="wh1">Mumbai - Bhiwandi</option>
+                    <option value="wh2">Delhi - Gurgaon</option>
+                    <option value="wh3">Bangalore</option>
+                    <option value="wh4">Chennai</option>
+                </select>
+            </div>
+
+            <div style="margin-left: auto; display: flex; gap: 8px; align-items: flex-end;">
+                <button class="btn-primary btn" onclick="exportReport('excel')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Export Excel
+                </button>
+                <button class="btn" onclick="exportReport('pdf')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    Export PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- Report Tabs -->
+        <div class="report-tabs">
+            <button class="report-tab active" onclick="switchReport('sales')">Sales Report</button>
+            <button class="report-tab" onclick="switchReport('tax')">Tax Report</button>
+            <button class="report-tab" onclick="switchReport('inventory')">Inventory Report</button>
+            <button class="report-tab" onclick="switchReport('profitability')">Profitability</button>
+            <button class="report-tab" onclick="switchReport('performance')">Performance</button>
+        </div>
+
+        <!-- Sales Report -->
+        <div id="salesReport" class="report-content active">
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-value">₹12,45,890</div>
+                    <div class="stat-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        <span>+18.2% from last month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-value">1,847</div>
+                    <div class="stat-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        <span>+12.5% from last month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Average Order Value</div>
+                    <div class="stat-value">₹674</div>
+                    <div class="stat-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        <span>+5.1% from last month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Return Rate</div>
+                    <div class="stat-value">2.4%</div>
+                    <div class="stat-change negative">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
+                            <polyline points="17 18 23 18 23 12"/>
+                        </svg>
+                        <span>-0.8% from last month</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sales Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Sales Trend (Last 30 Days)</h3>
+                    <div class="chart-actions">
+                        <button class="icon-btn" title="Download Chart">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="bar-chart" id="salesChart">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Top Products Table -->
+            <div class="data-table-container">
+                <div class="table-header">
+                    <h3 class="table-title">Top Selling Products</h3>
+                    <div class="table-search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" placeholder="Search products..." id="productSearch">
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>SKU</th>
+                            <th>Category</th>
+                            <th>Units Sold</th>
+                            <th>Revenue</th>
+                            <th>Avg Price</th>
+                            <th>Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topProductsTable">
+                        <!-- Generated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tax Report -->
+        <div id="taxReport" class="report-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Tax Collected</div>
+                    <div class="stat-value">₹1,84,260</div>
+                    <div class="stat-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        <span>+15.3% from last month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">CGST (9%)</div>
+                    <div class="stat-value">₹92,130</div>
+                    <div class="stat-change">
+                        <span>50% of total tax</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">SGST (9%)</div>
+                    <div class="stat-value">₹92,130</div>
+                    <div class="stat-change">
+                        <span>50% of total tax</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Taxable Amount</div>
+                    <div class="stat-value">₹10,23,667</div>
+                    <div class="stat-change">
+                        <span>Base amount (excl. tax)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tax Breakdown Table -->
+            <div class="data-table-container">
+                <div class="table-header">
+                    <h3 class="table-title">GST Breakdown by State</h3>
+                    <div class="table-search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" placeholder="Search state...">
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>State</th>
+                            <th>Orders</th>
+                            <th>Taxable Amount</th>
+                            <th>CGST (9%)</th>
+                            <th>SGST (9%)</th>
+                            <th>Total Tax</th>
+                            <th>Grand Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="taxBreakdownTable">
+                        <!-- Generated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Inventory Report -->
+        <div id="inventoryReport" class="report-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total SKUs</div>
+                    <div class="stat-value">3,482</div>
+                    <div class="stat-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        <span>+127 new products</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Total Inventory Value</div>
+                    <div class="stat-value">₹45.2L</div>
+                    <div class="stat-change">
+                        <span>Across all warehouses</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Low Stock Items</div>
+                    <div class="stat-value">47</div>
+                    <div class="stat-change negative">
+                        <span>Requires attention</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Out of Stock</div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-change negative">
+                        <span>Critical status</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Movement Table -->
+            <div class="data-table-container">
+                <div class="table-header">
+                    <h3 class="table-title">Inventory Movement Analysis</h3>
+                    <div class="table-search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" placeholder="Search inventory...">
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>SKU</th>
+                            <th>Opening Stock</th>
+                            <th>Received</th>
+                            <th>Sold</th>
+                            <th>Closing Stock</th>
+                            <th>Turnover Rate</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryMovementTable">
+                        <!-- Generated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Profitability Report -->
+        <div id="profitabilityReport" class="report-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Gross Profit</div>
+                    <div class="stat-value">₹4,68,340</div>
+                    <div class="stat-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        <span>+22.4% from last month</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Gross Margin</div>
+                    <div class="stat-value">37.6%</div>
+                    <div class="stat-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        <span>+2.1% margin increase</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Operating Expenses</div>
+                    <div class="stat-value">₹1,24,560</div>
+                    <div class="stat-change">
+                        <span>Shipping, storage, fees</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Net Profit</div>
+                    <div class="stat-value">₹3,43,780</div>
+                    <div class="stat-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        <span>27.6% net margin</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profitability by Category -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3 class="chart-title">Profit Margin by Category</h3>
+                </div>
+                <div class="bar-chart" id="profitChart">
+                    <!-- Generated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Detailed Profitability Table -->
+            <div class="data-table-container">
+                <div class="table-header">
+                    <h3 class="table-title">Product Profitability Analysis</h3>
+                    <div class="table-search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" placeholder="Search products...">
+                    </div>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Revenue</th>
+                            <th>COGS</th>
+                            <th>Gross Profit</th>
+                            <th>Expenses</th>
+                            <th>Net Profit</th>
+                            <th>Margin %</th>
+                            <th>Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody id="profitabilityTable">
+                        <!-- Generated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Performance Report -->
+        <div id="performanceReport" class="report-content">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Order Fulfillment Rate</div>
+                    <div class="stat-value">96.8%</div>
+                    <div class="stat-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        <span>+1.2% improvement</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Avg Delivery Time</div>
+                    <div class="stat-value">2.4 days</div>
+                    <div class="stat-change positive">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                        <span>0.3 days faster</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Customer Satisfaction</div>
+                    <div class="stat-value">4.6/5.0</div>
+                    <div class="stat-change positive">
+                        <span>Based on 1,234 reviews</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Cancellation Rate</div>
+                    <div class="stat-value">1.8%</div>
+                    <div class="stat-change negative">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/>
+                            <polyline points="17 18 23 18 23 12"/>
+                        </svg>
+                        <span>-0.4% from last month</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Metrics Table -->
+            <div class="data-table-container">
+                <div class="table-header">
+                    <h3 class="table-title">Warehouse Performance Metrics</h3>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Warehouse</th>
+                            <th>Orders Processed</th>
+                            <th>Fulfillment Rate</th>
+                            <th>Avg Processing Time</th>
+                            <th>On-Time Delivery</th>
+                            <th>Return Rate</th>
+                            <th>Performance</th>
+                        </tr>
+                    </thead>
+                    <tbody id="performanceTable">
+                        <!-- Generated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample Data
+        const salesData = [
+            { date: 'Nov 1', revenue: 38450 },
+            { date: 'Nov 5', revenue: 42300 },
+            { date: 'Nov 10', revenue: 39800 },
+            { date: 'Nov 15', revenue: 45600 },
+            { date: 'Nov 20', revenue: 41200 },
+            { date: 'Nov 25', revenue: 48900 },
+            { date: 'Nov 30', revenue: 52340 }
+        ];
+
+        const profitData = [
+            { category: 'Electronics', margin: 42 },
+            { category: 'Fashion', margin: 38 },
+            { category: 'Home & Kitchen', margin: 35 },
+            { category: 'Books', margin: 28 },
+            { category: 'Sports', margin: 32 }
+        ];
+
+        const topProducts = [
+            { name: 'Wireless Earbuds Pro', sku: 'WEB-2024-001', category: 'Electronics', units: 487, revenue: 389600, price: 799, performance: 'high' },
+            { name: 'Cotton T-Shirt Pack', sku: 'CTS-2024-045', category: 'Fashion', units: 356, revenue: 177244, price: 499, performance: 'high' },
+            { name: 'Smart Watch Series 5', sku: 'SWS-2024-012', category: 'Electronics', units: 234, revenue: 351000, price: 1499, performance: 'high' },
+            { name: 'Yoga Mat Premium', sku: 'YMP-2024-078', category: 'Sports', units: 198, revenue: 138600, price: 699, performance: 'medium' },
+            { name: 'Non-Stick Cookware Set', sku: 'NSC-2024-034', category: 'Home & Kitchen', units: 167, revenue: 250500, price: 1499, performance: 'medium' },
+            { name: 'Self-Help Book Bundle', sku: 'SHB-2024-056', category: 'Books', units: 143, revenue: 57200, price: 399, performance: 'medium' },
+            { name: 'LED Desk Lamp', sku: 'LDL-2024-089', category: 'Electronics', units: 124, revenue: 123760, price: 999, performance: 'low' },
+            { name: 'Running Shoes Men', sku: 'RSM-2024-023', category: 'Sports', units: 98, revenue: 195804, price: 1999, performance: 'low' }
+        ];
+
+        const taxBreakdown = [
+            { state: 'Maharashtra', orders: 423, taxable: 284567, cgst: 25611, sgst: 25611 },
+            { state: 'Delhi', orders: 367, taxable: 247890, cgst: 22310, sgst: 22310 },
+            { state: 'Karnataka', orders: 312, taxable: 210234, cgst: 18921, sgst: 18921 },
+            { state: 'Tamil Nadu', orders: 289, taxable: 194670, cgst: 17520, sgst: 17520 },
+            { state: 'Gujarat', orders: 234, taxable: 157680, cgst: 14191, sgst: 14191 },
+            { state: 'West Bengal', orders: 222, taxable: 149626, cgst: 13466, sgst: 13466 }
+        ];
+
+        const inventoryMovement = [
+            { product: 'Wireless Earbuds Pro', sku: 'WEB-2024-001', opening: 850, received: 300, sold: 487, closing: 663, turnover: '57%', status: 'high' },
+            { product: 'Smart Watch Series 5', sku: 'SWS-2024-012', opening: 420, received: 150, sold: 234, closing: 336, turnover: '56%', status: 'high' },
+            { product: 'Cotton T-Shirt Pack', sku: 'CTS-2024-045', opening: 680, received: 200, sold: 356, closing: 524, turnover: '52%', status: 'medium' },
+            { product: 'Yoga Mat Premium', sku: 'YMP-2024-078', opening: 340, received: 100, sold: 198, closing: 242, turnover: '45%', status: 'medium' },
+            { product: 'LED Desk Lamp', sku: 'LDL-2024-089', opening: 280, received: 80, sold: 124, closing: 236, turnover: '34%', status: 'low' },
+            { product: 'Running Shoes Men', sku: 'RSM-2024-023', opening: 220, received: 50, sold: 98, closing: 172, turnover: '36%', status: 'low' }
+        ];
+
+        const profitabilityData = [
+            { product: 'Wireless Earbuds Pro', revenue: 389600, cogs: 233760, gross: 155840, expenses: 23376, net: 132464, margin: 34, rating: 'high' },
+            { product: 'Smart Watch Series 5', revenue: 351000, cogs: 210600, gross: 140400, expenses: 21060, net: 119340, margin: 34, rating: 'high' },
+            { product: 'Non-Stick Cookware Set', revenue: 250500, cogs: 162825, gross: 87675, expenses: 15033, net: 72642, margin: 29, rating: 'medium' },
+            { product: 'Running Shoes Men', revenue: 195804, cogs: 127773, gross: 68031, expenses: 11746, net: 56285, margin: 29, rating: 'medium' },
+            { product: 'Cotton T-Shirt Pack', revenue: 177244, cogs: 124271, gross: 52973, expenses: 10635, net: 42338, margin: 24, rating: 'low' },
+            { product: 'Yoga Mat Premium', revenue: 138600, cogs: 97020, gross: 41580, expenses: 8316, net: 33264, margin: 24, rating: 'low' }
+        ];
+
+        const performanceData = [
+            { warehouse: 'Mumbai - Bhiwandi', orders: 687, fulfillment: '98.2%', processing: '4.2 hrs', delivery: '94.5%', returns: '2.1%', performance: 'high' },
+            { warehouse: 'Delhi - Gurgaon', orders: 542, fulfillment: '96.8%', processing: '4.8 hrs', delivery: '92.3%', returns: '2.4%', performance: 'high' },
+            { warehouse: 'Bangalore', orders: 412, fulfillment: '95.4%', processing: '5.1 hrs', delivery: '90.8%', returns: '2.8%', performance: 'medium' },
+            { warehouse: 'Chennai', orders: 206, fulfillment: '94.1%', processing: '5.6 hrs', delivery: '89.2%', returns: '3.1%', performance: 'medium' }
+        ];
+
+        // Initialize Charts
+        function initSalesChart() {
+            const chart = document.getElementById('salesChart');
+            const maxRevenue = Math.max(...salesData.map(d => d.revenue));
+            
+            chart.innerHTML = salesData.map(data => {
+                const height = (data.revenue / maxRevenue) * 100;
+                return `
+                    <div class="bar" style="height: ${height}%">
+                        <div class="bar-value">₹${(data.revenue / 1000).toFixed(1)}K</div>
+                        <div class="bar-label">${data.date}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function initProfitChart() {
+            const chart = document.getElementById('profitChart');
+            const maxMargin = Math.max(...profitData.map(d => d.margin));
+            
+            chart.innerHTML = profitData.map(data => {
+                const height = (data.margin / maxMargin) * 100;
+                return `
+                    <div class="bar" style="height: ${height}%">
+                        <div class="bar-value">${data.margin}%</div>
+                        <div class="bar-label">${data.category}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Initialize Tables
+        function initTopProductsTable() {
+            const tbody = document.getElementById('topProductsTable');
+            tbody.innerHTML = topProducts.map(product => `
+                <tr>
+                    <td style="font-weight: 600;">${product.name}</td>
+                    <td style="font-family: 'Courier New', monospace; color: var(--tertiary);">${product.sku}</td>
+                    <td>${product.category}</td>
+                    <td>${product.units.toLocaleString()}</td>
+                    <td style="font-weight: 600;">₹${product.revenue.toLocaleString()}</td>
+                    <td>₹${product.price}</td>
+                    <td><span class="badge badge-${product.performance}">${product.performance}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function initTaxBreakdownTable() {
+            const tbody = document.getElementById('taxBreakdownTable');
+            tbody.innerHTML = taxBreakdown.map(tax => {
+                const total = tax.cgst + tax.sgst;
+                const grand = tax.taxable + total;
+                return `
+                    <tr>
+                        <td style="font-weight: 600;">${tax.state}</td>
+                        <td>${tax.orders}</td>
+                        <td>₹${tax.taxable.toLocaleString()}</td>
+                        <td>₹${tax.cgst.toLocaleString()}</td>
+                        <td>₹${tax.sgst.toLocaleString()}</td>
+                        <td style="font-weight: 600;">₹${total.toLocaleString()}</td>
+                        <td style="font-weight: 700;">₹${grand.toLocaleString()}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function initInventoryMovementTable() {
+            const tbody = document.getElementById('inventoryMovementTable');
+            tbody.innerHTML = inventoryMovement.map(inv => `
+                <tr>
+                    <td style="font-weight: 600;">${inv.product}</td>
+                    <td style="font-family: 'Courier New', monospace; color: var(--tertiary);">${inv.sku}</td>
+                    <td>${inv.opening}</td>
+                    <td style="color: var(--gray-dark);">+${inv.received}</td>
+                    <td style="color: var(--gray-medium);">-${inv.sold}</td>
+                    <td style="font-weight: 600;">${inv.closing}</td>
+                    <td>${inv.turnover}</td>
+                    <td><span class="badge badge-${inv.status}">${inv.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function initProfitabilityTable() {
+            const tbody = document.getElementById('profitabilityTable');
+            tbody.innerHTML = profitabilityData.map(profit => `
+                <tr>
+                    <td style="font-weight: 600;">${profit.product}</td>
+                    <td>₹${profit.revenue.toLocaleString()}</td>
+                    <td style="color: var(--gray-medium);">₹${profit.cogs.toLocaleString()}</td>
+                    <td style="font-weight: 600;">₹${profit.gross.toLocaleString()}</td>
+                    <td style="color: var(--gray-medium);">₹${profit.expenses.toLocaleString()}</td>
+                    <td style="font-weight: 700; color: var(--gray-dark);">₹${profit.net.toLocaleString()}</td>
+                    <td style="font-weight: 600;">${profit.margin}%</td>
+                    <td><span class="badge badge-${profit.rating}">${profit.rating}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function initPerformanceTable() {
+            const tbody = document.getElementById('performanceTable');
+            tbody.innerHTML = performanceData.map(perf => `
+                <tr>
+                    <td style="font-weight: 600;">${perf.warehouse}</td>
+                    <td>${perf.orders}</td>
+                    <td style="font-weight: 600;">${perf.fulfillment}</td>
+                    <td>${perf.processing}</td>
+                    <td>${perf.delivery}</td>
+                    <td>${perf.returns}</td>
+                    <td><span class="badge badge-${perf.performance}">${perf.performance}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        // Switch Report Tabs
+        function switchReport(reportType) {
+            // Update tab active state
+            document.querySelectorAll('.report-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Hide all reports
+            document.querySelectorAll('.report-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Show selected report
+            const reportMap = {
+                'sales': 'salesReport',
+                'tax': 'taxReport',
+                'inventory': 'inventoryReport',
+                'profitability': 'profitabilityReport',
+                'performance': 'performanceReport'
+            };
+
+            document.getElementById(reportMap[reportType]).classList.add('active');
+        }
+
+        // Update Reports based on filters
+        function updateReports() {
+            console.log('Updating reports with filters...');
+            // In real implementation, fetch data based on filters
+        }
+
+        // Export functionality
+        function exportReport(format) {
+            alert(`Exporting report as ${format.toUpperCase()}...\n\nIn production, this would generate and download the ${format} file.`);
+        }
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            initSalesChart();
+            initProfitChart();
+            initTopProductsTable();
+            initTaxBreakdownTable();
+            initInventoryMovementTable();
+            initProfitabilityTable();
+            initPerformanceTable();
+        });
+    </script>
+</body>
+</html>

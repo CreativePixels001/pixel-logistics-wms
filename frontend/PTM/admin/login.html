@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Login - Pixel Trip Management</title>
+    <link rel="stylesheet" href="../css/landing-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+            padding: 24px;
+        }
+        
+        .login-card {
+            background: var(--white);
+            border: 2px solid var(--black);
+            border-radius: 16px;
+            padding: 48px;
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .login-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--black);
+            margin-bottom: 16px;
+        }
+        
+        .login-logo svg {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .login-title {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--black);
+            margin-bottom: 8px;
+        }
+        
+        .login-subtitle {
+            font-size: 14px;
+            color: var(--gray-600);
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: var(--font-sans);
+            color: var(--gray-900);
+            background: var(--white);
+            transition: var(--transition-base);
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--black);
+        }
+        
+        .form-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+        
+        .form-checkbox input {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .form-checkbox label {
+            font-size: 14px;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+        
+        .btn-login {
+            width: 100%;
+            background: var(--black);
+            color: var(--white);
+            padding: 14px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-login:hover {
+            background: var(--gray-900);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 32px 0;
+            position: relative;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: var(--gray-300);
+        }
+        
+        .divider span {
+            background: var(--white);
+            padding: 0 16px;
+            font-size: 13px;
+            color: var(--gray-500);
+            position: relative;
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 24px;
+        }
+        
+        .login-footer a {
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition-fast);
+        }
+        
+        .login-footer a:hover {
+            color: var(--black);
+        }
+        
+        .error-message {
+            background: var(--gray-100);
+            border: 2px solid var(--gray-300);
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .error-message p {
+            font-size: 14px;
+            color: var(--gray-700);
+            margin: 0;
+        }
+        
+        .back-home {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .back-home a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--gray-600);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition-fast);
+        }
+        
+        .back-home a:hover {
+            color: var(--black);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="back-home">
+            <a href="../index.html">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"/>
+                    <polyline points="12 19 5 12 12 5"/>
+                </svg>
+                Back to Home
+            </a>
+        </div>
+        
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    <span>PTM Agent</span>
+                </div>
+                <h1 class="login-title">Welcome Back</h1>
+                <p class="login-subtitle">Login to access your agent dashboard</p>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                <p>Invalid credentials. Please try again.</p>
+            </div>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        class="form-input" 
+                        placeholder="agent@pixeltrip.in" 
+                        required
+                        value="demo@pixeltrip.in"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        class="form-input" 
+                        placeholder="Enter your password" 
+                        required
+                        value="demo123"
+                    >
+                </div>
+                
+                <div class="form-checkbox">
+                    <input type="checkbox" id="remember" checked>
+                    <label for="remember">Remember me for 30 days</label>
+                </div>
+                
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                        <polyline points="10 17 15 12 10 7"/>
+                        <line x1="15" y1="12" x2="3" y2="12"/>
+                    </svg>
+                    Login to Dashboard
+                </button>
+            </form>
+            
+            <div class="divider">
+                <span>Demo Credentials</span>
+            </div>
+            
+            <div style="background: var(--gray-50); padding: 16px; border-radius: 8px; border: 1px solid var(--gray-300);">
+                <p style="font-size: 13px; color: var(--gray-600); margin: 0 0 8px 0; font-weight: 600;">Test Login:</p>
+                <p style="font-size: 13px; color: var(--gray-700); margin: 0; font-family: 'Courier New', monospace;">
+                    Email: <strong>demo@pixeltrip.in</strong><br>
+                    Password: <strong>demo123</strong>
+                </p>
+            </div>
+            
+            <div class="login-footer">
+                <a href="#">Forgot Password?</a>
+                <span style="color: var(--gray-400); margin: 0 12px;">•</span>
+                <a href="#">Contact Support</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const remember = document.getElementById('remember').checked;
+            const errorMsg = document.getElementById('errorMessage');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // Hide error
+            errorMsg.classList.remove('show');
+            
+            // Show loading
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="animation: spin 1s linear infinite;">
+                    <circle cx="12" cy="12" r="10"/>
+                </svg>
+                Logging in...
+            `;
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Demo credentials
+                if (email === 'demo@pixeltrip.in' && password === 'demo123') {
+                    // Success
+                    const authToken = 'ptm_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    
+                    if (remember) {
+                        localStorage.setItem('ptmAuthToken', authToken);
+                    } else {
+                        sessionStorage.setItem('ptmAuthToken', authToken);
+                    }
+                    
+                    localStorage.setItem('ptmAgentName', 'Ashish Kumar');
+                    localStorage.setItem('ptmAgentEmail', email);
+                    
+                    console.log('✅ Login successful');
+                    console.log('🎫 Auth token:', authToken);
+                    
+                    // Redirect to dashboard
+                    window.location.href = 'dashboard.html';
+                } else {
+                    // Error
+                    errorMsg.classList.add('show');
+                    loginBtn.disabled = false;
+                    loginBtn.innerHTML = `
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+                            <polyline points="10 17 15 12 10 7"/>
+                            <line x1="15" y1="12" x2="3" y2="12"/>
+                        </svg>
+                        Login to Dashboard
+                    `;
+                }
+            }, 1000);
+        }
+        
+        // Add spin animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Check if already logged in
+        const authToken = localStorage.getItem('ptmAuthToken') || sessionStorage.getItem('ptmAuthToken');
+        if (authToken) {
+            console.log('🔐 Already logged in, redirecting...');
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>

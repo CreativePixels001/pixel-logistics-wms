@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics Dashboard - PixelAudit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../assets/css/global.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+        }
+
+        .page-content {
+            padding: 2rem;
+            max-width: 1400px;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1rem;
+            color: #666666;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: #666666;
+        }
+
+        .breadcrumb a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-icon svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #000000;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #666666;
+            font-weight: 500;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .stat-change.up {
+            color: #10B981;
+        }
+
+        .stat-change.down {
+            color: #EF4444;
+        }
+
+        /* Category Grid */
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #000000;
+            margin-bottom: 1.5rem;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .category-card {
+            background: #ffffff;
+            border: 2px solid #e5e5e5;
+            border-radius: 4px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .category-card:hover {
+            border-color: #000000;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        .category-icon svg {
+            width: 48px;
+            height: 48px;
+            stroke: #000000;
+        }
+
+        .category-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .category-subtitle {
+            font-size: 0.875rem;
+            color: #666666;
+            margin-bottom: 1rem;
+        }
+
+        .category-count {
+            font-size: 0.875rem;
+            color: #999999;
+            font-weight: 500;
+        }
+
+        /* Activity Feed */
+        .activity-section {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            padding: 1.5rem;
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+        }
+
+        .activity-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .view-all-btn {
+            font-size: 0.875rem;
+            color: #000000;
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px solid #000000;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 0.875rem;
+            color: #000000;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: #999999;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #999999;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .empty-state-icon svg {
+            width: 40px;
+            height: 40px;
+            stroke: #cccccc;
+        }
+
+        .empty-state-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #666666;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state-text {
+            font-size: 0.875rem;
+            color: #999999;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <div id="sidebarContainer"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <div id="headerContainer"></div>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Breadcrumb -->
+                <div class="breadcrumb">
+                    <a href="../../../dashboard.html">Dashboard</a>
+                    <span>/</span>
+                    <span>Logistics</span>
+                </div>
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1 class="page-title">📦 Logistics Module</h1>
+                    <p class="page-subtitle">Manage warehouse, driver, vehicle, and trip audits</p>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalAudits">0</div>
+                        <div class="stat-label">Total Audits</div>
+                        <div class="stat-change up" id="totalChange">Start your first audit</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="pendingAudits">0</div>
+                        <div class="stat-label">Pending Review</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="completedAudits">0</div>
+                        <div class="stat-label">Completed</div>
+                        <div class="stat-change up" id="completedChange">+0% this month</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="activeDrivers">0</div>
+                        <div class="stat-label">Active Drivers</div>
+                    </div>
+                </div>
+
+                <!-- Category Grid -->
+                <h2 class="section-title">Audit Categories</h2>
+                <div class="category-grid">
+                    <!-- Warehouse -->
+                    <a href="warehouse-audits.html" class="category-card">
+                        <div class="category-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                        </div>
+                        <h3 class="category-title">Warehouse Audits</h3>
+                        <p class="category-subtitle">Safety, process, fire safety, loading, packaging</p>
+                        <p class="category-count">5 Templates Available</p>
+                    </a>
+
+                    <!-- Driver -->
+                    <a href="driver-audits.html" class="category-card">
+                        <div class="category-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <circle cx="12" cy="12" r="3"/>
+                                <line x1="12" y1="2" x2="12" y2="9"/>
+                                <line x1="12" y1="15" x2="12" y2="22"/>
+                            </svg>
+                        </div>
+                        <h3 class="category-title">Driver Audits</h3>
+                        <p class="category-subtitle">Compliance, safety, behavior, documentation</p>
+                        <p class="category-count">2 Templates Available</p>
+                    </a>
+
+                    <!-- Vehicle -->
+                    <a href="vehicle-audits.html" class="category-card">
+                        <div class="category-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                                <rect x="1" y="3" width="15" height="13"/>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                                <circle cx="5.5" cy="18.5" r="2.5"/>
+                                <circle cx="18.5" cy="18.5" r="2.5"/>
+                            </svg>
+                        </div>
+                        <h3 class="category-title">Vehicle Audits</h3>
+                        <p class="category-subtitle">Inspection, tyre & brake, maintenance</p>
+                        <p class="category-count">2 Templates Available</p>
+                    </a>
+
+                    <!-- Trip -->
+                    <a href="trip-audits.html" class="category-card">
+                        <div class="category-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                        </div>
+                        <h3 class="category-title">Trip Audits</h3>
+                        <p class="category-subtitle">Safety, compliance, route verification</p>
+                        <p class="category-count">2 Templates Available</p>
+                    </a>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity-section">
+                    <div class="activity-header">
+                        <h3 class="activity-title">Recent Activity</h3>
+                        <a href="logistics-reports.html" class="view-all-btn">View All</a>
+                    </div>
+                    
+                    <div id="activityFeed">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                            </div>
+                            <h4 class="empty-state-title">No Recent Activity</h4>
+                            <p class="empty-state-text">Start creating audits to see activity here</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Load Components -->
+    <script src="../../../assets/js/components.js"></script>
+    <script src="../js/dashboard.js"></script>
+    <script>
+        // Initialize components
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load sidebar and header
+            document.getElementById('sidebarContainer').innerHTML = renderSidebar('dashboard');
+            document.getElementById('headerContainer').innerHTML = renderHeader();
+            
+            // Load dashboard data
+            if (typeof LogisticsDashboard !== 'undefined') {
+                LogisticsDashboard.init();
+            }
+        });
+    </script>
+</body>
+</html>

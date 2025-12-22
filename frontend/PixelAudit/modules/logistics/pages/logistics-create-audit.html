@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Audit - PixelAudit Logistics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../assets/css/global.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .dashboard-layout { display: flex; min-height: 100vh; }
+        .main-content { flex: 1; margin-left: 260px; }
+        .page-content { padding: 2rem; max-width: 900px; margin: 0 auto; }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: #666666;
+        }
+
+        .breadcrumb a { color: #000000; text-decoration: none; font-weight: 500; }
+
+        .page-header { margin-bottom: 2rem; }
+        .page-title { font-size: 2rem; font-weight: 800; color: #000000; margin-bottom: 0.5rem; }
+        .page-subtitle { font-size: 1rem; color: #666666; }
+
+        .form-card {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-section-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #f5f5f5;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-label.required::after {
+            content: " *";
+            color: #EF4444;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 3px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #000000;
+            box-shadow: 0 0 0 3px rgba(0,0,0,0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-help {
+            font-size: 0.75rem;
+            color: #999999;
+            margin-top: 0.25rem;
+        }
+
+        .template-preview {
+            background: #f5f5f5;
+            border: 1px solid #e5e5e5;
+            border-radius: 3px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .template-preview-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .template-preview-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 0.75rem;
+        }
+
+        .preview-stat {
+            text-align: center;
+        }
+
+        .preview-stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .preview-stat-label {
+            font-size: 0.75rem;
+            color: #666666;
+            margin-top: 0.25rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #333333;
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #000000;
+            border: 1px solid #e5e5e5;
+        }
+
+        .btn-secondary:hover {
+            background: #f5f5f5;
+        }
+
+        .success-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .success-modal.show {
+            display: flex;
+        }
+
+        .success-content {
+            background: #ffffff;
+            border-radius: 4px;
+            padding: 2rem;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #10B981;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .success-icon svg {
+            width: 48px;
+            height: 48px;
+            stroke: #ffffff;
+        }
+
+        .success-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-text {
+            font-size: 0.875rem;
+            color: #666666;
+            margin-bottom: 1.5rem;
+        }
+
+        .whatsapp-link {
+            background: #25D366;
+            color: #ffffff;
+            padding: 0.75rem 1.5rem;
+            border-radius: 3px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .audit-link-box {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 3px;
+            margin-top: 1rem;
+            font-family: monospace;
+            font-size: 0.75rem;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebarContainer"></div>
+
+        <main class="main-content">
+            <div id="headerContainer"></div>
+
+            <div class="page-content">
+                <div class="breadcrumb">
+                    <a href="../../../dashboard.html">Dashboard</a>
+                    <span>/</span>
+                    <a href="logistics-dashboard.html">Logistics</a>
+                    <span>/</span>
+                    <span>Create Audit</span>
+                </div>
+
+                <div class="page-header">
+                    <h1 class="page-title">➕ Create New Audit</h1>
+                    <p class="page-subtitle">Assign an audit to a team member or complete it yourself</p>
+                </div>
+
+                <form id="createAuditForm">
+                    <!-- Template Selection -->
+                    <div class="form-card">
+                        <h3 class="form-section-title">Audit Template</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Category</label>
+                            <select class="form-select" id="category" required>
+                                <option value="">Select Category</option>
+                                <option value="warehouse">Warehouse</option>
+                                <option value="driver">Driver</option>
+                                <option value="vehicle">Vehicle</option>
+                                <option value="trip">Trip</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required">Template</label>
+                            <select class="form-select" id="template" required disabled>
+                                <option value="">Select template first</option>
+                            </select>
+                            <div class="template-preview" id="templatePreview" style="display: none;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Client Information -->
+                    <div class="form-card">
+                        <h3 class="form-section-title">Client Information</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Client Name</label>
+                            <input type="text" class="form-input" id="clientName" placeholder="e.g., Mahindra Logistics" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required">Location</label>
+                            <input type="text" class="form-input" id="location" placeholder="e.g., Warehouse #5, Pune" required>
+                        </div>
+                    </div>
+
+                    <!-- Assignment -->
+                    <div class="form-card">
+                        <h3 class="form-section-title">Assignment</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label required">Assign To</label>
+                            <select class="form-select" id="auditor" required>
+                                <option value="">Select Auditor</option>
+                                <option value="self">Self Audit</option>
+                                <option value="rajesh">Rajesh Kumar (+91 98765 43210)</option>
+                                <option value="priya">Priya Sharma (+91 98765 43211)</option>
+                                <option value="amit">Amit Patel (+91 98765 43212)</option>
+                            </select>
+                            <p class="form-help">Choose "Self Audit" to complete immediately, or assign to team member</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label required">Due Date</label>
+                            <input type="date" class="form-input" id="dueDate" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Instructions / Notes</label>
+                            <textarea class="form-textarea" id="notes" placeholder="Add any special instructions for the auditor..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-secondary" onclick="window.history.back()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create & Assign Audit</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="success-content">
+            <div class="success-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            </div>
+            <h3 class="success-title">Audit Created Successfully!</h3>
+            <p class="success-text" id="successMessage"></p>
+            <a href="#" class="whatsapp-link" id="whatsappLink" target="_blank">📱 Send via WhatsApp</a>
+            <div class="audit-link-box" id="auditLinkBox"></div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="window.location.href='logistics-dashboard.html'">Dashboard</button>
+                <button class="btn btn-primary" onclick="window.location.reload()">Create Another</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../../assets/js/components.js"></script>
+    <script src="../js/templates.js"></script>
+    <script src="../js/create-audit.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load components
+            document.getElementById('sidebarContainer').innerHTML = renderSidebar('dashboard');
+            document.getElementById('headerContainer').innerHTML = renderHeader();
+            
+            // Initialize create audit
+            if (typeof CreateAudit !== 'undefined') {
+                CreateAudit.init();
+            }
+            
+            // Set minimum due date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dueDate').setAttribute('min', today);
+            document.getElementById('dueDate').value = today;
+        });
+    </script>
+</body>
+</html>

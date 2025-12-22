@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics - Pixel Safe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="common-styles.css">
+    <style>
+        .content { padding: 2rem; }
+        
+        .period-selector {
+            background: #ffffff;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .period-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e0e0e0;
+            background: #ffffff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+        
+        .period-btn:hover,
+        .period-btn.active {
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-change {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #000000;
+        }
+        
+        .charts-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .chart-card {
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+            overflow: hidden;
+        }
+        
+        .chart-header {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chart-title {
+            font-size: 0.9375rem;
+            font-weight: 700;
+        }
+        
+        .chart-subtitle {
+            font-size: 0.8125rem;
+            color: #666666;
+            margin-top: 0.125rem;
+        }
+        
+        .chart-content {
+            padding: 1.5rem;
+        }
+        
+        .chart-container {
+            height: 320px;
+            position: relative;
+        }
+        
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .performance-card {
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+            overflow: hidden;
+        }
+        
+        .leaderboard-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .leaderboard-item {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #f5f5f5;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .leaderboard-item:last-child {
+            border-bottom: none;
+        }
+        
+        .rank {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+        
+        .rank.top {
+            background: #000000;
+            color: #ffffff;
+        }
+        
+        .agent-info {
+            flex: 1;
+        }
+        
+        .agent-name {
+            font-weight: 600;
+            margin-bottom: 0.125rem;
+        }
+        
+        .agent-stats {
+            font-size: 0.75rem;
+            color: #666666;
+        }
+        
+        .agent-value {
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+        
+        .commission-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .commission-table th {
+            padding: 0.75rem 1.5rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid #e8e8e8;
+            background: #fafafa;
+        }
+        
+        .commission-table td {
+            padding: 0.875rem 1.5rem;
+            border-bottom: 1px solid #f5f5f5;
+            font-size: 0.875rem;
+        }
+        
+        .commission-table tbody tr:hover {
+            background: #fafafa;
+        }
+
+        @media (max-width: 1024px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .charts-section,
+            .performance-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <header class="top-header">
+            <div class="header-left">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <span>Pixel Safe</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="search-bar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="globalSearch" placeholder="Search leads, clients, policies...">
+                    <kbd>⌘K</kbd>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-icon-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="badge">3</span>
+                </button>
+                <button class="header-icon-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span class="badge">5</span>
+                </button>
+                <div class="user-menu">
+                    <div class="user-avatar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <span class="user-name" id="headerAgentName">Agent</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </div>
+            </div>
+        </header>
+
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <a href="dashboard.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="analytics.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        <span>Analytics</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Sales</div>
+                    <a href="leads.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Leads</span>
+                        <span class="nav-badge">24</span>
+                    </a>
+                    <a href="clients.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <line x1="20" y1="8" x2="20" y2="14"/>
+                            <line x1="23" y1="11" x2="17" y2="11"/>
+                        </svg>
+                        <span>Clients</span>
+                    </a>
+                    <a href="deals.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        <span>Deals</span>
+                        <span class="nav-badge">8</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <a href="policies.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        <span>Policies</span>
+                    </a>
+                    <a href="renewals.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span>Renewals</span>
+                    </a>
+                    <a href="claims.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <span>Claims</span>
+                        <span class="nav-badge">3</span>
+                    </a>
+                    <a href="agents.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Agents</span>
+                    </a>
+                    <a href="reports.html" class="nav-link active">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                        <span>Reports</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <div class="page-header-left">
+                    <h1>Reports & Analytics</h1>
+                    <p>Performance insights and commission tracking</p>
+                </div>
+                <div class="page-header-right">
+                    <button class="btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 6 2 18 2 18 9"/>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                            <rect x="6" y="14" width="12" height="8"/>
+                        </svg>
+                        Export PDF
+                    </button>
+                    <button class="btn-primary" onclick="openScheduleReportPanel()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Schedule Report
+                    </button>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="period-selector">
+                    <span style="font-weight: 600; font-size: 0.875rem; color: #666666;">Period:</span>
+                    <button class="period-btn">Today</button>
+                    <button class="period-btn">This Week</button>
+                    <button class="period-btn active">This Month</button>
+                    <button class="period-btn">This Quarter</button>
+                    <button class="period-btn">This Year</button>
+                    <button class="period-btn">Custom Range</button>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                        </div>
+                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-value">₹2.4Cr</div>
+                        <div class="stat-change">+22.3% vs last month</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                        </div>
+                        <div class="stat-label">Policies Sold</div>
+                        <div class="stat-value">423</div>
+                        <div class="stat-change">+18.4% vs last month</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 6v6l4 2"/>
+                            </svg>
+                        </div>
+                        <div class="stat-label">Avg Deal Cycle</div>
+                        <div class="stat-value">18 days</div>
+                        <div class="stat-change">-2 days improvement</div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                            </svg>
+                        </div>
+                        <div class="stat-label">Conversion Rate</div>
+                        <div class="stat-value">36%</div>
+                        <div class="stat-change">+4.1% vs last month</div>
+                    </div>
+                </div>
+
+                <div class="charts-section">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">Revenue Trend</div>
+                                <div class="chart-subtitle">Monthly performance overview</div>
+                            </div>
+                        </div>
+                        <div class="chart-content">
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">Policy Distribution</div>
+                                <div class="chart-subtitle">By insurance type</div>
+                            </div>
+                        </div>
+                        <div class="chart-content">
+                            <div class="chart-container">
+                                <canvas id="policyChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="performance-grid">
+                    <div class="performance-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">Top Performers</div>
+                                <div class="chart-subtitle">Agent leaderboard this month</div>
+                            </div>
+                        </div>
+                        <div class="leaderboard-list">
+                            <div class="leaderboard-item">
+                                <div class="rank top">1</div>
+                                <div class="agent-info">
+                                    <div class="agent-name">Priya Sharma</div>
+                                    <div class="agent-stats">52 policies • 94% conversion</div>
+                                </div>
+                                <div class="agent-value">₹18.5L</div>
+                            </div>
+                            <div class="leaderboard-item">
+                                <div class="rank top">2</div>
+                                <div class="agent-info">
+                                    <div class="agent-name">Rajesh Kumar</div>
+                                    <div class="agent-stats">48 policies • 88% conversion</div>
+                                </div>
+                                <div class="agent-value">₹16.2L</div>
+                            </div>
+                            <div class="leaderboard-item">
+                                <div class="rank top">3</div>
+                                <div class="agent-info">
+                                    <div class="agent-name">Amit Patel</div>
+                                    <div class="agent-stats">45 policies • 85% conversion</div>
+                                </div>
+                                <div class="agent-value">₹14.8L</div>
+                            </div>
+                            <div class="leaderboard-item">
+                                <div class="rank">4</div>
+                                <div class="agent-info">
+                                    <div class="agent-name">Sunita Reddy</div>
+                                    <div class="agent-stats">38 policies • 82% conversion</div>
+                                </div>
+                                <div class="agent-value">₹12.4L</div>
+                            </div>
+                            <div class="leaderboard-item">
+                                <div class="rank">5</div>
+                                <div class="agent-info">
+                                    <div class="agent-name">Vikram Singh</div>
+                                    <div class="agent-stats">35 policies • 78% conversion</div>
+                                </div>
+                                <div class="agent-value">₹11.2L</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="performance-card">
+                        <div class="chart-header">
+                            <div>
+                                <div class="chart-title">Commission Breakdown</div>
+                                <div class="chart-subtitle">Current month earnings</div>
+                            </div>
+                        </div>
+                        <table class="commission-table">
+                            <thead>
+                                <tr>
+                                    <th>Agent</th>
+                                    <th>Policies</th>
+                                    <th>Revenue</th>
+                                    <th>Commission</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="font-weight: 600;">Priya Sharma</td>
+                                    <td>52</td>
+                                    <td>₹18.5L</td>
+                                    <td style="font-weight: 700;">₹2.78L</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600;">Rajesh Kumar</td>
+                                    <td>48</td>
+                                    <td>₹16.2L</td>
+                                    <td style="font-weight: 700;">₹2.43L</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600;">Amit Patel</td>
+                                    <td>45</td>
+                                    <td>₹14.8L</td>
+                                    <td style="font-weight: 700;">₹2.22L</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600;">Sunita Reddy</td>
+                                    <td>38</td>
+                                    <td>₹12.4L</td>
+                                    <td style="font-weight: 700;">₹1.86L</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600;">Vikram Singh</td>
+                                    <td>35</td>
+                                    <td>₹11.2L</td>
+                                    <td style="font-weight: 700;">₹1.68L</td>
+                                </tr>
+                                <tr>
+                                    <td style="font-weight: 600;">Neha Gupta</td>
+                                    <td>32</td>
+                                    <td>₹9.8L</td>
+                                    <td style="font-weight: 700;">₹1.47L</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const agent = sessionStorage.getItem('pisAgent');
+        if (!agent) {
+            window.location.href = 'login.html';
+        } else {
+            const agentData = JSON.parse(agent);
+            document.getElementById('headerAgentName').textContent = agentData.name;
+        }
+
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Revenue (₹L)',
+                    data: [125, 142, 158, 175, 189, 205, 218, 235, 248, 262, 278, 295],
+                    backgroundColor: '#000000',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f5f5f5', drawBorder: false },
+                        ticks: { font: { family: 'Inter', size: 11 } }
+                    },
+                    x: {
+                        grid: { display: false, drawBorder: false },
+                        ticks: { font: { family: 'Inter', size: 11 } }
+                    }
+                }
+            }
+        });
+
+        // Policy Distribution Chart
+        const policyCtx = document.getElementById('policyChart').getContext('2d');
+        new Chart(policyCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Health', 'Life', 'Motor', 'Property', 'Travel'],
+                datasets: [{
+                    data: [35, 28, 20, 12, 5],
+                    backgroundColor: ['#000000', '#333333', '#666666', '#999999', '#cccccc'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 15,
+                            font: { family: 'Inter', size: 12, weight: '500' }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Global Search Keyboard Shortcut (Cmd+K / Ctrl+K)
+        document.addEventListener('keydown', function(e) {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('globalSearch').focus();
+            }
+        });
+    </script>
+
+    <!-- Slide Panels -->
+    <script src="slide-panels.js"></script>
+    <script>
+        fetch('slide-panels.html')
+            .then(response => response.text())
+            .then(html => {
+                const div = document.createElement('div');
+                div.innerHTML = html;
+                document.body.appendChild(div);
+            });
+    </script>
+</body>
+</html>

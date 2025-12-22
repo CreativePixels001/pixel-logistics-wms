@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - PixelNotes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .navbar {
+            background: #000000;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid #000000;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border: 2px solid #ffffff;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateX(-5px);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: #ffffff;
+            padding: 5rem 0 3rem;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .hero-section p {
+            font-size: 1.25rem;
+            color: #999999;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .docs-container {
+            padding: 4rem 0;
+        }
+
+        .docs-sidebar {
+            background: #f5f5f5;
+            padding: 2rem;
+            border-right: 3px solid #e0e0e0;
+            position: sticky;
+            top: 80px;
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        .docs-sidebar h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .docs-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .docs-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        .docs-menu a {
+            color: #666666;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            display: block;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .docs-menu a:hover {
+            color: #000000;
+            border-left-color: #000000;
+            background: #ffffff;
+        }
+
+        .docs-menu a.active {
+            color: #000000;
+            font-weight: 600;
+            border-left-color: #000000;
+            background: #ffffff;
+        }
+
+        .docs-content {
+            padding: 0 3rem;
+        }
+
+        .docs-content h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 3px solid #000000;
+        }
+
+        .docs-content h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 2.5rem 0 1rem;
+        }
+
+        .docs-content p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #666666;
+            margin-bottom: 1.5rem;
+        }
+
+        .docs-content ul, .docs-content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 2rem;
+        }
+
+        .docs-content li {
+            margin-bottom: 0.5rem;
+            line-height: 1.8;
+            color: #666666;
+        }
+
+        .code-block {
+            background: #000000;
+            color: #ffffff;
+            padding: 1.5rem;
+            border-radius: 4px;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+        }
+
+        .info-box {
+            background: #f5f5f5;
+            border-left: 4px solid #000000;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .info-box.warning {
+            border-left-color: #ff6b6b;
+        }
+
+        .info-box.tip {
+            border-left-color: #4CAF50;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .step-guide {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-guide li {
+            counter-increment: step-counter;
+            padding-left: 3rem;
+            position: relative;
+            margin-bottom: 2rem;
+            color: #000000;
+        }
+
+        .step-guide li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 35px;
+            height: 35px;
+            background: #000000;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+        }
+
+        .screenshot {
+            border: 3px solid #000000;
+            margin: 2rem 0;
+            max-width: 100%;
+        }
+
+        @media (max-width: 992px) {
+            .docs-sidebar {
+                position: static;
+                height: auto;
+                margin-bottom: 2rem;
+            }
+            .docs-content {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="landing.html" class="back-button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1>Documentation</h1>
+            <p>Everything you need to know to get started and master PixelNotes</p>
+        </div>
+    </section>
+
+    <!-- Docs Container -->
+    <section class="docs-container">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-lg-3">
+                    <div class="docs-sidebar">
+                        <h3>Contents</h3>
+                        <ul class="docs-menu">
+                            <li><a href="#getting-started" class="active">Getting Started</a></li>
+                            <li><a href="#creating-notes">Creating Notes</a></li>
+                            <li><a href="#voice-input">Voice Input</a></li>
+                            <li><a href="#pi-assistant">PI Assistant</a></li>
+                            <li><a href="#sections">Smart Sections</a></li>
+                            <li><a href="#search">Search & Find</a></li>
+                            <li><a href="#collaboration">Team Collaboration</a></li>
+                            <li><a href="#shortcuts">Keyboard Shortcuts</a></li>
+                            <li><a href="#export">Export & Backup</a></li>
+                            <li><a href="#troubleshooting">Troubleshooting</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="col-lg-9">
+                    <div class="docs-content">
+                        <!-- Getting Started -->
+                        <section id="getting-started">
+                            <h2>Getting Started</h2>
+                            <p>Welcome to PixelNotes! This guide will help you get up and running in minutes.</p>
+
+                            <h3>1. Sign Up or Try Demo</h3>
+                            <ol class="step-guide">
+                                <li>
+                                    <strong>Visit PixelNotes</strong>
+                                    <p>Go to <a href="login.html">login page</a> to access PixelNotes</p>
+                                </li>
+                                <li>
+                                    <strong>Choose Your Method</strong>
+                                    <p>Click "Sign in with Google" for full features, or "Try Demo Mode" to test without login</p>
+                                </li>
+                                <li>
+                                    <strong>Complete Setup</strong>
+                                    <p>If using Google, authorize access. You'll be redirected to your dashboard automatically</p>
+                                </li>
+                                <li>
+                                    <strong>Start Creating</strong>
+                                    <p>Click "New Note" to create your first note</p>
+                                </li>
+                            </ol>
+
+                            <div class="info-box tip">
+                                <strong>💡 Tip:</strong>
+                                Demo Mode gives you full access to all features without requiring sign-up. Your notes are saved locally in your browser. Sign in with Google to sync across devices.
+                            </div>
+                        </section>
+
+                        <!-- Creating Notes -->
+                        <section id="creating-notes">
+                            <h2>Creating & Managing Notes</h2>
+                            
+                            <h3>Creating a New Note</h3>
+                            <p>There are multiple ways to create notes:</p>
+                            <ul>
+                                <li><strong>Dashboard:</strong> Click the "New Note" button</li>
+                                <li><strong>Editor:</strong> Click "+" icon in the notes list</li>
+                                <li><strong>Keyboard:</strong> Press Ctrl+N (Windows) or Cmd+N (Mac)</li>
+                            </ul>
+
+                            <h3>Note Structure</h3>
+                            <p>Each note in PixelNotes has three main components:</p>
+                            <ul>
+                                <li><strong>Title:</strong> Give your note a descriptive name</li>
+                                <li><strong>Category/Tags:</strong> Organize with categories and tags</li>
+                                <li><strong>Content:</strong> The main note body with rich text support</li>
+                            </ul>
+
+                            <h3>Rich Text Formatting</h3>
+                            <p>PixelNotes supports various formatting options:</p>
+                            <ul>
+                                <li>Bold, italic, underline text</li>
+                                <li>Bulleted and numbered lists</li>
+                                <li>Headers and subheaders</li>
+                                <li>Code blocks for technical content</li>
+                                <li>Links and references</li>
+                            </ul>
+
+                            <div class="info-box">
+                                <strong>📝 Note:</strong>
+                                All changes are auto-saved every few seconds. You'll see a "Saved" indicator when changes are synced.
+                            </div>
+                        </section>
+
+                        <!-- Voice Input -->
+                        <section id="voice-input">
+                            <h2>Multi-Language Voice Input</h2>
+                            
+                            <h3>Starting Voice Input</h3>
+                            <ol class="step-guide">
+                                <li>
+                                    <strong>Click Microphone Icon</strong>
+                                    <p>Located in the editor toolbar</p>
+                                </li>
+                                <li>
+                                    <strong>Select Language</strong>
+                                    <p>Choose from 10+ supported languages including English, Hindi, Marathi, Tamil, Telugu, etc.</p>
+                                </li>
+                                <li>
+                                    <strong>Grant Permission</strong>
+                                    <p>Allow browser to access your microphone (one-time permission)</p>
+                                </li>
+                                <li>
+                                    <strong>Start Speaking</strong>
+                                    <p>Speak naturally. Your words will appear in real-time</p>
+                                </li>
+                            </ol>
+
+                            <h3>Voice Input Best Practices</h3>
+                            <ul>
+                                <li><strong>Clear Environment:</strong> Use in a quiet space for best accuracy</li>
+                                <li><strong>Natural Speech:</strong> Speak at your normal pace, no need to slow down</li>
+                                <li><strong>Punctuation:</strong> Say "comma", "period", "question mark" for punctuation</li>
+                                <li><strong>New Line:</strong> Say "new line" or "new paragraph"</li>
+                                <li><strong>Code-Switching:</strong> Mix languages naturally - the system adapts</li>
+                            </ul>
+
+                            <div class="info-box tip">
+                                <strong>💡 Pro Tip:</strong>
+                                For meeting notes, start voice input at the beginning of the meeting and let it run. PI will automatically add timestamps and structure the content.
+                            </div>
+                        </section>
+
+                        <!-- PI Assistant -->
+                        <section id="pi-assistant">
+                            <h2>PI (Pixel Intelligence) Assistant</h2>
+                            
+                            <h3>What is PI?</h3>
+                            <p>PI is your intelligent note-taking companion that learns from your writing, suggests improvements, and helps you extract more value from your notes.</p>
+
+                            <h3>Key PI Features</h3>
+                            
+                            <h4>1. Real-Time Suggestions</h4>
+                            <p>As you type, PI analyzes your content and provides context-aware suggestions:</p>
+                            <ul>
+                                <li>Related notes and topics</li>
+                                <li>Potential action items</li>
+                                <li>Relevant categories and tags</li>
+                                <li>Writing improvements</li>
+                            </ul>
+
+                            <h4>2. Auto-Summarization</h4>
+                            <p>Generate summaries of long notes instantly:</p>
+                            <ol>
+                                <li>Click the "Summarize" button in PI panel</li>
+                                <li>PI analyzes your note content</li>
+                                <li>Receive a concise summary with key points</li>
+                                <li>Copy or insert summary into note</li>
+                            </ol>
+
+                            <h4>3. Action Item Extraction</h4>
+                            <p>PI automatically identifies tasks and deadlines in your notes:</p>
+                            <ul>
+                                <li>Detects action verbs (do, complete, send, call, etc.)</li>
+                                <li>Identifies due dates and time references</li>
+                                <li>Creates a todo list from meeting notes</li>
+                                <li>Highlights important decisions</li>
+                            </ul>
+
+                            <h4>4. Smart Tags</h4>
+                            <p>PI suggests relevant tags based on note content, making organization effortless.</p>
+
+                            <div class="code-block">
+                                <code>
+Example: If you write "Call John about Q4 sales report by Friday"<br>
+<br>
+PI suggests:<br>
+- Action: Call John<br>
+- Topic: Sales report<br>
+- Deadline: This Friday<br>
+- Tags: Sales, Q4, Follow-up
+                                </code>
+                            </div>
+                        </section>
+
+                        <!-- Smart Sections -->
+                        <section id="sections">
+                            <h2>Smart Sections</h2>
+                            
+                            <h3>Understanding Sections</h3>
+                            <p>Smart Sections automatically organize your notes chronologically, making long-running projects and journals easy to navigate.</p>
+
+                            <h3>How Sections Work</h3>
+                            <ul>
+                                <li><strong>Auto-Creation:</strong> Sections are created automatically based on date (weekly or monthly)</li>
+                                <li><strong>Collapsible:</strong> Click section headers to expand/collapse content</li>
+                                <li><strong>Visual Timeline:</strong> See your note history at a glance</li>
+                                <li><strong>Easy Navigation:</strong> Jump to any time period quickly</li>
+                            </ul>
+
+                            <h3>Using Sections Effectively</h3>
+                            <ol class="step-guide">
+                                <li>
+                                    <strong>Enable Sections</strong>
+                                    <p>Toggle "Use Sections" in note settings</p>
+                                </li>
+                                <li>
+                                    <strong>Choose Period</strong>
+                                    <p>Select Weekly or Monthly sections based on your needs</p>
+                                </li>
+                                <li>
+                                    <strong>Add Content</strong>
+                                    <p>New entries automatically appear in the current period's section</p>
+                                </li>
+                                <li>
+                                    <strong>Navigate History</strong>
+                                    <p>Collapse old sections to focus on current work while preserving history</p>
+                                </li>
+                            </ol>
+
+                            <div class="info-box">
+                                <strong>📌 Use Cases:</strong>
+                                Sections are perfect for: Daily journals, Project logs, Meeting series, Customer interaction history, Development notes, Personal growth tracking
+                            </div>
+                        </section>
+
+                        <!-- Search -->
+                        <section id="search">
+                            <h2>Search & Find</h2>
+                            
+                            <h3>Basic Search</h3>
+                            <p>Find notes quickly using the search bar:</p>
+                            <ul>
+                                <li>Type any keyword or phrase</li>
+                                <li>Results appear instantly as you type</li>
+                                <li>Matches in title, content, and tags are highlighted</li>
+                            </ul>
+
+                            <h3>Advanced Search</h3>
+                            <p>Use filters to narrow down results:</p>
+                            <ul>
+                                <li><strong>Date Range:</strong> Find notes from specific time periods</li>
+                                <li><strong>Categories:</strong> Search within specific categories</li>
+                                <li><strong>Tags:</strong> Filter by single or multiple tags</li>
+                                <li><strong>Sort Options:</strong> By date, relevance, or title</li>
+                            </ul>
+
+                            <h3>Search Tips</h3>
+                            <div class="code-block">
+                                <code>
+Search operators:<br>
+- Use quotes for exact phrases: "project meeting"<br>
+- Use AND to require multiple terms: sales AND Q4<br>
+- Use OR for alternatives: report OR summary<br>
+- Use - to exclude: meeting -cancelled
+                                </code>
+                            </div>
+
+                            <div class="info-box tip">
+                                <strong>🔍 Pro Tip:</strong>
+                                PI's semantic search understands context. Searching "customer complaints" will also find notes about "client issues" or "user feedback".
+                            </div>
+                        </section>
+
+                        <!-- Collaboration -->
+                        <section id="collaboration">
+                            <h2>Team Collaboration</h2>
+                            
+                            <h3>Sharing Notes</h3>
+                            <ol class="step-guide">
+                                <li>
+                                    <strong>Open Note</strong>
+                                    <p>Navigate to the note you want to share</p>
+                                </li>
+                                <li>
+                                    <strong>Click Share</strong>
+                                    <p>Click the share icon in the toolbar</p>
+                                </li>
+                                <li>
+                                    <strong>Add Team Members</strong>
+                                    <p>Enter email addresses of collaborators</p>
+                                </li>
+                                <li>
+                                    <strong>Set Permissions</strong>
+                                    <p>Choose View Only or Edit access</p>
+                                </li>
+                            </ol>
+
+                            <h3>Team Features</h3>
+                            <ul>
+                                <li><strong>Shared Templates:</strong> Create note templates for consistent team documentation</li>
+                                <li><strong>Comments:</strong> Add comments to specific sections (Enterprise plan)</li>
+                                <li><strong>Version History:</strong> See who made what changes and when</li>
+                                <li><strong>Team Dashboard:</strong> Overview of shared notes and team activity</li>
+                            </ul>
+
+                            <div class="info-box warning">
+                                <strong>⚠️ Important:</strong>
+                                Team collaboration features require a Team or Enterprise plan. Demo Mode does not support sharing.
+                            </div>
+                        </section>
+
+                        <!-- Shortcuts -->
+                        <section id="shortcuts">
+                            <h2>Keyboard Shortcuts</h2>
+                            
+                            <h3>Global Shortcuts</h3>
+                            <ul>
+                                <li><code>Ctrl+N</code> / <code>Cmd+N</code> - New Note</li>
+                                <li><code>Ctrl+S</code> / <code>Cmd+S</code> - Save (manual save)</li>
+                                <li><code>Ctrl+F</code> / <code>Cmd+F</code> - Search</li>
+                                <li><code>Ctrl+K</code> / <code>Cmd+K</code> - Quick Commands</li>
+                                <li><code>Esc</code> - Close dialogs/panels</li>
+                            </ul>
+
+                            <h3>Editor Shortcuts</h3>
+                            <ul>
+                                <li><code>Ctrl+B</code> / <code>Cmd+B</code> - Bold</li>
+                                <li><code>Ctrl+I</code> / <code>Cmd+I</code> - Italic</li>
+                                <li><code>Ctrl+U</code> / <code>Cmd+U</code> - Underline</li>
+                                <li><code>Ctrl+L</code> / <code>Cmd+L</code> - Insert Link</li>
+                                <li><code>Ctrl+Shift+V</code> - Voice Input</li>
+                                <li><code>Ctrl+Shift+P</code> - Toggle PI Panel</li>
+                            </ul>
+
+                            <h3>Navigation Shortcuts</h3>
+                            <ul>
+                                <li><code>Ctrl+←</code> / <code>Cmd+←</code> - Previous Note</li>
+                                <li><code>Ctrl+→</code> / <code>Cmd+→</code> - Next Note</li>
+                                <li><code>Ctrl+Home</code> - Go to Dashboard</li>
+                                <li><code>Ctrl+↑</code> / <code>Cmd+↑</code> - Scroll to Top</li>
+                                <li><code>Ctrl+↓</code> / <code>Cmd+↓</code> - Scroll to Bottom</li>
+                            </ul>
+                        </section>
+
+                        <!-- Export -->
+                        <section id="export">
+                            <h2>Export & Backup</h2>
+                            
+                            <h3>Exporting Notes</h3>
+                            <p>Export individual notes or entire collections:</p>
+                            <ul>
+                                <li><strong>Markdown:</strong> Plain text format with formatting preserved</li>
+                                <li><strong>PDF:</strong> Professional document format</li>
+                                <li><strong>HTML:</strong> Web-ready format with full styling</li>
+                                <li><strong>JSON:</strong> Raw data for custom processing</li>
+                            </ul>
+
+                            <h3>Backup Options</h3>
+                            <ol class="step-guide">
+                                <li>
+                                    <strong>Automatic Backup</strong>
+                                    <p>Enterprise plans include automatic daily backups to Google Drive</p>
+                                </li>
+                                <li>
+                                    <strong>Manual Export</strong>
+                                    <p>Go to Settings → Export → Select format and notes</p>
+                                </li>
+                                <li>
+                                    <strong>Download Backup</strong>
+                                    <p>Complete archive downloads as .zip file</p>
+                                </li>
+                            </ol>
+
+                            <div class="info-box tip">
+                                <strong>🔄 Backup Strategy:</strong>
+                                We recommend exporting important notes weekly and storing backups in multiple locations (local drive, cloud storage, external drive).
+                            </div>
+                        </section>
+
+                        <!-- Troubleshooting -->
+                        <section id="troubleshooting">
+                            <h2>Troubleshooting</h2>
+                            
+                            <h3>Common Issues</h3>
+                            
+                            <h4>Voice Input Not Working</h4>
+                            <ul>
+                                <li>Check microphone permissions in browser settings</li>
+                                <li>Ensure HTTPS connection (required for microphone access)</li>
+                                <li>Try a different browser (Chrome recommended)</li>
+                                <li>Check if another app is using the microphone</li>
+                            </ul>
+
+                            <h4>Notes Not Syncing</h4>
+                            <ul>
+                                <li>Check internet connection</li>
+                                <li>Refresh the page (Ctrl+R / Cmd+R)</li>
+                                <li>Clear browser cache and cookies</li>
+                                <li>Sign out and sign back in</li>
+                            </ul>
+
+                            <h4>PI Not Responding</h4>
+                            <ul>
+                                <li>Ensure note has enough content (minimum 50 words)</li>
+                                <li>Wait a few seconds for AI processing</li>
+                                <li>Toggle PI panel off and on</li>
+                                <li>Check if ad-blocker is interfering</li>
+                            </ul>
+
+                            <h4>Search Not Finding Notes</h4>
+                            <ul>
+                                <li>Check spelling of search terms</li>
+                                <li>Try different keywords or synonyms</li>
+                                <li>Remove filters to broaden search</li>
+                                <li>Wait for search index to update (may take a minute)</li>
+                            </ul>
+
+                            <div class="info-box">
+                                <strong>📧 Still Need Help?</strong>
+                                Contact our support team at support@creativepixels.in or use the in-app chat. Enterprise customers have access to 24/7 priority support.
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('.docs-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                // Update active state
+                document.querySelectorAll('.docs-menu a').forEach(a => a.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Scroll to section
+                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Update active menu item on scroll
+        const sections = document.querySelectorAll('.docs-content section');
+        const menuLinks = document.querySelectorAll('.docs-menu a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            menuLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${current}`) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

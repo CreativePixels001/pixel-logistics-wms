@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="blogTitle">Blog Post - Pixel Logistics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #000000;
+            --color-secondary: #1a1a1a;
+            --color-grey-dark: #4a4a4a;
+            --color-grey: #6b6b6b;
+            --color-grey-light: #9b9b9b;
+            --color-grey-lighter: #d1d1d1;
+            --color-background: #f5f5f5;
+            --color-white: #ffffff;
+            --transition: 0.3s ease;
+        }
+
+        /* Animated Icons */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .icon-robot, .icon-truck, .icon-chart {
+            width: 80px;
+            height: 80px;
+            position: relative;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Robot Icon */
+        .icon-robot-head {
+            width: 50px;
+            height: 40px;
+            border: 3px solid var(--color-primary);
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            border-radius: 8px;
+        }
+
+        .icon-robot-antenna {
+            width: 3px;
+            height: 12px;
+            background: var(--color-primary);
+            position: absolute;
+            top: -12px;
+            left: 23px;
+        }
+
+        .icon-robot-antenna::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--color-primary);
+            border-radius: 50%;
+            position: absolute;
+            top: -8px;
+            left: -2.5px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .icon-robot-eyes {
+            display: flex;
+            gap: 15px;
+            position: absolute;
+            top: 18px;
+            left: 23px;
+        }
+
+        .icon-robot-eye {
+            width: 8px;
+            height: 8px;
+            background: var(--color-primary);
+            border-radius: 50%;
+        }
+
+        .icon-robot-body {
+            width: 40px;
+            height: 30px;
+            border: 3px solid var(--color-primary);
+            position: absolute;
+            top: 50px;
+            left: 20px;
+            border-radius: 5px;
+        }
+
+        /* Truck Icon */
+        .icon-truck-cabin {
+            width: 25px;
+            height: 30px;
+            border: 3px solid var(--color-primary);
+            position: absolute;
+            top: 25px;
+            left: 10px;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .icon-truck-cargo {
+            width: 40px;
+            height: 25px;
+            border: 3px solid var(--color-primary);
+            position: absolute;
+            top: 30px;
+            left: 35px;
+        }
+
+        .icon-truck-wheels {
+            display: flex;
+            gap: 35px;
+            position: absolute;
+            top: 58px;
+            left: 15px;
+        }
+
+        .icon-truck-wheel {
+            width: 12px;
+            height: 12px;
+            border: 3px solid var(--color-primary);
+            border-radius: 50%;
+            animation: spin 2s linear infinite;
+        }
+
+        /* Chart Icon */
+        .icon-chart-bars {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        .icon-chart-bar {
+            width: 12px;
+            background: var(--color-primary);
+            border-radius: 3px 3px 0 0;
+        }
+
+        .icon-chart-bar:nth-child(1) {
+            height: 25px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .icon-chart-bar:nth-child(2) {
+            height: 40px;
+            animation: pulse 1.5s ease-in-out infinite 0.2s;
+        }
+
+        .icon-chart-bar:nth-child(3) {
+            height: 30px;
+            animation: pulse 1.5s ease-in-out infinite 0.4s;
+        }
+
+        .icon-chart-bar:nth-child(4) {
+            height: 45px;
+            animation: pulse 1.5s ease-in-out infinite 0.6s;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: var(--color-secondary);
+            background: var(--color-white);
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-grey-lighter);
+            padding: 1.5rem 0;
+        }
+
+        .nav-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-back {
+            padding: 10px 24px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .nav-back:hover {
+            background: var(--color-secondary);
+        }
+
+        /* Article */
+        .article-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 120px 2rem 80px;
+        }
+
+        .article-header {
+            margin-bottom: 3rem;
+        }
+
+        .article-category {
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .article-title {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            letter-spacing: -1px;
+        }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            padding: 20px 0;
+            border-top: 2px solid var(--color-grey-lighter);
+            border-bottom: 2px solid var(--color-grey-lighter);
+        }
+
+        .author-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .author-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .author-name {
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .article-date {
+            color: var(--color-grey);
+            font-size: 14px;
+        }
+
+        .read-time {
+            color: var(--color-grey);
+            font-size: 14px;
+        }
+
+        .article-image {
+            width: 100%;
+            height: 400px;
+            background: var(--color-background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 3rem 0;
+            border: 2px solid var(--color-grey-lighter);
+            overflow: hidden;
+        }
+
+        .article-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+        }
+
+        /* Audio Player */
+        .audio-player {
+            position: sticky;
+            top: 90px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            padding: 20px 30px;
+            margin: 2rem 0;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .play-btn {
+            width: 50px;
+            height: 50px;
+            background: var(--color-white);
+            color: var(--color-primary);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .play-btn::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 12px solid var(--color-primary);
+            border-top: 8px solid transparent;
+            border-bottom: 8px solid transparent;
+            margin-left: 3px;
+        }
+
+        .play-btn.playing::before {
+            border-left: none;
+            width: 12px;
+            height: 16px;
+            background: linear-gradient(to right, 
+                var(--color-primary) 0%, 
+                var(--color-primary) 35%, 
+                transparent 35%, 
+                transparent 65%, 
+                var(--color-primary) 65%, 
+                var(--color-primary) 100%);
+            margin-left: 0;
+        }
+
+        .audio-info {
+            flex: 1;
+        }
+
+        .audio-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.9;
+        }
+
+        .audio-progress {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .audio-progress-bar {
+            height: 100%;
+            background: var(--color-white);
+            border-radius: 2px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .audio-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        .speed-control {
+            display: flex;
+            gap: 5px;
+        }
+
+        .speed-btn {
+            padding: 5px 12px;
+            background: rgba(255, 255, 255, 0.2);
+            color: var(--color-white);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .speed-btn:hover, .speed-btn.active {
+            background: var(--color-white);
+            color: var(--color-primary);
+        }
+
+        .article-content {
+            font-size: 18px;
+            line-height: 1.9;
+            color: var(--color-grey-dark);
+        }
+
+        .article-content h2 {
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--color-primary);
+            margin: 3rem 0 1.5rem;
+            line-height: 1.3;
+        }
+
+        .article-content h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-secondary);
+            margin: 2.5rem 0 1rem;
+        }
+
+        .article-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .article-content ul, .article-content ol {
+            margin: 1.5rem 0 1.5rem 2rem;
+        }
+
+        .article-content li {
+            margin-bottom: 0.75rem;
+        }
+
+        .article-content strong {
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        .highlight-box {
+            background: var(--color-background);
+            border-left: 5px solid var(--color-primary);
+            padding: 30px;
+            margin: 2.5rem 0;
+        }
+
+        .highlight-box p {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-secondary);
+        }
+
+        .article-footer {
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 3px solid var(--color-primary);
+        }
+
+        .share-section {
+            margin-bottom: 3rem;
+        }
+
+        .share-section h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .share-btn {
+            padding: 12px 24px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .share-btn:hover {
+            background: var(--color-secondary);
+        }
+
+        .related-posts {
+            margin-top: 4rem;
+        }
+
+        .related-posts h3 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 2rem;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .related-card {
+            border: 2px solid var(--color-grey-lighter);
+            padding: 25px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .related-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .related-card h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .related-card p {
+            font-size: 14px;
+            color: var(--color-grey);
+        }
+
+        @media (max-width: 768px) {
+            .article-title {
+                font-size: 32px;
+            }
+
+            .article-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .article-content {
+                font-size: 16px;
+            }
+
+            .related-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .audio-player {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 15px;
+            }
+
+            .audio-controls {
+                justify-content: center;
+            }
+
+            .speed-control {
+                justify-content: center;
+            }
+
+            .icon-robot, .icon-truck, .icon-chart {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="blogs.html" class="nav-back">← Back to Blog</a>
+            <a href="PixelLogistics.html" class="nav-back" style="background: transparent; color: #000; border: 2px solid #000;">Home</a>
+        </div>
+    </nav>
+
+    <!-- Article -->
+    <article class="article-container" id="articleContent">
+        <!-- Content will be loaded dynamically -->
+    </article>
+
+    <script>
+        const blogData = {
+            1: {
+                title: "The Future of AI in Warehouse Management",
+                category: "AI & Technology",
+                date: "December 5, 2025",
+                author: "Pixel Intelligence",
+                readTime: "8 min read",
+                iconType: "robot",
+                content: `
+                    <p>Artificial Intelligence is revolutionizing warehouse operations at an unprecedented pace. From predictive analytics to autonomous robots, AI is transforming how businesses manage inventory, optimize workflows, and reduce operational costs.</p>
+
+                    <h2>The Current State of AI in Warehouses</h2>
+                    <p>Modern warehouses are no longer just storage facilities—they're intelligent ecosystems powered by machine learning algorithms and real-time data processing. Companies implementing AI-driven warehouse management systems are seeing remarkable improvements in efficiency and accuracy.</p>
+
+                    <div class="highlight-box">
+                        <p>"Companies using AI in warehouse operations report up to 25% improvement in productivity and 40% reduction in operational errors."</p>
+                    </div>
+
+                    <h2>Key AI Applications</h2>
+
+                    <h3>1. Predictive Inventory Management</h3>
+                    <p>AI algorithms analyze historical data, seasonal trends, and market conditions to predict demand with unprecedented accuracy. This allows businesses to:</p>
+                    <ul>
+                        <li>Reduce stockouts by 50-70%</li>
+                        <li>Minimize excess inventory carrying costs</li>
+                        <li>Optimize reorder points automatically</li>
+                        <li>Adjust to market changes in real-time</li>
+                    </ul>
+
+                    <h3>2. Intelligent Labor Management</h3>
+                    <p>Machine learning models optimize workforce allocation by predicting peak periods, analyzing productivity patterns, and suggesting optimal staffing levels. This results in better resource utilization and improved employee satisfaction.</p>
+
+                    <h3>3. Automated Quality Control</h3>
+                    <p>Computer vision systems powered by AI can inspect products at speeds impossible for human workers, detecting defects with 99.9% accuracy while maintaining consistent quality standards.</p>
+
+                    <h2>Implementation Strategies</h2>
+                    <p>Successfully integrating AI into warehouse operations requires a strategic approach:</p>
+                    <ol>
+                        <li><strong>Start with data collection:</strong> Ensure you have quality data from all warehouse operations</li>
+                        <li><strong>Choose the right use cases:</strong> Begin with high-impact, low-complexity applications</li>
+                        <li><strong>Train your team:</strong> Invest in employee education and change management</li>
+                        <li><strong>Iterate and improve:</strong> Continuously refine AI models based on real-world performance</li>
+                    </ol>
+
+                    <h2>The Road Ahead</h2>
+                    <p>As AI technology continues to evolve, we can expect even more transformative changes in warehouse management. Emerging trends include:</p>
+                    <ul>
+                        <li>Fully autonomous warehouses with minimal human intervention</li>
+                        <li>Advanced robotics working alongside human workers</li>
+                        <li>Blockchain integration for enhanced traceability</li>
+                        <li>Edge computing for real-time decision making</li>
+                    </ul>
+
+                    <p>The future of warehouse management is intelligent, adaptive, and powered by AI. Companies that embrace these technologies today will be the leaders of tomorrow's logistics landscape.</p>
+                `
+            },
+            2: {
+                title: "5 Ways to Reduce Last-Mile Delivery Costs",
+                category: "Transportation",
+                date: "November 28, 2025",
+                author: "Pixel Intelligence",
+                readTime: "6 min read",
+                iconType: "truck",
+                content: `
+                    <p>Last-mile delivery accounts for 53% of total shipping costs, making it the most expensive part of the logistics chain. However, with the right strategies and technology, businesses can significantly reduce these costs while improving service quality.</p>
+
+                    <h2>1. Route Optimization with AI</h2>
+                    <p>Intelligent route planning systems use machine learning to analyze traffic patterns, weather conditions, and delivery windows to create the most efficient routes possible.</p>
+
+                    <div class="highlight-box">
+                        <p>"AI-powered route optimization can reduce fuel costs by up to 30% and increase delivery capacity by 20%"</p>
+                    </div>
+
+                    <h3>Implementation Tips:</h3>
+                    <ul>
+                        <li>Use real-time traffic data for dynamic routing</li>
+                        <li>Consider delivery time windows and customer preferences</li>
+                        <li>Optimize for both distance and time</li>
+                        <li>Account for vehicle capacity and restrictions</li>
+                    </ul>
+
+                    <h2>2. Consolidate Deliveries</h2>
+                    <p>Combining multiple orders into single delivery routes reduces the number of trips required and maximizes vehicle utilization.</p>
+
+                    <h3>Key Strategies:</h3>
+                    <ul>
+                        <li>Implement delivery zones and time slots</li>
+                        <li>Use micro-fulfillment centers closer to customers</li>
+                        <li>Batch orders by geographic proximity</li>
+                        <li>Offer incentives for flexible delivery windows</li>
+                    </ul>
+
+                    <h2>3. Leverage Alternative Delivery Methods</h2>
+                    <p>Traditional delivery vans aren't always the most cost-effective option. Consider alternatives like:</p>
+                    <ul>
+                        <li><strong>Bike couriers</strong> for urban deliveries</li>
+                        <li><strong>Locker systems</strong> for customer pickup</li>
+                        <li><strong>Crowdsourced delivery</strong> during peak periods</li>
+                        <li><strong>Drones and autonomous vehicles</strong> for specific use cases</li>
+                    </ul>
+
+                    <h2>4. Reduce Failed Deliveries</h2>
+                    <p>Failed deliveries cost an average of $17 per attempt and damage customer relationships. Prevent them by:</p>
+                    <ul>
+                        <li>Sending real-time delivery notifications</li>
+                        <li>Offering live tracking links</li>
+                        <li>Providing delivery preference options</li>
+                        <li>Using smart lockers as backup delivery points</li>
+                    </ul>
+
+                    <h2>5. Optimize Fleet Management</h2>
+                    <p>Efficient fleet management can yield significant cost savings through:</p>
+                    <ul>
+                        <li>Predictive maintenance to reduce breakdowns</li>
+                        <li>Fuel efficiency monitoring and driver training</li>
+                        <li>Right-sizing your fleet based on demand patterns</li>
+                        <li>Utilizing electric vehicles for lower operating costs</li>
+                    </ul>
+
+                    <h2>Measuring Success</h2>
+                    <p>Track these key metrics to evaluate your cost reduction efforts:</p>
+                    <ol>
+                        <li>Cost per delivery</li>
+                        <li>Successful delivery rate (first attempt)</li>
+                        <li>Average delivery time</li>
+                        <li>Customer satisfaction scores</li>
+                        <li>Fleet utilization rate</li>
+                    </ol>
+
+                    <p>By implementing these strategies systematically, businesses can achieve 30-40% reduction in last-mile delivery costs while simultaneously improving customer satisfaction and environmental sustainability.</p>
+                `
+            },
+            3: {
+                title: "Case Study: 3x ROI in 6 Months with Pixel WMS",
+                category: "Case Studies",
+                date: "November 15, 2025",
+                author: "Pixel Intelligence",
+                readTime: "10 min read",
+                iconType: "chart",
+                content: `
+                    <p>When TechRetail Solutions, a mid-sized e-commerce company, implemented Pixel Logistics WMS, they achieved remarkable results that exceeded all expectations. This case study examines their journey and the strategies that led to a 3x return on investment in just six months.</p>
+
+                    <h2>The Challenge</h2>
+                    <p>TechRetail was struggling with several critical issues:</p>
+                    <ul>
+                        <li>92% inventory accuracy causing frequent stockouts</li>
+                        <li>Manual order processing leading to 4-hour average fulfillment time</li>
+                        <li>Limited visibility across 3 warehouse locations</li>
+                        <li>Customer complaints about order errors and delays</li>
+                        <li>Inability to scale during peak seasons</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <p>"We were turning away business because we couldn't fulfill orders fast enough. Something had to change." - CEO, TechRetail Solutions</p>
+                    </div>
+
+                    <h2>The Solution</h2>
+                    <p>After evaluating multiple WMS providers, TechRetail chose Pixel Logistics for its:</p>
+                    <ul>
+                        <li>Cloud-native architecture for rapid deployment</li>
+                        <li>AI-powered inventory optimization</li>
+                        <li>Seamless integration with existing systems</li>
+                        <li>Scalable pricing model</li>
+                        <li>Comprehensive mobile capabilities</li>
+                    </ul>
+
+                    <h3>Implementation Timeline</h3>
+                    <ol>
+                        <li><strong>Week 1-2:</strong> System configuration and data migration</li>
+                        <li><strong>Week 3-4:</strong> Staff training and pilot testing</li>
+                        <li><strong>Week 5-6:</strong> Full rollout across all locations</li>
+                        <li><strong>Week 7-8:</strong> Optimization and fine-tuning</li>
+                    </ol>
+
+                    <h2>The Results</h2>
+
+                    <h3>Operational Improvements</h3>
+                    <ul>
+                        <li><strong>99.8% inventory accuracy</strong> - Up from 92%</li>
+                        <li><strong>45-minute average fulfillment time</strong> - Reduced from 4 hours</li>
+                        <li><strong>85% reduction in picking errors</strong></li>
+                        <li><strong>Real-time visibility</strong> across all locations</li>
+                    </ul>
+
+                    <h3>Financial Impact</h3>
+                    <ul>
+                        <li><strong>$1.8M annual cost savings</strong> in labor and operations</li>
+                        <li><strong>40% increase in order capacity</strong> without additional staff</li>
+                        <li><strong>$2.4M additional revenue</strong> from improved availability</li>
+                        <li><strong>ROI of 297%</strong> in first 6 months</li>
+                    </ul>
+
+                    <h3>Customer Experience</h3>
+                    <ul>
+                        <li><strong>35% improvement</strong> in customer satisfaction scores</li>
+                        <li><strong>98.5% on-time delivery rate</strong></li>
+                        <li><strong>50% reduction</strong> in customer service inquiries</li>
+                        <li><strong>4.8/5 average rating</strong> on review platforms</li>
+                    </ul>
+
+                    <h2>Key Success Factors</h2>
+
+                    <h3>1. Executive Buy-in</h3>
+                    <p>Leadership commitment ensured adequate resources and drove organizational change management.</p>
+
+                    <h3>2. Comprehensive Training</h3>
+                    <p>TechRetail invested heavily in employee training, conducting multiple sessions and providing ongoing support.</p>
+
+                    <h3>3. Phased Approach</h3>
+                    <p>Starting with a pilot program allowed the team to identify and resolve issues before full deployment.</p>
+
+                    <h3>4. Data-Driven Optimization</h3>
+                    <p>Regular analysis of performance metrics enabled continuous improvement and refinement.</p>
+
+                    <h2>Lessons Learned</h2>
+                    <p>TechRetail's COO shared these insights:</p>
+                    <ol>
+                        <li>Clean data migration is critical - invest time upfront</li>
+                        <li>Mobile adoption drives warehouse efficiency</li>
+                        <li>Integration with existing systems must be seamless</li>
+                        <li>Change management is as important as technology</li>
+                        <li>Partner with a vendor who provides excellent support</li>
+                    </ol>
+
+                    <h2>Looking Forward</h2>
+                    <p>Building on this success, TechRetail plans to:</p>
+                    <ul>
+                        <li>Expand to 2 additional warehouse locations</li>
+                        <li>Implement advanced analytics for demand forecasting</li>
+                        <li>Integrate robotics for automated picking</li>
+                        <li>Launch same-day delivery in major markets</li>
+                    </ul>
+
+                    <div class="highlight-box">
+                        <p>"Pixel Logistics didn't just solve our immediate problems—it positioned us for long-term growth. We can now compete with much larger players." - COO, TechRetail Solutions</p>
+                    </div>
+
+                    <p>This case study demonstrates that with the right WMS solution, strategic implementation, and organizational commitment, dramatic improvements in efficiency and profitability are achievable in a remarkably short timeframe.</p>
+                `
+            }
+        };
+
+        // Get blog ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const blogId = urlParams.get('id') || '1';
+
+        // Audio Player State
+        let audioPlaying = false;
+        let speechSynthesis = window.speechSynthesis;
+        let utterance = null;
+        let currentCharIndex = 0;
+
+        // Get animated icon HTML
+        function getAnimatedIcon(iconType) {
+            const icons = {
+                robot: `
+                    <div class="icon-robot">
+                        <div class="icon-robot-antenna"></div>
+                        <div class="icon-robot-head">
+                            <div class="icon-robot-eyes">
+                                <div class="icon-robot-eye"></div>
+                                <div class="icon-robot-eye"></div>
+                            </div>
+                        </div>
+                        <div class="icon-robot-body"></div>
+                    </div>
+                `,
+                truck: `
+                    <div class="icon-truck">
+                        <div class="icon-truck-cabin"></div>
+                        <div class="icon-truck-cargo"></div>
+                        <div class="icon-truck-wheels">
+                            <div class="icon-truck-wheel"></div>
+                            <div class="icon-truck-wheel"></div>
+                        </div>
+                    </div>
+                `,
+                chart: `
+                    <div class="icon-chart">
+                        <div class="icon-chart-bars">
+                            <div class="icon-chart-bar"></div>
+                            <div class="icon-chart-bar"></div>
+                            <div class="icon-chart-bar"></div>
+                            <div class="icon-chart-bar"></div>
+                        </div>
+                    </div>
+                `
+            };
+            return icons[iconType] || icons.robot;
+        }
+
+        // Load blog content
+        function loadBlog() {
+            const blog = blogData[blogId];
+            if (!blog) {
+                document.getElementById('articleContent').innerHTML = '<h1>Blog post not found</h1>';
+                return;
+            }
+
+            document.getElementById('blogTitle').textContent = blog.title + ' - Pixel Logistics';
+            
+            document.getElementById('articleContent').innerHTML = `
+                <div class="article-header">
+                    <span class="article-category">${blog.category}</span>
+                    <h1 class="article-title">${blog.title}</h1>
+                    <div class="article-meta">
+                        <div class="author-section">
+                            <div class="author-avatar">${blog.author.charAt(0)}</div>
+                            <div class="author-info">
+                                <div class="author-name">${blog.author}</div>
+                                <div class="article-date">${blog.date}</div>
+                            </div>
+                        </div>
+                        <div class="read-time">${blog.readTime}</div>
+                    </div>
+                </div>
+
+                <!-- Audio Player -->
+                <div class="audio-player">
+                    <div class="audio-controls">
+                        <button class="play-btn" onclick="toggleAudio()" id="playBtn"></button>
+                    </div>
+                    <div class="audio-info">
+                        <div class="audio-title">Listen to this article</div>
+                        <div class="audio-progress" onclick="seekAudio(event)">
+                            <div class="audio-progress-bar" id="progressBar"></div>
+                        </div>
+                        <div class="audio-time">
+                            <span id="currentTime">0:00</span>
+                            <span id="totalTime">--:--</span>
+                        </div>
+                    </div>
+                    <div class="speed-control">
+                        <button class="speed-btn active" onclick="setSpeed(1)" data-speed="1">1x</button>
+                        <button class="speed-btn" onclick="setSpeed(1.25)" data-speed="1.25">1.25x</button>
+                        <button class="speed-btn" onclick="setSpeed(1.5)" data-speed="1.5">1.5x</button>
+                    </div>
+                </div>
+
+                <div class="article-image">${getAnimatedIcon(blog.iconType)}</div>
+
+                <div class="article-content" id="articleText">
+                    ${blog.content}
+                </div>
+
+                <div class="article-footer">
+                    <div class="share-section">
+                        <h3>Share this article</h3>
+                        <div class="share-buttons">
+                            <button class="share-btn" onclick="shareArticle('twitter')">Share on Twitter</button>
+                            <button class="share-btn" onclick="shareArticle('linkedin')">Share on LinkedIn</button>
+                            <button class="share-btn" onclick="shareArticle('email')">Email</button>
+                        </div>
+                    </div>
+
+                    <div class="related-posts">
+                        <h3>Related Articles</h3>
+                        <div class="related-grid">
+                            ${getRelatedPosts(blogId)}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Initialize audio
+            initializeAudio(blog);
+        }
+
+        // Audio Player Functions
+        function initializeAudio(blog) {
+            // Get article text content
+            const articleEl = document.getElementById('articleText');
+            const textContent = blog.title + '. ' + articleEl.innerText;
+            
+            // Create speech synthesis utterance
+            utterance = new SpeechSynthesisUtterance(textContent);
+            utterance.rate = 1;
+            utterance.pitch = 1;
+            utterance.volume = 1;
+
+            // Calculate approximate duration (words per minute)
+            const wordCount = textContent.split(' ').length;
+            const estimatedMinutes = Math.ceil(wordCount / 150); // Average reading speed
+            document.getElementById('totalTime').textContent = estimatedMinutes + ':00';
+
+            utterance.onend = function() {
+                audioPlaying = false;
+                document.getElementById('playBtn').classList.remove('playing');
+                document.getElementById('progressBar').style.width = '0%';
+            };
+
+            utterance.onboundary = function(event) {
+                if (event.name === 'word') {
+                    currentCharIndex = event.charIndex;
+                    const progress = (currentCharIndex / textContent.length) * 100;
+                    document.getElementById('progressBar').style.width = progress + '%';
+                    
+                    const elapsed = Math.floor((currentCharIndex / textContent.length) * estimatedMinutes * 60);
+                    const minutes = Math.floor(elapsed / 60);
+                    const seconds = elapsed % 60;
+                    document.getElementById('currentTime').textContent = 
+                        minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+                }
+            };
+        }
+
+        function toggleAudio() {
+            const playBtn = document.getElementById('playBtn');
+            
+            if (audioPlaying) {
+                speechSynthesis.cancel();
+                audioPlaying = false;
+                playBtn.classList.remove('playing');
+            } else {
+                speechSynthesis.speak(utterance);
+                audioPlaying = true;
+                playBtn.classList.add('playing');
+            }
+        }
+
+        function setSpeed(speed) {
+            // Update active button
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Update utterance speed
+            if (utterance) {
+                utterance.rate = speed;
+                
+                // Restart if playing
+                if (audioPlaying) {
+                    speechSynthesis.cancel();
+                    speechSynthesis.speak(utterance);
+                }
+            }
+        }
+
+        function seekAudio(event) {
+            const progressBar = event.currentTarget;
+            const rect = progressBar.getBoundingClientRect();
+            const clickX = event.clientX - rect.left;
+            const percentage = (clickX / rect.width) * 100;
+            
+            document.getElementById('progressBar').style.width = percentage + '%';
+            
+            // Note: Web Speech API doesn't support seeking, so we restart from beginning
+            // In a real implementation, you'd use Web Audio API with actual audio files
+            if (audioPlaying) {
+                speechSynthesis.cancel();
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function getRelatedPosts(currentId) {
+            const allIds = Object.keys(blogData).filter(id => id !== currentId);
+            const relatedIds = allIds.slice(0, 3);
+            
+            return relatedIds.map(id => {
+                const blog = blogData[id];
+                return `
+                    <div class="related-card" onclick="window.location.href='blog-detail.html?id=${id}'">
+                        <h4>${blog.title}</h4>
+                        <p>${blog.date} • ${blog.readTime}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function shareArticle(platform) {
+            const url = window.location.href;
+            const blog = blogData[blogId];
+            const text = blog.title;
+
+            switch(platform) {
+                case 'twitter':
+                    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`);
+                    break;
+                case 'linkedin':
+                    window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`);
+                    break;
+                case 'email':
+                    window.location.href = `mailto:?subject=${encodeURIComponent(text)}&body=${encodeURIComponent(url)}`;
+                    break;
+            }
+        }
+
+        // Load blog on page load
+        loadBlog();
+    </script>
+</body>
+</html>

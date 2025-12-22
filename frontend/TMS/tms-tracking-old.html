@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Tracking - TMS | Pixel Logistics</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tms-dashboard.css">
+</head>
+<body>
+  
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="14" height="14" rx="2" fill="currentColor"/>
+          <rect x="4" y="20" width="14" height="14" rx="2" fill="currentColor" opacity="0.8"/>
+          <rect x="20" y="4" width="14" height="14" rx="2" fill="currentColor" opacity="0.6"/>
+          <rect x="20" y="20" width="14" height="14" rx="2" fill="currentColor" opacity="0.9"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Transportation Management System</div>
+        </div>
+      </div>
+      <div style="flex: 1;"></div>
+      
+      <button class="header-btn" onclick="openSearch()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <span>Search</span>
+        <kbd style="margin-left: 8px; padding: 2px 6px; background: rgba(0,0,0,0.1); border-radius: 4px; font-size: 11px;">⌘K</kbd>
+      </button>
+      
+      <!-- Theme Toggle -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <!-- Search Modal -->
+      <div id="searchModal" class="search-modal" style="display: none;" onclick="if(event.target === this) closeSearch()">
+        <div class="search-content">
+          <div class="search-input-wrapper">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Search shipments, carriers, routes..." />
+            <button onclick="closeSearch()" style="background: none; border: none; cursor: pointer; padding: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div id="searchSuggestions" class="search-suggestions"></div>
+        </div>
+      </div>
+      
+      <!-- User Menu -->
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">Transport Manager</div>
+          <div class="user-role">Fleet Operations</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">TM</div>
+        <div class="user-dropdown" id="userDropdown">
+          <a href="#" class="dropdown-item" onclick="viewProfile(); return false;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </a>
+          <a href="#" class="dropdown-item" onclick="changePassword(); return false;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Change Password
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="landing.html" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title"><span>Transportation</span></div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="tms-dashboard.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span class="sidebar-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-shipments.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"/>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                  <circle cx="5.5" cy="18.5" r="2.5"/>
+                  <circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+              </span>
+              <span class="sidebar-text">Shipments</span>
+              <span class="badge">248</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-tracking.html" class="sidebar-link active">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="10" r="3"/>
+                  <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/>
+                </svg>
+              </span>
+              <span class="sidebar-text">Live Tracking</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-routes.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+              </span>
+              <span class="sidebar-text">Route Optimization</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title"><span>Management</span></div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="tms-carriers.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span class="sidebar-text">Carriers</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-fleet.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+              </span>
+              <span class="sidebar-text">Fleet Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-compliance.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                </svg>
+              </span>
+              <span class="sidebar-text">DOT Compliance</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Live GPS Tracking</h1>
+          <p class="page-description">Real-time location tracking for all active shipments</p>
+        </div>
+      </div>
+
+      <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+        
+        <!-- Map Container -->
+        <div class="card" style="height: 600px;">
+          <div class="card-body" style="display: flex; align-items: center; justify-content: center; height: 100%; background: var(--color-background);">
+            <div style="text-align: center;">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="margin: 0 auto; opacity: 0.3;">
+                <circle cx="12" cy="10" r="3"/>
+                <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/>
+              </svg>
+              <h3 style="margin-top: 1rem; font-size: 1.125rem; font-weight: 600;">Interactive Map</h3>
+              <p style="margin-top: 0.5rem; color: var(--color-text-secondary); font-size: 0.875rem;">
+                Google Maps integration coming soon<br>
+                GPS tracking with real-time updates
+              </p>
+              <p style="margin-top: 1rem; font-size: 0.75rem; color: var(--color-text-secondary);">
+                API Endpoint: <code style="background: rgba(0,0,0,0.05); padding: 0.25rem 0.5rem; border-radius: 4px;">GET /api/v1/tms/shipments?status=in_transit</code>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Shipments List -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Active Shipments</h3>
+            <span class="badge">87</span>
+          </div>
+          <div style="max-height: 536px; overflow-y: auto;">
+            <div style="padding: 0.75rem;">
+              <div style="border: 1px solid var(--color-border); border-radius: 6px; padding: 0.75rem; margin-bottom: 0.75rem;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                  <strong style="font-size: 0.875rem;">#SH-2024-0042</strong>
+                  <span style="background: rgba(139, 92, 246, 0.1); color: #7c3aed; padding: 0.125rem 0.5rem; border-radius: 8px; font-size: 0.75rem; font-weight: 600;">IN TRANSIT</span>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 0.5rem;">
+                  Los Angeles, CA → Chicago, IL
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="10" r="3"/>
+                    <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/>
+                  </svg>
+                  <span style="font-size: 0.75rem;">Albuquerque, NM</span>
+                </div>
+              </div>
+
+              <div style="border: 1px solid var(--color-border); border-radius: 6px; padding: 0.75rem; margin-bottom: 0.75rem;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                  <strong style="font-size: 0.875rem;">#SH-2024-0038</strong>
+                  <span style="background: rgba(139, 92, 246, 0.1); color: #7c3aed; padding: 0.125rem 0.5rem; border-radius: 8px; font-size: 0.75rem; font-weight: 600;">IN TRANSIT</span>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 0.5rem;">
+                  New York, NY → Miami, FL
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="10" r="3"/>
+                    <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/>
+                  </svg>
+                  <span style="font-size: 0.75rem;">Jacksonville, FL</span>
+                </div>
+              </div>
+
+              <div style="border: 1px solid var(--color-border); border-radius: 6px; padding: 0.75rem;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                  <strong style="font-size: 0.875rem;">#SH-2024-0035</strong>
+                  <span style="background: rgba(139, 92, 246, 0.1); color: #7c3aed; padding: 0.125rem 0.5rem; border-radius: 8px; font-size: 0.75rem; font-weight: 600;">IN TRANSIT</span>
+                </div>
+                <div style="font-size: 0.75rem; color: var(--color-text-secondary); margin-bottom: 0.5rem;">
+                  Seattle, WA → Portland, OR
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="10" r="3"/>
+                    <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/>
+                  </svg>
+                  <span style="font-size: 0.75rem;">Tacoma, WA</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/tms-common.js"></script>
+</body>
+</html>

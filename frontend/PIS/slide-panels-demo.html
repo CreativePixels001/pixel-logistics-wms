@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide Panels Demo - Pixel Safe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="common-styles.css">
+    <style>
+        body {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .subtitle {
+            font-size: 1.125rem;
+            color: #666666;
+            margin-bottom: 3rem;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .demo-card {
+            background: #ffffff;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 2rem;
+            transition: all 0.2s;
+        }
+        
+        .demo-card:hover {
+            border-color: #000000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .demo-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .demo-card p {
+            font-size: 0.875rem;
+            color: #666666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .demo-card .btn {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .feature-section {
+            background: #fafafa;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .feature-section h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-list svg {
+            flex-shrink: 0;
+            margin-top: 0.125rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-section">
+        <h1>Pixel Safe - Slide Panel Forms</h1>
+        <p class="subtitle">Modern, professional slide-in panels for all form interactions. Click any button below to see the panel in action.</p>
+    </div>
+
+    <div class="demo-grid">
+        <div class="demo-card">
+            <h3>New Lead</h3>
+            <p>Capture new lead information with contact details, interest type, priority, source, and follow-up scheduling.</p>
+            <button class="btn btn-primary" onclick="openNewLeadPanel()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="8.5" cy="7" r="4"/>
+                    <line x1="20" y1="8" x2="20" y2="14"/>
+                    <line x1="23" y1="11" x2="17" y2="11"/>
+                </svg>
+                Open New Lead Form
+            </button>
+        </div>
+
+        <div class="demo-card">
+            <h3>Add Client</h3>
+            <p>Convert leads to clients with comprehensive personal information, contact details, and segment classification.</p>
+            <button class="btn btn-primary" onclick="openAddClientPanel()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="8.5" cy="7" r="4"/>
+                    <polyline points="17 11 19 13 23 9"/>
+                </svg>
+                Open Add Client Form
+            </button>
+        </div>
+
+        <div class="demo-card">
+            <h3>Create Proposal</h3>
+            <p>Generate detailed insurance proposals with policy details, coverage amounts, premium calculations, and benefits.</p>
+            <button class="btn btn-primary" onclick="openCreateProposalPanel()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="12" y1="18" x2="12" y2="12"/>
+                    <line x1="9" y1="15" x2="15" y2="15"/>
+                </svg>
+                Open Proposal Form
+            </button>
+        </div>
+
+        <div class="demo-card">
+            <h3>Issue Policy</h3>
+            <p>Create and activate new insurance policies with complete policy configuration, nominee details, and payment tracking.</p>
+            <button class="btn btn-primary" onclick="openIssuePolicyPanel()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+                Open Policy Form
+            </button>
+        </div>
+
+        <div class="demo-card">
+            <h3>Bulk Reminder</h3>
+            <p>Schedule automated reminders for policy renewals, premium payments, and document submissions across multiple clients.</p>
+            <button class="btn btn-primary" onclick="openBulkReminderPanel()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                Open Reminder Form
+            </button>
+        </div>
+
+        <div class="demo-card">
+            <h3>New Claim</h3>
+            <p>File insurance claims with incident details, document uploads, hospital information, and bank account for reimbursement.</p>
+            <button class="btn btn-primary" onclick="openNewClaimPanel()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <path d="M9 15l2 2 4-4"/>
+                </svg>
+                Open Claim Form
+            </button>
+        </div>
+
+        <div class="demo-card">
+            <h3>Schedule Report</h3>
+            <p>Set up automated report generation with customizable metrics, filters, delivery schedules, and export formats.</p>
+            <button class="btn btn-primary" onclick="openScheduleReportPanel()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"/>
+                    <line x1="12" y1="20" x2="12" y2="4"/>
+                    <line x1="6" y1="20" x2="6" y2="14"/>
+                </svg>
+                Open Report Form
+            </button>
+        </div>
+    </div>
+
+    <div class="feature-section">
+        <h2>✨ Features & Design Highlights</h2>
+        <ul class="feature-list">
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <div>
+                    <strong>Smooth Slide Animation:</strong> Panels slide in from the right with a smooth cubic-bezier transition for professional UX
+                </div>
+            </li>
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <div>
+                    <strong>600px Wide Panel:</strong> Spacious form layout with optimal readability and comfortable input fields
+                </div>
+            </li>
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <div>
+                    <strong>Black & White Theme:</strong> Professional minimalist design with clear visual hierarchy and borders
+                </div>
+            </li>
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <div>
+                    <strong>Overlay Backdrop:</strong> Semi-transparent black overlay (50% opacity) for focus and context separation
+                </div>
+            </li>
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <div>
+                    <strong>Keyboard Shortcuts:</strong> ESC key to close panels, maintaining accessibility standards
+                </div>
+            </li>
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <div>
+                    <strong>Sectioned Forms:</strong> Organized form sections with clear titles for better information grouping
+                </div>
+            </li>
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <div>
+                    <strong>Smart Validation:</strong> Required field indicators, input patterns, and helpful hints for better data quality
+                </div>
+            </li>
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <div>
+                    <strong>File Upload with Drag-Drop:</strong> Modern drag-and-drop file upload with visual feedback and file previews
+                </div>
+            </li>
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <div>
+                    <strong>Sticky Footer:</strong> Action buttons (Cancel/Submit) always visible at the bottom for easy access
+                </div>
+            </li>
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                <div>
+                    <strong>Mobile Responsive:</strong> Full-width panels on mobile devices with optimized spacing and touch targets
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="feature-section">
+        <h2>🚀 Next Steps - Backend Integration</h2>
+        <ul class="feature-list">
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <div>
+                    <strong>API Endpoints:</strong> Connect form submissions to backend REST APIs for data persistence
+                </div>
+            </li>
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <div>
+                    <strong>Real-time Validation:</strong> Implement server-side validation for PAN, phone numbers, email addresses
+                </div>
+            </li>
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <div>
+                    <strong>File Storage:</strong> Implement document upload to cloud storage (AWS S3 / Azure Blob)
+                </div>
+            </li>
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <div>
+                    <strong>Success Notifications:</strong> Replace alerts with toast notifications for better UX feedback
+                </div>
+            </li>
+            <li>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#666666" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <div>
+                    <strong>Auto-populate:</strong> Implement client/policy search with autocomplete dropdowns
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Slide Panels -->
+    <script src="slide-panels.js"></script>
+    <script>
+        // Load slide panel components
+        fetch('slide-panels.html')
+            .then(response => response.text())
+            .then(html => {
+                const div = document.createElement('div');
+                div.innerHTML = html;
+                document.body.appendChild(div);
+            });
+    </script>
+</body>
+</html>

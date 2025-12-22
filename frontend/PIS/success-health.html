@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Issued Successfully - Pixel Safe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="success-styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span>Pixel Safe</span>
+                </a>
+            </div>
+        </div>
+    </nav> 
+
+    <!-- Success Container -->
+    <div class="success-container">
+        <div class="container">
+            <div class="success-card">
+                <!-- Success Animation -->
+                <div class="success-animation">
+                    <div class="checkmark-circle">
+                        <svg class="checkmark" viewBox="0 0 52 52">
+                            <circle class="checkmark-circle-bg" cx="26" cy="26" r="25" fill="none"/>
+                            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Success Message -->
+                <h1 class="success-title">Policy Issued Successfully!</h1>
+                <p class="success-subtitle">Congratulations! Your health insurance policy is now active.</p>
+
+                <!-- Policy Details -->
+                <div class="policy-card">
+                    <div class="policy-badge">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        <span>Policy Active</span>
+                    </div>
+
+                    <div class="policy-header">
+                        <div class="insurer-logo" id="successLogo">SH</div>
+                        <div>
+                            <h2 id="successInsurer">Star Health Insurance</h2>
+                            <p id="successPlan">Family Health Optima</p>
+                        </div>
+                    </div>
+
+                    <div class="policy-number">
+                        <label>Policy Number</label>
+                        <div class="number-display" id="policyNumber">Loading...</div>
+                    </div>
+
+                    <div class="policy-details">
+                        <div class="detail-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            <div>
+                                <span>Policy Holder</span>
+                                <strong id="holderName">-</strong>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                            <div>
+                                <span>Sum Insured</span>
+                                <strong id="sumInsured">₹5,00,000</strong>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            <div>
+                                <span>Policy Period</span>
+                                <strong id="policyPeriod">-</strong>
+                            </div>
+                        </div>
+
+                        <div class="detail-item">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                            <div>
+                                <span>Premium Paid</span>
+                                <strong id="premiumPaid">₹11,800</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="transaction-details">
+                        <div class="transaction-row">
+                            <span>Transaction ID</span>
+                            <strong id="transactionId">-</strong>
+                        </div>
+                        <div class="transaction-row">
+                            <span>Payment Date</span>
+                            <strong id="paymentDate">-</strong>
+                        </div>
+                        <div class="transaction-row">
+                            <span>Payment Method</span>
+                            <strong id="paymentMethod">-</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn-primary" onclick="downloadPolicy()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Download Policy Document
+                    </button>
+                    <button class="btn-secondary" onclick="sendEmail()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        Email Policy Details
+                    </button>
+                </div>
+
+                <!-- Quick Access Card -->
+                <div class="quick-access-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 12px; padding: 2rem; margin: 2rem 0; text-align: center;">
+                    <div style="margin-bottom: 1rem;">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto; opacity: 0.9;">
+                            <path d="M9 11l3 3L22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                    </div>
+                    <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Need to File a Claim?</h3>
+                    <p style="opacity: 0.9; margin-bottom: 1.5rem; font-size: 1rem;">Submit your claim request anytime. We'll process it quickly and keep you updated.</p>
+                    <button onclick="window.location.href='file-claim.html?policyId=' + sessionStorage.getItem('policyId')" style="background: white; color: #667eea; border: none; padding: 0.875rem 2rem; border-radius: 8px; font-weight: 600; font-size: 1rem; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: all 0.2s;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 0.5rem;">
+                            <path d="M9 11l3 3L22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                        File a Claim Now
+                    </button>
+                </div>
+
+                <!-- What's Next -->
+                <div class="whats-next">
+                    <h3>What's Next?</h3>
+                    <div class="next-steps">
+                        <div class="next-step">
+                            <div class="step-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M9 11l3 3L22 4"/>
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4>File Claims Anytime</h4>
+                                <p>Submit claims online 24/7 with quick approval process</p>
+                            </div>
+                        </div>
+                        
+                        <div class="next-step">
+                            <div class="step-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4>Health Checkup</h4>
+                                <p>Book your free annual health checkup within 30 days</p>
+                            </div>
+                        </div>
+
+                        <div class="next-step">
+                            <div class="step-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                    <polyline points="9 22 9 12 15 12 15 22"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4>Download App</h4>
+                                <p>Access your policy, file claims, and more on our mobile app</p>
+                            </div>
+                        </div>
+
+                        <div class="next-step">
+                            <div class="step-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                    <polyline points="10 9 9 9 8 9"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h4>Policy Documents</h4>
+                                <p>Review your policy terms and keep documents handy</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Support Section -->
+                <div class="support-section">
+                    <div class="support-card">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <div>
+                            <h4>Need Help?</h4>
+                            <p>Our customer support team is available 24/7 to assist you.</p>
+                            <div class="support-actions">
+                                <a href="tel:1800XXXXX" class="support-link">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                    </svg>
+                                    Call 1800-XXX-XXXX
+                                </a>
+                                <a href="mailto:support@pixelsafe.com" class="support-link">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                        <polyline points="22,6 12,13 2,6"/>
+                                    </svg>
+                                    Email Support
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Back to Home -->
+                <div class="back-home">
+                    <a href="index.html" class="btn-outline">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        Back to Home
+                    </a>
+                    <a href="my-policies.html" class="btn-outline">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        View My Policies
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="success-health.js"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-// DLT WMS - Shipping Operations Module JavaScript
+// Pixel WMS - Shipping Operations Module JavaScript
 // Handles ship confirm, BOL generation, manifest creation
 
 let currentShipment = null;

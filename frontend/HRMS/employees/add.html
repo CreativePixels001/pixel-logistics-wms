@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Employee - Pixel Resource</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <style>
+        /* Multi-Step Form */
+        .form-wizard {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            margin-bottom: 1.5rem;
+        }
+
+        .wizard-steps {
+            display: flex;
+            padding: 2rem 2rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .wizard-steps::before {
+            content: '';
+            position: absolute;
+            top: 3rem;
+            left: 2rem;
+            right: 2rem;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 0;
+        }
+
+        .wizard-step {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--bg-white);
+            border: 2px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: var(--text-light);
+            transition: all var(--transition-normal);
+        }
+
+        .wizard-step.active .step-number {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .wizard-step.completed .step-number {
+            background: var(--bg-light);
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .wizard-step.active .step-label {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .wizard-content {
+            padding: 0 2rem 2rem;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 1rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 2rem;
+        }
+
+        .form-actions-left,
+        .form-actions-right {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        /* Photo Upload */
+        .photo-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem;
+            background: var(--bg-light);
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            text-align: center;
+        }
+
+        .photo-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: var(--radius-lg);
+            background: var(--bg-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-preview-placeholder {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .upload-instructions {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* File Upload List */
+        .file-upload-area {
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--primary-color);
+            background: var(--bg-white);
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-white);
+            border-radius: var(--radius-md);
+        }
+
+        .uploaded-files {
+            margin-top: 1rem;
+        }
+
+        .uploaded-file {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.5rem;
+        }
+
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .file-size {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Summary Section */
+        .summary-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-title {
+            font-size: 0.9375rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .summary-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .summary-value {
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .wizard-steps {
+                padding: 1.5rem 1rem 0;
+            }
+
+            .step-label {
+                font-size: 0.75rem;
+            }
+
+            .step-number {
+                width: 36px;
+                height: 36px;
+                font-size: 0.875rem;
+            }
+
+            .wizard-content {
+                padding: 0 1rem 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+
+            .form-actions-left,
+            .form-actions-right {
+                width: 100%;
+            }
+
+            .form-actions-left button,
+            .form-actions-right button {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>Pixel Resource</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Employee Management</div>
+                    <a href="directory.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Employee Directory
+                    </a>
+                    <a href="add.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <line x1="20" y1="8" x2="20" y2="14"/>
+                            <line x1="23" y1="11" x2="17" y2="11"/>
+                        </svg>
+                        Add Employee
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="../settings/configuration.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search employees, departments...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Admin</span>
+                            <span class="user-role" id="userRole">Administrator</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Add New Employee</h1>
+                        <p class="page-subtitle">Complete all steps to onboard a new employee</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-secondary" onclick="saveDraft()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                <polyline points="17 21 17 13 7 13 7 21"/>
+                                <polyline points="7 3 7 8 15 8"/>
+                            </svg>
+                            Save Draft
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Multi-Step Form -->
+                <div class="form-wizard">
+                    <!-- Steps Indicator -->
+                    <div class="wizard-steps">
+                        <div class="wizard-step active" data-step="1">
+                            <div class="step-number">1</div>
+                            <div class="step-label">Personal Info</div>
+                        </div>
+                        <div class="wizard-step" data-step="2">
+                            <div class="step-number">2</div>
+                            <div class="step-label">Job Details</div>
+                        </div>
+                        <div class="wizard-step" data-step="3">
+                            <div class="step-number">3</div>
+                            <div class="step-label">Documents</div>
+                        </div>
+                        <div class="wizard-step" data-step="4">
+                            <div class="step-number">4</div>
+                            <div class="step-label">Bank & Salary</div>
+                        </div>
+                        <div class="wizard-step" data-step="5">
+                            <div class="step-number">5</div>
+                            <div class="step-label">Review & Submit</div>
+                        </div>
+                    </div>
+
+                    <!-- Form Content -->
+                    <div class="wizard-content">
+                        <form id="addEmployeeForm">
+                            <!-- Step 1: Personal Information -->
+                            <div class="form-step active" data-step="1">
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Photo Upload</h3>
+                                    <div class="photo-upload">
+                                        <div class="photo-preview" id="photoPreview">
+                                            <div class="photo-preview-placeholder">?</div>
+                                        </div>
+                                        <div>
+                                            <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('photoInput').click()">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                                    <circle cx="12" cy="13" r="4"/>
+                                                </svg>
+                                                Upload Photo
+                                            </button>
+                                            <input type="file" id="photoInput" accept="image/*" style="display: none;" onchange="previewPhoto(event)">
+                                        </div>
+                                        <div class="upload-instructions">JPG, PNG • Max 2MB • 500x500 recommended</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Basic Information</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">First Name</label>
+                                            <input type="text" class="form-input" id="firstName" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Middle Name</label>
+                                            <input type="text" class="form-input" id="middleName">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Last Name</label>
+                                            <input type="text" class="form-input" id="lastName" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label required">Date of Birth</label>
+                                            <input type="date" class="form-input" id="dob" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Gender</label>
+                                            <select class="form-select" id="gender" required>
+                                                <option value="">Select Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="Other">Other</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Blood Group</label>
+                                            <select class="form-select" id="bloodGroup">
+                                                <option value="">Select Blood Group</option>
+                                                <option value="A+">A+</option>
+                                                <option value="A-">A-</option>
+                                                <option value="B+">B+</option>
+                                                <option value="B-">B-</option>
+                                                <option value="O+">O+</option>
+                                                <option value="O-">O-</option>
+                                                <option value="AB+">AB+</option>
+                                                <option value="AB-">AB-</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Marital Status</label>
+                                            <select class="form-select" id="maritalStatus" required>
+                                                <option value="">Select Status</option>
+                                                <option value="Single">Single</option>
+                                                <option value="Married">Married</option>
+                                                <option value="Divorced">Divorced</option>
+                                                <option value="Widowed">Widowed</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Nationality</label>
+                                            <input type="text" class="form-input" id="nationality" value="Indian">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Contact Information</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Email</label>
+                                            <input type="email" class="form-input" id="email" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label required">Phone Number</label>
+                                            <input type="tel" class="form-input" id="phone" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Emergency Contact Name</label>
+                                            <input type="text" class="form-input" id="emergencyName">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Emergency Contact Number</label>
+                                            <input type="tel" class="form-input" id="emergencyPhone">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label required">Address</label>
+                                        <textarea class="form-textarea" id="address" rows="3" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Job Details -->
+                            <div class="form-step" data-step="2">
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Employment Information</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Employee ID</label>
+                                            <input type="text" class="form-input" id="employeeId" placeholder="Auto-generated" readonly>
+                                            <div class="form-hint">Will be auto-generated on submission</div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label required">Join Date</label>
+                                            <input type="date" class="form-input" id="joinDate" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Department</label>
+                                            <select class="form-select" id="department" required>
+                                                <option value="">Select Department</option>
+                                                <option value="IT & Technology">IT & Technology</option>
+                                                <option value="Operations">Operations</option>
+                                                <option value="Finance">Finance</option>
+                                                <option value="Sales & Marketing">Sales & Marketing</option>
+                                                <option value="Maintenance">Maintenance</option>
+                                                <option value="Security">Security</option>
+                                                <option value="Support">Support</option>
+                                                <option value="HR & Admin">HR & Admin</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label required">Designation</label>
+                                            <input type="text" class="form-input" id="designation" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Employment Type</label>
+                                            <select class="form-select" id="employmentType" required>
+                                                <option value="">Select Type</option>
+                                                <option value="Full Time">Full Time</option>
+                                                <option value="Part Time">Part Time</option>
+                                                <option value="Contract">Contract</option>
+                                                <option value="Intern">Intern</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label required">Reporting Manager</label>
+                                            <select class="form-select" id="reportingManager" required>
+                                                <option value="">Select Manager</option>
+                                                <option value="EMP008">Neha Joshi (EMP008)</option>
+                                                <option value="EMP002">Priya Kumar (EMP002)</option>
+                                                <option value="EMP003">Amit Mehta (EMP003)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Work Location</label>
+                                            <input type="text" class="form-input" id="workLocation" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Probation Period (Months)</label>
+                                            <input type="number" class="form-input" id="probationPeriod" value="3" min="0">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Shift & Attendance</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Shift</label>
+                                            <select class="form-select" id="shift" required>
+                                                <option value="">Select Shift</option>
+                                                <option value="General">General (9 AM - 6 PM)</option>
+                                                <option value="Morning">Morning (6 AM - 2 PM)</option>
+                                                <option value="Afternoon">Afternoon (2 PM - 10 PM)</option>
+                                                <option value="Night">Night (10 PM - 6 AM)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Week Off Days</label>
+                                            <select class="form-select" id="weekOff">
+                                                <option value="Saturday-Sunday">Saturday - Sunday</option>
+                                                <option value="Sunday">Sunday Only</option>
+                                                <option value="Rotational">Rotational</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 3: Documents -->
+                            <div class="form-step" data-step="3">
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Identity Documents</h3>
+                                    <div class="form-group">
+                                        <label class="form-label required">Aadhaar Card</label>
+                                        <div class="file-upload-area" onclick="document.getElementById('aadhaarFile').click()">
+                                            <div class="upload-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                                    <polyline points="17 8 12 3 7 8"/>
+                                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                                </svg>
+                                            </div>
+                                            <div><strong>Click to upload</strong> or drag and drop</div>
+                                            <div class="upload-instructions">PDF, JPG, PNG • Max 5MB</div>
+                                        </div>
+                                        <input type="file" id="aadhaarFile" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="handleFileUpload(event, 'aadhaar')">
+                                        <div id="aadhaarFileList" class="uploaded-files"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label required">PAN Card</label>
+                                        <div class="file-upload-area" onclick="document.getElementById('panFile').click()">
+                                            <div class="upload-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                                    <polyline points="17 8 12 3 7 8"/>
+                                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                                </svg>
+                                            </div>
+                                            <div><strong>Click to upload</strong> or drag and drop</div>
+                                            <div class="upload-instructions">PDF, JPG, PNG • Max 5MB</div>
+                                        </div>
+                                        <input type="file" id="panFile" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="handleFileUpload(event, 'pan')">
+                                        <div id="panFileList" class="uploaded-files"></div>
+                                    </div>
+                                </div>
+
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Educational Documents</h3>
+                                    <div class="form-group">
+                                        <label class="form-label">Highest Qualification Certificate</label>
+                                        <div class="file-upload-area" onclick="document.getElementById('degreeFile').click()">
+                                            <div class="upload-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                                    <polyline points="17 8 12 3 7 8"/>
+                                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                                </svg>
+                                            </div>
+                                            <div><strong>Click to upload</strong> or drag and drop</div>
+                                            <div class="upload-instructions">PDF, JPG, PNG • Max 5MB</div>
+                                        </div>
+                                        <input type="file" id="degreeFile" accept=".pdf,.jpg,.jpeg,.png" style="display: none;" onchange="handleFileUpload(event, 'degree')">
+                                        <div id="degreeFileList" class="uploaded-files"></div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label">Experience Letters (if any)</label>
+                                        <div class="file-upload-area" onclick="document.getElementById('experienceFile').click()">
+                                            <div class="upload-icon">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                                    <polyline points="17 8 12 3 7 8"/>
+                                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                                </svg>
+                                            </div>
+                                            <div><strong>Click to upload</strong> or drag and drop</div>
+                                            <div class="upload-instructions">PDF, JPG, PNG • Max 5MB • Multiple files allowed</div>
+                                        </div>
+                                        <input type="file" id="experienceFile" accept=".pdf,.jpg,.jpeg,.png" multiple style="display: none;" onchange="handleFileUpload(event, 'experience')">
+                                        <div id="experienceFileList" class="uploaded-files"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 4: Bank & Salary -->
+                            <div class="form-step" data-step="4">
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Bank Account Details</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Bank Name</label>
+                                            <input type="text" class="form-input" id="bankName" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label required">Account Number</label>
+                                            <input type="text" class="form-input" id="accountNumber" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">IFSC Code</label>
+                                            <input type="text" class="form-input" id="ifscCode" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label required">Account Holder Name</label>
+                                            <input type="text" class="form-input" id="accountHolderName" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Branch Name</label>
+                                        <input type="text" class="form-input" id="branchName">
+                                    </div>
+                                </div>
+
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Salary Structure</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Basic Salary (Monthly)</label>
+                                            <input type="number" class="form-input" id="basicSalary" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">HRA</label>
+                                            <input type="number" class="form-input" id="hra">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Other Allowances</label>
+                                            <input type="number" class="form-input" id="allowances">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Gross Salary</label>
+                                            <input type="number" class="form-input" id="grossSalary" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-section">
+                                    <h3 class="form-section-title">Statutory Details</h3>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">PAN Number</label>
+                                            <input type="text" class="form-input" id="panNumber" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Aadhaar Number</label>
+                                            <input type="text" class="form-input" id="aadhaarNumber">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">UAN Number</label>
+                                            <input type="text" class="form-input" id="uanNumber">
+                                            <div class="form-hint">Universal Account Number for PF</div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">ESI Number</label>
+                                            <input type="text" class="form-input" id="esiNumber">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 5: Review & Submit -->
+                            <div class="form-step" data-step="5">
+                                <div class="summary-section">
+                                    <h3 class="summary-title">Personal Information</h3>
+                                    <div class="summary-grid">
+                                        <div class="summary-item">
+                                            <div class="summary-label">Full Name</div>
+                                            <div class="summary-value" id="summaryFullName">-</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">Date of Birth</div>
+                                            <div class="summary-value" id="summaryDOB">-</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">Gender</div>
+                                            <div class="summary-value" id="summaryGender">-</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">Email</div>
+                                            <div class="summary-value" id="summaryEmail">-</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">Phone</div>
+                                            <div class="summary-value" id="summaryPhone">-</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">Address</div>
+                                            <div class="summary-value" id="summaryAddress">-</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="summary-section">
+                                    <h3 class="summary-title">Employment Details</h3>
+                                    <div class="summary-grid">
+                                        <div class="summary-item">
+                                            <div class="summary-label">Join Date</div>
+                                            <div class="summary-value" id="summaryJoinDate">-</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">Department</div>
+                                            <div class="summary-value" id="summaryDepartment">-</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">Designation</div>
+                                            <div class="summary-value" id="summaryDesignation">-</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">Employment Type</div>
+                                            <div class="summary-value" id="summaryEmploymentType">-</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">Shift</div>
+                                            <div class="summary-value" id="summaryShift">-</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">Work Location</div>
+                                            <div class="summary-value" id="summaryWorkLocation">-</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="summary-section">
+                                    <h3 class="summary-title">Salary & Bank Details</h3>
+                                    <div class="summary-grid">
+                                        <div class="summary-item">
+                                            <div class="summary-label">Gross Salary</div>
+                                            <div class="summary-value" id="summaryGrossSalary">-</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">Bank Name</div>
+                                            <div class="summary-value" id="summaryBankName">-</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">Account Number</div>
+                                            <div class="summary-value" id="summaryAccountNumber">-</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="summary-label">PAN Number</div>
+                                            <div class="summary-value" id="summaryPAN">-</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="summary-section">
+                                    <h3 class="summary-title">Documents Uploaded</h3>
+                                    <div id="summaryDocuments" style="font-size: 0.875rem; color: var(--text-secondary);">
+                                        No documents uploaded
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Form Navigation -->
+                            <div class="form-actions">
+                                <div class="form-actions-left">
+                                    <button type="button" class="btn btn-ghost" id="prevBtn" onclick="previousStep()" style="display: none;">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                            <polyline points="15 18 9 12 15 6"/>
+                                        </svg>
+                                        Previous
+                                    </button>
+                                </div>
+                                <div class="form-actions-right">
+                                    <button type="button" class="btn btn-secondary" onclick="window.location.href='directory.html'">Cancel</button>
+                                    <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextStep()">
+                                        Next
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                            <polyline points="9 18 15 12 9 6"/>
+                                        </svg>
+                                    </button>
+                                    <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                            <polyline points="20 6 9 17 4 12"/>
+                                        </svg>
+                                        Submit & Create Employee
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+        const uploadedFiles = {
+            aadhaar: [],
+            pan: [],
+            degree: [],
+            experience: []
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
+            updateStepButtons();
+            
+            // Calculate gross salary automatically
+            document.getElementById('basicSalary').addEventListener('input', calculateGrossSalary);
+            document.getElementById('hra').addEventListener('input', calculateGrossSalary);
+            document.getElementById('allowances').addEventListener('input', calculateGrossSalary);
+        });
+
+        // Load user info
+        function loadUserInfo() {
+            const user = JSON.parse(sessionStorage.getItem('hrmsUser') || '{}');
+            if (user.name) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userRole').textContent = user.role;
+                document.getElementById('userAvatar').textContent = user.name.charAt(0);
+            }
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Next step
+        function nextStep() {
+            if (validateStep(currentStep)) {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    updateStep();
+                }
+            }
+        }
+
+        // Previous step
+        function previousStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStep();
+            }
+        }
+
+        // Update step display
+        function updateStep() {
+            // Update step indicators
+            document.querySelectorAll('.wizard-step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                } else if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+
+            // Update form steps
+            document.querySelectorAll('.form-step').forEach((step, index) => {
+                step.classList.remove('active');
+                if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                }
+            });
+
+            // Update summary if on last step
+            if (currentStep === totalSteps) {
+                updateSummary();
+            }
+
+            updateStepButtons();
+        }
+
+        // Update buttons
+        function updateStepButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+
+            if (currentStep === 1) {
+                prevBtn.style.display = 'none';
+            } else {
+                prevBtn.style.display = 'inline-flex';
+            }
+
+            if (currentStep === totalSteps) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-flex';
+            } else {
+                nextBtn.style.display = 'inline-flex';
+                submitBtn.style.display = 'none';
+            }
+        }
+
+        // Validate step
+        function validateStep(step) {
+            const currentStepElement = document.querySelector(`.form-step[data-step="${step}"]`);
+            const requiredFields = currentStepElement.querySelectorAll('[required]');
+            
+            for (let field of requiredFields) {
+                if (!field.value) {
+                    field.focus();
+                    showToast('Please fill all required fields', 'error');
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        // Preview photo
+        function previewPhoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('photoPreview').innerHTML = `<img src="${e.target.result}" alt="Photo">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Handle file upload
+        function handleFileUpload(event, type) {
+            const files = event.target.files;
+            const fileList = document.getElementById(`${type}FileList`);
+            
+            for (let file of files) {
+                uploadedFiles[type].push(file);
+                
+                const fileDiv = document.createElement('div');
+                fileDiv.className = 'uploaded-file';
+                fileDiv.innerHTML = `
+                    <div class="file-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name">${file.name}</div>
+                        <div class="file-size">${(file.size / 1024).toFixed(2)} KB</div>
+                    </div>
+                    <button type="button" class="action-btn" onclick="removeFile('${type}', '${file.name}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                `;
+                fileList.appendChild(fileDiv);
+            }
+        }
+
+        // Remove file
+        function removeFile(type, fileName) {
+            uploadedFiles[type] = uploadedFiles[type].filter(f => f.name !== fileName);
+            const fileList = document.getElementById(`${type}FileList`);
+            const fileElements = fileList.querySelectorAll('.uploaded-file');
+            fileElements.forEach(el => {
+                if (el.querySelector('.file-name').textContent === fileName) {
+                    el.remove();
+                }
+            });
+        }
+
+        // Calculate gross salary
+        function calculateGrossSalary() {
+            const basic = parseFloat(document.getElementById('basicSalary').value) || 0;
+            const hra = parseFloat(document.getElementById('hra').value) || 0;
+            const allowances = parseFloat(document.getElementById('allowances').value) || 0;
+            const gross = basic + hra + allowances;
+            document.getElementById('grossSalary').value = gross;
+        }
+
+        // Update summary
+        function updateSummary() {
+            // Personal Info
+            const fullName = `${document.getElementById('firstName').value} ${document.getElementById('middleName').value} ${document.getElementById('lastName').value}`.trim();
+            document.getElementById('summaryFullName').textContent = fullName || '-';
+            document.getElementById('summaryDOB').textContent = document.getElementById('dob').value || '-';
+            document.getElementById('summaryGender').textContent = document.getElementById('gender').value || '-';
+            document.getElementById('summaryEmail').textContent = document.getElementById('email').value || '-';
+            document.getElementById('summaryPhone').textContent = document.getElementById('phone').value || '-';
+            document.getElementById('summaryAddress').textContent = document.getElementById('address').value || '-';
+
+            // Employment Details
+            document.getElementById('summaryJoinDate').textContent = document.getElementById('joinDate').value || '-';
+            document.getElementById('summaryDepartment').textContent = document.getElementById('department').value || '-';
+            document.getElementById('summaryDesignation').textContent = document.getElementById('designation').value || '-';
+            document.getElementById('summaryEmploymentType').textContent = document.getElementById('employmentType').value || '-';
+            document.getElementById('summaryShift').textContent = document.getElementById('shift').value || '-';
+            document.getElementById('summaryWorkLocation').textContent = document.getElementById('workLocation').value || '-';
+
+            // Salary & Bank
+            const grossSalary = document.getElementById('grossSalary').value;
+            document.getElementById('summaryGrossSalary').textContent = grossSalary ? `₹${grossSalary}` : '-';
+            document.getElementById('summaryBankName').textContent = document.getElementById('bankName').value || '-';
+            document.getElementById('summaryAccountNumber').textContent = document.getElementById('accountNumber').value || '-';
+            document.getElementById('summaryPAN').textContent = document.getElementById('panNumber').value || '-';
+
+            // Documents
+            const docsList = [];
+            Object.keys(uploadedFiles).forEach(type => {
+                if (uploadedFiles[type].length > 0) {
+                    docsList.push(`${type.charAt(0).toUpperCase() + type.slice(1)}: ${uploadedFiles[type].length} file(s)`);
+                }
+            });
+            document.getElementById('summaryDocuments').textContent = docsList.length > 0 ? docsList.join(', ') : 'No documents uploaded';
+        }
+
+        // Save draft
+        function saveDraft() {
+            showToast('Draft saved successfully', 'success');
+        }
+
+        // Form submission
+        document.getElementById('addEmployeeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (validateStep(currentStep)) {
+                // In a real app, send data to server
+                showToast('Employee created successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'directory.html';
+                }, 2000);
+            }
+        });
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">×</button>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

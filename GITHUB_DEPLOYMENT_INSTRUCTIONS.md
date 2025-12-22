@@ -32,7 +32,7 @@
 
 ```bash
 # Navigate to project directory
-cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS"
+cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS"
 
 # Add your GitHub repository as remote
 # REPLACE 'YOUR_USERNAME' with your actual GitHub username
@@ -276,7 +276,7 @@ Best regards,
 
 ### Push to GitHub:
 ```bash
-cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS"
+cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS"
 git remote add origin https://github.com/YOUR_USERNAME/pixel-logistics-wms.git
 git push -u origin main
 ```

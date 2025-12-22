@@ -5,7 +5,7 @@
 
 class OfflineStorageManager {
   constructor() {
-    this.dbName = 'DLT_WMS_Offline';
+    this.dbName = 'Pixel_WMS_Offline';
     this.dbVersion = 1;
     this.db = null;
     

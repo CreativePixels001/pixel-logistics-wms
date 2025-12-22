@@ -1,0 +1,2384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pi Command Center - Professional Grid System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            overflow: auto;
+            min-height: 100vh;
+        }
+
+        /* Professional Grid Container */
+        .command-center {
+            max-width: 1920px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: auto auto auto;
+            gap: 1rem;
+            min-height: 100vh;
+        }
+
+        /* Header Section */
+        .header {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+        }
+
+        .header-left h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #999 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-left p {
+            color: #666;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .system-status {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .status-item {
+            text-align: center;
+        }
+
+        .status-label {
+            font-size: 0.65rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.2rem;
+        }
+
+        .status-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #0f0;
+        }
+
+        /* Pi Core - Center Piece */
+        .pi-core {
+            grid-column: 4 / 9;
+            grid-row: 2 / 3;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .pi-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 0.75rem;
+        }
+
+        .pi-avatar {
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle at 35% 35%, #ffffff 0%, #f5f5f5 25%, #e8e8e8 50%, #d0d0d0 75%, #b8b8b8 100%);
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.9);
+            box-shadow: 
+                0 0 30px rgba(255,255,255,0.6),
+                0 4px 12px rgba(0,0,0,0.3),
+                inset -8px -8px 16px rgba(0,0,0,0.1),
+                inset 8px 8px 16px rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            animation: avatarPulse 3s ease-in-out infinite;
+        }
+
+        .pi-avatar-symbol {
+            font-size: 1.75rem;
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: 400;
+            color: #000;
+            font-style: italic;
+        }
+
+        @keyframes avatarPulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 30px rgba(255,255,255,0.6),
+                    0 4px 12px rgba(0,0,0,0.3),
+                    inset -8px -8px 16px rgba(0,0,0,0.1),
+                    inset 8px 8px 16px rgba(255,255,255,0.8);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 40px rgba(255,255,255,0.8),
+                    0 5px 15px rgba(0,0,0,0.4),
+                    inset -10px -10px 20px rgba(0,0,0,0.15),
+                    inset 10px 10px 20px rgba(255,255,255,0.9);
+            }
+        }
+
+        .pi-info {
+            flex: 1;
+        }
+
+        .pi-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.15rem;
+        }
+
+        .pi-subtitle {
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        .pi-status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #0f0;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            animation: statusBlink 2s ease-in-out infinite;
+        }
+
+        @keyframes statusBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 0.75rem;
+            overflow-y: auto;
+            max-height: 450px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .chat-message {
+            display: flex;
+            gap: 0.75rem;
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .message-avatar.pi {
+            background: radial-gradient(circle, #fff 0%, #ddd 100%);
+            color: #000;
+            font-weight: 700;
+            font-family: 'Times New Roman', serif;
+            font-style: italic;
+        }
+
+        .message-content {
+            max-width: 75%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .chat-message.user .message-content {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .chat-message.pi .message-content {
+            background: rgba(15,255,15,0.1);
+            border: 1px solid rgba(15,255,15,0.3);
+        }
+
+        .message-time {
+            font-size: 0.65rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .chat-input-area {
+            padding: 0.75rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.2);
+        }
+
+        .chat-input-wrapper {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 0.6rem 0.85rem;
+            color: #fff;
+            font-size: 0.8rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input::placeholder {
+            color: #666;
+        }
+
+        .chat-input:focus {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.4);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, #0f0 0%, #0a0 100%);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            color: #000;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .send-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(15,255,15,0.5);
+        }
+
+        .send-button:active {
+            transform: scale(0.95);
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: rgba(15,255,15,0.1);
+            border: 1px solid rgba(15,255,15,0.3);
+            border-radius: 12px;
+            max-width: fit-content;
+        }
+
+        .typing-indicator.active {
+            display: flex;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #0f0;
+            border-radius: 50%;
+            animation: typingBounce 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* Database Section - Left */
+        .database-section {
+            grid-column: 1 / 4;
+            grid-row: 2 / 3;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 0.4rem;
+        }
+
+        .database-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .database-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            border: 2px solid rgba(0,0,0,0.8);
+            border-radius: 10px;
+            padding: 0.75rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 40px rgba(255,255,255,0.6),
+                0 8px 24px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .database-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 0 60px rgba(255,255,255,0.9),
+                0 12px 32px rgba(0,0,0,0.4);
+        }
+
+        .database-card.offline {
+            background: #e0e0e0;
+            opacity: 0.6;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .db-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .db-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #000;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .db-status {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .db-status.active {
+            background: #0f0;
+            color: #000;
+        }
+
+        .db-status.offline {
+            background: #666;
+            color: #fff;
+        }
+
+        .db-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+        }
+
+        .db-stat {
+            background: rgba(0,0,0,0.1);
+            padding: 0.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .db-stat-value {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .db-stat-label {
+            font-size: 0.6rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        /* Applications Section - Right */
+        .applications-section {
+            grid-column: 9 / 13;
+            grid-row: 2 / 3;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .app-card {
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #fff;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+
+        .app-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255,255,255,0.15);
+            box-shadow: 
+                0 0 40px rgba(255,255,255,0.8),
+                0 8px 24px rgba(0,0,0,0.4);
+        }
+
+        .app-icon {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 0.6rem;
+        }
+
+        .app-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .app-name {
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .app-status {
+            font-size: 0.65rem;
+            color: #0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+        }
+
+        .app-status.offline {
+            color: #f00;
+        }
+
+        .app-status.unknown {
+            color: #ff0;
+        }
+
+        /* API Grid Section */
+        .api-section {
+            grid-column: 1 / -1;
+            grid-row: 3 / 4;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .api-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 0.75rem;
+        }
+
+        .api-card {
+            background: rgba(0,0,0,0.7);
+            border: 2px solid #666;
+            border-radius: 10px;
+            padding: 0.75rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .api-card:hover {
+            transform: translateY(-3px);
+            border-color: #fff;
+            background: rgba(255,255,255,0.1);
+            box-shadow: 0 0 30px rgba(255,255,255,0.6);
+        }
+
+        .api-icon {
+            width: 28px;
+            height: 28px;
+            margin: 0 auto 0.4rem;
+        }
+
+        .api-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .api-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .api-type {
+            font-size: 0.55rem;
+            color: #666;
+        }
+
+        /* System Detail Overlay - Module 2 Enhanced */
+        .system-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .system-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .overlay-content {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .overlay-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .overlay-close:hover {
+            background: rgba(255,0,0,0.2);
+            border-color: #f00;
+            transform: rotate(90deg);
+        }
+
+        .overlay-close svg {
+            width: 20px;
+            height: 20px;
+            stroke: #fff;
+        }
+
+        .overlay-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .overlay-icon {
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #0f0 0%, #0a0 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 40px rgba(15,255,15,0.5);
+        }
+
+        .overlay-icon svg {
+            width: 50px;
+            height: 50px;
+            stroke: #000;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .overlay-title-section h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #fff 0%, #0f0 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .overlay-subtitle {
+            font-size: 0.9rem;
+            color: #999;
+        }
+
+        .overlay-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(15,255,15,0.2);
+            border: 1px solid #0f0;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #0f0;
+            margin-top: 0.5rem;
+        }
+
+        .overlay-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .overlay-stat-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .overlay-stat-card:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: #0f0;
+            transform: translateY(-4px);
+        }
+
+        .overlay-stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0f0;
+            margin-bottom: 0.5rem;
+        }
+
+        .overlay-stat-label {
+            font-size: 0.75rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .overlay-info-section {
+            margin-bottom: 2rem;
+        }
+
+        .overlay-info-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #0f0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .overlay-info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .overlay-info-item {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .overlay-info-key {
+            font-size: 0.7rem;
+            color: #666;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        .overlay-info-value {
+            font-size: 0.95rem;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .overlay-description {
+            background: rgba(15,255,15,0.05);
+            border: 1px solid rgba(15,255,15,0.2);
+            border-radius: 10px;
+            padding: 1.25rem;
+            color: #ccc;
+            line-height: 1.7;
+            margin-bottom: 2rem;
+        }
+
+        .overlay-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .overlay-btn {
+            padding: 0.9rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .overlay-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .overlay-btn-secondary {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .overlay-btn-secondary:hover:not(:disabled) {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .overlay-btn-start {
+            background: linear-gradient(135deg, #0f0 0%, #0a0 100%);
+            color: #000;
+            border: 1px solid #0f0;
+        }
+
+        .overlay-btn-start:hover:not(:disabled) {
+            box-shadow: 0 0 30px rgba(15,255,15,0.6);
+            transform: translateY(-2px);
+        }
+
+        .overlay-btn-start.running {
+            background: linear-gradient(135deg, #ff0 0%, #fa0 100%);
+            border-color: #ff0;
+        }
+
+        .overlay-btn-stop {
+            background: linear-gradient(135deg, #f00 0%, #a00 100%);
+            color: #fff;
+            border: 1px solid #f00;
+        }
+
+        .overlay-btn-stop:hover:not(:disabled) {
+            box-shadow: 0 0 30px rgba(255,0,0,0.6);
+            transform: translateY(-2px);
+        }
+
+        .overlay-btn-primary {
+            background: linear-gradient(135deg, #0f0 0%, #0a0 100%);
+            color: #000;
+            box-shadow: 0 0 30px rgba(15,255,15,0.5);
+        }
+
+        .overlay-btn-primary:hover:not(:disabled) {
+            box-shadow: 0 0 50px rgba(15,255,15,0.8);
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .server-status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .server-status-indicator.running {
+            border-color: #0f0;
+            background: rgba(15,255,15,0.1);
+        }
+
+        .server-status-indicator.stopped {
+            border-color: #f00;
+            background: rgba(255,0,0,0.1);
+        }
+
+        .server-status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #666;
+            animation: pulse 2s infinite;
+        }
+
+        .server-status-indicator.running .server-status-dot {
+            background: #0f0;
+        }
+
+        .server-status-indicator.stopped .server-status-dot {
+            background: #f00;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .server-console {
+            background: #000;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .server-console.active {
+            display: block;
+        }
+
+        .console-line {
+            color: #0f0;
+            margin-bottom: 0.25rem;
+        }
+
+        .console-line.error {
+            color: #f00;
+        }
+
+        .console-line.warning {
+            color: #ff0;
+        }
+
+        .console-line.info {
+            color: #0ff;
+        }
+
+        /* Metrics Footer */
+        .metrics-footer {
+            grid-column: 1 / -1;
+            grid-row: 4 / 5;
+            background: #000;
+            border-top: 2px solid #fff;
+            padding: 1rem 0;
+            overflow: hidden;
+        }
+
+        .metrics-track {
+            display: flex;
+            gap: 3rem;
+            animation: scrollMetrics 40s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes scrollMetrics {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .metric-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0 1.5rem;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .metric-label {
+            font-size: 0.65rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-value {
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .metric-value.active { color: #0f0; }
+        .metric-value.warning { color: #ff0; }
+        .metric-value.critical { color: #f00; animation: blink 1s infinite; }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.4; }
+        }
+
+        /* Responsive */
+        @media (max-width: 1600px) {
+            .api-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .command-center {
+                grid-template-columns: 1fr;
+            }
+            
+            .database-section,
+            .pi-core,
+            .applications-section,
+            .api-section {
+                grid-column: 1 / -1;
+            }
+
+            .app-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .overlay-stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .overlay-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .overlay-actions {
+                flex-direction: column;
+            }
+
+            .overlay-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="command-center">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>π COMMAND CENTER</h1>
+                <p>Pixel Ecosystem • Real-time Monitoring Dashboard</p>
+            </div>
+            <div class="system-status">
+                <div class="status-item">
+                    <div class="status-label">System Health</div>
+                    <div class="status-value">99.8%</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Active Users</div>
+                    <div class="status-value">8,434</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-label">Uptime</div>
+                    <div class="status-value">99d</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Database Section -->
+        <div class="database-section">
+            <div class="section-title">Database Infrastructure</div>
+            <div class="database-grid">
+                <div class="database-card">
+                    <div class="db-header">
+                        <div class="db-name">Primary Database</div>
+                        <div class="db-status active">Active</div>
+                    </div>
+                    <div class="db-stats">
+                        <div class="db-stat">
+                            <div class="db-stat-value">2.4TB</div>
+                            <div class="db-stat-label">Storage</div>
+                        </div>
+                        <div class="db-stat">
+                            <div class="db-stat-value">3,988</div>
+                            <div class="db-stat-label">Queries/s</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="database-card offline">
+                    <div class="db-header">
+                        <div class="db-name">Backup Server</div>
+                        <div class="db-status offline">Offline</div>
+                    </div>
+                    <div class="db-stats">
+                        <div class="db-stat">
+                            <div class="db-stat-value">---</div>
+                            <div class="db-stat-label">Storage</div>
+                        </div>
+                        <div class="db-stat">
+                            <div class="db-stat-value">---</div>
+                            <div class="db-stat-label">Queries/s</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="database-card offline">
+                    <div class="db-header">
+                        <div class="db-name">Archive Server</div>
+                        <div class="db-status offline">Offline</div>
+                    </div>
+                    <div class="db-stats">
+                        <div class="db-stat">
+                            <div class="db-stat-value">---</div>
+                            <div class="db-stat-label">Storage</div>
+                        </div>
+                        <div class="db-stat">
+                            <div class="db-stat-value">---</div>
+                            <div class="db-stat-label">Queries/s</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pi Core -->
+        <div class="pi-core">
+            <div class="pi-header">
+                <div class="pi-avatar">
+                    <div class="pi-avatar-symbol">π</div>
+                </div>
+                <div class="pi-info">
+                    <div class="pi-title">π AI Assistant</div>
+                    <div class="pi-subtitle">
+                        <span class="pi-status-dot"></span>Online • Ready to help
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-message pi">
+                        <div class="message-avatar pi">π</div>
+                        <div>
+                            <div class="message-content">
+                                Hello! I'm Pi, your intelligent assistant for the Pixel Ecosystem. I can help you with:
+                                <br><br>
+                                • System status and monitoring<br>
+                                • Database queries and analytics<br>
+                                • Application insights (WMS, TMS, EMS, CPX)<br>
+                                • API integration information<br>
+                                • Documentation and guides
+                                <br><br>
+                                Ask me anything about your connected systems!
+                            </div>
+                            <div class="message-time">Just now</div>
+                        </div>
+                    </div>
+
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <div class="chat-input-wrapper">
+                        <input 
+                            type="text" 
+                            class="chat-input" 
+                            id="chatInput"
+                            placeholder="Ask about systems, databases, APIs..."
+                            autocomplete="off"
+                        />
+                        <button class="send-button" id="sendButton">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"></line>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Applications Section -->
+        <div class="applications-section">
+            <div class="section-title">Core Applications</div>
+            <div class="app-grid">
+                <div class="app-card" data-app="wms">
+                    <div class="app-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                    </div>
+                    <div class="app-name">WMS</div>
+                    <div class="app-status offline" id="status-wms">● Offline</div>
+                </div>
+
+                <div class="app-card" data-app="tms">
+                    <div class="app-icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="1" y="3" width="15" height="13"/>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                            <circle cx="5.5" cy="18.5" r="2.5"/>
+                            <circle cx="18.5" cy="18.5" r="2.5"/>
+                        </svg>
+                    </div>
+                    <div class="app-name">TMS</div>
+                    <div class="app-status offline" id="status-tms">● Offline</div>
+                </div>
+
+                <div class="app-card" data-app="ems">
+                    <div class="app-icon">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                    </div>
+                    <div class="app-name">EMS</div>
+                    <div class="app-status offline" id="status-ems">● Offline</div>
+                </div>
+
+                <div class="app-card" data-app="cpx">
+                    <div class="app-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <div class="app-name">CPX Website</div>
+                    <div class="app-status offline" id="status-cpx">● Offline</div>
+                </div>
+
+                <div class="app-card" data-app="pi">
+                    <div class="app-icon">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/>
+                            <circle cx="12" cy="12" r="3"/>
+                            <line x1="12" y1="2" x2="12" y2="5"/>
+                            <line x1="12" y1="19" x2="12" y2="22"/>
+                        </svg>
+                    </div>
+                    <div class="app-name">Pi AI</div>
+                    <div class="app-status offline" id="status-pi">● Offline</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Section -->
+        <div class="api-section">
+            <div class="section-title">External API Integrations</div>
+            <div class="api-grid">
+                <div class="api-card">
+                    <div class="api-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                    </div>
+                    <div class="api-name">e-Way Bill</div>
+                    <div class="api-type">Government</div>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                            <line x1="1" y1="10" x2="23" y2="10"/>
+                        </svg>
+                    </div>
+                    <div class="api-name">FASTag</div>
+                    <div class="api-type">Government</div>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="1" y="3" width="15" height="13"/>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                            <circle cx="5.5" cy="18.5" r="2.5"/>
+                            <circle cx="18.5" cy="18.5" r="2.5"/>
+                        </svg>
+                    </div>
+                    <div class="api-name">Vahan</div>
+                    <div class="api-type">Government</div>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-icon">
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/>
+                        </svg>
+                    </div>
+                    <div class="api-name">NavIC GPS</div>
+                    <div class="api-type">Government</div>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                    </div>
+                    <div class="api-name">Amazon</div>
+                    <div class="api-type">E-commerce</div>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-icon">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                            <line x1="7" y1="7" x2="7.01" y2="7"/>
+                        </svg>
+                    </div>
+                    <div class="api-name">Flipkart</div>
+                    <div class="api-type">E-commerce</div>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-icon">
+                        <svg viewBox="0 0 24 24">
+                            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                            <polyline points="2 17 12 22 22 17"/>
+                            <polyline points="2 12 12 17 22 12"/>
+                        </svg>
+                    </div>
+                    <div class="api-name">Meesho</div>
+                    <div class="api-type">E-commerce</div>
+                </div>
+
+                <div class="api-card">
+                    <div class="api-icon">
+                        <svg viewBox="0 0 24 24">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                            <line x1="1" y1="10" x2="23" y2="10"/>
+                        </svg>
+                    </div>
+                    <div class="api-name">Cashfree</div>
+                    <div class="api-type">Payment</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Metrics Footer -->
+        <div class="metrics-footer">
+            <div class="metrics-track">
+                <div class="metric-item">
+                    <div class="metric-label">Total Requests</div>
+                    <div class="metric-value active" id="total-requests">2,847,392</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Active Users</div>
+                    <div class="metric-value active" id="active-users">8,434</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">DB Queries/s</div>
+                    <div class="metric-value active" id="db-queries">3,988</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Response Time</div>
+                    <div class="metric-value active" id="response-time">143ms</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Cache Hit Rate</div>
+                    <div class="metric-value active" id="cache-hit">96.2%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">API Calls</div>
+                    <div class="metric-value active" id="api-calls">12,659</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">WMS Orders</div>
+                    <div class="metric-value active" id="wms-orders">3,287</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">TMS Shipments</div>
+                    <div class="metric-value active" id="tms-shipments">1,905</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">EMS Products</div>
+                    <div class="metric-value active" id="ems-products">24,931</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Pi Chats</div>
+                    <div class="metric-value active" id="pi-chats">2,858</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">CPU Usage</div>
+                    <div class="metric-value active" id="cpu-usage">67%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Memory</div>
+                    <div class="metric-value active" id="memory">74%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Network I/O</div>
+                    <div class="metric-value active" id="network-io">2.3GB/s</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Uptime</div>
+                    <div class="metric-value active" id="uptime">99d</div>
+                </div>
+
+                <!-- Duplicate for infinite scroll -->
+                <div class="metric-item">
+                    <div class="metric-label">Total Requests</div>
+                    <div class="metric-value active">2,847,392</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Active Users</div>
+                    <div class="metric-value active">8,434</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">DB Queries/s</div>
+                    <div class="metric-value active">3,988</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Response Time</div>
+                    <div class="metric-value active">143ms</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Cache Hit Rate</div>
+                    <div class="metric-value active">96.2%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">API Calls</div>
+                    <div class="metric-value active">12,659</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">WMS Orders</div>
+                    <div class="metric-value active">3,287</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">TMS Shipments</div>
+                    <div class="metric-value active">1,905</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">EMS Products</div>
+                    <div class="metric-value active">24,931</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Pi Chats</div>
+                    <div class="metric-value active">2,858</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">CPU Usage</div>
+                    <div class="metric-value active">67%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Memory</div>
+                    <div class="metric-value active">74%</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Network I/O</div>
+                    <div class="metric-value active">2.3GB/s</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">Uptime</div>
+                    <div class="metric-value active">99d</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- System Detail Overlay -->
+    <div class="system-overlay" id="systemOverlay">
+        <div class="overlay-content">
+            <div class="overlay-close" onclick="closeOverlay()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+
+            <div class="overlay-header">
+                <div class="overlay-icon" id="overlayIcon">
+                    <!-- Icon will be injected -->
+                </div>
+                <div class="overlay-title-section">
+                    <h2 id="overlayTitle">System Name</h2>
+                    <p class="overlay-subtitle" id="overlaySubtitle">System Description</p>
+                    <div class="overlay-status">
+                        <span style="font-size: 1.2rem;">●</span>
+                        <span id="overlayStatus">Online</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overlay-stats-grid" id="overlayStats">
+                <!-- Stats will be injected -->
+            </div>
+
+            <div class="overlay-description" id="overlayDescription">
+                <!-- Description will be injected -->
+            </div>
+
+            <div class="server-status-indicator" id="serverStatus">
+                <div class="server-status-dot"></div>
+                <span id="serverStatusText">Server Status: Unknown</span>
+            </div>
+
+            <div class="server-console" id="serverConsole">
+                <div class="console-line info">Server Console Output:</div>
+            </div>
+
+            <div class="overlay-info-section">
+                <div class="overlay-info-title">System Information</div>
+                <div class="overlay-info-grid" id="overlayInfo">
+                    <!-- Info will be injected -->
+                </div>
+            </div>
+
+            <div class="overlay-actions">
+                <button class="overlay-btn overlay-btn-secondary" onclick="closeOverlay()">Close</button>
+                <button class="overlay-btn overlay-btn-start" id="serverControlBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    <span id="serverControlText">Start Server</span>
+                </button>
+                <button class="overlay-btn overlay-btn-primary" id="overlayOpenBtn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                    Open System
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chat functionality
+        const chatMessages = document.getElementById('chatMessages');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        const knowledgeBase = {
+            'wms': 'WMS (Warehouse Management System) is currently online with 3,287 active orders. It handles inventory management, order fulfillment, and warehouse operations across your facilities.',
+            'tms': 'TMS (Transportation Management System) is online managing 1,905 active shipments. It provides real-time tracking, route optimization, and fleet management capabilities.',
+            'ems': 'EMS (E-commerce Management System) is online with 24,931 products across Amazon, Flipkart, and Meesho platforms. It handles multi-channel inventory, pricing, and order synchronization.',
+            'cpx': 'CPX Website is your customer-facing platform, currently online and serving customers. It integrates with all backend systems for seamless order processing.',
+            'pi': 'Pi AI Assistant (me!) helps you monitor and manage the entire Pixel Ecosystem. I can answer questions about any connected system, database, or API.',
+            'database': 'Your primary database is active with 2.4TB storage and processing 3,988 queries per second. Two backup servers are in offline standby mode.',
+            'api': 'You have 8 external API integrations: e-Way Bill, FASTag, Vahan, NavIC (Government), Amazon, Flipkart, Meesho (E-commerce), and Cashfree (Payment).',
+            'status': 'All core systems are online with 99.8% health. Active users: 8,434. System uptime: 99 days. CPU: 67%, Memory: 74%.',
+            'help': 'I can help with: System status, Database queries, Application details, API information, Performance metrics, Documentation, and Troubleshooting. Just ask!'
+        };
+
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+        }
+
+        function addMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isUser ? 'user' : 'pi'}`;
+            
+            const avatarDiv = document.createElement('div');
+            avatarDiv.className = `message-avatar ${isUser ? '' : 'pi'}`;
+            avatarDiv.textContent = isUser ? 'You' : 'π';
+            
+            const contentWrapper = document.createElement('div');
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            messageContent.textContent = content;
+            
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = getCurrentTime();
+            
+            contentWrapper.appendChild(messageContent);
+            contentWrapper.appendChild(timeDiv);
+            
+            messageDiv.appendChild(avatarDiv);
+            messageDiv.appendChild(contentWrapper);
+            
+            // Insert before typing indicator
+            chatMessages.insertBefore(messageDiv, typingIndicator);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function getBotResponse(userMessage) {
+            const message = userMessage.toLowerCase();
+            
+            // Check knowledge base
+            for (const [key, value] of Object.entries(knowledgeBase)) {
+                if (message.includes(key)) {
+                    return value;
+                }
+            }
+            
+            // Default responses
+            if (message.includes('hello') || message.includes('hi')) {
+                return 'Hello! How can I assist you with the Pixel Ecosystem today?';
+            }
+            
+            if (message.includes('how are you')) {
+                return 'All systems operational! I\'m functioning perfectly and ready to help you manage the ecosystem.';
+            }
+            
+            if (message.includes('thank')) {
+                return 'You\'re welcome! Feel free to ask if you need anything else.';
+            }
+            
+            return 'I can help you with information about WMS, TMS, EMS, CPX Website, databases, APIs, and system status. What would you like to know?';
+        }
+
+        function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            addMessage(message, true);
+            chatInput.value = '';
+            
+            // Show typing indicator
+            typingIndicator.classList.add('active');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            
+            // Simulate bot thinking
+            setTimeout(() => {
+                typingIndicator.classList.remove('active');
+                const response = getBotResponse(message);
+                addMessage(response, false);
+            }, 1000 + Math.random() * 1000);
+        }
+
+        sendButton.addEventListener('click', sendMessage);
+        
+        chatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Live metric updates
+        function updateMetrics() {
+            // Total Requests (incrementing)
+            const requests = document.getElementById('total-requests');
+            if (requests) {
+                const current = parseInt(requests.textContent.replace(/,/g, ''));
+                requests.textContent = (current + Math.floor(Math.random() * 100)).toLocaleString();
+            }
+
+            // Active Users (fluctuating)
+            const users = document.getElementById('active-users');
+            if (users) {
+                const current = parseInt(users.textContent.replace(/,/g, ''));
+                const change = Math.floor(Math.random() * 20) - 10;
+                users.textContent = Math.max(0, current + change).toLocaleString();
+            }
+
+            // DB Queries
+            const queries = document.getElementById('db-queries');
+            if (queries) {
+                queries.textContent = (3800 + Math.floor(Math.random() * 300)).toLocaleString();
+            }
+
+            // Response Time
+            const responseTime = document.getElementById('response-time');
+            if (responseTime) {
+                const time = 100 + Math.floor(Math.random() * 100);
+                responseTime.textContent = time + 'ms';
+                responseTime.className = 'metric-value ' + (time > 180 ? 'warning' : 'active');
+            }
+
+            // Cache Hit Rate
+            const cacheHit = document.getElementById('cache-hit');
+            if (cacheHit) {
+                cacheHit.textContent = (94 + Math.random() * 4).toFixed(1) + '%';
+            }
+
+            // CPU Usage
+            const cpuUsage = document.getElementById('cpu-usage');
+            if (cpuUsage) {
+                const cpu = 50 + Math.floor(Math.random() * 40);
+                cpuUsage.textContent = cpu + '%';
+                cpuUsage.className = 'metric-value ' + 
+                    (cpu > 85 ? 'critical' : cpu > 75 ? 'warning' : 'active');
+            }
+
+            // Memory
+            const memory = document.getElementById('memory');
+            if (memory) {
+                const mem = 70 + Math.floor(Math.random() * 15);
+                memory.textContent = mem + '%';
+                memory.className = 'metric-value ' + (mem > 85 ? 'warning' : 'active');
+            }
+
+            // Network I/O
+            const networkIo = document.getElementById('network-io');
+            if (networkIo) {
+                networkIo.textContent = (2.0 + Math.random() * 0.8).toFixed(1) + 'GB/s';
+            }
+
+            // WMS Orders
+            const wmsOrders = document.getElementById('wms-orders');
+            if (wmsOrders) {
+                const current = parseInt(wmsOrders.textContent.replace(/,/g, ''));
+                wmsOrders.textContent = (current + Math.floor(Math.random() * 5)).toLocaleString();
+            }
+
+            // TMS Shipments
+            const tmsShipments = document.getElementById('tms-shipments');
+            if (tmsShipments) {
+                const current = parseInt(tmsShipments.textContent.replace(/,/g, ''));
+                tmsShipments.textContent = (current + Math.floor(Math.random() * 3)).toLocaleString();
+            }
+        }
+
+        // Update every 1.5 seconds
+        setInterval(updateMetrics, 1500);
+
+        // Navigation System - Module 1
+        const systemPaths = {
+            'wms': '../frontend/WMS/index.html',
+            'tms': '../frontend/TMS/index.html',
+            'ems': '../frontend/EMS/dashboard.html',
+            'cpx': '../CPX website/index.html',
+            'pi': '../PixelOne/pi-app/index.html'
+        };
+
+        const systemDetails = {
+            'wms': {
+                name: 'Warehouse Management System',
+                description: '3,287 active orders • Inventory & fulfillment operations',
+                status: 'Online'
+            },
+            'tms': {
+                name: 'Transportation Management System',
+                description: '1,905 active shipments • Real-time tracking & fleet management',
+                status: 'Online'
+            },
+            'ems': {
+                name: 'E-commerce Management System',
+                description: '24,931 products • Multi-channel inventory sync',
+                status: 'Online'
+            },
+            'cpx': {
+                name: 'CPX Website',
+                description: 'Customer-facing platform • Integrated order processing',
+                status: 'Online'
+            },
+            'pi': {
+                name: 'Pi AI Assistant',
+                description: 'Intelligent monitoring & management assistant',
+                status: 'Online'
+            }
+        };
+
+        // Attach click handlers to application cards
+        document.querySelectorAll('.app-card[data-app]').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.preventDefault();
+                const app = this.getAttribute('data-app');
+                showSystemOverlay(app);
+            });
+
+            // Add hover cursor
+            card.style.cursor = 'pointer';
+        });
+
+        // Module 2: System Detail Overlay
+        const systemOverlayData = {
+            'wms': {
+                title: 'Warehouse Management System',
+                subtitle: 'Comprehensive Inventory & Order Fulfillment Platform',
+                icon: '<svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
+                description: 'Advanced warehouse management platform handling real-time inventory tracking, order fulfillment, pick-pack-ship operations, and multi-location warehouse coordination. Integrated with barcode scanning, automated reordering, and comprehensive reporting dashboards.',
+                stats: [
+                    { label: 'Active Orders', value: '0' },
+                    { label: 'Products', value: 'N/A' },
+                    { label: 'Warehouses', value: '0' }
+                ],
+                info: {
+                    'Version': 'v2.4.1',
+                    'Uptime': '0%',
+                    'Last Updated': 'N/A',
+                    'Database': 'Not Connected',
+                    'Response Time': 'N/A',
+                    'Active Users': '0'
+                },
+                serverPath: '../frontend/WMS',
+                startCommand: 'cd ../frontend/WMS && npm start',
+                port: 3001
+            },
+            'tms': {
+                title: 'Transportation Management System',
+                subtitle: 'Real-time Fleet & Shipment Tracking Platform',
+                icon: '<svg viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>',
+                description: 'Complete transportation management solution with GPS tracking, route optimization, driver management, vehicle maintenance scheduling, and delivery proof capture. Supports multi-modal logistics including road, rail, and air freight.',
+                stats: [
+                    { label: 'Active Shipments', value: '0' },
+                    { label: 'Vehicles', value: '0' },
+                    { label: 'Drivers', value: '0' }
+                ],
+                info: {
+                    'Version': 'v3.1.0',
+                    'Uptime': '0%',
+                    'Last Updated': 'N/A',
+                    'GPS Provider': 'Not Connected',
+                    'Avg Delivery Time': 'N/A',
+                    'On-Time Rate': '0%'
+                },
+                serverPath: '../frontend/TMS',
+                startCommand: 'cd ../frontend/TMS && npm start',
+                port: 3002
+            },
+            'ems': {
+                title: 'E-commerce Management System',
+                subtitle: 'Multi-Platform Marketplace Integration Hub',
+                icon: '<svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',
+                description: 'Unified e-commerce platform managing product listings, inventory synchronization, order processing, and pricing across Amazon, Flipkart, and Meesho. Features automated repricing, bulk upload tools, and cross-platform analytics.',
+                stats: [
+                    { label: 'Products Listed', value: '0' },
+                    { label: 'Platforms', value: '0' },
+                    { label: 'Daily Orders', value: '0' }
+                ],
+                info: {
+                    'Version': 'v1.8.2',
+                    'Uptime': '0%',
+                    'Last Sync': 'N/A',
+                    'Amazon': 'Disconnected',
+                    'Flipkart': 'Disconnected',
+                    'Meesho': 'Disconnected'
+                },
+                serverPath: '../frontend/EMS',
+                startCommand: 'cd ../frontend/EMS && npm start',
+                port: 3003
+            },
+            'cpx': {
+                title: 'CPX Website',
+                subtitle: 'Customer-Facing Commerce Platform',
+                icon: '<svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
+                description: 'Modern responsive website serving as the primary customer touchpoint. Integrated product catalog, shopping cart, payment gateway, order tracking, and customer support system. Built with SEO optimization and mobile-first design.',
+                stats: [
+                    { label: 'Daily Visitors', value: '0' },
+                    { label: 'Conversion Rate', value: '0%' },
+                    { label: 'Avg Session', value: 'N/A' }
+                ],
+                info: {
+                    'Version': 'v4.0.1',
+                    'Uptime': '0%',
+                    'Last Deploy': 'N/A',
+                    'Page Speed': 'N/A',
+                    'CDN': 'Inactive',
+                    'SSL': 'Not Configured'
+                },
+                serverPath: '../CPX website',
+                startCommand: 'cd "../CPX website" && npm start',
+                port: 3004
+            },
+            'pi': {
+                title: 'Pi AI Assistant',
+                subtitle: 'Intelligent System Monitoring & Management',
+                icon: '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/></svg>',
+                description: 'AI-powered virtual assistant providing real-time system monitoring, intelligent insights, automated alerts, and natural language querying across the entire Pixel Ecosystem. Features predictive analytics and anomaly detection.',
+                stats: [
+                    { label: 'Chat Sessions', value: '0' },
+                    { label: 'Queries Today', value: '0' },
+                    { label: 'Accuracy', value: 'N/A' }
+                ],
+                info: {
+                    'Version': 'v1.2.0',
+                    'Model': 'Not Loaded',
+                    'Last Updated': 'N/A',
+                    'Response Time': 'N/A',
+                    'Languages': '0',
+                    'Knowledge Base': 'Not Loaded'
+                },
+                serverPath: '../PixelOne/pi-app',
+                startCommand: 'cd ../PixelOne/pi-app && npm start',
+                port: 3005
+            }
+        };
+
+        let currentApp = null;
+        let serverRunning = {};
+
+        // Update card status on page load
+        function updateCardStatus(app, isRunning) {
+            const statusElement = document.getElementById(`status-${app}`);
+            if (statusElement) {
+                if (isRunning) {
+                    statusElement.className = 'app-status';
+                    statusElement.textContent = '● Online';
+                } else {
+                    statusElement.className = 'app-status offline';
+                    statusElement.textContent = '● Offline';
+                }
+            }
+        }
+
+        function addConsoleLog(message, type = 'info') {
+            const console = document.getElementById('serverConsole');
+            const line = document.createElement('div');
+            line.className = `console-line ${type}`;
+            line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            console.appendChild(line);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function updateServerStatus(app, isRunning) {
+            serverRunning[app] = isRunning;
+            
+            // Update card status
+            updateCardStatus(app, isRunning);
+            
+            if (currentApp === app) {
+                const statusIndicator = document.getElementById('serverStatus');
+                const statusText = document.getElementById('serverStatusText');
+                const controlBtn = document.getElementById('serverControlBtn');
+                const controlText = document.getElementById('serverControlText');
+                
+                if (isRunning) {
+                    statusIndicator.className = 'server-status-indicator running';
+                    statusText.textContent = `Server Status: Running on port ${systemOverlayData[app].port}`;
+                    controlBtn.className = 'overlay-btn overlay-btn-stop';
+                    controlText.textContent = 'Stop Server';
+                    controlBtn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="6" y="6" width="12" height="12"></rect>
+                        </svg>
+                        <span>Stop Server</span>
+                    `;
+                    
+                    // Update overlay status to Online
+                    document.getElementById('overlayStatus').textContent = 'Online & Operational';
+                } else {
+                    statusIndicator.className = 'server-status-indicator stopped';
+                    statusText.textContent = 'Server Status: Stopped';
+                    controlBtn.className = 'overlay-btn overlay-btn-start';
+                    controlText.textContent = 'Start Server';
+                    controlBtn.innerHTML = `
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        <span>Start Server</span>
+                    `;
+                    
+                    // Update overlay status to Offline
+                    document.getElementById('overlayStatus').textContent = 'Offline - Not Running';
+                }
+            }
+        }
+
+        async function startServer(app) {
+            const data = systemOverlayData[app];
+            const consoleEl = document.getElementById('serverConsole');
+            consoleEl.classList.add('active');
+            
+            addConsoleLog(`Starting ${data.title}...`, 'info');
+            addConsoleLog(`Command: ${data.startCommand}`, 'info');
+            addConsoleLog(`Port: ${data.port}`, 'info');
+            
+            try {
+                const response = await fetch('http://localhost:4000/api/start-server', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ system: app.toUpperCase() })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    addConsoleLog(`Server started successfully on http://localhost:${data.port}`, 'success');
+                    addConsoleLog(`PID: ${result.pid}`, 'info');
+                    addConsoleLog('Ready to accept connections', 'success');
+                    updateServerStatus(app, true);
+                    updateStatsAfterStart(app);
+                } else {
+                    addConsoleLog(`Error: ${result.error}`, 'error');
+                    addConsoleLog('Server failed to start', 'error');
+                }
+            } catch (error) {
+                addConsoleLog('Backend API not available', 'error');
+                addConsoleLog('Make sure the API server is running on port 4000', 'warning');
+                addConsoleLog('Run: cd "CTO System/backend" && npm install && npm start', 'info');
+            }
+        }
+
+        async function stopServer(app) {
+            const data = systemOverlayData[app];
+            
+            addConsoleLog(`Stopping ${data.title}...`, 'warning');
+            
+            try {
+                const response = await fetch('http://localhost:4000/api/stop-server', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ system: app.toUpperCase() })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    addConsoleLog('Gracefully shutting down connections...', 'warning');
+                    addConsoleLog('Server stopped successfully', 'success');
+                    updateServerStatus(app, false);
+                    resetStatsAfterStop(app);
+                } else {
+                    addConsoleLog(`Error: ${result.error}`, 'error');
+                }
+            } catch (error) {
+                addConsoleLog('Backend API not available', 'error');
+                addConsoleLog('Cannot stop server - API connection failed', 'error');
+            }
+        }
+
+        function updateStatsAfterStart(app) {
+            const data = systemOverlayData[app];
+            
+            // Simulate fetching real data from backend
+            if (app === 'wms') {
+                data.stats = [
+                    { label: 'Active Orders', value: '3,287' },
+                    { label: 'Products', value: '24,931' },
+                    { label: 'Warehouses', value: '12' }
+                ];
+                data.info = {
+                    'Version': 'v2.4.1',
+                    'Uptime': '0m',
+                    'Last Updated': 'Just now',
+                    'Database': 'Primary MongoDB',
+                    'Response Time': '143ms',
+                    'Active Users': '1'
+                };
+            } else if (app === 'tms') {
+                data.stats = [
+                    { label: 'Active Shipments', value: '1,905' },
+                    { label: 'Vehicles', value: '342' },
+                    { label: 'Drivers', value: '528' }
+                ];
+                data.info = {
+                    'Version': 'v3.1.0',
+                    'Uptime': '0m',
+                    'Last Updated': 'Just now',
+                    'GPS Provider': 'NavIC + GPS',
+                    'Avg Delivery Time': '2.4 days',
+                    'On-Time Rate': '94.7%'
+                };
+            } else if (app === 'ems') {
+                data.stats = [
+                    { label: 'Products Listed', value: '24,931' },
+                    { label: 'Platforms', value: '3' },
+                    { label: 'Daily Orders', value: '847' }
+                ];
+                data.info = {
+                    'Version': 'v1.8.2',
+                    'Uptime': '0m',
+                    'Last Sync': 'Just now',
+                    'Amazon': 'Connected',
+                    'Flipkart': 'Connected',
+                    'Meesho': 'Connected'
+                };
+            } else if (app === 'cpx') {
+                data.stats = [
+                    { label: 'Daily Visitors', value: '8,434' },
+                    { label: 'Conversion Rate', value: '3.2%' },
+                    { label: 'Avg Session', value: '4m 32s' }
+                ];
+                data.info = {
+                    'Version': 'v4.0.1',
+                    'Uptime': '0m',
+                    'Last Deploy': 'Just now',
+                    'Page Speed': '92/100',
+                    'CDN': 'Active',
+                    'SSL': 'Valid'
+                };
+            } else if (app === 'pi') {
+                data.stats = [
+                    { label: 'Chat Sessions', value: '1' },
+                    { label: 'Queries Today', value: '0' },
+                    { label: 'Accuracy', value: '100%' }
+                ];
+                data.info = {
+                    'Version': 'v1.2.0',
+                    'Model': 'GPT-4 Enhanced',
+                    'Last Updated': 'Just now',
+                    'Response Time': '<200ms',
+                    'Languages': '12',
+                    'Knowledge Base': '15,000+ docs'
+                };
+            }
+            
+            // Refresh overlay if currently viewing this app
+            if (currentApp === app) {
+                refreshOverlayData(app);
+            }
+        }
+
+        function resetStatsAfterStop(app) {
+            const data = systemOverlayData[app];
+            
+            // Reset to zero/NA values
+            if (app === 'wms') {
+                data.stats = [
+                    { label: 'Active Orders', value: '0' },
+                    { label: 'Products', value: 'N/A' },
+                    { label: 'Warehouses', value: '0' }
+                ];
+                data.info = {
+                    'Version': 'v2.4.1',
+                    'Uptime': '0%',
+                    'Last Updated': 'N/A',
+                    'Database': 'Not Connected',
+                    'Response Time': 'N/A',
+                    'Active Users': '0'
+                };
+            } else if (app === 'tms') {
+                data.stats = [
+                    { label: 'Active Shipments', value: '0' },
+                    { label: 'Vehicles', value: '0' },
+                    { label: 'Drivers', value: '0' }
+                ];
+                data.info = {
+                    'Version': 'v3.1.0',
+                    'Uptime': '0%',
+                    'Last Updated': 'N/A',
+                    'GPS Provider': 'Not Connected',
+                    'Avg Delivery Time': 'N/A',
+                    'On-Time Rate': '0%'
+                };
+            } else if (app === 'ems') {
+                data.stats = [
+                    { label: 'Products Listed', value: '0' },
+                    { label: 'Platforms', value: '0' },
+                    { label: 'Daily Orders', value: '0' }
+                ];
+                data.info = {
+                    'Version': 'v1.8.2',
+                    'Uptime': '0%',
+                    'Last Sync': 'N/A',
+                    'Amazon': 'Disconnected',
+                    'Flipkart': 'Disconnected',
+                    'Meesho': 'Disconnected'
+                };
+            } else if (app === 'cpx') {
+                data.stats = [
+                    { label: 'Daily Visitors', value: '0' },
+                    { label: 'Conversion Rate', value: '0%' },
+                    { label: 'Avg Session', value: 'N/A' }
+                ];
+                data.info = {
+                    'Version': 'v4.0.1',
+                    'Uptime': '0%',
+                    'Last Deploy': 'N/A',
+                    'Page Speed': 'N/A',
+                    'CDN': 'Inactive',
+                    'SSL': 'Not Configured'
+                };
+            } else if (app === 'pi') {
+                data.stats = [
+                    { label: 'Chat Sessions', value: '0' },
+                    { label: 'Queries Today', value: '0' },
+                    { label: 'Accuracy', value: 'N/A' }
+                ];
+                data.info = {
+                    'Version': 'v1.2.0',
+                    'Model': 'Not Loaded',
+                    'Last Updated': 'N/A',
+                    'Response Time': 'N/A',
+                    'Languages': '0',
+                    'Knowledge Base': 'Not Loaded'
+                };
+            }
+            
+            // Refresh overlay if currently viewing this app
+            if (currentApp === app) {
+                refreshOverlayData(app);
+            }
+        }
+
+        function refreshOverlayData(app) {
+            const data = systemOverlayData[app];
+            
+            // Update stats
+            const statsContainer = document.getElementById('overlayStats');
+            statsContainer.innerHTML = data.stats.map(stat => `
+                <div class="overlay-stat-card">
+                    <div class="overlay-stat-value">${stat.value}</div>
+                    <div class="overlay-stat-label">${stat.label}</div>
+                </div>
+            `).join('');
+            
+            // Update info
+            const infoContainer = document.getElementById('overlayInfo');
+            infoContainer.innerHTML = Object.entries(data.info).map(([key, value]) => `
+                <div class="overlay-info-item">
+                    <div class="overlay-info-key">${key}</div>
+                    <div class="overlay-info-value">${value}</div>
+                </div>
+            `).join('');
+        }
+
+        function showSystemOverlay(appKey) {
+            const data = systemOverlayData[appKey];
+            if (!data) return;
+
+            currentApp = appKey;
+            const overlay = document.getElementById('systemOverlay');
+            
+            // Set title and subtitle
+            document.getElementById('overlayTitle').textContent = data.title;
+            document.getElementById('overlaySubtitle').textContent = data.subtitle;
+            
+            // Set status based on server running state
+            const isRunning = serverRunning[appKey] || false;
+            document.getElementById('overlayStatus').textContent = isRunning ? 'Online & Operational' : 'Offline - Not Running';
+            
+            // Set icon
+            document.getElementById('overlayIcon').innerHTML = data.icon;
+            
+            // Set description
+            document.getElementById('overlayDescription').textContent = data.description;
+            
+            // Set stats
+            const statsContainer = document.getElementById('overlayStats');
+            statsContainer.innerHTML = data.stats.map(stat => `
+                <div class="overlay-stat-card">
+                    <div class="overlay-stat-value">${stat.value}</div>
+                    <div class="overlay-stat-label">${stat.label}</div>
+                </div>
+            `).join('');
+            
+            // Set info
+            const infoContainer = document.getElementById('overlayInfo');
+            infoContainer.innerHTML = Object.entries(data.info).map(([key, value]) => `
+                <div class="overlay-info-item">
+                    <div class="overlay-info-key">${key}</div>
+                    <div class="overlay-info-value">${value}</div>
+                </div>
+            `).join('');
+            
+            // Reset server status
+            updateServerStatus(appKey, serverRunning[appKey] || false);
+            
+            // Clear console
+            const consoleEl = document.getElementById('serverConsole');
+            consoleEl.innerHTML = '<div class="console-line info">Server Console Output:</div>';
+            consoleEl.classList.remove('active');
+            
+            // Set server control button
+            const controlBtn = document.getElementById('serverControlBtn');
+            controlBtn.onclick = () => {
+                if (serverRunning[appKey]) {
+                    stopServer(appKey);
+                } else {
+                    startServer(appKey);
+                }
+            };
+            
+            // Set open button
+            const openBtn = document.getElementById('overlayOpenBtn');
+            openBtn.onclick = () => {
+                const path = systemPaths[appKey];
+                if (path) {
+                    window.location.href = path;
+                }
+            };
+            
+            // Show overlay
+            overlay.classList.add('active');
+        }
+
+        // Initialize all servers as offline on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            ['wms', 'tms', 'ems', 'cpx', 'pi'].forEach(app => {
+                updateCardStatus(app, false);
+            });
+        });
+
+        function closeOverlay() {
+            document.getElementById('systemOverlay').classList.remove('active');
+        }
+
+        // Close overlay on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeOverlay();
+            }
+        });
+
+        // Close overlay on background click
+        document.getElementById('systemOverlay').addEventListener('click', (e) => {
+            if (e.target.id === 'systemOverlay') {
+                closeOverlay();
+            }
+        });
+
+        // Enhanced knowledge base with navigation info
+        Object.assign(knowledgeBase, {
+            'navigate': 'You can click on any application card to see detailed information. Click "Open System" in the overlay to launch that system.',
+            'systems': 'The Pixel Ecosystem includes 5 core systems: WMS (Warehouse Management), TMS (Transportation), EMS (E-commerce), CPX Website (Customer Portal), and Pi AI (Assistant).',
+            'click': 'Click on any application card to view detailed stats, system information, and performance metrics before opening.',
+            'open': 'To open a system, click its card to see details, then click the "Open System" button in the overlay.',
+            'details': 'Click any system card to see comprehensive details including active stats, version info, uptime, and real-time metrics.',
+            'overlay': 'The detail overlay shows you complete system information before navigation, including current status, performance metrics, and key statistics.'
+        });
+
+        // Update Live Stats
+        function updateLiveStats() {
+            // Already implemented in previous code
+        }
+
+        setInterval(updateLiveStats, 2000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+{
+  "id": "packaging",
+  "name": "Packaging Quality Audit",
+  "category": "Logistics - Warehouse",
+  "description": "Quality inspection for packaging materials, processes, and standards compliance",
+  "version": "1.0",
+  "items": [
+    {
+      "id": "pk-01",
+      "question": "Are packaging materials stored in clean, dry conditions?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "pk-02",
+      "question": "Are cartons and boxes free from damage or contamination?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "pk-03",
+      "question": "Is packaging material inventory tracked and rotated?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-04",
+      "question": "Are eco-friendly or recyclable materials used where possible?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-05",
+      "question": "Are packaging material specifications documented?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-06",
+      "question": "Are packaging stations organized and ergonomic?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "pk-07",
+      "question": "Are packing supplies easily accessible at workstations?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-08",
+      "question": "Is packing area clean and free from clutter?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "pk-09",
+      "question": "Are tape dispensers and tools in good working condition?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-10",
+      "question": "Is adequate workspace available for packing operations?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-11",
+      "question": "Are products verified against pick lists before packing?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-12",
+      "question": "Are correct box sizes selected for products?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-13",
+      "question": "Is void fill material used to prevent movement?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "pk-14",
+      "question": "Are fragile items wrapped individually with bubble wrap?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "pk-15",
+      "question": "Are heavy items placed at bottom of packages?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-16",
+      "question": "Are packages sealed securely with proper tape?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "pk-17",
+      "question": "Are sharp edges and corners protected?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-18",
+      "question": "Is packing peanuts or air pillows used appropriately?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-19",
+      "question": "Are packing slips/invoices included in packages?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-20",
+      "question": "Are special handling stickers applied (Fragile, This Side Up)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "pk-21",
+      "question": "Are shipping labels printed clearly and accurately?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "pk-22",
+      "question": "Are barcodes scannable and not obscured?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-23",
+      "question": "Are labels applied to correct package surfaces?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-24",
+      "question": "Are packages weighed and dimensions verified?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-25",
+      "question": "Are random quality checks performed on packed orders?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-26",
+      "question": "Is packaging damage rate tracked and below threshold?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-27",
+      "question": "Are customer complaints about packaging reviewed?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-28",
+      "question": "Are packaging standards documented and accessible?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-29",
+      "question": "Are packers trained on proper techniques?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-30",
+      "question": "Is packaging efficiency monitored (time per package)?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-31",
+      "question": "Are cost-saving packaging improvements identified?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "pk-32",
+      "question": "Overall packaging quality and standards satisfactory?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    }
+  ]
+}

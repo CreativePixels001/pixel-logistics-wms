@@ -1,5 +1,5 @@
 /**
- * DLT WMS Charts Library - Modern Professional Edition
+ * Pixel WMS Charts Library - Modern Professional Edition
  * Enhanced data visualization with creative professional design
  */
 

@@ -1,4 +1,4 @@
-// DLT WMS - Lot Traceability Module JavaScript
+// Pixel WMS - Lot Traceability Module JavaScript
 // Handles lot lookup, genealogy, expiry tracking, and lot hold/release
 
 let currentLot = null;

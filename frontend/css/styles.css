@@ -1,5 +1,5 @@
 /* ================================================
-   DLT WMS - Professional Design System
+   Pixel WMS - Professional Design System
    Color Scheme: Black & White Only
    ================================================ */
 
@@ -1931,5 +1931,405 @@ body.dark-theme .quick-action-subtitle {
   .activity-icon svg {
     width: 14px;
     height: 14px;
+  }
+}
+
+/* ================================================
+   Receipt Sidebar Modal - Black & White Theme
+   ================================================ */
+
+/* Overlay */
+.receipt-sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 9998;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.receipt-sidebar-overlay[style*="display: flex"],
+.receipt-sidebar-overlay[style*="display: block"] {
+  opacity: 1;
+}
+
+/* Sidebar Panel */
+.receipt-sidebar {
+  position: fixed;
+  top: 0;
+  right: -600px;
+  width: 600px;
+  max-width: 90vw;
+  height: 100vh;
+  background: #ffffff;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body.dark-theme .receipt-sidebar {
+  background: #1a1a1a;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.6);
+}
+
+.receipt-sidebar[style*="display: flex"],
+.receipt-sidebar[style*="display: block"] {
+  right: 0;
+}
+
+/* Header */
+.receipt-sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24px 28px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background: linear-gradient(180deg, #ffffff 0%, #f9f9f9 100%);
+}
+
+body.dark-theme .receipt-sidebar-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, #1f1f1f 0%, #1a1a1a 100%);
+}
+
+.receipt-sidebar-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #000000;
+  margin-bottom: 4px;
+}
+
+body.dark-theme .receipt-sidebar-title {
+  color: #ffffff;
+}
+
+.receipt-sidebar-subtitle {
+  font-size: 13px;
+  color: #666666;
+  font-weight: 400;
+}
+
+body.dark-theme .receipt-sidebar-subtitle {
+  color: #aaaaaa;
+}
+
+.receipt-sidebar-close {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.05);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #333333;
+}
+
+.receipt-sidebar-close:hover {
+  background: rgba(0, 0, 0, 0.1);
+  transform: scale(1.05);
+}
+
+body.dark-theme .receipt-sidebar-close {
+  background: rgba(255, 255, 255, 0.05);
+  color: #cccccc;
+}
+
+body.dark-theme .receipt-sidebar-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* Body */
+.receipt-sidebar-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+  background: #fafafa;
+}
+
+body.dark-theme .receipt-sidebar-body {
+  background: #151515;
+}
+
+.receipt-sidebar-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.receipt-sidebar-body::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.receipt-sidebar-body::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.receipt-sidebar-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .receipt-sidebar-body::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+body.dark-theme .receipt-sidebar-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+body.dark-theme .receipt-sidebar-body::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Sections */
+.receipt-section {
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+body.dark-theme .receipt-section {
+  background: #1f1f1f;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.receipt-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #000000;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+body.dark-theme .receipt-section-header {
+  color: #ffffff;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.05);
+}
+
+.receipt-section-header svg {
+  color: #666666;
+}
+
+body.dark-theme .receipt-section-header svg {
+  color: #aaaaaa;
+}
+
+/* Add Line Button */
+.btn-add-line {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: #000000;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-add-line:hover {
+  background: #1a1a1a;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+body.dark-theme .btn-add-line {
+  background: #ffffff;
+  color: #000000;
+}
+
+body.dark-theme .btn-add-line:hover {
+  background: #e8e8e8;
+}
+
+/* Receipt Lines Summary */
+.receipt-lines-summary {
+  display: flex;
+  gap: 20px;
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+body.dark-theme .receipt-lines-summary {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.line-summary-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.line-summary-label {
+  font-size: 13px;
+  color: #666666;
+  font-weight: 500;
+}
+
+body.dark-theme .line-summary-label {
+  color: #aaaaaa;
+}
+
+.line-summary-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #000000;
+}
+
+body.dark-theme .line-summary-value {
+  color: #ffffff;
+}
+
+/* Receipt Lines Table */
+.receipt-lines-table {
+  background: #fafafa;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+body.dark-theme .receipt-lines-table {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.receipt-lines-table select,
+.receipt-lines-table input {
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 13px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  background: #ffffff;
+  color: #000000;
+  transition: all 0.2s ease;
+}
+
+body.dark-theme .receipt-lines-table select,
+body.dark-theme .receipt-lines-table input {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #252525;
+  color: #ffffff;
+}
+
+.receipt-lines-table select:focus,
+.receipt-lines-table input:focus {
+  outline: none;
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+body.dark-theme .receipt-lines-table select:focus,
+body.dark-theme .receipt-lines-table input:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+}
+
+/* Footer */
+.receipt-sidebar-footer {
+  display: flex;
+  gap: 12px;
+  padding: 20px 28px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+}
+
+body.dark-theme .receipt-sidebar-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  background: #1a1a1a;
+}
+
+/* Form Elements Override for Sidebar */
+.receipt-sidebar .form-group {
+  margin-bottom: 18px;
+}
+
+.receipt-sidebar .form-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333333;
+  margin-bottom: 8px;
+}
+
+body.dark-theme .receipt-sidebar .form-label {
+  color: #cccccc;
+}
+
+.receipt-sidebar .form-input,
+.receipt-sidebar .form-select,
+.receipt-sidebar .form-textarea {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  background: #ffffff;
+  color: #000000;
+  transition: all 0.2s ease;
+}
+
+body.dark-theme .receipt-sidebar .form-input,
+body.dark-theme .receipt-sidebar .form-select,
+body.dark-theme .receipt-sidebar .form-textarea {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #252525;
+  color: #ffffff;
+}
+
+.receipt-sidebar .form-input:focus,
+.receipt-sidebar .form-select:focus,
+.receipt-sidebar .form-textarea:focus {
+  outline: none;
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+body.dark-theme .receipt-sidebar .form-input:focus,
+body.dark-theme .receipt-sidebar .form-select:focus,
+body.dark-theme .receipt-sidebar .form-textarea:focus {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+}
+
+.receipt-sidebar .form-help {
+  display: block;
+  font-size: 12px;
+  color: #888888;
+  margin-top: 6px;
+}
+
+body.dark-theme .receipt-sidebar .form-help {
+  color: #999999;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .receipt-sidebar {
+    width: 100%;
+    max-width: 100%;
   }
 }

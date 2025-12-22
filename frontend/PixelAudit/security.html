@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security - PixelAudit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/landing.css">
+</head>
+<body>
+    <div class="container" style="padding: 80px 24px;">
+        <a href="index.html" class="btn btn-secondary" style="margin-bottom: 32px; display: inline-flex;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Home
+        </a>
+
+        <div style="max-width: 800px; margin: 0 auto;">
+            <h1 style="font-size: 3rem; margin-bottom: 24px; text-align: center;">Security at PixelAudit</h1>
+            <p class="text-muted" style="font-size: 1.25rem; margin-bottom: 64px; text-align: center;">
+                Your data security is our top priority
+            </p>
+
+            <div class="glass-card" style="padding: 48px; margin-bottom: 32px; text-align: center;">
+                <div style="width: 80px; height: 80px; background: var(--color-white); color: var(--color-black); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; box-shadow: var(--shadow-neon-white);">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                </div>
+                <h2 style="margin-bottom: 16px;">Enterprise-Grade Security</h2>
+                <p style="font-size: 1.125rem; line-height: 1.8; color: var(--color-text-secondary);">
+                    PixelAudit implements industry-standard security practices to protect your audit data, 
+                    client information, and sensitive photos. We take security seriously, even at our low price point.
+                </p>
+            </div>
+
+            <h2 style="margin-bottom: 32px;">Security Measures</h2>
+
+            <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+                <div style="display: flex; gap: 16px;">
+                    <div style="width: 48px; height: 48px; background: var(--color-white); color: var(--color-black); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 12px;">Data Encryption</h3>
+                        <p class="text-muted" style="line-height: 1.8;">
+                            All data is encrypted in transit using HTTPS/TLS 1.3 and at rest using AES-256 encryption. 
+                            Your audit data, photos, and client information are always encrypted.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+                <div style="display: flex; gap: 16px;">
+                    <div style="width: 48px; height: 48px; background: var(--color-white); color: var(--color-black); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 12px;">Secure Cloud Storage</h3>
+                        <p class="text-muted" style="line-height: 1.8;">
+                            Photos are stored on AWS S3 with strict access controls and automatic backups. 
+                            Database is hosted on MongoDB Atlas with 24/7 monitoring and redundancy.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+                <div style="display: flex; gap: 16px;">
+                    <div style="width: 48px; height: 48px; background: var(--color-white); color: var(--color-black); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="8.5" cy="7" r="4"></circle>
+                            <polyline points="17 11 19 13 23 9"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 12px;">OAuth 2.0 Authentication</h3>
+                        <p class="text-muted" style="line-height: 1.8;">
+                            We use Google OAuth for secure authentication. We never store your Google password. 
+                            JWT tokens are used for session management with automatic expiration.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+                <div style="display: flex; gap: 16px;">
+                    <div style="width: 48px; height: 48px; background: var(--color-white); color: var(--color-black); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 12px;">Access Controls</h3>
+                        <p class="text-muted" style="line-height: 1.8;">
+                            Role-based access ensures field auditors can only access assigned audits via unique links. 
+                            Admin users have full control. No one can see data from other accounts.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+                <div style="display: flex; gap: 16px;">
+                    <div style="width: 48px; height: 48px; background: var(--color-white); color: var(--color-black); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 12px;">24/7 Monitoring</h3>
+                        <p class="text-muted" style="line-height: 1.8;">
+                            Our infrastructure is monitored 24/7 for suspicious activity. Automated alerts notify us 
+                            of any potential security issues within seconds.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+                <div style="display: flex; gap: 16px;">
+                    <div style="width: 48px; height: 48px; background: var(--color-white); color: var(--color-black); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 12px;">Regular Backups</h3>
+                        <p class="text-muted" style="line-height: 1.8;">
+                            Automatic daily backups with 30-day retention. In case of data loss, we can restore 
+                            from any backup point within the last month.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 48px; margin-bottom: 32px;">
+                <h2 style="margin-bottom: 24px;">Compliance & Certifications</h2>
+                <p style="line-height: 1.8; color: var(--color-text-secondary); margin-bottom: 16px;">
+                    We are working towards the following certifications:
+                </p>
+                <ul style="color: var(--color-text-secondary); line-height: 1.8;">
+                    <li><strong>GDPR Compliance:</strong> European data protection standards</li>
+                    <li><strong>ISO 27001:</strong> Information security management (planned for 2026)</li>
+                    <li><strong>SOC 2 Type II:</strong> Security controls audit (planned for 2026)</li>
+                </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 48px; margin-bottom: 32px;">
+                <h2 style="margin-bottom: 24px;">Responsible Disclosure</h2>
+                <p style="line-height: 1.8; color: var(--color-text-secondary);">
+                    If you discover a security vulnerability, please report it to <strong>security@pixelaudit.com</strong>. 
+                    We take all reports seriously and will respond within 24 hours. We do not currently offer a bug 
+                    bounty program but appreciate responsible disclosure.
+                </p>
+            </div>
+
+            <div class="glass-card" style="padding: 48px; text-align: center;">
+                <h2 style="margin-bottom: 16px;">Questions About Security?</h2>
+                <p style="color: var(--color-text-secondary); margin-bottom: 32px;">
+                    Our security team is here to answer any questions.
+                </p>
+                <a href="mailto:security@pixelaudit.com" class="btn btn-primary btn-lg">
+                    Contact Security Team
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-// DLT WMS - ASN Receipt Module JavaScript
+// Pixel WMS - ASN Receipt Module JavaScript
 // Handles ASN receipt processing
 
 let currentASNMode = null;

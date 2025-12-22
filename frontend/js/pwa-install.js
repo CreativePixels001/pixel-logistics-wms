@@ -256,7 +256,7 @@ class PWAInstaller {
         </svg>
         <div>
           <strong>Update Available</strong>
-          <p>A new version of DLT WMS is ready.</p>
+          <p>A new version of Pixel WMS is ready.</p>
         </div>
       </div>
       <button onclick="location.reload()" class="pwa-update-button">Update Now</button>

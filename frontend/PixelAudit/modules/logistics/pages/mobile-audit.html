@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Audit - PixelAudit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f5f5;
+            color: #000000;
+            padding-bottom: 80px;
+        }
+
+        .mobile-header {
+            background: #000000;
+            color: #ffffff;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-subtitle {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .progress-bar {
+            background: #e5e5e5;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.75rem;
+        }
+
+        .progress-fill {
+            background: #10B981;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.75rem;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+
+        .audit-content {
+            padding: 1rem;
+        }
+
+        .info-card {
+            background: #ffffff;
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .info-row:last-child { border-bottom: none; }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: #666666;
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-size: 0.875rem;
+            color: #000000;
+            font-weight: 500;
+        }
+
+        .audit-item {
+            background: #ffffff;
+            border-radius: 4px;
+            padding: 1.5rem 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .item-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .item-number {
+            background: #000000;
+            color: #ffffff;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .item-question {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #000000;
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .item-critical {
+            background: #EF4444;
+            color: #ffffff;
+            font-size: 0.625rem;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 2px;
+            text-transform: uppercase;
+        }
+
+        .response-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .response-btn {
+            padding: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: 2px solid #e5e5e5;
+            border-radius: 3px;
+            background: #ffffff;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .response-btn.yes {
+            border-color: #10B981;
+            background: #ffffff;
+            color: #10B981;
+        }
+
+        .response-btn.yes.active {
+            background: #10B981;
+            color: #ffffff;
+        }
+
+        .response-btn.no {
+            border-color: #EF4444;
+            background: #ffffff;
+            color: #EF4444;
+        }
+
+        .response-btn.no.active {
+            background: #EF4444;
+            color: #ffffff;
+        }
+
+        .response-btn.na {
+            border-color: #999999;
+            background: #ffffff;
+            color: #999999;
+        }
+
+        .response-btn.na.active {
+            background: #999999;
+            color: #ffffff;
+        }
+
+        .notes-input {
+            width: 100%;
+            padding: 0.75rem;
+            font-size: 0.875rem;
+            border: 1px solid #e5e5e5;
+            border-radius: 3px;
+            font-family: inherit;
+            min-height: 80px;
+            margin-top: 0.5rem;
+        }
+
+        .photo-upload {
+            margin-top: 0.5rem;
+        }
+
+        .photo-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 3px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .photo-preview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            padding: 1rem;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .save-btn, .submit-btn {
+            flex: 1;
+            padding: 1rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            border-radius: 3px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .save-btn {
+            background: #f5f5f5;
+            color: #000000;
+        }
+
+        .submit-btn {
+            background: #10B981;
+            color: #ffffff;
+        }
+
+        .submit-btn:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-header">
+        <div class="header-title" id="headerTitle">Loading Audit...</div>
+        <div class="header-subtitle" id="headerSubtitle"></div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        <div class="progress-text" id="progressText">0 of 0 completed</div>
+    </div>
+
+    <div class="audit-content">
+        <div class="info-card" id="auditInfo" style="display: none;">
+            <div class="info-row">
+                <span class="info-label">CLIENT</span>
+                <span class="info-value" id="clientName"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">LOCATION</span>
+                <span class="info-value" id="location"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">DUE DATE</span>
+                <span class="info-value" id="dueDate"></span>
+            </div>
+        </div>
+
+        <div id="auditItems"></div>
+    </div>
+
+    <div class="bottom-bar">
+        <button class="save-btn" onclick="MobileAudit.saveProgress()">💾 Save Progress</button>
+        <button class="submit-btn" id="submitBtn" onclick="MobileAudit.submitAudit()" disabled>✅ Submit Audit</button>
+    </div>
+
+    <script src="../js/templates.js"></script>
+    <script>
+        const MobileAudit = {
+            auditId: null,
+            audit: null,
+            template: null,
+            responses: {},
+            
+            async init() {
+                const params = new URLSearchParams(window.location.search);
+                this.auditId = params.get('id');
+                
+                if (!this.auditId) {
+                    alert('Invalid audit link');
+                    return;
+                }
+                
+                await this.loadAudit();
+                await this.loadTemplate();
+                this.loadSavedResponses();
+                this.renderAudit();
+                this.setupAutoSave();
+            },
+            
+            async loadAudit() {
+                const audits = JSON.parse(localStorage.getItem('pixelaudit_logistics_audits') || '[]');
+                this.audit = audits.find(a => a.id === this.auditId);
+                
+                if (!this.audit) {
+                    alert('Audit not found');
+                    return;
+                }
+                
+                document.getElementById('clientName').textContent = this.audit.clientName;
+                document.getElementById('location').textContent = this.audit.location;
+                document.getElementById('dueDate').textContent = new Date(this.audit.dueDate).toLocaleDateString();
+                document.getElementById('auditInfo').style.display = 'block';
+            },
+            
+            async loadTemplate() {
+                this.template = await LogisticsTemplates.getTemplateById(this.audit.templateId);
+                
+                if (!this.template) {
+                    alert('Template not found');
+                    return;
+                }
+                
+                document.getElementById('headerTitle').textContent = this.template.name;
+                document.getElementById('headerSubtitle').textContent = `${this.audit.clientName} • ${this.audit.location}`;
+            },
+            
+            loadSavedResponses() {
+                const saved = localStorage.getItem(`audit_responses_${this.auditId}`);
+                if (saved) {
+                    this.responses = JSON.parse(saved);
+                }
+            },
+            
+            renderAudit() {
+                const container = document.getElementById('auditItems');
+                
+                this.template.items.forEach((item, index) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'audit-item';
+                    itemDiv.id = `item-${item.id}`;
+                    
+                    const savedResponse = this.responses[item.id] || {};
+                    
+                    itemDiv.innerHTML = `
+                        <div class="item-header">
+                            <div class="item-number">${index + 1}</div>
+                            <div class="item-question">${item.question}</div>
+                            ${item.critical ? '<div class="item-critical">Critical</div>' : ''}
+                        </div>
+                        
+                        <div class="response-buttons">
+                            <button class="response-btn yes ${savedResponse.answer === 'yes' ? 'active' : ''}" 
+                                onclick="MobileAudit.setAnswer('${item.id}', 'yes')">✓ Yes</button>
+                            <button class="response-btn no ${savedResponse.answer === 'no' ? 'active' : ''}" 
+                                onclick="MobileAudit.setAnswer('${item.id}', 'no')">✗ No</button>
+                            <button class="response-btn na ${savedResponse.answer === 'na' ? 'active' : ''}" 
+                                onclick="MobileAudit.setAnswer('${item.id}', 'na')">N/A</button>
+                        </div>
+                        
+                        ${item.notes ? `
+                            <textarea class="notes-input" placeholder="Add notes..." 
+                                onchange="MobileAudit.setNotes('${item.id}', this.value)">${savedResponse.notes || ''}</textarea>
+                        ` : ''}
+                        
+                        ${item.photo_required ? `
+                            <div class="photo-upload">
+                                <button class="photo-btn" onclick="MobileAudit.addPhoto('${item.id}')">📷 Add Photo</button>
+                                <div class="photo-preview" id="photos-${item.id}"></div>
+                            </div>
+                        ` : ''}
+                    `;
+                    
+                    container.appendChild(itemDiv);
+                });
+                
+                this.updateProgress();
+            },
+            
+            setAnswer(itemId, answer) {
+                if (!this.responses[itemId]) {
+                    this.responses[itemId] = {};
+                }
+                this.responses[itemId].answer = answer;
+                
+                // Update UI
+                const item = document.getElementById(`item-${itemId}`);
+                item.querySelectorAll('.response-btn').forEach(btn => btn.classList.remove('active'));
+                item.querySelector(`.response-btn.${answer}`).classList.add('active');
+                
+                this.updateProgress();
+                this.saveProgress();
+            },
+            
+            setNotes(itemId, notes) {
+                if (!this.responses[itemId]) {
+                    this.responses[itemId] = {};
+                }
+                this.responses[itemId].notes = notes;
+            },
+            
+            addPhoto(itemId) {
+                alert('Photo upload feature: In production, this would open camera/file picker');
+            },
+            
+            updateProgress() {
+                const totalItems = this.template.items.length;
+                const completedItems = Object.keys(this.responses).filter(id => this.responses[id].answer).length;
+                const percentage = (completedItems / totalItems) * 100;
+                
+                document.getElementById('progressFill').style.width = `${percentage}%`;
+                document.getElementById('progressText').textContent = `${completedItems} of ${totalItems} completed`;
+                
+                document.getElementById('submitBtn').disabled = completedItems < totalItems;
+            },
+            
+            saveProgress() {
+                localStorage.setItem(`audit_responses_${this.auditId}`, JSON.stringify(this.responses));
+                console.log('✅ Progress saved');
+            },
+            
+            setupAutoSave() {
+                setInterval(() => this.saveProgress(), 30000); // Auto-save every 30 seconds
+            },
+            
+            submitAudit() {
+                if (confirm('Submit audit? This cannot be undone.')) {
+                    // Update audit status
+                    const audits = JSON.parse(localStorage.getItem('pixelaudit_logistics_audits') || '[]');
+                    const index = audits.findIndex(a => a.id === this.auditId);
+                    
+                    if (index !== -1) {
+                        audits[index].status = 'completed';
+                        audits[index].completedAt = new Date().toISOString();
+                        audits[index].responses = this.responses;
+                        localStorage.setItem('pixelaudit_logistics_audits', JSON.stringify(audits));
+                    }
+                    
+                    alert('✅ Audit submitted successfully!');
+                    window.location.href = 'logistics-dashboard.html';
+                }
+            }
+        };
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => MobileAudit.init());
+    </script>
+</body>
+</html>

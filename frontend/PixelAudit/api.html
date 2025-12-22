@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Reference - PixelAudit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/landing.css">
+</head>
+<body>
+    <div class="container" style="padding: 80px 24px;">
+        <a href="index.html" class="btn btn-secondary" style="margin-bottom: 32px; display: inline-flex;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Back to Home
+        </a>
+
+        <div style="max-width: 900px; margin: 0 auto;">
+            <h1 style="font-size: 3rem; margin-bottom: 24px;">API Reference</h1>
+            <p class="text-muted" style="font-size: 1.25rem; margin-bottom: 48px;">
+                Integrate PixelAudit into your existing systems
+            </p>
+
+            <div class="glass-card" style="padding: 48px; margin-bottom: 32px;">
+                <h2 style="margin-bottom: 16px;">Coming Soon</h2>
+                <p style="font-size: 1.125rem; line-height: 1.8; color: var(--color-text-secondary); margin-bottom: 24px;">
+                    Our REST API is currently in development and will be available with the ₹1,000 Enterprise tier. 
+                    You'll be able to programmatically create audits, assign them, fetch results, and generate reports.
+                </p>
+                <div class="badge badge-info">Available Q1 2026</div>
+            </div>
+
+            <h2 style="margin-bottom: 32px;">Planned Endpoints</h2>
+
+            <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                    <div>
+                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                            <span class="badge badge-success">GET</span>
+                            <code style="font-family: monospace; color: var(--color-white);">/api/v1/audits</code>
+                        </div>
+                        <p class="text-muted">List all audits with filtering and pagination</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                    <div>
+                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                            <span class="badge badge-primary">POST</span>
+                            <code style="font-family: monospace; color: var(--color-white);">/api/v1/audits</code>
+                        </div>
+                        <p class="text-muted">Create and assign a new audit</p>
+                    </div>
+                </div>
+                <div style="background: rgba(0,0,0,0.5); padding: 16px; border-radius: 2px; margin-top: 16px; font-family: monospace; font-size: 0.875rem; overflow-x: auto;">
+<pre style="margin: 0; color: var(--color-text-secondary);">{
+  "clientId": "client_123",
+  "templateId": "template_restaurant",
+  "auditorPhone": "+919876543210",
+  "dueDate": "2026-01-15T18:00:00Z"
+}</pre>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                    <div>
+                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                            <span class="badge badge-success">GET</span>
+                            <code style="font-family: monospace; color: var(--color-white);">/api/v1/audits/:id</code>
+                        </div>
+                        <p class="text-muted">Get audit details including all responses</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                    <div>
+                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                            <span class="badge badge-success">GET</span>
+                            <code style="font-family: monospace; color: var(--color-white);">/api/v1/audits/:id/pdf</code>
+                        </div>
+                        <p class="text-muted">Download PDF report for completed audit</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                    <div>
+                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                            <span class="badge badge-primary">POST</span>
+                            <code style="font-family: monospace; color: var(--color-white);">/api/v1/clients</code>
+                        </div>
+                        <p class="text-muted">Create a new client</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 32px; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                    <div>
+                        <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+                            <span class="badge badge-success">GET</span>
+                            <code style="font-family: monospace; color: var(--color-white);">/api/v1/templates</code>
+                        </div>
+                        <p class="text-muted">List all available audit templates</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 48px; margin-bottom: 32px;">
+                <h3 style="margin-bottom: 16px;">Authentication</h3>
+                <p style="line-height: 1.8; color: var(--color-text-secondary); margin-bottom: 16px;">
+                    All API requests require authentication via Bearer token:
+                </p>
+                <div style="background: rgba(0,0,0,0.5); padding: 16px; border-radius: 2px; font-family: monospace; font-size: 0.875rem;">
+<pre style="margin: 0; color: var(--color-text-secondary);">Authorization: Bearer your_api_key_here</pre>
+                </div>
+            </div>
+
+            <div class="glass-card" style="padding: 48px; margin-bottom: 32px;">
+                <h3 style="margin-bottom: 16px;">Rate Limits</h3>
+                <ul style="color: var(--color-text-secondary); line-height: 1.8;">
+                    <li><strong>Free Tier:</strong> Not available</li>
+                    <li><strong>₹1 Tier:</strong> Not available</li>
+                    <li><strong>₹100 Tier:</strong> Not available</li>
+                    <li><strong>₹1,000 Enterprise:</strong> 1,000 requests/hour</li>
+                </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 48px; margin-bottom: 32px;">
+                <h3 style="margin-bottom: 16px;">Webhooks (Planned)</h3>
+                <p style="line-height: 1.8; color: var(--color-text-secondary); margin-bottom: 16px;">
+                    Receive real-time notifications when:
+                </p>
+                <ul style="color: var(--color-text-secondary); line-height: 1.8;">
+                    <li>Audit is completed</li>
+                    <li>Audit is assigned</li>
+                    <li>Photo is uploaded</li>
+                    <li>PDF report is generated</li>
+                </ul>
+            </div>
+
+            <div class="glass-card" style="padding: 48px; text-align: center;">
+                <h2 style="margin-bottom: 16px;">Want Early Access?</h2>
+                <p style="color: var(--color-text-secondary); margin-bottom: 32px;">
+                    Sign up for our API beta program and get notified when it launches.
+                </p>
+                <div style="display: flex; gap: 12px; justify-content: center; max-width: 500px; margin: 0 auto;">
+                    <input type="email" class="form-input" placeholder="your@email.com" style="flex: 1;">
+                    <button class="btn btn-primary">Join Waitlist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

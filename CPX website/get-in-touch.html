@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get in Touch - Transform Your Business | CreativePixels</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --serif: 'Playfair Display', serif;
+            --sans: 'Inter', sans-serif;
+            --border: 2px;
+        }
+
+        html {
+            scroll-snap-type: y proximity;
+            scroll-behavior: smooth;
+            overflow-y: scroll;
+            scroll-padding-top: 0;
+        }
+
+        body {
+            font-family: var(--sans);
+            background: white;
+            color: #1a1a1a;
+            overflow-x: hidden;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Navigation - Same as home.html */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: var(--border) solid black;
+            padding: 1.5rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: black;
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: black;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            opacity: 0.6;
+        }
+
+        .cta-btn {
+            padding: 0.75rem 1.75rem;
+            background: black;
+            color: white !important;
+            border: var(--border) solid black;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            background: white;
+            color: black !important;
+        }
+
+        /* Full Screen Sections with Scroll Snap */
+        section {
+            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 3rem 4rem;
+            scroll-snap-align: center;
+            scroll-snap-stop: normal;
+            position: relative;
+        }
+
+        .section-content {
+            max-width: 1000px;
+            text-align: center;
+            width: 100%;
+        }
+
+        .question-label {
+            font-family: var(--sans);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #999;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .question-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            border: 3px solid currentColor;
+            border-radius: 50%;
+            color: #1a1a1a;
+            transition: all 0.3s ease;
+        }
+
+        .dark-section .question-icon {
+            color: white;
+        }
+
+        .question-title {
+            font-family: var(--serif);
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 2.5rem;
+            color: black;
+            letter-spacing: -0.02em;
+        }
+
+        .question-answer {
+            font-family: var(--sans);
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            line-height: 1.8;
+            color: #444;
+            max-width: 750px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        /* Section Variations */
+        .dark-section {
+            background: black;
+            color: white;
+        }
+
+        .dark-section .question-title {
+            color: white;
+        }
+
+        .dark-section .question-answer {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .dark-section .question-label {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Final CTA Section */
+        .final-section {
+            background: black;
+            color: white;
+        }
+
+        .final-title {
+            font-family: var(--serif);
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .final-subtitle {
+            font-family: var(--sans);
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 4rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .contact-card {
+            background: white;
+            color: black;
+            padding: 3rem 2.5rem;
+            border: var(--border) solid white;
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+            transition: left 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            z-index: 0;
+        }
+
+        .contact-card:hover::before {
+            left: 0;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+        }
+
+        .contact-card:hover .contact-icon,
+        .contact-card:hover .contact-title,
+        .contact-card:hover .contact-text,
+        .contact-card:hover .contact-btn {
+            color: white;
+        }
+
+        .contact-card:hover .contact-btn {
+            border-color: white;
+        }
+
+        .contact-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .contact-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            transition: color 0.4s ease;
+        }
+
+        .contact-title {
+            font-family: var(--serif);
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+            transition: color 0.4s ease;
+        }
+
+        .contact-text {
+            font-family: var(--sans);
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            transition: color 0.4s ease;
+        }
+
+        .contact-btn {
+            display: inline-block;
+            padding: 0.9rem 2rem;
+            border: var(--border) solid black;
+            color: black;
+            text-decoration: none;
+            font-family: var(--sans);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.4s ease;
+        }
+
+        /* Scroll Indicator */
+        .scroll-hint {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: #999;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0;
+            animation: fadeIn 1s ease 2s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .scroll-hint::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border-left: 2px solid currentColor;
+            border-bottom: 2px solid currentColor;
+            transform: rotate(-45deg);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: rotate(-45deg) translateY(0); }
+            40% { transform: rotate(-45deg) translateY(8px); }
+            60% { transform: rotate(-45deg) translateY(4px); }
+        }
+
+        .dark-section .scroll-hint {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            section {
+                padding: 7rem 2rem 3rem;
+            }
+
+            .nav-menu {
+                gap: 1.5rem;
+            }
+
+            .nav-menu a {
+                font-size: 0.85rem;
+            }
+
+            .question-label {
+                font-size: 0.8rem;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .contact-card {
+                padding: 2.5rem 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">CreativePixels</a>
+            <ul class="nav-menu">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="pixelgram.html">PixelGram</a></li>
+                <li><a href="pixel-world.html">Pixel World</a></li>
+                <li><a href="pixelverse.html">PixelVerse</a></li>
+                <li><a href="get-in-touch.html" class="cta-btn">Get in Touch</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Question 1: Who Are We -->
+    <section class="intro-section">
+        <div class="section-content">
+            <div class="question-label">Discovery Phase</div>
+            <div class="question-icon">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <h1 class="question-title">Who are we?</h1>
+            <p class="question-answer">
+                We are CreativePixels—your strategic digital partner specializing in end-to-end product delivery. Our cross-functional team leverages agile methodologies and design thinking to transform stakeholder requirements into scalable, high-performance solutions that drive measurable ROI.
+            </p>
+        </div>
+        <div class="scroll-hint">Scroll</div>
+    </section>
+
+    <!-- Question 2: What Do We Do -->
+    <section class="dark-section">
+        <div class="section-content">
+            <div class="question-label">Scope Definition</div>
+            <div class="question-icon">
+                <i class="fa-solid fa-rocket"></i>
+            </div>
+            <h1 class="question-title">What do we do?</h1>
+            <p class="question-answer">
+                We execute mission-critical digital transformation initiatives—from warehouse management systems optimizing supply chain KPIs, to insurance platforms streamlining operational workflows. Our deliverables focus on sprint-based increments, ensuring continuous value delivery and stakeholder alignment.
+            </p>
+        </div>
+        <div class="scroll-hint">Scroll</div>
+    </section>
+
+    <!-- Question 3: Why Choose Us -->
+    <section>
+        <div class="section-content">
+            <div class="question-label">Value Proposition</div>
+            <div class="question-icon">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <h1 class="question-title">Why choose us?</h1>
+            <p class="question-answer">
+                We deliver quantifiable business outcomes: 35% efficiency gains, 99.9% SLA compliance, 50% faster time-to-market. Our track record demonstrates consistent on-time, on-budget delivery with zero critical defects post-launch. We mitigate project risks while maximizing resource utilization and stakeholder satisfaction.
+            </p>
+        </div>
+        <div class="scroll-hint">Scroll</div>
+    </section>
+
+    <!-- Question 4: How Do We Work -->
+    <section class="dark-section">
+        <div class="section-content">
+            <div class="question-label">Methodology Framework</div>
+            <div class="question-icon">
+                <i class="fa-solid fa-diagram-project"></i>
+            </div>
+            <h1 class="question-title">How do we work?</h1>
+            <p class="question-answer">
+                Our Agile-Scrum framework ensures transparency: Sprint Planning → Daily Standups → Development Sprints → Sprint Reviews → Retrospectives. We maintain continuous stakeholder engagement through bi-weekly demos and burndown tracking, ensuring scope alignment and risk mitigation at every milestone.
+            </p>
+        </div>
+        <div class="scroll-hint">Scroll</div>
+    </section>
+
+    <!-- Question 5: When to Start -->
+    <section>
+        <div class="section-content">
+            <div class="question-label">Project Initiation</div>
+            <div class="question-icon">
+                <i class="fa-solid fa-clock"></i>
+            </div>
+            <h1 class="question-title">When should you start?</h1>
+            <p class="question-answer">
+                Immediate project kickoff recommended. Every sprint delay represents opportunity cost and competitive disadvantage. Fast-track your digital transformation roadmap—we'll conduct stakeholder workshops, define your MVP scope, and establish clear success metrics within the first week.
+            </p>
+        </div>
+        <div class="scroll-hint">Scroll</div>
+    </section>
+
+    <!-- Final CTA Section -->
+    <section class="final-section">
+        <div class="section-content">
+            <div class="question-label">Go-Live Strategy</div>
+            <div class="question-icon">
+                <i class="fa-solid fa-handshake"></i>
+            </div>
+            <h2 class="final-title">Ready to Transform Your Business?</h2>
+            <p class="final-subtitle">
+                Connect with us today and kickstart your digital transformation initiative. Choose your preferred communication channel—our project managers are standing by to discuss your requirements, timeline, and deliverables.
+            </p>
+
+            <div class="contact-grid">
+                <!-- Email -->
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <h3 class="contact-title">Email</h3>
+                    <p class="contact-text">connect@creativepixels.in</p>
+                    <a href="mailto:connect@creativepixels.in" class="contact-btn">Send Email</a>
+                </div>
+
+                <!-- Call -->
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fa-solid fa-phone"></i>
+                    </div>
+                    <h3 class="contact-title">Call</h3>
+                    <p class="contact-text">+91 90047 89969</p>
+                    <a href="tel:+919004789969" class="contact-btn">Call Now</a>
+                </div>
+
+                <!-- WhatsApp -->
+                <div class="contact-card">
+                    <div class="contact-icon">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </div>
+                    <h3 class="contact-title">WhatsApp</h3>
+                    <p class="contact-text">+91 90047 89969</p>
+                    <a href="https://wa.me/919004789969" target="_blank" class="contact-btn">Message Us</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Smooth fade-in on load
+        document.addEventListener('DOMContentLoaded', () => {
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                document.body.style.transition = 'opacity 0.5s ease';
+                document.body.style.opacity = '1';
+            }, 100);
+
+            // Enhanced lazy scroll between sections
+            const sections = document.querySelectorAll('section');
+            let isScrolling = false;
+            let currentSection = 0;
+
+            // Wheel event for smooth section jumping
+            window.addEventListener('wheel', (e) => {
+                if (isScrolling) return;
+
+                const delta = Math.sign(e.deltaY);
+                
+                if (delta > 0 && currentSection < sections.length - 1) {
+                    // Scroll down
+                    isScrolling = true;
+                    currentSection++;
+                    scrollToSection(currentSection);
+                } else if (delta < 0 && currentSection > 0) {
+                    // Scroll up
+                    isScrolling = true;
+                    currentSection--;
+                    scrollToSection(currentSection);
+                }
+            }, { passive: true });
+
+            // Keyboard navigation
+            window.addEventListener('keydown', (e) => {
+                if (isScrolling) return;
+
+                if (e.key === 'ArrowDown' && currentSection < sections.length - 1) {
+                    e.preventDefault();
+                    isScrolling = true;
+                    currentSection++;
+                    scrollToSection(currentSection);
+                } else if (e.key === 'ArrowUp' && currentSection > 0) {
+                    e.preventDefault();
+                    isScrolling = true;
+                    currentSection--;
+                    scrollToSection(currentSection);
+                }
+            });
+
+            // Smooth scroll to section
+            function scrollToSection(index) {
+                sections[index].scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'center',
+                    inline: 'nearest'
+                });
+
+                setTimeout(() => {
+                    isScrolling = false;
+                }, 400); // Faster scroll response
+            }
+
+            // Update current section on manual scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        currentSection = Array.from(sections).indexOf(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            sections.forEach(section => observer.observe(section));
+        });
+
+        // Hide scroll hints after first scroll
+        let scrolled = false;
+        window.addEventListener('scroll', () => {
+            if (!scrolled) {
+                document.querySelectorAll('.scroll-hint').forEach(hint => {
+                    hint.style.transition = 'opacity 0.5s ease';
+                    hint.style.opacity = '0';
+                });
+                scrolled = true;
+            }
+        });
+    </script>
+
+    <!-- Footer -->
+    <footer style="background: black; color: white; padding: 4rem 2rem 2rem; border-top: 2px solid black;">
+        <div style="max-width: 1400px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 4rem; margin-bottom: 3rem; padding-bottom: 3rem; border-bottom: 1px solid rgba(255, 255, 255, 0.2);">
+                <div>
+                    <h3 style="font-size: 1.75rem; margin-bottom: 1rem; font-family: 'Space Grotesk', sans-serif;">CreativePixels</h3>
+                    <p style="color: rgba(255, 255, 255, 0.7); line-height: 1.6; margin-bottom: 1.5rem;">Transforming thoughts into monetizable products through innovative design, machine learning, and creative problem-solving.</p>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#" style="width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.3); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none;" aria-label="LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                        </a>
+                        <a href="#" style="width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.3); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none;" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+                        </a>
+                        <a href="#" style="width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.3); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none;" aria-label="GitHub">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                        </a>
+                        <a href="#" style="width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.3); display: flex; align-items: center; justify-content: center; color: white; text-decoration: none;" aria-label="Email">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="font-size: 1.125rem; margin-bottom: 1.5rem; font-weight: 600;">Company</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 1rem;"><a href="#who-we-are" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">About Us</a></li>
+                        <li style="margin-bottom: 1rem;"><a href="#how-we-solve" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">Our Approach</a></li>
+                        <li style="margin-bottom: 1rem;"><a href="pixel-world.html" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">Pixel World</a></li>
+                        <li style="margin-bottom: 1rem;"><a href="pixelgram.html" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">PixelGram</a></li>
+                        <li style="margin-bottom: 1rem;"><a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="font-size: 1.125rem; margin-bottom: 1.5rem; font-weight: 600;">Services</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 1rem;"><a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">Digital Transformation</a></li>
+                        <li style="margin-bottom: 1rem;"><a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">AI & Machine Learning</a></li>
+                        <li style="margin-bottom: 1rem;"><a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">Product Design</a></li>
+                        <li style="margin-bottom: 1rem;"><a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">Development</a></li>
+                        <li style="margin-bottom: 1rem;"><a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">Consulting</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="font-size: 1.125rem; margin-bottom: 1.5rem; font-weight: 600;">Contact</h4>
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 1rem;"><a href="studio.html" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">Get in Touch</a></li>
+                        <li style="margin-bottom: 1rem;"><a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">Support</a></li>
+                        <li style="margin-bottom: 1rem;"><a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">Partners</a></li>
+                        <li style="margin-bottom: 1rem;"><a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">Press Kit</a></li>
+                        <li style="margin-bottom: 1rem;"><a href="#" style="color: rgba(255, 255, 255, 0.7); text-decoration: none;">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; color: rgba(255, 255, 255, 0.5); font-size: 0.875rem;">
+                <p>&copy; 2025 CreativePixels. All rights reserved.</p>
+                <div style="display: flex; gap: 2rem;">
+                    <a href="#" style="color: rgba(255, 255, 255, 0.5); text-decoration: none;">Privacy Policy</a>
+                    <a href="#" style="color: rgba(255, 255, 255, 0.5); text-decoration: none;">Terms of Service</a>
+                    <a href="#" style="color: rgba(255, 255, 255, 0.5); text-decoration: none;">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

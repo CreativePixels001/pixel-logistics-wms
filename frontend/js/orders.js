@@ -1,4 +1,4 @@
-// DLT WMS - Order Management Module JavaScript
+// Pixel WMS - Order Management Module JavaScript
 // Handles sales order lookup, pick wave creation, and allocation
 
 let currentAction = null;

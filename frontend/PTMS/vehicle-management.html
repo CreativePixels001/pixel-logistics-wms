@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vehicle Management - Fleet Operations & Maintenance">
+  <title>Vehicle Management - PTMS | Pixel Logistics</title>
+  
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tms-dashboard.css">
+  <link rel="stylesheet" href="../css/ptms-optimized.css">
+  <link rel="stylesheet" href="../css/side-panel.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">People Transport Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <!-- Search Trigger Button -->
+      <button class="search-trigger" onclick="openSearch()" aria-label="Search">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <span>Search</span>
+        <kbd class="search-kbd-compact">⌘K</kbd>
+      </button>
+      
+      <!-- Theme Toggle Button -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <!-- Global Search Modal -->
+      <div class="search-modal" id="searchModal" style="display: none;">
+        <div class="search-modal-overlay" onclick="closeSearch()"></div>
+        <div class="search-modal-content">
+          <div class="search-input-wrapper">
+            <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" class="search-input" id="globalSearchInput" placeholder="Search vehicles, maintenance..." autocomplete="off">
+            <button class="search-close" onclick="closeSearch()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div class="search-suggestions" id="searchSuggestions"></div>
+        </div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">HR Manager</div>
+          <div class="user-role">Transport Coordinator</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">HM</div>
+        <div class="user-dropdown" id="userDropdown">
+          <a href="#" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="ptms-login.html" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="15 17 20 12 15 7"></polyline>
+              <line x1="20" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Layout Container -->
+  <div class="layout">
+    
+    <!-- Sidebar Component -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Vehicle Management</h1>
+          <p class="page-description">Manage fleet operations, maintenance, and vehicle status</p>
+        </div>
+        <div class="page-actions">
+          <button class="btn btn-secondary">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export Fleet Data
+          </button>
+          <button class="btn btn-primary" onclick="openAddVehiclePanel()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add Vehicle
+          </button>
+        </div>
+      </div>
+
+      <!-- Fleet Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">Total Fleet</div>
+            <div class="stat-icon stat-icon-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="3" width="15" height="13"/>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 16"/>
+                <circle cx="5.5" cy="18.5" r="2.5"/>
+                <circle cx="18.5" cy="18.5" r="2.5"/>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value">45</div>
+          <div class="stat-footer">
+            <span class="stat-label">Buses: 28 | Mini: 12 | Cabs: 5</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">Active Vehicles</div>
+            <div class="stat-icon stat-icon-success">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value">38</div>
+          <div class="stat-footer">
+            <span class="stat-change stat-change-positive">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
+              84.4%
+            </span>
+            <span class="stat-label">utilization rate</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">Under Maintenance</div>
+            <div class="stat-icon stat-icon-warning">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value">5</div>
+          <div class="stat-footer">
+            <span class="stat-label">Avg. downtime: 2.3 days</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-header">
+            <div class="stat-title">Inspection Due</div>
+            <div class="stat-icon stat-icon-info">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div class="stat-value">12</div>
+          <div class="stat-footer">
+            <span class="stat-label">Next 30 days</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters-section">
+        <div class="filters-grid">
+          <div class="filter-group">
+            <label class="filter-label">Vehicle Type</label>
+            <select class="filter-select">
+              <option>All Types</option>
+              <option>Bus (45-Seater)</option>
+              <option>Mini Bus (20-Seater)</option>
+              <option>Cab (4-Seater)</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Status</label>
+            <select class="filter-select">
+              <option>All Status</option>
+              <option>Active</option>
+              <option>In Transit</option>
+              <option>Maintenance</option>
+              <option>Idle</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Location</label>
+            <select class="filter-select">
+              <option>All Locations</option>
+              <option>Mumbai</option>
+              <option>Delhi</option>
+              <option>Bangalore</option>
+              <option>Pune</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Search Vehicle</label>
+            <input type="text" class="filter-input" placeholder="Vehicle number or ID...">
+          </div>
+        </div>
+      </div>
+
+      <!-- Vehicles Table -->
+      <div class="table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Vehicle ID</th>
+              <th>Registration No.</th>
+              <th>Type</th>
+              <th>Capacity</th>
+              <th>Driver</th>
+              <th>Status</th>
+              <th>Location</th>
+              <th>Last Service</th>
+              <th>Next Inspection</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>VEH-001</strong></td>
+              <td><span class="shipment-id">MH-02-AB-1234</span></td>
+              <td>Bus (45-Seater)</td>
+              <td>45</td>
+              <td>Rajesh Kumar</td>
+              <td><span class="status-badge status-in-transit">In Transit</span></td>
+              <td>Andheri, Mumbai</td>
+              <td>15 Nov 2025</td>
+              <td>15 Dec 2025</td>
+              <td>
+                <div class="table-actions">
+                  <button class="btn-icon" title="View Details">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                  <button class="btn-icon" title="Edit">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>VEH-002</strong></td>
+              <td><span class="shipment-id">MH-02-CD-5678</span></td>
+              <td>Mini Bus (20-Seater)</td>
+              <td>20</td>
+              <td>Suresh Patil</td>
+              <td><span class="status-badge status-delivered">Active</span></td>
+              <td>Powai, Mumbai</td>
+              <td>10 Nov 2025</td>
+              <td>10 Jan 2026</td>
+              <td>
+                <div class="table-actions">
+                  <button class="btn-icon" title="View Details">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                  <button class="btn-icon" title="Edit">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>VEH-003</strong></td>
+              <td><span class="shipment-id">DL-01-EF-9012</span></td>
+              <td>Bus (45-Seater)</td>
+              <td>45</td>
+              <td>Amit Singh</td>
+              <td><span class="status-badge status-pending">Maintenance</span></td>
+              <td>Manesar, Delhi</td>
+              <td>01 Nov 2025</td>
+              <td>25 Nov 2025</td>
+              <td>
+                <div class="table-actions">
+                  <button class="btn-icon" title="View Details">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                  <button class="btn-icon" title="Edit">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td><strong>VEH-004</strong></td>
+              <td><span class="shipment-id">KA-03-GH-3456</span></td>
+              <td>Cab (4-Seater)</td>
+              <td>4</td>
+              <td>Vendor: Ola</td>
+              <td><span class="status-badge status-delivered">Active</span></td>
+              <td>Marathahalli, Bangalore</td>
+              <td>N/A</td>
+              <td>N/A</td>
+              <td>
+                <div class="table-actions">
+                  <button class="btn-icon" title="View Details">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                  </button>
+                  <button class="btn-icon" title="Edit">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Add Vehicle Side Panel -->
+  <div class="side-panel" id="addVehiclePanel">
+    <div class="side-panel-overlay" onclick="closeAddVehiclePanel()"></div>
+    <div class="side-panel-content">
+      <div class="side-panel-header">
+        <h2 class="side-panel-title">Add New Vehicle</h2>
+        <button class="side-panel-close" onclick="closeAddVehiclePanel()">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="side-panel-body">
+        <form id="addVehicleForm">
+          <div class="form-group">
+            <label class="form-label">Registration Number *</label>
+            <input type="text" class="form-input" placeholder="e.g., MH-02-AB-1234" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Vehicle Type *</label>
+            <select class="form-select" required>
+              <option value="">Select Type</option>
+              <option>Bus (45-Seater)</option>
+              <option>Mini Bus (20-Seater)</option>
+              <option>Cab (4-Seater)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Capacity *</label>
+            <input type="number" class="form-input" placeholder="Number of seats" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Make & Model</label>
+            <input type="text" class="form-input" placeholder="e.g., Tata Starbus">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Year of Manufacture</label>
+            <input type="number" class="form-input" placeholder="YYYY">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Base Location *</label>
+            <select class="form-select" required>
+              <option value="">Select Location</option>
+              <option>Mumbai</option>
+              <option>Delhi</option>
+              <option>Bangalore</option>
+              <option>Pune</option>
+              <option>Chennai</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Assigned Driver</label>
+            <select class="form-select">
+              <option value="">Select Driver</option>
+              <option>Rajesh Kumar</option>
+              <option>Suresh Patil</option>
+              <option>Amit Singh</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Insurance Expiry Date</label>
+            <input type="date" class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Fitness Certificate Expiry</label>
+            <input type="date" class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Notes</label>
+            <textarea class="form-textarea" placeholder="Additional information..."></textarea>
+          </div>
+        </form>
+      </div>
+      
+      <div class="side-panel-footer">
+        <button class="btn btn-secondary" onclick="closeAddVehiclePanel()">Cancel</button>
+        <button class="btn btn-primary" onclick="submitVehicle()">Add Vehicle</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+    }
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+
+    // User Menu Toggle
+    function toggleUserMenu() {
+      const dropdown = document.getElementById('userDropdown');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const userMenu = document.querySelector('.user-menu');
+      const dropdown = document.getElementById('userDropdown');
+      if (!userMenu.contains(event.target)) {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    // Search Modal
+    function openSearch() {
+      document.getElementById('searchModal').style.display = 'flex';
+      document.getElementById('globalSearchInput').focus();
+    }
+
+    function closeSearch() {
+      document.getElementById('searchModal').style.display = 'none';
+    }
+
+    // Keyboard shortcut for search (Cmd+K / Ctrl+K)
+    document.addEventListener('keydown', function(e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        openSearch();
+      }
+      if (e.key === 'Escape') {
+        closeSearch();
+      }
+    });
+
+    // Add Vehicle Panel
+    function openAddVehiclePanel() {
+      document.getElementById('addVehiclePanel').classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeAddVehiclePanel() {
+      document.getElementById('addVehiclePanel').classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function submitVehicle() {
+      alert('Vehicle added successfully!');
+      closeAddVehiclePanel();
+    }
+  </script>
+
+  <script src="js/ptms-data.js"></script>
+  <script src="js/ptms-app.js"></script>
+  <script src="js/components-loader.js"></script>
+
+</body>
+</html>

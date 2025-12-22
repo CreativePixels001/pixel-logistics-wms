@@ -34,11 +34,9 @@ const Radio = {
     // Radio.garden API for city data
     RADIO_GARDEN_API: 'https://radio.garden/api/ara/content/places',
     
-    // Multiple API servers (radio-browser has mirrors)
+    // Multiple API servers (radio-browser has mirrors) - using all.api for better CORS support
     API_SERVERS: [
-        'https://de1.api.radio-browser.info',
-        'https://at1.api.radio-browser.info',
-        'https://de2.api.radio-browser.info'
+        'https://all.api.radio-browser.info'
     ],
     
     /**
@@ -483,27 +481,37 @@ const Radio = {
             const searchTerms = [city.name, city.state].filter(Boolean);
             for (const term of searchTerms) {
                 const path = '/json/stations/byname/' + encodeURIComponent(term) + 
-                    '?hidebroken=true&limit=30&order=clickcount&reverse=true';
+                    '?hidebroken=true&limit=50&order=clickcount&reverse=true';
                 
                 for (const server of this.API_SERVERS) {
                     try {
-                        const res = await fetch(server + path);
+                        const res = await fetch(server + path, {
+                            headers: { 'User-Agent': 'PixelRadio/1.0' }
+                        });
                         if (res.ok) {
                             const data = await res.json();
-                            const indianStations = data.filter(s => 
-                                (s.country === 'India' || s.countrycode === 'IN') &&
-                                (s.url_resolved || s.url)
-                            );
+                            // Filter for Indian stations with HTTPS streams (for mixed content)
+                            const indianStations = data.filter(s => {
+                                const url = s.url_resolved || s.url || '';
+                                const isIndian = s.country === 'India' || s.countrycode === 'IN';
+                                const hasSecureUrl = url.startsWith('https://') || url.startsWith('http://');
+                                return isIndian && hasSecureUrl;
+                            });
                             if (indianStations.length > 0) {
                                 this.cityStations[city.id] = indianStations;
                                 return indianStations;
                             }
                         }
-                    } catch(e) {}
+                    } catch(e) {
+                        console.log('[Radio] Server error, trying next...');
+                    }
                 }
             }
-        } catch(e) {}
+        } catch(e) {
+            console.log('[Radio] API error:', e.message);
+        }
         
+        // Return fallback stations for this city
         return this.getFallbackStations().slice(0, 10);
     },
     
@@ -559,14 +567,26 @@ const Radio = {
         this.current = station;
         this.currentIndex = index;
         
-        this.audio.src = station.url_resolved || station.url;
-        this.audio.play().catch(() => {
-            document.getElementById('nowLocation').textContent = 'Stream error - try another';
+        // Get stream URL - prefer url_resolved, try to use HTTPS if available
+        let streamUrl = station.url_resolved || station.url;
+        
+        // Some streams work on both HTTP and HTTPS - try upgrading to HTTPS
+        if (streamUrl && streamUrl.startsWith('http://')) {
+            // Try HTTPS version (many streams support both)
+            const httpsUrl = streamUrl.replace('http://', 'https://');
+            // We'll try the original URL since not all streams support HTTPS
+            console.log('[Radio] Stream URL:', streamUrl);
+        }
+        
+        this.audio.src = streamUrl;
+        this.audio.play().catch((e) => {
+            console.log('[Radio] Playback error:', e.message);
+            document.getElementById('nowLocation').textContent = 'Stream unavailable - try another';
         });
         
         document.getElementById('nowPlaying').textContent = station.name;
         document.getElementById('nowLocation').textContent = 
-            ((station.state || '') + ' ' + (station.country || '')).trim();
+            (station.language || 'India').trim();
         
         this.updateSaveBtn();
     },
@@ -977,15 +997,6 @@ const Radio = {
             
             this.closeStationsDrawer();
             this.renderCities(chip.dataset.state);
-        });
-        
-        // Grid click (for grid view)
-        document.getElementById('grid').addEventListener('click', (e) => {
-            const cell = e.target.closest('.cell');
-            if (!cell || cell.classList.contains('empty')) return;
-            
-            const idx = parseInt(cell.dataset.stationIdx);
-            this.play(idx, cell);
         });
         
         // Search

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - PixelAudit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/global.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Container -->
+        <div id="sidebarContainer"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header Container -->
+            <div id="headerContainer"></div>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Settings Tabs -->
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('profile')">Profile</button>
+                    <button class="tab-btn" onclick="switchTab('company')">Company</button>
+                    <button class="tab-btn" onclick="switchTab('security')">Security</button>
+                    <button class="tab-btn" onclick="switchTab('notifications')">Notifications</button>
+                </div>
+
+                <!-- Profile Settings -->
+                <div id="profileTab" class="tab-content active">
+                    <div class="card">
+                        <h3 class="card-title">Personal Information</h3>
+                        <form id="profileForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Full Name *</label>
+                                    <input type="text" id="fullName" value="Demo User" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Email Address *</label>
+                                    <input type="email" id="email" value="demo@pixelaudit.com" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Phone Number</label>
+                                    <input type="tel" id="phone" value="+91 98765 43210">
+                                </div>
+                                <div class="form-group">
+                                    <label>Role</label>
+                                    <select id="role">
+                                        <option>Admin</option>
+                                        <option>Auditor</option>
+                                        <option>Manager</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Company Settings -->
+                <div id="companyTab" class="tab-content">
+                    <div class="card">
+                        <h3 class="card-title">Company Details</h3>
+                        <form id="companyForm">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>Company Name *</label>
+                                    <input type="text" id="companyName" value="PixelAudit Demo" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Industry</label>
+                                    <select id="industry">
+                                        <option>Logistics & Warehousing</option>
+                                        <option>Restaurant & Hospitality</option>
+                                        <option>Retail & E-commerce</option>
+                                        <option>Manufacturing</option>
+                                        <option>Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>GST Number</label>
+                                    <input type="text" id="gstNumber" placeholder="27AABCM1234F1Z5">
+                                </div>
+                                <div class="form-group">
+                                    <label>Company Size</label>
+                                    <select id="companySize">
+                                        <option>1-10 employees</option>
+                                        <option>11-50 employees</option>
+                                        <option>51-200 employees</option>
+                                        <option>201+ employees</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <textarea id="address" rows="3" placeholder="Enter company address"></textarea>
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div id="securityTab" class="tab-content">
+                    <div class="card">
+                        <h3 class="card-title">Change Password</h3>
+                        <form id="passwordForm">
+                            <div class="form-group">
+                                <label>Current Password</label>
+                                <input type="password" id="currentPassword">
+                            </div>
+                            <div class="form-group">
+                                <label>New Password</label>
+                                <input type="password" id="newPassword">
+                            </div>
+                            <div class="form-group">
+                                <label>Confirm New Password</label>
+                                <input type="password" id="confirmPassword">
+                            </div>
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Update Password</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">Two-Factor Authentication</h3>
+                        <p class="text-muted">Add an extra layer of security to your account</p>
+                        <div style="margin-top: 1.5rem;">
+                            <label class="switch">
+                                <input type="checkbox" id="twoFactorToggle">
+                                <span class="slider"></span>
+                            </label>
+                            <span style="margin-left: 1rem;">Enable Two-Factor Authentication</span>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">Active Sessions</h3>
+                        <div class="session-list">
+                            <div class="session-item">
+                                <div>
+                                    <strong>Current Session</strong>
+                                    <p class="text-muted">macOS • Chrome • Mumbai, India</p>
+                                </div>
+                                <span class="badge badge-completed">Active Now</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notification Settings -->
+                <div id="notificationsTab" class="tab-content">
+                    <div class="card">
+                        <h3 class="card-title">Email Notifications</h3>
+                        <div class="notification-settings">
+                            <div class="notification-item">
+                                <div>
+                                    <strong>Audit Assignments</strong>
+                                    <p class="text-muted">Get notified when new audits are assigned to you</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="notification-item">
+                                <div>
+                                    <strong>Audit Completion</strong>
+                                    <p class="text-muted">Get notified when audits are completed</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="notification-item">
+                                <div>
+                                    <strong>Weekly Summary</strong>
+                                    <p class="text-muted">Receive weekly audit summary reports</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="notification-item">
+                                <div>
+                                    <strong>Marketing Emails</strong>
+                                    <p class="text-muted">Updates about new features and product news</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">WhatsApp Notifications</h3>
+                        <div class="notification-settings">
+                            <div class="notification-item">
+                                <div>
+                                    <strong>Instant Updates</strong>
+                                    <p class="text-muted">Get real-time WhatsApp notifications for critical updates</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Form submissions
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            
+            localStorage.setItem('pixelaudit_user_name', name);
+            localStorage.setItem('pixelaudit_user_email', email);
+            
+            alert('Profile updated successfully!');
+            location.reload();
+        });
+
+        document.getElementById('companyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Company details updated successfully!');
+        });
+
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (newPassword !== confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            alert('Password updated successfully!');
+            this.reset();
+        });
+    </script>
+
+    <!-- Components -->
+    <script src="assets/js/components.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeComponents('settings', 'Settings', 'Manage your account and preferences', '');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Orders - Flipkart - Pixel Commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Leaflet CSS for Black & White Maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #000;
+            --secondary: #333;
+            --tertiary: #666;
+            --border: #e5e7eb;
+            --bg: #fff;
+            --bg-secondary: #f9fafb;
+            --gray-dark: #1a1a1a;
+            --gray-medium: #4a4a4a;
+            --gray-light: #9ca3af;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--primary);
+            line-height: 1.5;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.125rem;
+            font-weight: 800;
+        }
+
+        .logo svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        .header-title {
+            font-size: 0.875rem;
+            color: var(--tertiary);
+            border-left: 1px solid var(--border);
+            padding-left: 16px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #333 0%, #000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg);
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .btn:hover {
+            background: var(--bg-secondary);
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+
+        /* Left Panel - Order List */
+        .left-panel {
+            width: 380px;
+            background: var(--bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .search-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .search-box {
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 12px 10px 38px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-family: inherit;
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: var(--tertiary);
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+
+        .filter-tab {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: transparent;
+            border: 1px solid var(--border);
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .filter-tab:hover {
+            background: var(--bg-secondary);
+        }
+
+        .filter-tab.active {
+            background: var(--primary);
+            color: var(--bg);
+            border-color: var(--primary);
+        }
+
+        .orders-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .order-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .order-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .order-card.selected {
+            border-color: var(--primary);
+            background: #fafafa;
+        }
+
+        .order-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .order-id {
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--primary);
+        }
+
+        .order-status-badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-in-transit {
+            background: #e5e7eb;
+            color: #1a1a1a;
+        }
+
+        .status-out-for-delivery {
+            background: #d1d5db;
+            color: #000;
+        }
+
+        .status-delivered {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .status-pending {
+            background: #f9fafb;
+            color: #6b7280;
+        }
+
+        .order-customer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .customer-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #333 0%, #000 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg);
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .customer-info {
+            flex: 1;
+        }
+
+        .customer-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--primary);
+        }
+
+        .customer-location {
+            font-size: 0.75rem;
+            color: var(--tertiary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .customer-location svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .order-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .order-date {
+            font-size: 0.75rem;
+            color: var(--tertiary);
+        }
+
+        .order-amount {
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--primary);
+        }
+
+        /* Right Panel - Map & Details */
+        .right-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .map-container {
+            flex: 1;
+            background: #e8eaed;
+            position: relative;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Leaflet map custom styles - Black & White */
+        .leaflet-container {
+            background: #f5f5f5;
+        }
+
+        .map-tiles {
+            filter: grayscale(100%) contrast(1.1);
+        }
+
+        .leaflet-control-attribution {
+            display: none !important;
+        }
+
+        .leaflet-control-zoom {
+            border: 1px solid var(--border) !important;
+            border-radius: 6px !important;
+            overflow: hidden;
+        }
+
+        .leaflet-control-zoom a {
+            background: var(--bg) !important;
+            color: var(--primary) !important;
+            border: none !important;
+            border-bottom: 1px solid var(--border) !important;
+            width: 32px !important;
+            height: 32px !important;
+            line-height: 32px !important;
+            font-size: 18px !important;
+            font-weight: 700;
+        }
+
+        .leaflet-control-zoom a:last-child {
+            border-bottom: none !important;
+        }
+
+        .leaflet-control-zoom a:hover {
+            background: var(--bg-secondary) !important;
+        }
+
+        /* Custom marker styles */
+        .custom-marker {
+            background: var(--bg);
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            animation: pulse-marker 2s infinite;
+        }
+
+        @keyframes pulse-marker {
+            0%, 100% {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 0 0 0 rgba(0,0,0,0.4);
+            }
+            50% {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15), 0 0 0 10px rgba(0,0,0,0);
+            }
+        }
+
+        .custom-marker.start {
+            background: #f3f4f6;
+            border-color: #4a4a4a;
+        }
+
+        .custom-marker.end {
+            background: #e5e7eb;
+            border-color: #1a1a1a;
+        }
+
+        .custom-marker.current {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .custom-marker svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--primary);
+        }
+
+        .custom-marker.current svg {
+            stroke: var(--bg);
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8eaed 100%);
+        }
+
+
+
+        /* Tracking Details Panel */
+        .tracking-details {
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+            padding: 20px;
+            max-height: 280px;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+
+        .tracking-details.sticky {
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.08);
+        }
+
+        .tracking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .tracking-title {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .tracking-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-secondary);
+        }
+
+        .icon-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Timeline - Horizontal */
+        .timeline {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 28px;
+            right: 28px;
+            top: 12px;
+            height: 2px;
+            background: var(--border);
+        }
+
+        .timeline-item {
+            position: relative;
+            flex: 1;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .timeline-dot {
+            position: relative;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 3px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            margin-bottom: 8px;
+        }
+
+        .timeline-item.completed .timeline-dot {
+            border-color: #4a4a4a;
+            background: #4a4a4a;
+        }
+
+        .timeline-item.completed .timeline-dot svg {
+            stroke: var(--bg);
+        }
+
+        .timeline-item.active .timeline-dot {
+            border-color: #1a1a1a;
+            background: #1a1a1a;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+            }
+        }
+
+        .timeline-dot svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .timeline-content {
+            background: var(--bg-secondary);
+            padding: 8px 10px;
+            border-radius: 6px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            font-size: 0.75rem;
+            margin-bottom: 2px;
+        }
+
+        .timeline-desc {
+            font-size: 0.65rem;
+            color: var(--tertiary);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .timeline-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin-top: 4px;
+            align-items: center;
+        }
+
+        .timeline-time {
+            font-size: 0.65rem;
+            color: var(--tertiary);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .timeline-time svg {
+            width: 10px;
+            height: 10px;
+        }
+
+        .timeline-location {
+            font-size: 0.65rem;
+            color: var(--tertiary);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .timeline-location svg {
+            width: 10px;
+            height: 10px;
+        }
+
+        /* Courier Info */
+        .courier-info {
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .courier-logo {
+            width: 48px;
+            height: 48px;
+            background: var(--bg);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .courier-details {
+            flex: 1;
+        }
+
+        .courier-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 2px;
+        }
+
+        .courier-tracking {
+            font-size: 0.75rem;
+            color: var(--tertiary);
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Empty State */
+        .empty-state {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--tertiary);
+            background: var(--bg-secondary);
+            z-index: 1;
+        }
+
+        .map-container.has-map .empty-state {
+            display: none;
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--secondary);
+        }
+
+        .empty-state p {
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .left-panel {
+                width: 100%;
+            }
+
+            .right-panel {
+                display: none;
+            }
+
+            .main-container.show-details .left-panel {
+                display: none;
+            }
+
+            .main-container.show-details .right-panel {
+                display: flex;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--tertiary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <path d="M3 9h18"/>
+                    <path d="M9 21V9"/>
+                </svg>
+                <span>Pixel Commerce</span>
+            </div>
+            <div class="header-title">Order Tracking - Flipkart</div>
+        </div>
+        <div class="header-right">
+            <button class="btn" onclick="window.location.href='../orders/flipkart-orders.html'">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Orders
+            </button>
+            <div class="user-avatar">AS</div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container" id="mainContainer">
+        <!-- Left Panel - Order List -->
+        <aside class="left-panel">
+            <div class="search-header">
+                <div class="search-box">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" placeholder="Search orders, customers..." id="searchInput" oninput="searchOrders()">
+                </div>
+            </div>
+
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterOrders('all')">All</button>
+                <button class="filter-tab" onclick="filterOrders('in-transit')">In Transit</button>
+                <button class="filter-tab" onclick="filterOrders('out-for-delivery')">Out for Delivery</button>
+                <button class="filter-tab" onclick="filterOrders('delivered')">Delivered</button>
+            </div>
+
+            <div class="orders-list" id="ordersList">
+                <!-- Orders populated by JavaScript -->
+            </div>
+        </aside>
+
+        <!-- Right Panel - Map & Details -->
+        <main class="right-panel">
+            <div class="map-container" id="mapContainer">
+                <div id="map"></div>
+                <div class="empty-state" id="emptyState">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    <h3>Select an order to track</h3>
+                    <p>Choose an order from the list to view tracking details</p>
+                </div>
+            </div>
+
+            <div class="tracking-details" id="trackingDetails" style="display: none;">
+                <!-- Tracking details populated by JavaScript -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let map;
+        let markers = [];
+        let polyline;
+
+        // Sample tracking data
+        const ordersData = [
+            {
+                id: 'AMZ-2024-1122',
+                customer: 'Rajesh Kumar',
+                location: 'Mumbai, Maharashtra',
+                status: 'out-for-delivery',
+                date: '2024-11-28',
+                amount: 399,
+                courier: 'Delhivery',
+                tracking: 'DELV2024112230001',
+                timeline: [
+                    {
+                        title: 'Out for Delivery',
+                        description: 'Package is out for delivery and will reach you soon',
+                        time: 'Today, 08:45 AM',
+                        location: 'Mumbai Delivery Hub',
+                        status: 'active'
+                    },
+                    {
+                        title: 'In Transit',
+                        description: 'Package reached the nearest delivery center',
+                        time: 'Yesterday, 06:30 PM',
+                        location: 'Mumbai Sorting Facility',
+                        status: 'completed'
+                    },
+                    {
+                        title: 'Shipped',
+                        description: 'Package has been shipped from the warehouse',
+                        time: '27 Nov, 03:15 PM',
+                        location: 'Bhiwandi Warehouse',
+                        status: 'completed'
+                    },
+                    {
+                        title: 'Packed',
+                        description: 'Your order has been packed and ready to ship',
+                        time: '27 Nov, 11:20 AM',
+                        location: 'Bhiwandi Fulfillment Center',
+                        status: 'completed'
+                    },
+                    {
+                        title: 'Order Confirmed',
+                        description: 'Your order has been confirmed',
+                        time: '25 Nov, 02:30 PM',
+                        location: 'Mumbai',
+                        status: 'completed'
+                    }
+                ],
+                route: {
+                    start: { lat: 19.2183, lng: 73.0978 }, // Bhiwandi Warehouse
+                    end: { lat: 19.0760, lng: 72.8777 }, // Mumbai Customer
+                    current: { lat: 19.1136, lng: 72.9100 } // Current location
+                }
+            },
+            {
+                id: 'AMZ-2024-1125',
+                customer: 'Priya Sharma',
+                location: 'Delhi, NCR',
+                status: 'in-transit',
+                date: '2024-11-29',
+                amount: 399,
+                courier: 'Bluedart',
+                tracking: 'BD2024112930001',
+                timeline: [
+                    {
+                        title: 'In Transit',
+                        description: 'Package is on the way to delivery center',
+                        time: 'Today, 10:30 AM',
+                        location: 'Delhi Hub',
+                        status: 'active'
+                    },
+                    {
+                        title: 'Shipped',
+                        description: 'Package dispatched from warehouse',
+                        time: 'Today, 06:15 AM',
+                        location: 'Gurgaon Warehouse',
+                        status: 'completed'
+                    },
+                    {
+                        title: 'Order Placed',
+                        description: 'Order confirmed and processing started',
+                        time: 'Yesterday, 04:20 PM',
+                        location: 'Delhi',
+                        status: 'completed'
+                    }
+                ],
+                route: {
+                    start: { lat: 28.4595, lng: 77.0266 }, // Gurgaon Warehouse
+                    end: { lat: 28.7041, lng: 77.1025 }, // Delhi Customer
+                    current: { lat: 28.5355, lng: 77.0910 }
+                }
+            },
+            {
+                id: 'AMZ-2024-1120',
+                customer: 'Amit Patel',
+                location: 'Bangalore, Karnataka',
+                status: 'delivered',
+                date: '2024-11-27',
+                amount: 798,
+                courier: 'Delhivery',
+                tracking: 'DELV2024112730001',
+                timeline: [
+                    {
+                        title: 'Delivered',
+                        description: 'Package delivered successfully',
+                        time: '28 Nov, 02:15 PM',
+                        location: 'Bangalore - Koramangala',
+                        status: 'completed'
+                    },
+                    {
+                        title: 'Out for Delivery',
+                        description: 'Package out for final delivery',
+                        time: '28 Nov, 09:30 AM',
+                        location: 'Bangalore Delivery Hub',
+                        status: 'completed'
+                    },
+                    {
+                        title: 'In Transit',
+                        description: 'Package reached delivery center',
+                        time: '27 Nov, 08:00 PM',
+                        location: 'Bangalore Sorting Center',
+                        status: 'completed'
+                    },
+                    {
+                        title: 'Shipped',
+                        description: 'Package shipped from warehouse',
+                        time: '27 Nov, 01:45 PM',
+                        location: 'Bangalore Warehouse',
+                        status: 'completed'
+                    }
+                ],
+                route: {
+                    start: { lat: 12.9716, lng: 77.5946 }, // Bangalore Warehouse
+                    end: { lat: 12.9352, lng: 77.6245 }, // Koramangala
+                    current: { lat: 12.9352, lng: 77.6245 }
+                }
+            },
+            {
+                id: 'AMZ-2024-1118',
+                customer: 'Sneha Reddy',
+                location: 'Pune, Maharashtra',
+                status: 'in-transit',
+                date: '2024-11-28',
+                amount: 399,
+                courier: 'DTDC',
+                tracking: 'DTDC2024112830001',
+                timeline: [
+                    {
+                        title: 'In Transit',
+                        description: 'Package moving to delivery location',
+                        time: 'Today, 07:20 AM',
+                        location: 'Pune Transit Hub',
+                        status: 'active'
+                    },
+                    {
+                        title: 'Shipped',
+                        description: 'Package dispatched',
+                        time: 'Yesterday, 05:30 PM',
+                        location: 'Mumbai Warehouse',
+                        status: 'completed'
+                    }
+                ],
+                route: {
+                    start: { lat: 19.0760, lng: 72.8777 }, // Mumbai Warehouse
+                    end: { lat: 18.5204, lng: 73.8567 }, // Pune
+                    current: { lat: 18.9068, lng: 73.3452 }
+                }
+            },
+            {
+                id: 'AMZ-2024-1115',
+                customer: 'Vikram Singh',
+                location: 'Chennai, Tamil Nadu',
+                status: 'pending',
+                date: '2024-11-29',
+                amount: 399,
+                courier: 'India Post',
+                tracking: 'IP2024112930001',
+                timeline: [
+                    {
+                        title: 'Order Placed',
+                        description: 'Waiting for seller confirmation',
+                        time: 'Today, 11:00 AM',
+                        location: 'Chennai',
+                        status: 'active'
+                    }
+                ],
+                route: {
+                    start: { lat: 13.0827, lng: 80.2707 }, // Chennai
+                    end: { lat: 13.0569, lng: 80.2425 },
+                    current: { lat: 13.0827, lng: 80.2707 }
+                }
+            }
+        ];
+
+        let filteredOrders = [...ordersData];
+        let selectedOrder = null;
+
+        // Render orders list
+        function renderOrdersList() {
+            const ordersList = document.getElementById('ordersList');
+            ordersList.innerHTML = '';
+
+            filteredOrders.forEach(order => {
+                const orderCard = document.createElement('div');
+                orderCard.className = `order-card ${selectedOrder?.id === order.id ? 'selected' : ''}`;
+                orderCard.onclick = () => selectOrder(order.id);
+
+                orderCard.innerHTML = `
+                    <div class="order-card-header">
+                        <div class="order-id">${order.id}</div>
+                        <span class="order-status-badge status-${order.status}">
+                            ${order.status.replace('-', ' ')}
+                        </span>
+                    </div>
+                    <div class="order-customer">
+                        <div class="customer-avatar">${order.customer.charAt(0)}</div>
+                        <div class="customer-info">
+                            <div class="customer-name">${order.customer}</div>
+                            <div class="customer-location">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                ${order.location}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="order-meta">
+                        <div class="order-date">${formatDate(order.date)}</div>
+                        <div class="order-amount">₹${order.amount}</div>
+                    </div>
+                `;
+
+                ordersList.appendChild(orderCard);
+            });
+        }
+
+        // Select order and show tracking
+        function selectOrder(orderId) {
+            selectedOrder = ordersData.find(o => o.id === orderId);
+            renderOrdersList();
+            showTrackingDetails();
+        }
+
+        // Show tracking details with map
+        function showTrackingDetails() {
+            if (!selectedOrder) return;
+
+            const mapContainer = document.getElementById('mapContainer');
+            const trackingDetails = document.getElementById('trackingDetails');
+
+            // Add has-map class to hide empty state
+            mapContainer.classList.add('has-map');
+
+            // Initialize Leaflet map if not already done
+            if (!map) {
+                mapContainer.innerHTML = '<div id="map"></div>';
+                
+                map = L.map('map', {
+                    center: [20.5937, 78.9629], // Center of India
+                    zoom: 5,
+                    zoomControl: false,
+                    attributionControl: false
+                });
+
+                // Add custom zoom control to bottom right
+                L.control.zoom({
+                    position: 'bottomright'
+                }).addTo(map);
+
+                // Black and White tile layer - Monochrome style (same as TMS)
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                    maxZoom: 19,
+                    subdomains: 'abcd',
+                    className: 'map-tiles'
+                }).addTo(map);
+            }
+
+            // Clear existing markers and polyline
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            if (polyline) map.removeLayer(polyline);
+
+            // Create custom icon functions
+            const createCustomIcon = (className, svgContent) => {
+                return L.divIcon({
+                    className: 'custom-marker ' + className,
+                    html: svgContent,
+                    iconSize: [40, 40],
+                    iconAnchor: [20, 20]
+                });
+            };
+
+            // Start marker (warehouse)
+            const startIcon = createCustomIcon('start', `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+            `);
+
+            const startMarker = L.marker(
+                [selectedOrder.route.start.lat, selectedOrder.route.start.lng],
+                { icon: startIcon, title: 'Warehouse' }
+            ).addTo(map);
+
+            // Current location marker (truck)
+            const currentIcon = createCustomIcon('current', `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="3" width="15" height="13"/>
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                    <circle cx="5.5" cy="18.5" r="2.5"/>
+                    <circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+            `);
+
+            const currentMarker = L.marker(
+                [selectedOrder.route.current.lat, selectedOrder.route.current.lng],
+                { icon: currentIcon, title: 'Current Location' }
+            ).addTo(map);
+
+            // End marker (delivery location)
+            const endIcon = createCustomIcon('end', `
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                    <circle cx="12" cy="10" r="3"/>
+                </svg>
+            `);
+
+            const endMarker = L.marker(
+                [selectedOrder.route.end.lat, selectedOrder.route.end.lng],
+                { icon: endIcon, title: 'Delivery Location' }
+            ).addTo(map);
+
+            markers = [startMarker, currentMarker, endMarker];
+
+            // Create curved polyline route
+            const routeCoordinates = [
+                [selectedOrder.route.start.lat, selectedOrder.route.start.lng],
+                [selectedOrder.route.current.lat, selectedOrder.route.current.lng],
+                [selectedOrder.route.end.lat, selectedOrder.route.end.lng]
+            ];
+
+            polyline = L.polyline(routeCoordinates, {
+                color: '#000000',
+                weight: 3,
+                opacity: 0.8,
+                dashArray: '10, 10',
+                lineJoin: 'round'
+            }).addTo(map);
+
+            // Fit map to show all markers
+            const bounds = L.latLngBounds([
+                [selectedOrder.route.start.lat, selectedOrder.route.start.lng],
+                [selectedOrder.route.current.lat, selectedOrder.route.current.lng],
+                [selectedOrder.route.end.lat, selectedOrder.route.end.lng]
+            ]);
+            map.fitBounds(bounds.pad(0.2));
+
+            // Show tracking details
+            trackingDetails.style.display = 'block';
+            trackingDetails.innerHTML = `
+                <div class="tracking-header">
+                    <div class="tracking-title">Tracking Details - ${selectedOrder.id}</div>
+                    <div class="tracking-actions">
+                        <button class="icon-btn" title="Print" onclick="window.print()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="6 9 6 2 18 2 18 9"/>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                                <rect x="6" y="14" width="12" height="8"/>
+                            </svg>
+                        </button>
+                        <button class="icon-btn" title="Share" onclick="shareTracking()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="18" cy="5" r="3"/>
+                                <circle cx="6" cy="12" r="3"/>
+                                <circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="courier-info">
+                    <div class="courier-logo">${selectedOrder.courier.substring(0, 3).toUpperCase()}</div>
+                    <div class="courier-details">
+                        <div class="courier-name">${selectedOrder.courier}</div>
+                        <div class="courier-tracking">Tracking: ${selectedOrder.tracking}</div>
+                    </div>
+                </div>
+
+                <div class="timeline">
+                    ${selectedOrder.timeline.map(event => `
+                        <div class="timeline-item ${event.status}">
+                            <div class="timeline-dot">
+                                ${event.status === 'completed' ? `
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                ` : ''}
+                            </div>
+                            <div class="timeline-content">
+                                <div class="timeline-title">${event.title}</div>
+                                <div class="timeline-desc">${event.description}</div>
+                                <div class="timeline-meta">
+                                    <div class="timeline-time">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <circle cx="12" cy="12" r="10"/>
+                                            <polyline points="12 6 12 12 16 14"/>
+                                        </svg>
+                                        ${event.time}
+                                    </div>
+                                    <div class="timeline-location">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                            <circle cx="12" cy="10" r="3"/>
+                                        </svg>
+                                        ${event.location}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            document.getElementById('mainContainer').classList.add('show-details');
+        }
+
+        // Format date
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 0) return 'Today';
+            if (diffDays === 1) return 'Yesterday';
+            if (diffDays < 7) return `${diffDays} days ago`;
+            
+            return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+        }
+
+        // Filter orders
+        function filterOrders(status) {
+            // Update active tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Filter data
+            if (status === 'all') {
+                filteredOrders = [...ordersData];
+            } else {
+                filteredOrders = ordersData.filter(o => o.status === status);
+            }
+
+            renderOrdersList();
+        }
+
+        // Search orders
+        function searchOrders() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (!searchTerm) {
+                filteredOrders = [...ordersData];
+            } else {
+                filteredOrders = ordersData.filter(o => 
+                    o.id.toLowerCase().includes(searchTerm) ||
+                    o.customer.toLowerCase().includes(searchTerm) ||
+                    o.location.toLowerCase().includes(searchTerm) ||
+                    o.tracking.toLowerCase().includes(searchTerm)
+                );
+            }
+
+            renderOrdersList();
+        }
+
+        // Share tracking
+        function shareTracking() {
+            if (!selectedOrder) return;
+
+            const shareData = {
+                title: `Track Order ${selectedOrder.id}`,
+                text: `Track your order ${selectedOrder.id} - ${selectedOrder.status}`,
+                url: window.location.href + '?order=' + selectedOrder.id
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData);
+            } else {
+                navigator.clipboard.writeText(shareData.url);
+                alert('Tracking link copied to clipboard!');
+            }
+        }
+
+        // Auto-load from URL parameter
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('order');
+            
+            renderOrdersList();
+            
+            if (orderId) {
+                selectOrder(orderId);
+            }
+        });
+    </script>
+    
+    <!-- Leaflet JS for Black & White Maps -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</body>
+</html>

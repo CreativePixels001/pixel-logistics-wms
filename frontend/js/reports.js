@@ -1,4 +1,4 @@
-// DLT WMS - Reports & Analytics Module JavaScript
+// Pixel WMS - Reports & Analytics Module JavaScript
 // Handles report generation and analytics
 
 let currentReportCategory = null;

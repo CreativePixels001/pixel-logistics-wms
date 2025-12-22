@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meesho Orders - Pixel Commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <style>
+        /* Order Stats */
+        .order-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Filters Bar */
+        .filters-bar {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            font-size: 0.875rem;
+            white-space: nowrap;
+        }
+
+        .filter-group select {
+            flex: 1;
+        }
+
+        .date-range-inputs {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .date-range-inputs input[type="date"] {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+        }
+
+        .date-range-separator {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Bulk Actions Bar */
+        .bulk-actions-bar {
+            background: var(--primary-color);
+            color: var(--text-white);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 1rem;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .bulk-actions-bar.show {
+            display: flex;
+        }
+
+        .bulk-actions-info {
+            font-weight: 600;
+        }
+
+        .bulk-actions-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .bulk-actions-buttons .btn {
+            background: var(--bg-white);
+            color: var(--primary-color);
+            border: none;
+        }
+
+        .bulk-actions-buttons .btn:hover {
+            background: var(--bg-light);
+        }
+
+        /* Checkbox Styling */
+        .order-checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .orders-table th:first-child,
+        .orders-table td:first-child {
+            width: 40px;
+            text-align: center;
+        }
+
+        .filter-select {
+            min-width: 180px;
+        }
+
+        .status-tabs {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .status-tab {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-white);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .status-tab:hover {
+            background: var(--bg-light);
+        }
+
+        .status-tab.active {
+            background: var(--primary-color);
+            color: var(--text-white);
+            border-color: var(--primary-color);
+        }
+
+        .status-tab .count {
+            display: inline-block;
+            margin-left: 0.25rem;
+            padding: 0.125rem 0.5rem;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+        }
+
+        .status-tab.active .count {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Orders Table */
+        .orders-container {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .orders-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .orders-table thead {
+            background: var(--bg-light);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .orders-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .orders-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        .orders-table tbody tr {
+            transition: background var(--transition-fast);
+        }
+
+        .orders-table tbody tr:hover {
+            background: var(--bg-light);
+        }
+
+        /* Order ID */
+        .order-id {
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            color: var(--primary-color);
+        }
+
+        /* Customer Info */
+        .customer-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .customer-name {
+            font-weight: 600;
+        }
+
+        .customer-location {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Order Items */
+        .order-items {
+            font-size: 0.875rem;
+        }
+
+        .item-preview {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .item-image {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: #e0e0e0;
+            border: 1px solid var(--border-color);
+            object-fit: cover;
+            display: block;
+        }
+
+        .items-count {
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        /* Order Amount */
+        .order-amount {
+            font-weight: 800;
+            font-size: 1.125rem;
+        }
+
+        /* Order Date */
+        .order-date {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .order-time {
+            display: block;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Status Badge */
+        .order-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .order-status.pending {
+            background: rgba(255, 153, 0, 0.1);
+            color: #FF9900;
+        }
+
+        .order-status.pending .status-dot {
+            background: #FF9900;
+        }
+
+        .order-status.confirmed {
+            background: rgba(33, 150, 243, 0.1);
+            color: #2196F3;
+        }
+
+        .order-status.confirmed .status-dot {
+            background: #2196F3;
+        }
+
+        .order-status.shipped {
+            background: rgba(156, 39, 176, 0.1);
+            color: #9C27B0;
+        }
+
+        .order-status.shipped .status-dot {
+            background: #9C27B0;
+        }
+
+        .order-status.delivered {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4CAF50;
+        }
+
+        .order-status.delivered .status-dot {
+            background: #4CAF50;
+        }
+
+        .order-status.cancelled {
+            background: rgba(244, 67, 54, 0.1);
+            color: #F44336;
+        }
+
+        .order-status.cancelled .status-dot {
+            background: #F44336;
+        }
+
+        /* Action Buttons */
+        .order-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-icon-btn {
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            background: var(--bg-white);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-icon-btn:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--text-white);
+        }
+
+        .action-icon-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            opacity: 0.2;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Order Details Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+
+        .modal-close:hover {
+            background: var(--bg-light);
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        /* Order Details Grid */
+        .order-details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-section {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+        }
+
+        .detail-section h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .detail-section h3 svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            text-align: right;
+        }
+
+        /* Order Items List */
+        .order-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .order-item-card {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+        }
+
+        .order-item-image {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-sm);
+            background: #e0e0e0;
+            border: 2px solid var(--border-color);
+            object-fit: cover;
+            flex-shrink: 0;
+            display: block;
+        }
+
+        .order-item-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .order-item-name {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .order-item-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .order-item-price {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .order-item-price-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .order-item-price-value {
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        /* Order Timeline */
+        .order-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 0;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--success-color);
+            border: 2px solid var(--bg-white);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: calc(-2rem + 5px);
+            top: 12px;
+            width: 2px;
+            height: calc(100% - 12px);
+            background: var(--border-color);
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .timeline-item.pending::before {
+            background: var(--warning-color);
+        }
+
+        .timeline-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-title {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-desc {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Action Buttons in Modal */
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .orders-table {
+                font-size: 0.875rem;
+            }
+
+            .orders-table th,
+            .orders-table td {
+                padding: 0.75rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .status-tabs {
+                width: 100%;
+            }
+
+            .filters-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+
+            /* Mobile Card View */
+            .orders-table thead {
+                display: none;
+            }
+
+            .orders-table,
+            .orders-table tbody,
+            .orders-table tr,
+            .orders-table td {
+                display: block;
+            }
+
+            .orders-table tr {
+                margin-bottom: 1rem;
+                border: 1px solid var(--border-color);
+                border-radius: var(--radius-md);
+                overflow: hidden;
+            }
+
+            .orders-table td {
+                position: relative;
+                padding-left: 45%;
+                border-bottom: 1px solid var(--border-color);
+            }
+
+            .orders-table td:last-child {
+                border-bottom: none;
+            }
+
+            .orders-table td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 1rem;
+                font-weight: 700;
+                font-size: 0.75rem;
+                color: var(--text-secondary);
+            }
+
+            .order-details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons .btn {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span>Pixel Commerce</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Meesho</div>
+                    <a href="../platforms/meesho.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Meesho Dashboard
+                    </a>
+                    <a href="../products/meesho-catalog.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Products
+                    </a>
+                    <a href="meesho-orders.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Orders
+                    </a>
+                    <a href="../tracking/meesho-track-order.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        Track Orders
+                    </a>
+                    <a href="../inventory/meesho-stock.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                        Inventory
+                    </a>
+                    <a href="../analytics/meesho-analytics.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        Analytics
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="../settings/account.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search orders...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">S</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Seller Name</span>
+                            <span class="user-role" id="userRole">Meesho Seller</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Meesho Orders</h1>
+                        <p class="page-subtitle">Manage and track all your Meesho orders</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-secondary" onclick="exportAllOrders()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Export All
+                        </button>
+                        <button class="btn btn-primary" onclick="syncOrders()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"/>
+                                <polyline points="1 20 1 14 7 14"/>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                            </svg>
+                            Sync Orders
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Order Stats -->
+                <div class="order-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(33, 150, 243, 0.1); color: #2196F3;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                        </div>
+                        <div class="stat-details">
+                            <div class="stat-value">24</div>
+                            <div class="stat-label">Today's Orders</div>
+                            <div class="stat-change positive">+12.5% from yesterday</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(255, 153, 0, 0.1); color: #FF9900;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </div>
+                        <div class="stat-details">
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">Pending Orders</div>
+                            <div class="stat-change">Need action</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(156, 39, 176, 0.1); color: #9C27B0;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/>
+                                <path d="M2 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/>
+                                <path d="M7 21h10"/>
+                                <path d="M12 3v18"/>
+                                <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+                            </svg>
+                        </div>
+                        <div class="stat-details">
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Shipped Today</div>
+                            <div class="stat-change positive">On track</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: rgba(76, 175, 80, 0.1); color: #4CAF50;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                        </div>
+                        <div class="stat-details">
+                            <div class="stat-value">₹18,450</div>
+                            <div class="stat-label">Today's Revenue</div>
+                            <div class="stat-change positive">+8.2%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-bar">
+                    <div class="status-tabs">
+                        <button class="status-tab active" onclick="filterByStatus('all')" data-status="all">
+                            All Orders <span class="count">48</span>
+                        </button>
+                        <button class="status-tab" onclick="filterByStatus('pending')" data-status="pending">
+                            Pending <span class="count">8</span>
+                        </button>
+                        <button class="status-tab" onclick="filterByStatus('confirmed')" data-status="confirmed">
+                            Confirmed <span class="count">15</span>
+                        </button>
+                        <button class="status-tab" onclick="filterByStatus('shipped')" data-status="shipped">
+                            Shipped <span class="count">12</span>
+                        </button>
+                        <button class="status-tab" onclick="filterByStatus('delivered')" data-status="delivered">
+                            Delivered <span class="count">10</span>
+                        </button>
+                        <button class="status-tab" onclick="filterByStatus('cancelled')" data-status="cancelled">
+                            Cancelled <span class="count">3</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Advanced Filters -->
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <label>Date Range:</label>
+                        <div class="date-range-inputs">
+                            <input type="date" id="startDate" onchange="filterOrders()">
+                            <span class="date-range-separator">to</span>
+                            <input type="date" id="endDate" onchange="filterOrders()">
+                        </div>
+                    </div>
+                    <div class="filter-group" style="flex: 1;">
+                        <label>Search:</label>
+                        <input type="text" class="form-input" id="orderSearch" placeholder="Search by Order ID or Customer name..." oninput="filterOrders()" style="min-width: 300px;">
+                    </div>
+                    <button class="btn btn-secondary" onclick="clearFilters()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <polyline points="1 4 1 10 7 10"/>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                        </svg>
+                        Clear Filters
+                    </button>
+                </div>
+
+                <!-- Bulk Actions Bar -->
+                <div class="bulk-actions-bar" id="bulkActionsBar">
+                    <div class="bulk-actions-info">
+                        <span id="selectedCount">0</span> orders selected
+                    </div>
+                    <div class="bulk-actions-buttons">
+                        <button class="btn btn-sm" onclick="bulkPrintLabels()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polyline points="6 9 6 2 18 2 18 9"/>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                            </svg>
+                            Print Labels
+                        </button>
+                        <button class="btn btn-sm" onclick="bulkMarkShipped()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <path d="M16 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/>
+                                <path d="M2 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/>
+                            </svg>
+                            Mark as Shipped
+                        </button>
+                        <button class="btn btn-sm" onclick="bulkExport()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Export Selected
+                        </button>
+                        <button class="btn btn-sm" onclick="clearSelection()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                            Clear
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="orders-container">
+                    <table class="orders-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" class="order-checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Items</th>
+                                <th>Amount</th>
+                                <th>Date & Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- Order 1: Pending -->
+                            <tr data-status="pending" data-order-id="AMZ-2024-1125" data-customer="Rajesh Kumar">
+                                <td data-label="Select">
+                                    <input type="checkbox" class="order-checkbox order-select" onchange="updateBulkActions()">
+                                </td>
+                                <td data-label="Order ID">
+                                    <span class="order-id">AMZ-2024-1125</span>
+                                </td>
+                                <td data-label="Customer">
+                                    <div class="customer-info">
+                                        <span class="customer-name">Rajesh Kumar</span>
+                                        <span class="customer-location">Mumbai, Maharashtra</span>
+                                    </div>
+                                </td>
+                                <td data-label="Items">
+                                    <div class="order-items">
+                                        <div class="item-preview">
+                                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect fill='%23e0e0e0' width='40' height='40'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='10' fill='%23666'%3ERobot%3C/text%3E%3C/svg%3E" alt="Product" class="item-image">
+                                            <span>Red Titan Robot</span>
+                                        </div>
+                                        <div class="items-count">Qty: 2</div>
+                                    </div>
+                                </td>
+                                <td data-label="Amount">
+                                    <span class="order-amount">₹798</span>
+                                </td>
+                                <td data-label="Date & Time">
+                                    <div class="order-date">
+                                        30 Nov 2025
+                                        <span class="order-time">10:24 AM</span>
+                                    </div>
+                                </td>
+                                <td data-label="Status">
+                                    <span class="order-status pending">
+                                        <span class="status-dot"></span>
+                                        Pending
+                                    </span>
+                                </td>
+                                <td data-label="Actions">
+                                    <div class="order-actions">
+                                        <button class="action-icon-btn" title="View Details" onclick="viewOrder('AMZ-2024-1125')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-icon-btn" title="Track Order" onclick="window.location.href='../tracking/meesho-track-order.html?order=AMZ-2024-1125'">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                                <circle cx="12" cy="10" r="3"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-icon-btn" title="Print Label" onclick="printLabel('AMZ-2024-1125')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="6 9 6 2 18 2 18 9"/>
+                                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                                                <rect x="6" y="14" width="12" height="8"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Order 2: Confirmed -->
+                            <tr data-status="confirmed" data-order-id="AMZ-2024-1124" data-customer="Priya Sharma">
+                                <td data-label="Select">
+                                    <input type="checkbox" class="order-checkbox order-select" onchange="updateBulkActions()">
+                                </td>
+                                <td data-label="Order ID">
+                                    <span class="order-id">AMZ-2024-1124</span>
+                                </td>
+                                <td data-label="Customer">
+                                    <div class="customer-info">
+                                        <span class="customer-name">Priya Sharma</span>
+                                        <span class="customer-location">Delhi, NCR</span>
+                                    </div>
+                                </td>
+                                <td data-label="Items">
+                                    <div class="order-items">
+                                        <div class="item-preview">
+                                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect fill='%23e0e0e0' width='40' height='40'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='10' fill='%23666'%3ERobot%3C/text%3E%3C/svg%3E" alt="Product" class="item-image">
+                                            <span>Yellow Titan Robot</span>
+                                        </div>
+                                        <div class="items-count">Qty: 1</div>
+                                    </div>
+                                </td>
+                                <td data-label="Amount">
+                                    <span class="order-amount">₹399</span>
+                                </td>
+                                <td data-label="Date & Time">
+                                    <div class="order-date">
+                                        30 Nov 2025
+                                        <span class="order-time">09:15 AM</span>
+                                    </div>
+                                </td>
+                                <td data-label="Status">
+                                    <span class="order-status confirmed">
+                                        <span class="status-dot"></span>
+                                        Confirmed
+                                    </span>
+                                </td>
+                                <td data-label="Actions">
+                                    <div class="order-actions">
+                                        <button class="action-icon-btn" title="View Details" onclick="viewOrder('AMZ-2024-1124')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-icon-btn" title="Track Order" onclick="window.location.href='../tracking/meesho-track-order.html?order=AMZ-2024-1124'">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                                <circle cx="12" cy="10" r="3"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-icon-btn" title="Print Label" onclick="printLabel('AMZ-2024-1124')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="6 9 6 2 18 2 18 9"/>
+                                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                                                <rect x="6" y="14" width="12" height="8"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Order 3: Shipped -->
+                            <tr data-status="shipped" data-order-id="AMZ-2024-1123" data-customer="Amit Patel">
+                                <td data-label="Select">
+                                    <input type="checkbox" class="order-checkbox order-select" onchange="updateBulkActions()">
+                                </td>
+                                <td data-label="Order ID">
+                                    <span class="order-id">AMZ-2024-1123</span>
+                                </td>
+                                <td data-label="Customer">
+                                    <div class="customer-info">
+                                        <span class="customer-name">Amit Patel</span>
+                                        <span class="customer-location">Bangalore, Karnataka</span>
+                                    </div>
+                                </td>
+                                <td data-label="Items">
+                                    <div class="order-items">
+                                        <div class="item-preview">
+                                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect fill='%23e0e0e0' width='40' height='40'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='10' fill='%23666'%3ERobot%3C/text%3E%3C/svg%3E" alt="Product" class="item-image">
+                                            <span>Red Titan Robot (Pack of 2)</span>
+                                        </div>
+                                        <div class="items-count">Qty: 1 pack</div>
+                                    </div>
+                                </td>
+                                <td data-label="Amount">
+                                    <span class="order-amount">₹750</span>
+                                </td>
+                                <td data-label="Date & Time">
+                                    <div class="order-date">
+                                        29 Nov 2025
+                                        <span class="order-time">04:30 PM</span>
+                                    </div>
+                                </td>
+                                <td data-label="Status">
+                                    <span class="order-status shipped">
+                                        <span class="status-dot"></span>
+                                        Shipped
+                                    </span>
+                                </td>
+                                <td data-label="Actions">
+                                    <div class="order-actions">
+                                        <button class="action-icon-btn" title="View Details" onclick="viewOrder('AMZ-2024-1123')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-icon-btn" title="Track Shipment" onclick="trackShipment('AMZ-2024-1123')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <polyline points="12 6 12 12 16 14"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Order 4: Delivered -->
+                            <tr data-status="delivered" data-order-id="AMZ-2024-1122" data-customer="Sneha Reddy">
+                                <td data-label="Select">
+                                    <input type="checkbox" class="order-checkbox order-select" onchange="updateBulkActions()">
+                                </td>
+                                <td data-label="Order ID">
+                                    <span class="order-id">AMZ-2024-1122</span>
+                                </td>
+                                <td data-label="Customer">
+                                    <div class="customer-info">
+                                        <span class="customer-name">Sneha Reddy</span>
+                                        <span class="customer-location">Hyderabad, Telangana</span>
+                                    </div>
+                                </td>
+                                <td data-label="Items">
+                                    <div class="order-items">
+                                        <div class="item-preview">
+                                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect fill='%23e0e0e0' width='40' height='40'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='10' fill='%23666'%3ERobot%3C/text%3E%3C/svg%3E" alt="Product" class="item-image">
+                                            <span>Yellow Titan Robot</span>
+                                        </div>
+                                        <div class="items-count">Qty: 3</div>
+                                    </div>
+                                </td>
+                                <td data-label="Amount">
+                                    <span class="order-amount">₹1,197</span>
+                                </td>
+                                <td data-label="Date & Time">
+                                    <div class="order-date">
+                                        28 Nov 2025
+                                        <span class="order-time">11:00 AM</span>
+                                    </div>
+                                </td>
+                                <td data-label="Status">
+                                    <span class="order-status delivered">
+                                        <span class="status-dot"></span>
+                                        Delivered
+                                    </span>
+                                </td>
+                                <td data-label="Actions">
+                                    <div class="order-actions">
+                                        <button class="action-icon-btn" title="View Details" onclick="viewOrder('AMZ-2024-1122')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Order 5: Pending -->
+                            <tr data-status="pending" data-order-id="AMZ-2024-1126" data-customer="Vikram Singh">
+                                <td data-label="Select">
+                                    <input type="checkbox" class="order-checkbox order-select" onchange="updateBulkActions()">
+                                </td>
+                                <td data-label="Order ID">
+                                    <span class="order-id">AMZ-2024-1126</span>
+                                </td>
+                                <td data-label="Customer">
+                                    <div class="customer-info">
+                                        <span class="customer-name">Vikram Singh</span>
+                                        <span class="customer-location">Pune, Maharashtra</span>
+                                    </div>
+                                </td>
+                                <td data-label="Items">
+                                    <div class="order-items">
+                                        <div class="item-preview">
+                                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect fill='%23e0e0e0' width='40' height='40'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='10' fill='%23666'%3ERobot%3C/text%3E%3C/svg%3E" alt="Product" class="item-image">
+                                            <span>Red Titan Robot</span>
+                                        </div>
+                                        <div class="items-count">Qty: 1</div>
+                                    </div>
+                                </td>
+                                <td data-label="Amount">
+                                    <span class="order-amount">₹399</span>
+                                </td>
+                                <td data-label="Date & Time">
+                                    <div class="order-date">
+                                        30 Nov 2025
+                                        <span class="order-time">11:45 AM</span>
+                                    </div>
+                                </td>
+                                <td data-label="Status">
+                                    <span class="order-status pending">
+                                        <span class="status-dot"></span>
+                                        Pending
+                                    </span>
+                                </td>
+                                <td data-label="Actions">
+                                    <div class="order-actions">
+                                        <button class="action-icon-btn" title="View Details" onclick="viewOrder('AMZ-2024-1126')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-icon-btn" title="Track Order" onclick="window.location.href='../tracking/meesho-track-order.html?order=AMZ-2024-1126'">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                                <circle cx="12" cy="10" r="3"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-icon-btn" title="Print Label" onclick="printLabel('AMZ-2024-1126')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="6 9 6 2 18 2 18 9"/>
+                                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                                                <rect x="6" y="14" width="12" height="8"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Order 6: Cancelled -->
+                            <tr data-status="cancelled" data-order-id="AMZ-2024-1121" data-customer="Ananya Gupta">
+                                <td data-label="Select">
+                                    <input type="checkbox" class="order-checkbox order-select" onchange="updateBulkActions()">
+                                </td>
+                                <td data-label="Order ID">
+                                    <span class="order-id">AMZ-2024-1121</span>
+                                </td>
+                                <td data-label="Customer">
+                                    <div class="customer-info">
+                                        <span class="customer-name">Ananya Gupta</span>
+                                        <span class="customer-location">Kolkata, West Bengal</span>
+                                    </div>
+                                </td>
+                                <td data-label="Items">
+                                    <div class="order-items">
+                                        <div class="item-preview">
+                                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect fill='%23e0e0e0' width='40' height='40'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='10' fill='%23666'%3ERobot%3C/text%3E%3C/svg%3E" alt="Product" class="item-image">
+                                            <span>Yellow Titan Robot</span>
+                                        </div>
+                                        <div class="items-count">Qty: 2</div>
+                                    </div>
+                                </td>
+                                <td data-label="Amount">
+                                    <span class="order-amount">₹798</span>
+                                </td>
+                                <td data-label="Date & Time">
+                                    <div class="order-date">
+                                        27 Nov 2025
+                                        <span class="order-time">02:20 PM</span>
+                                    </div>
+                                </td>
+                                <td data-label="Status">
+                                    <span class="order-status cancelled">
+                                        <span class="status-dot"></span>
+                                        Cancelled
+                                    </span>
+                                </td>
+                                <td data-label="Actions">
+                                    <div class="order-actions">
+                                        <button class="action-icon-btn" title="View Details" onclick="viewOrder('AMZ-2024-1121')">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal" id="orderModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalOrderId">Order Details</h2>
+                <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- Order Info Grid -->
+                <div class="order-details-grid">
+                    <div class="detail-section">
+                        <h3>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            Customer Information
+                        </h3>
+                        <div class="detail-row">
+                            <span class="detail-label">Name:</span>
+                            <span class="detail-value" id="modalCustomerName">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Phone:</span>
+                            <span class="detail-value" id="modalCustomerPhone">+91 98765 43210</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Email:</span>
+                            <span class="detail-value" id="modalCustomerEmail">customer@email.com</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            Shipping Address
+                        </h3>
+                        <div class="detail-row">
+                            <span class="detail-label">Address:</span>
+                            <span class="detail-value" id="modalAddress" style="text-align: right; max-width: 60%;">123 Main Street, Area Name</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">City:</span>
+                            <span class="detail-value" id="modalCity">-</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">PIN Code:</span>
+                            <span class="detail-value" id="modalPin">400001</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                                <line x1="1" y1="10" x2="23" y2="10"/>
+                            </svg>
+                            Payment Details
+                        </h3>
+                        <div class="detail-row">
+                            <span class="detail-label">Method:</span>
+                            <span class="detail-value" id="modalPaymentMethod">Online Payment</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value" id="modalPaymentStatus">Paid</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Transaction ID:</span>
+                            <span class="detail-value" id="modalTransactionId">TXN123456789</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/>
+                                <path d="M2 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/>
+                                <path d="M7 21h10"/>
+                                <path d="M12 3v18"/>
+                                <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/>
+                            </svg>
+                            Shipping Details
+                        </h3>
+                        <div class="detail-row">
+                            <span class="detail-label">Method:</span>
+                            <span class="detail-value" id="modalShippingMethod">FBA</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">AWB Number:</span>
+                            <span class="detail-value" id="modalAwbNumber">AWB987654321</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Est. Delivery:</span>
+                            <span class="detail-value" id="modalDeliveryDate">2 Dec 2025</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <div class="detail-section" style="margin-bottom: 2rem;">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Order Items
+                    </h3>
+                    <div class="order-items-list" id="modalOrderItems">
+                        <!-- Dynamic items will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Order Timeline -->
+                <div class="detail-section">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Order Timeline
+                    </h3>
+                    <div class="order-timeline" id="modalTimeline">
+                        <!-- Dynamic timeline will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons" style="margin-top: 2rem;" id="modalActions">
+                    <!-- Dynamic action buttons will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load user info
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('emsUser') || '{}');
+            if (user.name) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userRole').textContent = 'Meesho Seller';
+                document.getElementById('userAvatar').textContent = user.name.charAt(0);
+            }
+        });
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Export all orders
+        function exportAllOrders() {
+            const rows = document.querySelectorAll('#ordersTableBody tr');
+            const orders = Array.from(rows)
+                .filter(row => row.style.display !== 'none')
+                .map(row => ({
+                    orderId: row.dataset.orderId,
+                    customer: row.dataset.customer,
+                    status: row.dataset.status
+                }));
+            
+            const csv = [
+                ['Order ID', 'Customer', 'Status', 'Date'],
+                ...orders.map(o => [o.orderId, o.customer, o.status, new Date().toLocaleDateString()])
+            ].map(row => row.join(',')).join('\\n');
+            
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'all_orders_' + new Date().toISOString().split('T')[0] + '.csv';
+            a.click();
+            
+            showToast('Exported ' + orders.length + ' orders to CSV', 'success');
+        }
+
+        // Filter by status
+        function filterByStatus(status) {
+            const rows = document.querySelectorAll('#ordersTableBody tr');
+            const tabs = document.querySelectorAll('.status-tab');
+
+            // Update active tab
+            tabs.forEach(tab => {
+                if (tab.dataset.status === status) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            // Filter rows
+            rows.forEach(row => {
+                if (status === 'all') {
+                    row.style.display = '';
+                } else {
+                    row.style.display = row.dataset.status === status ? '' : 'none';
+                }
+            });
+
+            showToast('Showing ' + (status === 'all' ? 'all' : status) + ' orders', 'info');
+            filterOrders(); // Apply search filter too
+        }
+
+        // Filter orders (advanced)
+        function filterOrders() {
+            const searchTerm = document.getElementById('orderSearch').value.toLowerCase();
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const rows = document.querySelectorAll('#ordersTableBody tr');
+            const currentStatusFilter = document.querySelector('.status-tab.active').dataset.status;
+            
+            rows.forEach(row => {
+                const orderId = row.dataset.orderId ? row.dataset.orderId.toLowerCase() : '';
+                const customer = row.dataset.customer ? row.dataset.customer.toLowerCase() : '';
+                
+                // Search filter
+                const matchesSearch = !searchTerm || orderId.includes(searchTerm) || customer.includes(searchTerm);
+                
+                // Status filter
+                const matchesStatus = currentStatusFilter === 'all' || row.dataset.status === currentStatusFilter;
+                
+                row.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
+            });
+        }
+
+        // Clear all filters
+        function clearFilters() {
+            document.getElementById('orderSearch').value = '';
+            document.getElementById('startDate').value = '';
+            document.getElementById('endDate').value = '';
+            filterOrders();
+            showToast('Filters cleared', 'info');
+        }
+
+        // Toggle select all
+        function toggleSelectAll() {
+            const selectAll = document.getElementById('selectAll');
+            const checkboxes = document.querySelectorAll('.order-select');
+            checkboxes.forEach(cb => {
+                if (cb.closest('tr').style.display !== 'none') {
+                    cb.checked = selectAll.checked;
+                }
+            });
+            updateBulkActions();
+        }
+
+        // Update bulk actions bar
+        function updateBulkActions() {
+            const selected = document.querySelectorAll('.order-select:checked');
+            const bulkBar = document.getElementById('bulkActionsBar');
+            const count = document.getElementById('selectedCount');
+            
+            count.textContent = selected.length;
+            
+            if (selected.length > 0) {
+                bulkBar.classList.add('show');
+            } else {
+                bulkBar.classList.remove('show');
+                document.getElementById('selectAll').checked = false;
+            }
+        }
+
+        // Clear selection
+        function clearSelection() {
+            document.querySelectorAll('.order-select').forEach(cb => cb.checked = false);
+            document.getElementById('selectAll').checked = false;
+            updateBulkActions();
+        }
+
+        // Bulk print labels
+        function bulkPrintLabels() {
+            const selected = document.querySelectorAll('.order-select:checked');
+            const orderIds = Array.from(selected).map(cb => cb.closest('tr').dataset.orderId);
+            showToast(`Generating labels for ${orderIds.length} orders...`, 'info');
+            setTimeout(() => {
+                showToast('Labels ready! Opening print dialog...', 'success');
+                clearSelection();
+            }, 1500);
+        }
+
+        // Bulk mark as shipped
+        function bulkMarkShipped() {
+            const selected = document.querySelectorAll('.order-select:checked');
+            const orderIds = Array.from(selected).map(cb => cb.closest('tr').dataset.orderId);
+            showToast(`Marking ${orderIds.length} orders as shipped...`, 'info');
+            setTimeout(() => {
+                showToast('Orders marked as shipped successfully!', 'success');
+                clearSelection();
+            }, 1500);
+        }
+
+        // Bulk export
+        function bulkExport() {
+            const selected = document.querySelectorAll('.order-select:checked');
+            const orders = Array.from(selected).map(cb => {
+                const row = cb.closest('tr');
+                return {
+                    orderId: row.dataset.orderId,
+                    customer: row.dataset.customer,
+                    status: row.dataset.status
+                };
+            });
+            
+            // Convert to CSV
+            const csv = [
+                ['Order ID', 'Customer', 'Status'],
+                ...orders.map(o => [o.orderId, o.customer, o.status])
+            ].map(row => row.join(',')).join('\n');
+            
+            // Download
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'orders_' + new Date().toISOString().split('T')[0] + '.csv';
+            a.click();
+            
+            showToast('Exported ' + orders.length + ' orders to CSV', 'success');
+            clearSelection();
+        }
+
+        // Filter by status
+        function filterByStatus(status) {
+            const rows = document.querySelectorAll('#ordersTableBody tr');
+            const tabs = document.querySelectorAll('.status-tab');
+
+            // Update active tab
+            tabs.forEach(tab => {
+                if (tab.dataset.status === status) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+
+            // Filter rows
+            rows.forEach(row => {
+                if (status === 'all') {
+                    row.style.display = '';
+                } else {
+                    row.style.display = row.dataset.status === status ? '' : 'none';
+                }
+            });
+
+            showToast('Showing ' + (status === 'all' ? 'all' : status) + ' orders', 'info');
+            filterOrders(); // Apply search filter too
+        }
+
+        // Sync orders
+        function syncOrders() {
+            showToast('Syncing orders from Meesho...', 'info');
+            setTimeout(() => {
+                showToast('Orders synced successfully!', 'success');
+            }, 2000);
+        }
+
+        // Order data (demo - will come from API)
+        const orderData = {
+            'AMZ-2024-1125': {
+                customer: { name: 'Rajesh Kumar', phone: '+91 98765 43210', email: 'rajesh@email.com', location: 'Mumbai, Maharashtra' },
+                address: '123 Marine Drive, Nariman Point',
+                city: 'Mumbai',
+                pin: '400001',
+                items: [{ name: 'Red Titan Robot', sku: 'TITAN13-RED', qty: 2, price: 399 }],
+                status: 'pending',
+                total: 798,
+                timeline: [
+                    { time: '30 Nov 2025, 10:24 AM', title: 'Order Placed', desc: 'Order received from customer', status: 'completed' },
+                    { time: 'Pending', title: 'Confirm Order', desc: 'Waiting for confirmation', status: 'pending' }
+                ]
+            },
+            'AMZ-2024-1124': {
+                customer: { name: 'Priya Sharma', phone: '+91 98765 43211', email: 'priya@email.com', location: 'Delhi, NCR' },
+                address: '45 Connaught Place',
+                city: 'New Delhi',
+                pin: '110001',
+                items: [{ name: 'Yellow Titan Robot', sku: 'TITAN13-YLW', qty: 1, price: 399 }],
+                status: 'confirmed',
+                total: 399,
+                timeline: [
+                    { time: '30 Nov 2025, 09:15 AM', title: 'Order Placed', desc: 'Order received from customer', status: 'completed' },
+                    { time: '30 Nov 2025, 09:30 AM', title: 'Order Confirmed', desc: 'Order confirmed and ready to ship', status: 'completed' },
+                    { time: 'Pending', title: 'Ship Order', desc: 'Waiting for shipment', status: 'pending' }
+                ]
+            },
+            'AMZ-2024-1123': {
+                customer: { name: 'Amit Patel', phone: '+91 98765 43212', email: 'amit@email.com', location: 'Bangalore, Karnataka' },
+                address: '67 MG Road, Indiranagar',
+                city: 'Bangalore',
+                pin: '560038',
+                items: [{ name: 'Red Titan Robot (Pack of 2)', sku: 'TITAN13-RED-2PC', qty: 1, price: 750 }],
+                status: 'shipped',
+                total: 750,
+                timeline: [
+                    { time: '29 Nov 2025, 04:30 PM', title: 'Order Placed', desc: 'Order received from customer', status: 'completed' },
+                    { time: '29 Nov 2025, 05:00 PM', title: 'Order Confirmed', desc: 'Order confirmed', status: 'completed' },
+                    { time: '29 Nov 2025, 06:15 PM', title: 'Shipped', desc: 'Order shipped via Meesho Logistics', status: 'completed' },
+                    { time: 'Est. 1 Dec 2025', title: 'Out for Delivery', desc: 'Package out for delivery', status: 'pending' }
+                ]
+            },
+            'AMZ-2024-1122': {
+                customer: { name: 'Sneha Reddy', phone: '+91 98765 43213', email: 'sneha@email.com', location: 'Hyderabad, Telangana' },
+                address: '89 Banjara Hills Road No 3',
+                city: 'Hyderabad',
+                pin: '500034',
+                items: [{ name: 'Yellow Titan Robot', sku: 'TITAN13-YLW', qty: 3, price: 399 }],
+                status: 'delivered',
+                total: 1197,
+                timeline: [
+                    { time: '28 Nov 2025, 11:00 AM', title: 'Order Placed', desc: 'Order received from customer', status: 'completed' },
+                    { time: '28 Nov 2025, 11:30 AM', title: 'Order Confirmed', desc: 'Order confirmed', status: 'completed' },
+                    { time: '28 Nov 2025, 02:00 PM', title: 'Shipped', desc: 'Order shipped', status: 'completed' },
+                    { time: '29 Nov 2025, 10:15 AM', title: 'Out for Delivery', desc: 'Package out for delivery', status: 'completed' },
+                    { time: '29 Nov 2025, 04:30 PM', title: 'Delivered', desc: 'Successfully delivered', status: 'completed' }
+                ]
+            },
+            'AMZ-2024-1126': {
+                customer: { name: 'Vikram Singh', phone: '+91 98765 43214', email: 'vikram@email.com', location: 'Pune, Maharashtra' },
+                address: '12 FC Road, Shivajinagar',
+                city: 'Pune',
+                pin: '411004',
+                items: [{ name: 'Red Titan Robot', sku: 'TITAN13-RED', qty: 1, price: 399 }],
+                status: 'pending',
+                total: 399,
+                timeline: [
+                    { time: '30 Nov 2025, 11:45 AM', title: 'Order Placed', desc: 'Order received from customer', status: 'completed' },
+                    { time: 'Pending', title: 'Confirm Order', desc: 'Waiting for confirmation', status: 'pending' }
+                ]
+            },
+            'AMZ-2024-1121': {
+                customer: { name: 'Ananya Gupta', phone: '+91 98765 43215', email: 'ananya@email.com', location: 'Kolkata, West Bengal' },
+                address: '34 Park Street, Central Kolkata',
+                city: 'Kolkata',
+                pin: '700016',
+                items: [{ name: 'Yellow Titan Robot', sku: 'TITAN13-YLW', qty: 2, price: 399 }],
+                status: 'cancelled',
+                total: 798,
+                timeline: [
+                    { time: '27 Nov 2025, 02:20 PM', title: 'Order Placed', desc: 'Order received from customer', status: 'completed' },
+                    { time: '27 Nov 2025, 03:15 PM', title: 'Cancelled', desc: 'Order cancelled by customer', status: 'completed' }
+                ]
+            }
+        };
+
+        // View order details
+        function viewOrder(orderId) {
+            const order = orderData[orderId];
+            if (!order) {
+                showToast('Order not found', 'error');
+                return;
+            }
+
+            // Set modal title
+            document.getElementById('modalOrderId').textContent = `Order ${orderId}`;
+
+            // Set customer info
+            document.getElementById('modalCustomerName').textContent = order.customer.name;
+            document.getElementById('modalCustomerPhone').textContent = order.customer.phone;
+            document.getElementById('modalCustomerEmail').textContent = order.customer.email;
+
+            // Set shipping address
+            document.getElementById('modalAddress').textContent = order.address;
+            document.getElementById('modalCity').textContent = order.city;
+            document.getElementById('modalPin').textContent = order.pin;
+
+            // Set order items
+            const itemsHtml = order.items.map(item => `
+                <div class="order-item-card">
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect fill='%23e0e0e0' width='80' height='80'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='12' fill='%23666'%3E${item.sku.includes('RED') ? 'Red' : 'Yellow'}%3C/text%3E%3Ctext x='50%25' y='65%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='10' fill='%23666'%3ERobot%3C/text%3E%3C/svg%3E" alt="${item.name}" class="order-item-image">
+                    <div class="order-item-details">
+                        <div class="order-item-name">${item.name}</div>
+                        <div class="order-item-meta">SKU: ${item.sku}</div>
+                        <div class="order-item-meta">Quantity: ${item.qty}</div>
+                    </div>
+                    <div class="order-item-price">
+                        <div class="order-item-price-label">Price</div>
+                        <div class="order-item-price-value">₹${item.price}</div>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('modalOrderItems').innerHTML = itemsHtml;
+
+            // Set timeline
+            const timelineHtml = order.timeline.map(item => `
+                <div class="timeline-item ${item.status}">
+                    <div class="timeline-time">${item.time}</div>
+                    <div class="timeline-title">${item.title}</div>
+                    <div class="timeline-desc">${item.desc}</div>
+                </div>
+            `).join('');
+            document.getElementById('modalTimeline').innerHTML = timelineHtml;
+
+            // Set action buttons based on status
+            let actionsHtml = '';
+            if (order.status === 'pending' || order.status === 'confirmed') {
+                actionsHtml = `
+                    <button class="btn btn-primary" onclick="markAsShipped('${orderId}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <path d="M16 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/>
+                            <path d="M2 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"/>
+                        </svg>
+                        Mark as Shipped
+                    </button>
+                    <button class="btn btn-secondary" onclick="printLabel('${orderId}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <polyline points="6 9 6 2 18 2 18 9"/>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                        </svg>
+                        Print Label
+                    </button>
+                    <button class="btn btn-secondary" onclick="cancelOrder('${orderId}')" style="background: var(--error-color); border-color: var(--error-color); color: white;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="15" y1="9" x2="9" y2="15"/>
+                            <line x1="9" y1="9" x2="15" y2="15"/>
+                        </svg>
+                        Cancel Order
+                    </button>
+                `;
+            } else if (order.status === 'shipped') {
+                actionsHtml = `
+                    <button class="btn btn-primary" onclick="trackShipment('${orderId}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Track Shipment
+                    </button>
+                    <button class="btn btn-secondary" onclick="printLabel('${orderId}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <polyline points="6 9 6 2 18 2 18 9"/>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                        </svg>
+                        Print Label
+                    </button>
+                `;
+            } else {
+                actionsHtml = `
+                    <button class="btn btn-secondary" onclick="printLabel('${orderId}')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                            <polyline points="6 9 6 2 18 2 18 9"/>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                        </svg>
+                        Print Invoice
+                    </button>
+                `;
+            }
+            document.getElementById('modalActions').innerHTML = actionsHtml;
+
+            // Show modal
+            document.getElementById('orderModal').classList.add('show');
+        }
+
+        // Close modal
+        function closeOrderModal() {
+            document.getElementById('orderModal').classList.remove('show');
+        }
+
+        // Close modal on outside click
+        document.getElementById('orderModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeOrderModal();
+            }
+        });
+
+        // Mark as shipped
+        function markAsShipped(orderId) {
+            showToast(`Processing shipment for ${orderId}...`, 'info');
+            setTimeout(() => {
+                showToast('Order marked as shipped successfully!', 'success');
+                closeOrderModal();
+                // In real app, would update the table row status
+            }, 1500);
+        }
+
+        // Cancel order
+        function cancelOrder(orderId) {
+            if (confirm(`Are you sure you want to cancel order ${orderId}? This action cannot be undone.`)) {
+                showToast(`Cancelling order ${orderId}...`, 'info');
+                setTimeout(() => {
+                    showToast('Order cancelled successfully', 'success');
+                    closeOrderModal();
+                    // In real app, would update the table row status
+                }, 1500);
+            }
+        }
+
+        // Print label
+        function printLabel(orderId) {
+            showToast(`Generating shipping label for ${orderId}...`, 'info');
+            setTimeout(() => {
+                showToast('Label ready! Opening print dialog...', 'success');
+                // In real app, would generate PDF and open print dialog
+                window.print();
+            }, 1000);
+        }
+
+        // Track shipment
+        function trackShipment(orderId) {
+            showToast(`Loading tracking information for ${orderId}...`, 'info');
+            setTimeout(() => {
+                showToast('Tracking: Package in transit, arriving tomorrow', 'success');
+                // In real app, would open tracking page or show tracking modal
+            }, 1000);
+        }
+
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">×</button>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

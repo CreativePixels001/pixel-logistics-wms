@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Renewal Successful - Pixel Safe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+        
+        .success-container {
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        .success-card {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: scaleIn 0.5s ease-out;
+        }
+        
+        @keyframes scaleIn {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .success-icon svg {
+            color: white;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #000;
+        }
+        
+        .subtitle {
+            font-size: 1.125rem;
+            color: #6b7280;
+            margin-bottom: 2rem;
+        }
+        
+        .policy-card {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .policy-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px dashed #e5e7eb;
+        }
+        
+        .policy-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+            font-family: monospace;
+            margin-bottom: 0.5rem;
+        }
+        
+        .renewal-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .detail-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+        
+        .detail-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #000;
+        }
+        
+        .transaction-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .transaction-title {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            margin-bottom: 0.5rem;
+        }
+        
+        .transaction-id {
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-family: monospace;
+        }
+        
+        .actions {
+            display: grid;
+            gap: 1rem;
+        }
+        
+        button, a.button {
+            width: 100%;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background: #000;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #333;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-secondary {
+            background: #f3f4f6;
+            color: #374151;
+        }
+        
+        .btn-secondary:hover {
+            background: #e5e7eb;
+        }
+        
+        .next-steps {
+            background: #fffbeb;
+            border: 1px solid #fef3c7;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: left;
+        }
+        
+        .next-steps h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 1rem;
+        }
+        
+        .next-steps ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .next-steps li {
+            padding: 0.5rem 0;
+            color: #78350f;
+            display: flex;
+            align-items: start;
+            gap: 0.5rem;
+        }
+        
+        .next-steps li::before {
+            content: "✓";
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        @media (max-width: 640px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .success-card {
+                padding: 2rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-card">
+            <!-- Success Icon -->
+            <div class="success-icon">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                    <polyline points="20 6 9 17 4 12"/>
+                </svg>
+            </div>
+            
+            <!-- Success Message -->
+            <h1>Renewal Successful!</h1>
+            <p class="subtitle">Your policy has been renewed successfully</p>
+            
+            <!-- Policy Details -->
+            <div class="policy-card">
+                <div class="policy-header">
+                    <div class="policy-number" id="policyNumber">-</div>
+                    <span class="renewal-badge">✓ Renewed for 1 Year</span>
+                </div>
+                
+                <div class="details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Plan Name</span>
+                        <span class="detail-value" id="planName">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Amount Paid</span>
+                        <span class="detail-value" id="amountPaid">₹0</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Payment Method</span>
+                        <span class="detail-value" id="paymentMethod">-</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">New Expiry Date</span>
+                        <span class="detail-value" id="expiryDate">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Transaction Details -->
+            <div class="transaction-card">
+                <div class="transaction-title">Transaction ID</div>
+                <div class="transaction-id" id="transactionId">-</div>
+            </div>
+            
+            <!-- Actions -->
+            <div class="actions">
+                <button class="btn-primary" onclick="downloadPolicy()">
+                    Download Renewed Policy
+                </button>
+                <a href="my-policies.html" class="button btn-secondary">
+                    View All Policies
+                </a>
+            </div>
+            
+            <!-- Next Steps -->
+            <div class="next-steps">
+                <h3>What happens next?</h3>
+                <ul>
+                    <li>Your renewed policy document will be emailed to you within 24 hours</li>
+                    <li>You can download your policy anytime from "My Policies"</li>
+                    <li>Your coverage continues without any interruption</li>
+                    <li>You'll receive a confirmation SMS shortly</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="renewal-success.js"></script>
+</body>
+</html>

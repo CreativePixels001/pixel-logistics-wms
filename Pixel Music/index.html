@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Play - Free Online Music Player</title>
+    <meta name="description" content="Stream unlimited music for free with Pixel Play's retro vinyl interface. No ads, no subscriptions. Play music online now!">
+    
+    <!-- Preconnect to external domains for faster loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://www.youtube.com">
+    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    
+    <!-- Open Graph Meta Tags (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:title" content="Pixel Play - Free Online Music Player">
+    <meta property="og:description" content="Stream unlimited music for free with retro vinyl aesthetics. No ads, no subscriptions!">
+    <meta property="og:image" content="https://play.creativepixels.in/SharePixel.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://play.creativepixels.in/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Pixel Play">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Pixel Play - Free Online Music Player">
+    <meta name="twitter:description" content="Stream unlimited music for free with retro vinyl aesthetics. No ads, no subscriptions!">
+    <meta name="twitter:image" content="https://play.creativepixels.in/SharePixel.png">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="PixelPlayLogo-White.svg">
+    
+    <!-- Critical CSS - Inline for instant render -->
+    <style>
+        body{margin:0;background:#000;color:#fff;font-family:system-ui,-apple-system,sans-serif;}
+        .login-screen,.app-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;}
+        .loading{text-align:center;padding:2rem;}
+    </style>
+    
+    <!-- Google Analytics - Async load -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KYS6H6HWBL"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KYS6H6HWBL');
+    </script>
+    
+    <!-- Bootstrap CSS - Async load -->
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"></noscript>
+    
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"></noscript>
+    
+    <!-- Google Fonts - Display swap for faster text render -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&family=Roboto+Mono&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&family=Roboto+Mono&display=swap" rel="stylesheet"></noscript>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Define Google Sign-In callback BEFORE loading the library -->
+    <script>
+        // Placeholder callback - will be replaced when auth.js loads
+        window.handleCredentialResponse = function(response) {
+            // Store the response and process when auth.js is ready
+            window.pendingGoogleResponse = response;
+        };
+    </script>
+    
+    <!-- Google Sign-In - Defer load -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-logo">
+                <i class="bi bi-vinyl-fill"></i>
+            </div>
+            <h1 class="login-title">Pixel Play</h1>
+            <p class="login-subtitle">Your Retro Vinyl Experience</p>
+            
+            <div id="g_id_onload"
+                 data-client_id="469366716838-3140k3fu6lqrrj7uvfv11u8a29jdsrvb.apps.googleusercontent.com"
+                 data-callback="handleCredentialResponse">
+            </div>
+            <div class="g_id_signin" 
+                 data-type="standard"
+                 data-size="large"
+                 data-theme="filled_black"
+                 data-text="sign_in_with"
+                 data-shape="rectangular"
+                 data-logo_alignment="left">
+            </div>
+            
+            <button class="btn btn-outline-light mt-3" onclick="skipLogin()">
+                <i class="bi bi-play-circle"></i> Continue without Login
+            </button>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="appScreen" class="app-screen" style="display: none;">
+        <!-- Header -->
+        <nav class="navbar navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <img src="PixelPlayLogo-White.svg" alt="Play" style="height: 32px; vertical-align: middle;">
+                    <span class="logo-text">Play</span>
+                </a>
+                <div class="navbar-actions">
+                    <!-- Mobile: Search & Profile Icons -->
+                    <button class="btn btn-link mobile-header-icon mobile-search-icon" onclick="openMobileSearch()">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <button class="btn btn-link mobile-header-icon mobile-profile-icon" onclick="toggleMobileProfileMenu()">
+                        <img id="mobileProfileImg" src="" alt="" style="display: none; width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+                        <i class="bi bi-person" id="mobileProfileIconDefault"></i>
+                    </button>
+                    <!-- Legacy mobile buttons (hidden) -->
+                    <button class="btn btn-sm btn-outline-light me-2 mobile-search-btn" onclick="toggleMobileSearch()" style="display: none !important;">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-light mobile-menu-btn" onclick="toggleMobileSidebar()">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <div class="navbar-text desktop-only">
+                        <div class="profile-dropdown">
+                            <button class="profile-btn" onclick="toggleProfileDropdown()">
+                                <span id="userName"></span>
+                                <i class="bi bi-chevron-down dropdown-arrow"></i>
+                            </button>
+                            <div class="profile-dropdown-menu" id="profileDropdownMenu">
+                                <a href="#" class="dropdown-item" onclick="showProfile(); return false;">
+                                    <i class="bi bi-person"></i> Profile
+                                </a>
+                                <a href="#" class="dropdown-item" onclick="showSettings(); return false;">
+                                    <i class="bi bi-gear"></i> Settings
+                                </a>
+                                <a href="radio.html" class="dropdown-item">
+                                    <i class="bi bi-broadcast"></i> Pixel Radio
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a href="#" class="dropdown-item logout-item" onclick="logout(); return false;">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Sliding Search Bar -->
+        <div class="mobile-sliding-search" id="mobileSlidingSearch">
+            <button class="search-back-btn" onclick="closeMobileSearchToPlayer()">
+                <i class="bi bi-arrow-left"></i>
+            </button>
+            <input type="text" id="mobileSlideSearchInput" class="slide-search-input" placeholder="Search it. Play it. Feel it.">
+        </div>
+
+        <!-- Mobile Profile Menu -->
+        <div class="mobile-profile-menu" id="mobileProfileMenu">
+            <a href="#" class="mobile-profile-item" onclick="showProfile(); closeMobileProfileMenu(); return false;">
+                <i class="bi bi-person"></i> Profile
+            </a>
+            <a href="#" class="mobile-profile-item" onclick="showSettings(); closeMobileProfileMenu(); return false;">
+                <i class="bi bi-gear"></i> Settings
+            </a>
+            <a href="radio.html" class="mobile-profile-item">
+                <i class="bi bi-broadcast"></i> Pixel Radio
+            </a>
+            <div class="mobile-profile-divider"></div>
+            <a href="#" class="mobile-profile-item logout" onclick="logout(); return false;">
+                <i class="bi bi-box-arrow-right"></i> Logout
+            </a>
+        </div>
+
+        <!-- Mobile Search Modal -->
+        <div class="mobile-search-modal" id="mobileSearchModal">
+            <div class="mobile-search-header">
+                <h5><i class="bi bi-vinyl-fill"></i> Discover Records</h5>
+                <button class="btn-close btn-close-white" onclick="toggleMobileSearch()"></button>
+            </div>
+            <div class="mobile-search-content">
+                <div class="search-box">
+                    <input type="text" id="mobileSearchInput" class="form-control" placeholder="Search it. Play it. Feel it.">
+                    <button id="mobileSearchBtn" class="btn btn-primary">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+                <div id="mobileSongList" class="song-list"></div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="container-fluid main-content">
+            <div class="row h-100">
+                <!-- Sidebar -->
+                <div class="col-lg-4 col-md-5 sidebar" id="sidebar">
+                    <!-- Platform Tabs -->
+                    <ul class="nav nav-tabs platform-tabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" data-platform="youtube" onclick="switchPlatform('youtube')">
+                                <i class="bi bi-vinyl-fill"></i> Discover Records
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" data-platform="library" onclick="switchPlatform('library')">
+                                <i class="bi bi-heart-fill"></i> Records Library <span class="library-count" id="libraryCount"></span>
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Search Box (Always Visible) -->
+                    <div class="search-box">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search it. Play it. Feel it.">
+                        <span class="search-shortcut-badge" id="searchShortcutBadge">⌘K</span>
+                        <button id="searchBtn" class="btn btn-primary">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+
+                    <!-- YouTube Content -->
+                    <div class="tab-content" id="youtubeContent">
+                        <div id="songList" class="song-list"></div>
+                    </div>
+
+                    <!-- Records Library Content -->
+                    <div class="tab-content" id="libraryContent" style="display: none;">
+                        <div class="library-header">
+                            <h5><i class="bi bi-heart-fill"></i> Your Saved Records</h5>
+                            <button class="btn btn-sm btn-outline-light" onclick="clearLibrary()" id="clearLibraryBtn" style="display: none;">
+                                <i class="bi bi-trash"></i> Clear All
+                            </button>
+                        </div>
+                        
+                        <div id="librarySongList" class="song-list">
+                            <div class="empty-library" id="emptyLibrary">
+                                <i class="bi bi-heart"></i>
+                                <p>No records in your library yet</p>
+                                <p class="small">Click the ❤️ icon on any song to save it here</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Player Area -->
+                <div class="col-lg-8 col-md-7 player-area" id="playerArea">
+                    <div class="vinyl-container">
+                        <!-- Turntable Platter Base (Always Visible) -->
+                        <div class="turntable-platter" id="turntablePlatter">
+                            <div class="platter-ring"></div>
+                            <div class="platter-center"></div>
+                            <div class="platter-spindle"></div>
+                        </div>
+
+                        <!-- Vinyl Disc (Slides up when song plays) -->
+                        <div class="vinyl-disc" id="vinylDisc">
+                            <div class="vinyl-outer-ring"></div>
+                            <div class="vinyl-grooves"></div>
+                            <div class="vinyl-label">
+                                <div class="album-art" id="albumArt">
+                                    <i class="bi bi-music-note-beamed"></i>
+                                </div>
+                            </div>
+                            <div class="vinyl-center-hole"></div>
+                        </div>
+
+                        <!-- Tonearm -->
+                        <div class="tonearm" id="tonearm">
+                            <div class="tonearm-base"></div>
+                            <div class="tonearm-arm" id="tonearmArm">
+                                <div class="arm-segment segment-1"></div>
+                                <div class="arm-segment segment-2"></div>
+                                <div class="arm-segment segment-3"></div>
+                            </div>
+                            <div class="tonearm-head" id="tonearmHead"></div>
+                        </div>
+
+                        <!-- Fullscreen Button -->
+                        <button class="fullscreen-btn" onclick="toggleFullscreen()" title="Fullscreen (F)">
+                            <i class="bi bi-fullscreen"></i>
+                        </button>
+                    </div>
+
+                    <!-- Controls Panel -->
+                    <div class="controls-panel" id="controlsPanel">
+                        <div class="song-info">
+                            <div class="song-title" id="currentSongTitle">No song playing</div>
+                            <div class="song-artist" id="currentSongArtist">Select a song to play</div>
+                        </div>
+
+                        <div class="progress-container">
+                            <span class="time-display" id="currentTime">0:00</span>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="progressBar"></div>
+                                <input type="range" class="progress-slider" id="progressSlider" min="0" max="100" value="0">
+                            </div>
+                            <span class="time-display" id="totalTime">0:00</span>
+                        </div>
+
+                        <div class="playback-controls">
+                            <div class="volume-control-inline">
+                                <i class="bi bi-volume-down-fill volume-icon-left"></i>
+                                <input type="range" class="volume-slider-inline" id="volumeSlider" min="0" max="100" value="50">
+                                <i class="bi bi-volume-up-fill volume-icon-right"></i>
+                            </div>
+                            <button class="control-btn" id="shareBtn" onclick="shareSong()" title="Share">
+                                <i class="bi bi-share"></i>
+                            </button>
+                            <button class="control-btn" id="prevBtn" onclick="playPrevious()">
+                                <i class="bi bi-skip-start-fill"></i>
+                            </button>
+                            <button class="control-btn play-btn" id="playPauseBtn" onclick="togglePlayPause()">
+                                <i class="bi bi-play-fill"></i>
+                            </button>
+                            <button class="control-btn" id="nextBtn" onclick="playNext()">
+                                <i class="bi bi-skip-end-fill"></i>
+                            </button>
+                            <button class="control-btn heart-btn" id="controlsHeartBtn" onclick="toggleCurrentSongInLibrary()" title="Add to Library">
+                                <i class="bi bi-heart"></i>
+                            </button>
+                            <div class="autoplay-toggle-container" title="Autoplay">
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="autoplayToggle" onchange="toggleAutoplay()">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <span class="toggle-label">Autoplay</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden YouTube Player -->
+        <div id="youtubePlayer" style="display: none;"></div>
+
+        <!-- Hidden Audio Element for Local Files -->
+        <audio id="audioPlayer"></audio>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <div class="container-fluid">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="privacy-policy.html" target="_blank">Privacy Policy</a>
+                    <span class="footer-divider">|</span>
+                    <a href="terms-of-service.html" target="_blank">Terms of Service</a>
+                    <span class="footer-divider">|</span>
+                    <a href="dmca-policy.html" target="_blank">DMCA Policy</a>
+                    <span class="footer-divider">|</span>
+                    <a href="cookie-policy.html" target="_blank">Cookie Policy</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Pixel Play by <a href="https://creativepixels.in" target="_blank">Creative Pixels</a>. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts - Async/Defer for faster page load -->
+    <!-- Bootstrap JS - Defer (not needed immediately) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" defer></script>
+    
+    <!-- YouTube IFrame API - Async load -->
+    <script src="https://www.youtube.com/iframe_api" async></script>
+    
+    <!-- App Scripts - Defer for non-blocking load -->
+    <script src="config.js" defer></script>
+    <script src="analytics.js" defer></script>
+    <script src="auth.js" defer></script>
+    <script src="app.js" defer></script>
+</body>
+</html>

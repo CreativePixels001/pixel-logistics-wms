@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelGram - Design Process & Methodology | CreativePixels</title>
+    <meta name="description" content="Explore our comprehensive design process - from research and strategy to implementation and evolution.">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #000000;
+            --dark: #000000;
+            --light: #FFFFFF;
+            --gray: #666666;
+            --border: 2px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: white;
+            color: var(--dark);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Horizontal Scroll Container */
+        .horizontal-scroll-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .horizontal-scroll-container {
+            display: flex;
+            flex-wrap: nowrap;
+            width: fit-content;
+            transition: transform 0.3s ease;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: white;
+            border-bottom: var(--border) solid black;
+            padding: 1.5rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: black;
+            text-decoration: none;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: black;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            opacity: 0.6;
+        }
+
+        .cta-btn {
+            padding: 0.75rem 1.75rem;
+            background: black;
+            color: white !important;
+            border: var(--border) solid black;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            background: white;
+            color: black !important;
+        }
+
+        /* Hero Section - Full Screen */
+        .hero {
+            min-height: 100vh;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            border-bottom: var(--border) solid black;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated Dots Background */
+        .dots-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: black;
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty));
+            }
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.5rem 1.25rem;
+            background: black;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-title {
+            font-size: clamp(4rem, 10vw, 8rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: black;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            color: var(--gray);
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 1;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-hint-text {
+            font-size: 0.875rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+
+        /* Full Screen Steps */
+        .full-screen-step {
+            min-height: 100vh;
+            min-width: 100vw;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            border-right: var(--border) solid black;
+            flex-shrink: 0;
+        }
+
+        .full-screen-step:last-child {
+            border-right: none;
+        }
+
+        .full-screen-step:nth-child(even) {
+            background: #fafafa;
+        }
+
+        .step-content {
+            max-width: 1000px;
+            width: 100%;
+        }
+
+        .step-number {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray);
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .step-title {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            line-height: 1.1;
+            color: black;
+            flex: 1;
+        }
+
+        /* Audio Player Controls */
+        .audio-control {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .play-btn {
+            width: 60px;
+            height: 60px;
+            background: black;
+            border: var(--border) solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .play-btn:hover {
+            background: white;
+        }
+
+        .play-btn:hover svg {
+            stroke: black;
+        }
+
+        .play-btn.playing {
+            background: white;
+        }
+
+        .play-btn.playing svg {
+            stroke: black;
+        }
+
+        .sound-visualizer {
+            display: none;
+            align-items: center;
+            gap: 4px;
+            height: 40px;
+        }
+
+        .sound-visualizer.active {
+            display: flex;
+        }
+
+        .sound-bar {
+            width: 4px;
+            background: black;
+            animation: soundWave 0.8s ease-in-out infinite;
+            transform-origin: bottom;
+        }
+
+        .sound-bar:nth-child(1) { height: 10px; animation-delay: 0s; }
+        .sound-bar:nth-child(2) { height: 20px; animation-delay: 0.1s; }
+        .sound-bar:nth-child(3) { height: 30px; animation-delay: 0.2s; }
+        .sound-bar:nth-child(4) { height: 20px; animation-delay: 0.3s; }
+        .sound-bar:nth-child(5) { height: 15px; animation-delay: 0.4s; }
+
+        @keyframes soundWave {
+            0%, 100% { transform: scaleY(0.3); }
+            50% { transform: scaleY(1); }
+        }
+
+        .step-description {
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            color: var(--gray);
+            line-height: 1.7;
+            margin-bottom: 3rem;
+        }
+
+        .step-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .detail-box {
+            padding: 2.5rem;
+            border: var(--border) solid black;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .full-screen-step:nth-child(even) .detail-box {
+            background: #fafafa;
+        }
+
+        .detail-box:hover {
+            background: black;
+            color: white;
+        }
+
+        .detail-box:hover .detail-title {
+            color: white;
+        }
+
+        .detail-box:hover .detail-text {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .detail-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: black;
+        }
+
+        .detail-text {
+            color: var(--gray);
+            line-height: 1.7;
+            font-size: 1.05rem;
+        }
+
+        /* Applications Showcase Section */
+        .applications-showcase {
+            min-height: 100vh;
+            background: #000000;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .showcase-header {
+            text-align: center;
+            max-width: 1000px;
+            padding: 0 2rem;
+            margin-bottom: 4rem;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .showcase-title {
+            font-size: clamp(3rem, 7vw, 5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .showcase-subtitle {
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            font-weight: 300;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        .apps-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            padding: 2rem 0;
+        }
+
+        .apps-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .apps-container {
+            display: flex;
+            gap: 2rem;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+        }
+
+        .app-card {
+            min-width: 380px;
+            max-width: 400px;
+            height: 75vh;
+            max-height: 550px;
+            scroll-snap-align: start;
+            border: 2px solid #ffffff;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: #000000;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .app-card:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-5px);
+        }
+
+        .app-card:hover .app-number,
+        .app-card:hover .app-title,
+        .app-card:hover .app-description,
+        .app-card:hover .app-features,
+        .app-card:hover .app-status {
+            color: #000000;
+        }
+
+        .app-card:hover .feature-dot {
+            background: #000000;
+        }
+
+        .app-card.coming-soon {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .app-card.coming-soon:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: none;
+        }
+
+        .app-card.coming-soon:hover .app-number,
+        .app-card.coming-soon:hover .app-title,
+        .app-card.coming-soon:hover .app-description,
+        .app-card.coming-soon:hover .app-status {
+            color: #ffffff;
+        }
+
+        .app-number {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            opacity: 0.6;
+        }
+
+        .app-title {
+            font-size: clamp(1.75rem, 4vw, 2.25rem);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .app-description {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.9;
+        }
+
+        .app-features {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .feature-dot {
+            width: 6px;
+            height: 6px;
+            background: #ffffff;
+            margin-top: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .feature-text {
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .app-status {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.6rem 1.25rem;
+            border: 2px solid #ffffff;
+            display: inline-block;
+            width: fit-content;
+        }
+
+        .app-card.coming-soon .app-status {
+            border-style: dashed;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            min-height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem 2rem;
+            background: black;
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.25rem;
+            opacity: 0.8;
+            margin-bottom: 2.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-white {
+            display: inline-block;
+            padding: 1.25rem 3rem;
+            background: white;
+            color: black;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.125rem;
+            border: var(--border) solid white;
+            transition: all 0.3s ease;
+        }
+
+        .cta-white:hover {
+            background: black;
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: white;
+            padding: 4rem 2rem 2rem;
+            border-top: var(--border) solid black;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-brand h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand p {
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        .footer-column h4 {
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: black;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--gray);
+            font-size: 0.875rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-menu {
+                display: none;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .step-details {
+                grid-template-columns: 1fr;
+            }
+
+            .app-card {
+                min-width: 85vw;
+                max-width: 85vw;
+                padding: 2rem;
+            }
+
+            .app-title {
+                font-size: 2.5rem;
+            }
+
+            .apps-container {
+                padding: 0 1rem;
+            }
+
+            .showcase-header {
+                margin-bottom: 2rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .app-card {
+                min-width: 90vw;
+                max-width: 90vw;
+                height: 75vh;
+            }
+
+            .showcase-title {
+                font-size: 2.5rem;
+            }
+
+            .showcase-subtitle {
+                font-size: 1.125rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="home.html" class="logo">CreativePixels</a>
+            <ul class="nav-menu">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="pixelgram.html">PixelGram</a></li>
+                <li><a href="pixel-world.html">Pixel World</a></li>
+                <li><a href="pixelverse.html">PixelVerse</a></li>
+                <li><a href="get-in-touch.html" class="cta-btn">Get in Touch</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section with Animated Dots -->
+    <section class="hero">
+        <div class="dots-background" id="dotsBackground"></div>
+        <div class="hero-content">
+            <div class="hero-badge">DESIGN METHODOLOGY</div>
+            <h1 class="hero-title">PixelGram</h1>
+            <p class="hero-subtitle">
+                Our comprehensive design process that transforms ideas into exceptional digital products through 
+                systematic research, strategy, creativity, and technical excellence.
+            </p>
+        </div>
+        <div class="scroll-hint">
+            <div class="scroll-hint-text">SCROLL TO EXPLORE</div>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5v14M12 19l-7-7M12 19l7-7" stroke="#666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Horizontal Scroll Wrapper for All Steps -->
+    <div class="horizontal-scroll-wrapper" id="horizontalWrapper">
+        <div class="horizontal-scroll-container" id="horizontalContainer">
+            <!-- Step 1: Research & Discovery -->
+            <section class="full-screen-step">
+                <div class="step-content">
+                    <div class="step-number">STEP 01</div>
+                    <div class="step-header">
+                        <h2 class="step-title">Research & Discovery</h2>
+                        <div class="audio-control">
+                            <button class="play-btn" data-step="1" aria-label="Play audio">
+                                <svg class="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M8 5v14l11-7L8 5z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <svg class="pause-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                                    <path d="M6 4h4v16H6V4zM14 4h4v16h-4V4z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <div class="sound-visualizer" data-visualizer="1">
+                                <div class="sound-bar"></div>
+                                <div class="sound-bar"></div>
+                                <div class="sound-bar"></div>
+                                <div class="sound-bar"></div>
+                                <div class="sound-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="step-description">
+                        Every great product starts with deep understanding. We immerse ourselves in your business, 
+                        users, and market to uncover insights that drive meaningful innovation.
+                    </p>
+                    <div class="step-details">
+                        <div class="detail-box">
+                            <h3 class="detail-title">User Research</h3>
+                            <p class="detail-text">In-depth interviews, surveys, and behavioral analysis to understand your users' real needs, pain points, and motivations beyond what they say.</p>
+                        </div>
+                        <div class="detail-box">
+                            <h3 class="detail-title">Market Analysis</h3>
+                            <p class="detail-text">Comprehensive competitive landscape review and market trend analysis to identify opportunities for differentiation and innovation.</p>
+                        </div>
+                        <div class="detail-box">
+                            <h3 class="detail-title">Stakeholder Workshops</h3>
+                            <p class="detail-text">Collaborative sessions with key stakeholders to align on vision, define success metrics, and establish clear objectives for the project.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+    <!-- Step 2: Strategy & Planning -->
+    <section class="full-screen-step">
+        <div class="step-content">
+            <div class="step-number">STEP 02</div>
+            <div class="step-header">
+                <h2 class="step-title">Strategy & Planning</h2>
+                <div class="audio-control">
+                    <button class="play-btn" data-step="2" aria-label="Play audio">
+                        <svg class="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 5v14l11-7L8 5z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <svg class="pause-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                            <path d="M6 4h4v16H6V4zM14 4h4v16h-4V4z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="sound-visualizer" data-visualizer="2">
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                    </div>
+                </div>
+            </div>
+            <p class="step-description">
+                Transform insights into actionable strategy. We define clear objectives, map user journeys, 
+                and create a roadmap that turns your vision into reality.
+            </p>
+            <div class="step-details">
+                <div class="detail-box">
+                    <h3 class="detail-title">User Personas</h3>
+                    <p class="detail-text">Detailed, research-backed profiles of your target users that guide every design decision and ensure we're solving real problems.</p>
+                </div>
+                <div class="detail-box">
+                    <h3 class="detail-title">Journey Mapping</h3>
+                    <p class="detail-text">Visual representation of user interactions across all touchpoints, identifying pain points, moments of delight, and opportunities for improvement.</p>
+                </div>
+                <div class="detail-box">
+                    <h3 class="detail-title">Information Architecture</h3>
+                    <p class="detail-text">Logical content structure and navigation systems that make complex information intuitive, accessible, and easy to navigate.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Step 3: Wireframing & Prototyping -->
+    <section class="full-screen-step">
+        <div class="step-content">
+            <div class="step-number">STEP 03</div>
+            <div class="step-header">
+                <h2 class="step-title">Wireframing & Prototyping</h2>
+                <div class="audio-control">
+                    <button class="play-btn" data-step="3" aria-label="Play audio">
+                        <svg class="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 5v14l11-7L8 5z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <svg class="pause-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                            <path d="M6 4h4v16H6V4zM14 4h4v16h-4V4z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="sound-visualizer" data-visualizer="3">
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                    </div>
+                </div>
+            </div>
+            <p class="step-description">
+                Rapid iteration from concept to clickable prototype. We validate ideas early and often, 
+                reducing risk and ensuring we build the right solution before investing in development.
+            </p>
+            <div class="step-details">
+                <div class="detail-box">
+                    <h3 class="detail-title">Low-Fi Wireframes</h3>
+                    <p class="detail-text">Quick sketches and basic layouts to explore multiple solutions rapidly, gather early feedback, and iterate without attachment.</p>
+                </div>
+                <div class="detail-box">
+                    <h3 class="detail-title">Interactive Prototypes</h3>
+                    <p class="detail-text">Clickable, high-fidelity prototypes that simulate real user experiences, allowing for realistic testing before development begins.</p>
+                </div>
+                <div class="detail-box">
+                    <h3 class="detail-title">Usability Testing</h3>
+                    <p class="detail-text">Real users testing prototypes in realistic scenarios to validate flows, identify friction points, and refine the experience iteratively.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Step 4: Visual Design -->
+    <section class="full-screen-step">
+        <div class="step-content">
+            <div class="step-number">STEP 04</div>
+            <div class="step-header">
+                <h2 class="step-title">Visual Design</h2>
+                <div class="audio-control">
+                    <button class="play-btn" data-step="4" aria-label="Play audio">
+                        <svg class="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 5v14l11-7L8 5z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <svg class="pause-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                            <path d="M6 4h4v16H6V4zM14 4h4v16h-4V4z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="sound-visualizer" data-visualizer="4">
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                    </div>
+                </div>
+            </div>
+            <p class="step-description">
+                Where function meets beauty. We craft pixel-perfect interfaces that not only look stunning 
+                but enhance usability and reinforce your brand identity at every touchpoint.
+            </p>
+            <div class="step-details">
+                <div class="detail-box">
+                    <h3 class="detail-title">Design System</h3>
+                    <p class="detail-text">Comprehensive library of reusable components, patterns, and guidelines that ensure visual consistency and scalability across your entire product.</p>
+                </div>
+                <div class="detail-box">
+                    <h3 class="detail-title">UI Components</h3>
+                    <p class="detail-text">Beautiful, accessible interface elements designed for every state and interaction, from buttons to complex data visualizations.</p>
+                </div>
+                <div class="detail-box">
+                    <h3 class="detail-title">Brand Guidelines</h3>
+                    <p class="detail-text">Visual language including typography, color, iconography, and motion that captures your brand essence across every digital experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Step 5: Development & Testing -->
+    <section class="full-screen-step">
+        <div class="step-content">
+            <div class="step-number">STEP 05</div>
+            <div class="step-header">
+                <h2 class="step-title">Development & Testing</h2>
+                <div class="audio-control">
+                    <button class="play-btn" data-step="5" aria-label="Play audio">
+                        <svg class="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 5v14l11-7L8 5z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <svg class="pause-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                            <path d="M6 4h4v16H6V4zM14 4h4v16h-4V4z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="sound-visualizer" data-visualizer="5">
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                    </div>
+                </div>
+            </div>
+            <p class="step-description">
+                Transform designs into production-ready code. We build with performance, scalability, 
+                and maintainability in mind, ensuring quality at every level of implementation.
+            </p>
+            <div class="step-details">
+                <div class="detail-box">
+                    <h3 class="detail-title">Frontend Development</h3>
+                    <p class="detail-text">Clean, semantic code that brings designs to pixel-perfect life with smooth animations, interactions, and responsive layouts across all devices.</p>
+                </div>
+                <div class="detail-box">
+                    <h3 class="detail-title">Quality Assurance</h3>
+                    <p class="detail-text">Rigorous testing across devices, browsers, screen sizes, and accessibility standards to ensure flawless performance for every user.</p>
+                </div>
+                <div class="detail-box">
+                    <h3 class="detail-title">Performance Optimization</h3>
+                    <p class="detail-text">Speed and efficiency optimization through code splitting, lazy loading, caching strategies, and asset optimization for instant-feeling experiences.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Step 6: Launch & Iterate -->
+    <section class="full-screen-step">
+        <div class="step-content">
+            <div class="step-number">STEP 06</div>
+            <div class="step-header">
+                <h2 class="step-title">Launch & Iterate</h2>
+                <div class="audio-control">
+                    <button class="play-btn" data-step="6" aria-label="Play audio">
+                        <svg class="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M8 5v14l11-7L8 5z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <svg class="pause-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                            <path d="M6 4h4v16H6V4zM14 4h4v16h-4V4z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="sound-visualizer" data-visualizer="6">
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                    </div>
+                </div>
+            </div>
+            <p class="step-description">
+                Ship with confidence and evolve with data. We monitor, measure, and continuously improve 
+                based on real user behavior, business metrics, and changing market dynamics.
+            </p>
+            <div class="step-details">
+                <div class="detail-box">
+                    <h3 class="detail-title">Production Deployment</h3>
+                    <p class="detail-text">Smooth, risk-managed launch with comprehensive monitoring, staging environments, and rollback strategies to ensure zero-downtime releases.</p>
+                </div>
+                <div class="detail-box">
+                    <h3 class="detail-title">Analytics & Insights</h3>
+                    <p class="detail-text">Track key metrics, user behavior patterns, conversion funnels, and business KPIs to understand what's working and identify improvement opportunities.</p>
+                </div>
+                <div class="detail-box">
+                    <h3 class="detail-title">Continuous Optimization</h3>
+                    <p class="detail-text">Data-driven iterations, A/B testing, feature enhancements, and performance improvements based on real-world usage and user feedback loops.</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Start Your Design Journey?</h2>
+            <p>
+                Let's transform your vision into a beautifully crafted digital product that users love and that drives real business results.
+            </p>
+            <a href="studio.html" class="cta-white">Start Your Project →</a>
+        </div>
+    </section>
+
+    <!-- Applications Showcase Section -->
+    <section class="applications-showcase" id="applications">
+        <div class="apps-wrapper" id="apps-wrapper">
+            <div class="apps-container" id="apps-container">
+                <!-- WMS Card -->
+                <div class="app-card" onclick="window.location.href='wms-solution.html'" style="cursor: pointer;">
+                    <div class="app-number">SOLUTION 01</div>
+                    <div class="app-content">
+                        <h3 class="app-title">Warehouse Management System</h3>
+                        <p class="app-description">
+                            End-to-end warehouse operations platform. From inventory tracking to order fulfillment, 
+                            streamline your entire warehouse workflow with real-time visibility and intelligent automation.
+                        </p>
+                        <div class="app-features">
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Real-time inventory tracking</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Automated order processing</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Advanced analytics dashboard</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-status">Learn More →</div>
+                </div>
+
+                <!-- TMS Card -->
+                <div class="app-card" onclick="window.location.href='tms-solution.html'" style="cursor: pointer;">
+                    <div class="app-number">SOLUTION 02</div>
+                    <div class="app-content">
+                        <h3 class="app-title">Transport Management System</h3>
+                        <p class="app-description">
+                            Complete transportation and logistics solution. Manage fleets, optimize routes, 
+                            track shipments in real-time, and reduce operational costs with AI-powered logistics intelligence.
+                        </p>
+                        <div class="app-features">
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Live GPS tracking & route optimization</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Fleet management & maintenance</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Automated dispatch & scheduling</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-status">Learn More →</div>
+                </div>
+
+                <!-- PIS Card -->
+                <div class="app-card" onclick="window.location.href='pis-solution.html'" style="cursor: pointer;">
+                    <div class="app-number">SOLUTION 03</div>
+                    <div class="app-content">
+                        <h3 class="app-title">Pixel Insurance Solution</h3>
+                        <p class="app-description">
+                            Modern insurance management platform. Handle policies, claims, and customer relationships 
+                            with a comprehensive system designed for insurance agencies and brokers.
+                        </p>
+                        <div class="app-features">
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Policy lifecycle management</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Automated claims processing</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Client portal & CRM integration</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-status">Learn More →</div>
+                </div>
+
+                <!-- Coming Soon Card 1 -->
+                <div class="app-card coming-soon">
+                    <div class="app-number">SOLUTION 04</div>
+                    <div class="app-content">
+                        <h3 class="app-title">Next Innovation</h3>
+                        <p class="app-description">
+                            We're crafting something extraordinary. A new enterprise solution that will redefine 
+                            how businesses operate. Stay tuned for the reveal.
+                        </p>
+                        <div class="app-features">
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Enterprise-grade architecture</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">AI-powered automation</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Seamless integrations</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-status">Coming Soon</div>
+                </div>
+
+                <!-- Coming Soon Card 2 -->
+                <div class="app-card coming-soon">
+                    <div class="app-number">SOLUTION 05</div>
+                    <div class="app-content">
+                        <h3 class="app-title">Future Platform</h3>
+                        <p class="app-description">
+                            Innovation never stops at CreativePixels. We're building the next generation 
+                            of enterprise tools that will shape the future of digital transformation.
+                        </p>
+                        <div class="app-features">
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Cloud-native infrastructure</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Advanced analytics & insights</div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-dot"></div>
+                                <div class="feature-text">Scalable & secure</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-status">Coming Soon</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>CreativePixels</h3>
+                    <p>Transforming thoughts into monetizable products through innovative design, machine learning, and creative problem-solving.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                <rect x="2" y="9" width="4" height="12"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Email">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about-us.html">About Us</a></li>
+                        <li><a href="our-approach.html">Our Approach</a></li>
+                        <li><a href="pixel-world.html">Pixel World</a></li>
+                        <li><a href="pixelgram.html">PixelGram</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="digital-transformation.html">Digital Transformation</a></li>
+                        <li><a href="ai-ml.html">AI & Machine Learning</a></li>
+                        <li><a href="product-design.html">Product Design</a></li>
+                        <li><a href="development.html">Development</a></li>
+                        <li><a href="consulting.html">Consulting</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="get-in-touch.html">Get in Touch</a></li>
+                        <li><a href="support.html">Support</a></li>
+                        <li><a href="partners.html">Partners</a></li>
+                        <li><a href="press-kit.html">Press Kit</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 CreativePixels. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
+                    <a href="cookie-policy.html">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Audio content for each step
+        const audioContent = {
+            1: "Research and Discovery. Every great product starts with deep understanding. We immerse ourselves in your business, users, and market to uncover insights that drive meaningful innovation. Through user research, market analysis, and stakeholder workshops.",
+            2: "Strategy and Planning. Transform insights into actionable strategy. We define clear objectives, map user journeys, and create a roadmap that turns your vision into reality. Using user personas, journey mapping, and information architecture.",
+            3: "Wireframing and Prototyping. Rapid iteration from concept to clickable prototype. We validate ideas early and often, reducing risk and ensuring we build the right solution before investing in development.",
+            4: "Visual Design. Where function meets beauty. We craft pixel-perfect interfaces that not only look stunning but enhance usability and reinforce your brand identity at every touchpoint.",
+            5: "Development and Testing. Transform designs into production-ready code. We build with performance, scalability, and maintainability in mind, ensuring quality at every level of implementation.",
+            6: "Launch and Iterate. Ship with confidence and evolve with data. We monitor, measure, and continuously improve based on real user behavior, business metrics, and changing market dynamics."
+        };
+
+        // Current playing audio
+        let currentAudio = null;
+        let currentStep = null;
+
+        // Audio Player functionality
+        function initAudioPlayers() {
+            const playButtons = document.querySelectorAll('.play-btn');
+            
+            playButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const step = this.getAttribute('data-step');
+                    const visualizer = document.querySelector(`[data-visualizer="${step}"]`);
+                    const playIcon = this.querySelector('.play-icon');
+                    const pauseIcon = this.querySelector('.pause-icon');
+                    
+                    // If another audio is playing, stop it
+                    if (currentAudio && currentStep !== step) {
+                        stopAudio(currentStep);
+                    }
+                    
+                    // Toggle play/pause
+                    if (this.classList.contains('playing')) {
+                        // Pause
+                        if (currentAudio) {
+                            window.speechSynthesis.cancel();
+                            currentAudio = null;
+                        }
+                        this.classList.remove('playing');
+                        visualizer.classList.remove('active');
+                        playIcon.style.display = 'block';
+                        pauseIcon.style.display = 'none';
+                    } else {
+                        // Play
+                        playAudio(step, this, visualizer, playIcon, pauseIcon);
+                    }
+                });
+            });
+        }
+
+        function playAudio(step, button, visualizer, playIcon, pauseIcon) {
+            // Use Web Speech API for text-to-speech
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(audioContent[step]);
+                utterance.rate = 0.9; // Slightly slower for clarity
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                
+                // When speech ends
+                utterance.onend = function() {
+                    button.classList.remove('playing');
+                    visualizer.classList.remove('active');
+                    playIcon.style.display = 'block';
+                    pauseIcon.style.display = 'none';
+                    currentAudio = null;
+                    currentStep = null;
+                };
+                
+                // Start playing
+                window.speechSynthesis.speak(utterance);
+                currentAudio = utterance;
+                currentStep = step;
+                
+                // Update UI
+                button.classList.add('playing');
+                visualizer.classList.add('active');
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            } else {
+                // Fallback: show alert if speech synthesis not supported
+                alert('Your browser does not support audio playback. Please try a modern browser like Chrome, Firefox, or Safari.');
+            }
+        }
+
+        function stopAudio(step) {
+            const btn = document.querySelector(`[data-step="${step}"]`);
+            const visualizer = document.querySelector(`[data-visualizer="${step}"]`);
+            const playIcon = btn.querySelector('.play-icon');
+            const pauseIcon = btn.querySelector('.pause-icon');
+            
+            if (currentAudio) {
+                window.speechSynthesis.cancel();
+                currentAudio = null;
+            }
+            
+            btn.classList.remove('playing');
+            visualizer.classList.remove('active');
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+        }
+
+        // Generate animated dots background
+        function createDotsBackground() {
+            const dotsContainer = document.getElementById('dotsBackground');
+            const dotCount = 50;
+            
+            for (let i = 0; i < dotCount; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                
+                const startX = Math.random() * 100;
+                const startY = Math.random() * 100;
+                const moveX = (Math.random() - 0.5) * 300;
+                const moveY = (Math.random() - 0.5) * 300;
+                const opacity = 0.05 + Math.random() * 0.15;
+                const duration = 30 + Math.random() * 30;
+                const delay = Math.random() * 15;
+                
+                dot.style.left = `${startX}%`;
+                dot.style.top = `${startY}%`;
+                dot.style.opacity = opacity;
+                dot.style.setProperty('--tx', `${moveX}px`);
+                dot.style.setProperty('--ty', `${moveY}px`);
+                dot.style.animationDuration = `${duration}s`;
+                dot.style.animationDelay = `${delay}s`;
+                
+                dotsContainer.appendChild(dot);
+            }
+        }
+        
+        // Horizontal Scroll Logic
+        let isScrollingHorizontally = false;
+        let horizontalScrollProgress = 0;
+        const totalSteps = 6;
+        
+        function handleScroll(e) {
+            const wrapper = document.getElementById('horizontalWrapper');
+            const container = document.getElementById('horizontalContainer');
+            const wrapperRect = wrapper.getBoundingClientRect();
+            
+            if (wrapperRect.top <= 0 && wrapperRect.bottom >= window.innerHeight) {
+                isScrollingHorizontally = true;
+                
+                if (horizontalScrollProgress < totalSteps - 1) {
+                    e.preventDefault();
+                    
+                    const scrollAmount = e.deltaY;
+                    horizontalScrollProgress += scrollAmount * 0.002;
+                    horizontalScrollProgress = Math.max(0, Math.min(totalSteps - 1, horizontalScrollProgress));
+                    
+                    const translateX = -(horizontalScrollProgress * window.innerWidth);
+                    container.style.transform = `translateX(${translateX}px)`;
+                    
+                    if (horizontalScrollProgress > 0 && horizontalScrollProgress < totalSteps - 1) {
+                        wrapper.style.position = 'sticky';
+                        wrapper.style.top = '0';
+                    }
+                } else {
+                    wrapper.style.position = 'relative';
+                    isScrollingHorizontally = false;
+                }
+            } else if (wrapperRect.top > 0) {
+                horizontalScrollProgress = 0;
+                container.style.transform = 'translateX(0)';
+                wrapper.style.position = 'relative';
+                isScrollingHorizontally = false;
+            }
+        }
+        
+        // Initialize
+        window.addEventListener('load', () => {
+            createDotsBackground();
+            initAudioPlayers();
+            window.addEventListener('wheel', handleScroll, { passive: false });
+        });
+        
+        // Smooth scroll for links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Entrance animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.2 });
+
+        window.addEventListener('load', () => {
+            document.querySelectorAll('.step-content, .detail-box').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(40px)';
+                el.style.transition = 'all 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                observer.observe(el);
+            });
+        });
+
+        // Navbar scroll effect
+        const navbar = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            } else {
+                navbar.style.boxShadow = 'none';
+            }
+        });
+
+        // Applications Section - Clean Horizontal Scroll
+        const appsWrapper = document.getElementById('apps-wrapper');
+        const appsContainer = document.getElementById('apps-container');
+        
+        if (appsWrapper && appsContainer) {
+            let currentPosition = 0;
+            let isAppsInView = false;
+            const cardWidth = 380; // Card width
+            const gap = 32; // 2rem gap
+            const scrollStep = cardWidth + gap;
+            
+            // Calculate initial centered position for first two cards
+            function initializePosition() {
+                const viewportWidth = appsWrapper.offsetWidth;
+                const twoCardsWidth = (cardWidth * 2) + gap;
+                const centerOffset = (viewportWidth - twoCardsWidth) / 2;
+                currentPosition = centerOffset;
+                appsContainer.style.transform = `translateX(${currentPosition}px)`;
+            }
+            
+            // Initialize on load
+            window.addEventListener('load', initializePosition);
+            window.addEventListener('resize', initializePosition);
+            
+            // Detect when in viewport and reset to center
+            const appsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && entry.intersectionRatio >= 0.3) {
+                        isAppsInView = true;
+                        // Reset to centered position when section comes into view
+                        initializePosition();
+                    } else if (!entry.isIntersecting) {
+                        isAppsInView = false;
+                    }
+                });
+            }, { threshold: [0, 0.3, 0.5, 1.0] });
+            
+            appsObserver.observe(appsWrapper);
+            
+            // Mouse wheel horizontal scroll
+            window.addEventListener('wheel', (e) => {
+                if (isAppsInView) {
+                    const viewportWidth = appsWrapper.offsetWidth;
+                    const twoCardsWidth = (cardWidth * 2) + gap;
+                    const maxScroll = (viewportWidth - twoCardsWidth) / 2; // Start position (centered)
+                    const minScroll = -(appsContainer.scrollWidth - viewportWidth - maxScroll); // End position
+                    
+                    if (e.deltaY !== 0) {
+                        const newPosition = currentPosition - (e.deltaY * 1.5);
+                        
+                        // Check boundaries - allow vertical scroll when at edges
+                        if (newPosition > maxScroll || newPosition < minScroll) {
+                            // Allow normal vertical scroll when at boundaries
+                            return;
+                        }
+                        
+                        e.preventDefault();
+                        currentPosition = newPosition;
+                        appsContainer.style.transform = `translateX(${currentPosition}px)`;
+                    }
+                }
+            }, { passive: false });
+        }
+    </script>
+</body>
+</html>

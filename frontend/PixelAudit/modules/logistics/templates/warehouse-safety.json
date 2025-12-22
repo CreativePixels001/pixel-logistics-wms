@@ -1,0 +1,409 @@
+{
+  "id": "warehouse-safety",
+  "name": "Warehouse Safety Audit",
+  "category": "Logistics - Warehouse",
+  "description": "Comprehensive safety inspection for warehouse operations including fire safety, equipment, and emergency procedures",
+  "version": "1.0",
+  "items": [
+    {
+      "id": "ws-01",
+      "question": "Are all fire extinguishers in accessible locations and properly serviced?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-02",
+      "question": "Are emergency exits clearly marked and unobstructed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-03",
+      "question": "Is emergency lighting functional in all areas?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-04",
+      "question": "Are fire alarm systems tested and functional?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-05",
+      "question": "Are sprinkler systems inspected and operational?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-06",
+      "question": "Are aisles and walkways clear of obstructions?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-07",
+      "question": "Are floor markings and safety lines clearly visible?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-08",
+      "question": "Are all storage racks properly secured and stable?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-09",
+      "question": "Are heavy items stored on lower shelves?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-10",
+      "question": "Are materials stacked safely within height limits?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-11",
+      "question": "Are all forklifts and material handling equipment inspected daily?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-12",
+      "question": "Do operators have valid licenses for equipment operation?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-13",
+      "question": "Are seat belts and safety features functional on all equipment?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-14",
+      "question": "Are warning lights and horns working on all vehicles?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-15",
+      "question": "Is equipment charging area properly ventilated?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-16",
+      "question": "Are all workers wearing required PPE (helmets, safety shoes, vests)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-17",
+      "question": "Are safety gloves available for handling operations?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-18",
+      "question": "Are eye protection equipment available in required areas?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-19",
+      "question": "Are high-visibility vests worn in active zones?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-20",
+      "question": "Is PPE inspection and replacement protocol followed?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-21",
+      "question": "Are hazardous materials stored in designated areas?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-22",
+      "question": "Are chemical storage areas properly ventilated?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-23",
+      "question": "Are MSDS sheets available for all chemicals?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-24",
+      "question": "Are spill kits available and accessible?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-25",
+      "question": "Are hazmat containers properly labeled?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-26",
+      "question": "Are electrical panels accessible and properly marked?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-27",
+      "question": "Are all electrical cords in good condition (no fraying)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-28",
+      "question": "Are proper lockout/tagout procedures in place?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-29",
+      "question": "Is lighting adequate throughout the warehouse?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-30",
+      "question": "Are ground fault circuit interrupters (GFCI) installed where needed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-31",
+      "question": "Are first aid kits fully stocked and accessible?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-32",
+      "question": "Are emergency contact numbers clearly posted?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-33",
+      "question": "Is there a designated emergency assembly point?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-34",
+      "question": "Are evacuation procedures posted and visible?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ws-35",
+      "question": "Have emergency drills been conducted in the last 6 months?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-36",
+      "question": "Are safety training records maintained and up to date?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-37",
+      "question": "Have all employees completed safety orientation?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-38",
+      "question": "Are safety meetings conducted monthly?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-39",
+      "question": "Is there a safety suggestion system in place?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-40",
+      "question": "Are incident reports documented and reviewed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-41",
+      "question": "Is warehouse temperature and humidity within acceptable ranges?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-42",
+      "question": "Are HVAC systems maintained regularly?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-43",
+      "question": "Is dust and debris regularly cleaned from work areas?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-44",
+      "question": "Are restrooms clean and properly stocked?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-45",
+      "question": "Is drinking water accessible to all workers?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-46",
+      "question": "Are security cameras operational and monitored?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-47",
+      "question": "Is access control system functioning properly?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-48",
+      "question": "Are visitor logs maintained?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-49",
+      "question": "Are all exits secured yet accessible from inside?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ws-50",
+      "question": "Overall warehouse safety rating satisfactory?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    }
+  ]
+}

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Side Panel Demo - TMS | Pixel Logistics</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tms-dashboard.css">
+  <link rel="stylesheet" href="../css/side-panel.css">
+  <style>
+    .demo-section {
+      padding: 2rem;
+      margin: 2rem 0;
+      background: var(--color-bg-secondary);
+      border-radius: 8px;
+    }
+    .demo-section h2 {
+      margin: 0 0 1rem 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+    .demo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .demo-card {
+      padding: 1.5rem;
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+    }
+    .demo-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1rem;
+      font-weight: 600;
+    }
+    .demo-card p {
+      margin: 0 0 1rem 0;
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+  </style>
+</head>
+<body>
+  
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="14" height="14" rx="2" fill="currentColor"/>
+          <rect x="4" y="20" width="14" height="14" rx="2" fill="currentColor" opacity="0.8"/>
+          <rect x="20" y="4" width="14" height="14" rx="2" fill="currentColor" opacity="0.6"/>
+          <rect x="20" y="20" width="14" height="14" rx="2" fill="currentColor" opacity="0.9"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Side Panel Component Demo</div>
+        </div>
+      </div>
+      <div style="flex: 1;"></div>
+      
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <a href="tms-dashboard.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="sidebar-link active">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6m-7-7h6m2 0h6"></path>
+          </svg>
+          <span>Demo</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div style="margin-bottom: 2rem;">
+        <h1 style="margin: 0 0 0.5rem 0; font-size: 1.875rem; font-weight: 700;">Side Panel Component Demo</h1>
+        <p style="margin: 0; color: var(--color-text-secondary);">Test all create forms and upload functionality</p>
+      </div>
+
+      <div class="demo-section">
+        <h2>📝 Create Forms</h2>
+        <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">Click any button to open a side panel with a form for creating that entity type.</p>
+        <div class="demo-grid">
+          <div class="demo-card">
+            <h3>Carrier</h3>
+            <p>Create a new carrier with DOT/MC numbers, contact info, and service types</p>
+            <button class="btn btn-primary" onclick="openCreatePanel('Carrier', null, handleSave)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add Carrier
+            </button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Vehicle</h3>
+            <p>Add a vehicle with type, make/model, VIN, and capacity details</p>
+            <button class="btn btn-primary" onclick="openCreatePanel('Vehicle', null, handleSave)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add Vehicle
+            </button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Shipment</h3>
+            <p>Create a shipment with pickup/delivery locations and freight details</p>
+            <button class="btn btn-primary" onclick="openCreatePanel('Shipment', null, handleSave)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add Shipment
+            </button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Compliance Violation</h3>
+            <p>Log a DOT violation or compliance issue with severity and details</p>
+            <button class="btn btn-primary" onclick="openCreatePanel('Violation', null, handleSave)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              Add Violation
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-section">
+        <h2>📎 Upload Documents</h2>
+        <p style="color: var(--color-text-secondary); margin-bottom: 1rem;">Test the drag-and-drop document upload panel for different entity types.</p>
+        <div class="demo-grid">
+          <div class="demo-card">
+            <h3>Carrier Documents</h3>
+            <p>Upload insurance, authority certificates, or contracts</p>
+            <button class="btn btn-primary" onclick="openUploadPanel('carrier', 'CAR-001', 'Swift Transportation (CAR-001)', handleUpload)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              Upload Documents
+            </button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Vehicle Documents</h3>
+            <p>Upload registration, inspection reports, or maintenance records</p>
+            <button class="btn btn-primary" onclick="openUploadPanel('vehicle', 'TRK-001', 'Semi Truck TRK-001', handleUpload)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              Upload Documents
+            </button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Shipment Documents</h3>
+            <p>Upload BOL, POD, invoices, or customs paperwork</p>
+            <button class="btn btn-primary" onclick="openUploadPanel('shipment', 'SHP-12345', 'Shipment SHP-12345', handleUpload)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              Upload Documents
+            </button>
+          </div>
+
+          <div class="demo-card">
+            <h3>Compliance Documents</h3>
+            <p>Upload citations, corrective action reports, or resolution proof</p>
+            <button class="btn btn-primary" onclick="openUploadPanel('compliance', 'VIO-789', 'HOS Violation VIO-789', handleUpload)">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              Upload Documents
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-section">
+        <h2>💡 Features</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+          <div>
+            <strong>✅ Slide-in Animation</strong>
+            <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin: 0.5rem 0 0 0;">
+              Smooth slide from right with overlay backdrop
+            </p>
+          </div>
+          <div>
+            <strong>✅ Form Validation</strong>
+            <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin: 0.5rem 0 0 0;">
+              Required fields, input types, and proper error handling
+            </p>
+          </div>
+          <div>
+            <strong>✅ Drag & Drop</strong>
+            <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin: 0.5rem 0 0 0;">
+              Upload files by dragging or clicking to browse
+            </p>
+          </div>
+          <div>
+            <strong>✅ File Validation</strong>
+            <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin: 0.5rem 0 0 0;">
+              10MB limit, PDF/DOC/XLS/images only
+            </p>
+          </div>
+          <div>
+            <strong>✅ Dark Mode</strong>
+            <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin: 0.5rem 0 0 0;">
+              Full support for light/dark themes
+            </p>
+          </div>
+          <div>
+            <strong>✅ Responsive</strong>
+            <p style="font-size: 0.875rem; color: var(--color-text-secondary); margin: 0.5rem 0 0 0;">
+              Works perfectly on mobile and desktop
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">📄 Usage Example</h3>
+        </div>
+        <div style="padding: 1rem;">
+          <pre style="background: var(--color-bg-secondary); padding: 1rem; border-radius: 6px; overflow-x: auto;"><code>// Open create panel
+openCreatePanel('Carrier', null, async (data) => {
+  console.log('Carrier data:', data);
+  // Save to API or update local state
+});
+
+// Open upload panel
+openUploadPanel('shipment', 'SHP-123', 'Shipment SHP-123', async (files) => {
+  console.log('Uploaded files:', files);
+  // Upload files to server
+});</code></pre>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/tms-common.js"></script>
+  <script src="../js/tms-side-panel.js"></script>
+  <script>
+    // Demo callbacks
+    function handleSave(data) {
+      console.log('Saved data:', data);
+      alert('Data saved successfully! Check console for details.');
+    }
+
+    function handleUpload(files) {
+      console.log('Uploaded files:', files);
+      alert(`Successfully uploaded ${files.length} file(s)! Check console for details.`);
+    }
+  </script>
+</body>
+</html>

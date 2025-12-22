@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Health Insurance Quotes - Pixel Safe</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="quotes-styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <a href="index.html" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: inherit;">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span>Pixel Safe</span>
+                </a>
+            </div>
+            <div class="nav-breadcrumb">
+                <a href="index.html">Home</a>
+                <span class="separator">›</span>
+                <a href="calculator-health.html">Calculator</a>
+                <span class="separator">›</span>
+                <span class="current">Compare Quotes</span>
+            </div>
+            <div class="nav-actions">
+                <button onclick="window.history.back()" class="btn-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Back
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="success-badge">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <span>Quotes Ready!</span>
+                </div>
+                <h1 class="page-title">Compare Your Health Insurance Quotes</h1>
+                <p class="page-subtitle">We've found the best plans from top insurers based on your requirements</p>
+                
+                <div class="quote-summary">
+                    <div class="summary-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        <div>
+                            <strong id="coverageDisplay">₹5,00,000</strong>
+                            <span>Coverage</span>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <div>
+                            <strong id="typeDisplay">Individual</strong>
+                            <span>Coverage Type</span>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <div>
+                            <strong id="ageDisplay">25 years</strong>
+                            <span>Age</span>
+                        </div>
+                    </div>
+                    <div class="summary-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        <div>
+                            <strong id="locationDisplay">India</strong>
+                            <span>Location</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quotes Comparison -->
+    <section class="quotes-section">
+        <div class="container">
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="filter-left">
+                    <span class="results-count"><strong id="quotesCount">5</strong> plans available</span>
+                </div>
+                <div class="filter-right">
+                    <select class="filter-select" id="sortBy">
+                        <option value="premium-low">Premium: Low to High</option>
+                        <option value="premium-high">Premium: High to Low</option>
+                        <option value="coverage-high">Coverage: High to Low</option>
+                        <option value="rating">Rating: High to Low</option>
+                    </select>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="onlineOnly">
+                        <span class="slider"></span>
+                        <span class="label">Online plans only</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Quotes Grid -->
+            <div class="quotes-grid" id="quotesGrid">
+                <!-- Quote cards will be dynamically inserted here -->
+            </div>
+
+            <!-- Help Section -->
+            <div class="help-section">
+                <div class="help-card">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <h3>Need Help Choosing?</h3>
+                    <p>Our insurance experts are available to help you select the best plan for your needs.</p>
+                    <div class="help-actions">
+                        <button class="btn-primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                            Call 1800-XXX-XXXX
+                        </button>
+                        <button class="btn-secondary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            Chat with Expert
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Modal -->
+    <div id="comparisonModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Plan Comparison</h2>
+                <button class="modal-close" onclick="closeComparisonModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="comparisonBody">
+                <!-- Comparison content will be inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="quotes-health.js"></script>
+</body>
+</html>

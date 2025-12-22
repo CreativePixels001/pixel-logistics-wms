@@ -1,0 +1,153 @@
+{
+  "id": "trip-compliance",
+  "name": "Trip Compliance Audit",
+  "category": "Logistics - Trip",
+  "description": "Regulatory compliance audit for trip documentation, permits, and legal requirements",
+  "version": "1.0",
+  "items": [
+    {
+      "id": "tc-01",
+      "question": "Is trip manifest generated and signed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-02",
+      "question": "Does manifest list all cargo items with quantities?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-03",
+      "question": "Are origin and destination details accurate?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-04",
+      "question": "Is bill of lading completed correctly?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-05",
+      "question": "Are delivery receipts/POD forms available?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-06",
+      "question": "Is vehicle registration current?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-07",
+      "question": "Is vehicle insurance valid for trip duration?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-08",
+      "question": "Is pollution certificate (PUC) valid?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-09",
+      "question": "Is fitness certificate current?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-10",
+      "question": "Are special permits obtained (if required for route/cargo)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-11",
+      "question": "Does driver have valid license for vehicle type?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-12",
+      "question": "Is driver's medical certificate valid?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-13",
+      "question": "Is ELD (Electronic Logging Device) functional and recording?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-14",
+      "question": "Are Hours of Service (HOS) logs up to date?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-15",
+      "question": "Is driver within daily/weekly driving hour limits?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-16",
+      "question": "Are rest periods documented and compliant?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-17",
+      "question": "Is trip within allowed driving time limits?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tc-18",
+      "question": "Overall trip compliance with regulations satisfactory?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    }
+  ]
+}

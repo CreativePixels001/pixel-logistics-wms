@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features - PixelNotes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .navbar {
+            background: #000000;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid #000000;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border: 2px solid #ffffff;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateX(-5px);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: #ffffff;
+            padding: 5rem 0 3rem;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-section p {
+            font-size: 1.25rem;
+            color: #999999;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            padding: 4rem 0;
+        }
+
+        .feature-detail {
+            background: #f5f5f5;
+            border-left: 4px solid #000000;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            transition: all 0.3s;
+        }
+
+        .feature-detail:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: translateX(10px);
+        }
+
+        .feature-detail:hover .feature-icon-box {
+            background: #ffffff;
+            border-color: #ffffff;
+        }
+
+        .feature-detail:hover .feature-icon-box svg {
+            stroke: #000000;
+        }
+
+        .feature-detail:hover .feature-specs li {
+            border-color: rgba(255,255,255,0.2);
+        }
+
+        .feature-detail:hover .feature-specs li::before {
+            background: #ffffff;
+        }
+
+        .feature-icon-box {
+            width: 100px;
+            height: 100px;
+            background: transparent;
+            border: 3px solid #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .feature-detail h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-detail p {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            color: #666666;
+        }
+
+        .feature-detail:hover p {
+            color: #cccccc;
+        }
+
+        .feature-specs {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-specs li {
+            padding: 1rem 0;
+            border-bottom: 1px solid #e0e0e0;
+            position: relative;
+            padding-left: 2rem;
+            transition: all 0.3s;
+        }
+
+        .feature-specs li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background: #000000;
+            transition: all 0.3s;
+        }
+
+        .feature-specs li:last-child {
+            border-bottom: none;
+        }
+
+        .cta-section {
+            background: #000000;
+            color: #ffffff;
+            padding: 4rem 0;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-cta {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #ffffff;
+            padding: 1rem 3rem;
+            font-weight: 700;
+            font-size: 1.125rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-cta:hover {
+            background: transparent;
+            color: #ffffff;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            .feature-detail {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="landing.html" class="back-button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1>Complete Feature Set</h1>
+            <p>Explore every capability that makes PixelNotes the ultimate enterprise note-taking solution</p>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section class="features-grid">
+        <div class="container">
+            <!-- PI Intelligence -->
+            <div class="feature-detail">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="feature-icon-box">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 16v-4"></path>
+                                <path d="M12 8h.01"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="col-lg-10">
+                        <h2>PI (Pixel Intelligence)</h2>
+                        <p>Your personal AI assistant that understands context, learns from your writing patterns, and actively helps you become more productive. PI doesn't just store notes—it makes them intelligent.</p>
+                        <ul class="feature-specs">
+                            <li><strong>Real-time Suggestions:</strong> Get intelligent suggestions as you type, based on context and your writing history</li>
+                            <li><strong>Auto-Summarization:</strong> Instantly generate summaries of long notes with key points extracted</li>
+                            <li><strong>Action Item Extraction:</strong> Automatically identify and list action items, todos, and deadlines</li>
+                            <li><strong>Smart Tags:</strong> PI suggests relevant tags and categories based on content</li>
+                            <li><strong>Context Awareness:</strong> Understands project context and links related notes automatically</li>
+                            <li><strong>Writing Enhancement:</strong> Suggests improvements for clarity, grammar, and professional tone</li>
+                            <li><strong>Learning System:</strong> Adapts to your writing style and preferences over time</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi-Language Voice Input -->
+            <div class="feature-detail">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="feature-icon-box">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                <line x1="12" y1="19" x2="12" y2="23"></line>
+                                <line x1="8" y1="23" x2="16" y2="23"></line>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="col-lg-10">
+                        <h2>Multi-Language Voice Input</h2>
+                        <p>Break language barriers with support for 10+ Indian languages. Perfect for multilingual teams, field workers, and capturing ideas on the go. Speak naturally in your preferred language.</p>
+                        <ul class="feature-specs">
+                            <li><strong>10+ Languages Supported:</strong> English, Hindi, Marathi, Tamil, Telugu, Gujarati, Kannada, Malayalam, Bengali, Punjabi</li>
+                            <li><strong>Automatic Transcription:</strong> Voice converted to text in real-time with high accuracy</li>
+                            <li><strong>Code-Switching Support:</strong> Seamlessly handle mixed-language conversations</li>
+                            <li><strong>Accent Recognition:</strong> Understands various regional accents and dialects</li>
+                            <li><strong>Punctuation Intelligence:</strong> Auto-adds punctuation based on speech patterns</li>
+                            <li><strong>Background Noise Filtering:</strong> Works well even in noisy environments</li>
+                            <li><strong>Offline Mode Available:</strong> Basic voice input works without internet</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Smart Sections -->
+            <div class="feature-detail">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="feature-icon-box">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="8" y1="6" x2="21" y2="6"></line>
+                                <line x1="8" y1="12" x2="21" y2="12"></line>
+                                <line x1="8" y1="18" x2="21" y2="18"></line>
+                                <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                                <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                                <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="col-lg-10">
+                        <h2>Smart Sections & Organization</h2>
+                        <p>Never lose track of information in long notes. Our intelligent section system automatically organizes content chronologically while keeping everything accessible and searchable.</p>
+                        <ul class="feature-specs">
+                            <li><strong>Auto-Dated Sections:</strong> Weekly and monthly sections created automatically</li>
+                            <li><strong>Collapsible View:</strong> Expand/collapse sections to focus on relevant content</li>
+                            <li><strong>Quick Navigation:</strong> Jump to any date or section instantly</li>
+                            <li><strong>Visual Timeline:</strong> See your note history at a glance</li>
+                            <li><strong>Section Search:</strong> Search within specific time periods</li>
+                            <li><strong>Archive Old Sections:</strong> Keep notes clean while preserving history</li>
+                            <li><strong>Custom Section Names:</strong> Rename sections for project milestones or events</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Team Collaboration -->
+            <div class="feature-detail">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="feature-icon-box">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="col-lg-10">
+                        <h2>Team Collaboration</h2>
+                        <p>Work together seamlessly with enterprise-grade collaboration tools. Share knowledge, maintain consistency, and keep everyone aligned with shared notes and templates.</p>
+                        <ul class="feature-specs">
+                            <li><strong>Google Authentication:</strong> Secure login with existing Google accounts</li>
+                            <li><strong>User-Specific Storage:</strong> Each team member gets isolated, secure storage</li>
+                            <li><strong>Shared Templates:</strong> Create and share note templates across teams</li>
+                            <li><strong>Knowledge Base:</strong> Build searchable company knowledge repository</li>
+                            <li><strong>Role-Based Access:</strong> Control who can view, edit, or share notes</li>
+                            <li><strong>Activity Tracking:</strong> See who created or modified notes and when</li>
+                            <li><strong>Team Dashboard:</strong> Overview of team activity and shared resources</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Auto-Save & Sync -->
+            <div class="feature-detail">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="feature-icon-box">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="col-lg-10">
+                        <h2>Auto-Save & Cloud Sync</h2>
+                        <p>Never lose a single word. PixelNotes saves your work automatically and keeps everything synchronized across devices. Your notes are always safe and accessible.</p>
+                        <ul class="feature-specs">
+                            <li><strong>Real-time Auto-Save:</strong> Changes saved every few seconds automatically</li>
+                            <li><strong>Version History:</strong> Restore previous versions if needed</li>
+                            <li><strong>Cross-Device Sync:</strong> Access notes from any device instantly</li>
+                            <li><strong>Offline Mode:</strong> Continue working without internet, sync when reconnected</li>
+                            <li><strong>Conflict Resolution:</strong> Smart merging when editing from multiple devices</li>
+                            <li><strong>Backup & Export:</strong> Regular automated backups to prevent data loss</li>
+                            <li><strong>Google Drive Integration:</strong> Optional sync with Google Drive for extra security</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Powerful Search -->
+            <div class="feature-detail">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <div class="feature-icon-box">
+                            <svg width="50" height="50" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <path d="m21 21-4.35-4.35"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="col-lg-10">
+                        <h2>Powerful AI Search</h2>
+                        <p>Find anything in milliseconds. Our AI-powered search understands context, synonyms, and relationships between notes, making information retrieval effortless.</p>
+                        <ul class="feature-specs">
+                            <li><strong>Full-Text Search:</strong> Search across all notes, categories, and tags</li>
+                            <li><strong>Semantic Understanding:</strong> Find notes by meaning, not just exact keywords</li>
+                            <li><strong>Date Range Filters:</strong> Search within specific time periods</li>
+                            <li><strong>Category Filtering:</strong> Narrow results by tags, categories, or projects</li>
+                            <li><strong>Instant Results:</strong> See results as you type with live preview</li>
+                            <li><strong>Smart Ranking:</strong> Most relevant results appear first automatically</li>
+                            <li><strong>Search History:</strong> Quickly re-run previous searches</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Experience All Features Today</h2>
+            <p style="color: #999999; margin-bottom: 2rem;">Start using PixelNotes with all features unlocked. No credit card required.</p>
+            <a href="login.html" class="btn-cta">Get Started Free</a>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

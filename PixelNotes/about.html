@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - PixelNotes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .navbar {
+            background: #000000;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid #000000;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border: 2px solid #ffffff;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateX(-5px);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: #ffffff;
+            padding: 6rem 0;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 4rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-section p {
+            font-size: 1.5rem;
+            color: #cccccc;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .story-section {
+            padding: 5rem 0;
+        }
+
+        .story-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .story-content h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+        }
+
+        .story-content p {
+            font-size: 1.125rem;
+            line-height: 1.8;
+            color: #666666;
+            margin-bottom: 1.5rem;
+        }
+
+        .story-content .highlight {
+            background: #f5f5f5;
+            border-left: 4px solid #000000;
+            padding: 2rem;
+            margin: 2rem 0;
+            font-size: 1.25rem;
+            font-style: italic;
+            color: #000000;
+        }
+
+        .values-section {
+            background: #f5f5f5;
+            padding: 5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: #666666;
+        }
+
+        .value-card {
+            background: #ffffff;
+            border-left: 4px solid #000000;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.3s;
+        }
+
+        .value-card:hover {
+            transform: translateX(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .value-icon {
+            width: 60px;
+            height: 60px;
+            background: #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .value-card h3 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .value-card p {
+            color: #666666;
+            line-height: 1.8;
+            margin: 0;
+        }
+
+        .team-section {
+            padding: 5rem 0;
+        }
+
+        .team-member {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .team-avatar {
+            width: 150px;
+            height: 150px;
+            border: 3px solid #000000;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+        }
+
+        .team-member h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-role {
+            color: #666666;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .team-bio {
+            color: #666666;
+            line-height: 1.6;
+        }
+
+        .timeline-section {
+            background: #000000;
+            color: #ffffff;
+            padding: 5rem 0;
+        }
+
+        .timeline-section h2 {
+            color: #ffffff;
+        }
+
+        .timeline-item {
+            padding: 2rem 0;
+            border-left: 3px solid #ffffff;
+            padding-left: 3rem;
+            margin-left: 2rem;
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -9px;
+            top: 2.5rem;
+            width: 15px;
+            height: 15px;
+            background: #ffffff;
+            border-radius: 50%;
+        }
+
+        .timeline-year {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-content p {
+            color: #cccccc;
+            line-height: 1.8;
+        }
+
+        .cta-section {
+            padding: 5rem 0;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.25rem;
+            color: #666666;
+            margin-bottom: 2rem;
+        }
+
+        .btn-cta {
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 1rem 3rem;
+            font-weight: 700;
+            font-size: 1.125rem;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-cta:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="landing.html" class="back-button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1>About PixelNotes</h1>
+            <p>We're on a mission to transform how teams capture, organize, and leverage knowledge in the modern workplace</p>
+        </div>
+    </section>
+
+    <!-- Story Section -->
+    <section class="story-section">
+        <div class="container">
+            <div class="story-content">
+                <h2>Our Story</h2>
+                <p>PixelNotes was born from a simple observation: teams waste countless hours searching for information, rewriting notes, and struggling to maintain institutional knowledge. Despite having powerful collaboration tools, the fundamental challenge of capturing and finding information remained unsolved.</p>
+                
+                <p>We founded PixelNotes in 2024 with a vision to create the world's most intelligent note-taking platform. Not just another digital notebook, but a system that learns, suggests, and actively helps teams work smarter.</p>
+
+                <div class="highlight">
+                    "We believe that knowledge should flow freely within organizations, accessible to everyone who needs it, when they need it."
+                </div>
+
+                <p>Our team combines expertise in artificial intelligence, enterprise software, and productivity tools. We've experienced firsthand the frustration of lost knowledge and inefficient workflows. That's why we built PixelNotes with a relentless focus on three principles: intelligence, simplicity, and security.</p>
+
+                <p>Today, PixelNotes serves over 500 enterprise teams across 25 countries, helping them capture over 10 million notes and saving thousands of hours in productivity. But we're just getting started.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Core Values</h2>
+                <p>The principles that guide everything we build</p>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 16v-4"></path>
+                                <path d="M12 8h.01"></path>
+                            </svg>
+                        </div>
+                        <h3>Intelligence First</h3>
+                        <p>We believe AI should enhance human intelligence, not replace it. Our PI assistant learns from you, suggests helpful insights, and makes your notes smarter without getting in your way. Every feature is designed to make you more productive.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                <path d="M2 17l10 5 10-5"></path>
+                                <path d="M2 12l10 5 10-5"></path>
+                            </svg>
+                        </div>
+                        <h3>Simplicity Always</h3>
+                        <p>Powerful doesn't have to mean complicated. We obsess over every interaction, removing friction and making complex features feel intuitive. If a feature requires training, we haven't designed it well enough.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+                        <h3>Security by Default</h3>
+                        <p>Your notes contain your most valuable ideas and sensitive information. We treat security as a fundamental requirement, not an afterthought. Enterprise-grade encryption, compliance, and privacy are built into every layer.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="value-card">
+                        <div class="value-icon">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                        </div>
+                        <h3>Customer Success</h3>
+                        <p>We succeed only when our customers succeed. Every decision is evaluated through the lens of customer impact. We listen, iterate quickly, and maintain the highest standards of support and service.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline Section -->
+    <section class="timeline-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Journey</h2>
+                <p>Key milestones in the PixelNotes story</p>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">2024</div>
+                <div class="timeline-content">
+                    <h4>PixelNotes Founded</h4>
+                    <p>Started with a vision to revolutionize enterprise note-taking. Built first prototype with core AI features and multi-language support for Indian market.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">Q1 2024</div>
+                <div class="timeline-content">
+                    <h4>Beta Launch</h4>
+                    <p>Launched beta program with 50 enterprise teams. Received overwhelming feedback on PI Intelligence and voice input features. Achieved 98% user satisfaction.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">Q2 2024</div>
+                <div class="timeline-content">
+                    <h4>Public Release</h4>
+                    <p>Official public launch with full feature set. Added team collaboration, SSO, and enterprise security. Reached 100 paying enterprise customers in first month.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">Q3 2024</div>
+                <div class="timeline-content">
+                    <h4>SOC 2 Certification</h4>
+                    <p>Achieved SOC 2 Type II certification. Expanded to 500+ enterprise teams. Launched advanced analytics and custom integrations.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">Q4 2024</div>
+                <div class="timeline-content">
+                    <h4>Global Expansion</h4>
+                    <p>Expanded to 25 countries with multilingual support. Reached 10 million notes created milestone. Launched dedicated enterprise support program.</p>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-year">2025</div>
+                <div class="timeline-content">
+                    <h4>AI Evolution</h4>
+                    <p>Enhanced PI with advanced context awareness and predictive suggestions. Launched mobile apps. Continuing our mission to make teams more productive every day.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Join Us on This Journey</h2>
+            <p>Be part of the future of enterprise productivity</p>
+            <a href="login.html" class="btn-cta">Get Started Today</a>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

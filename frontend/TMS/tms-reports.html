@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports & Analytics - TMS | Pixel Logistics</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tms-dashboard.css">
+  <link rel="stylesheet" href="../css/side-panel.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .chart-card {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .chart-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    
+    .chart-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .filter-section {
+      background: var(--color-bg-secondary);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+    
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .filter-label {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-text-primary);
+    }
+    
+    .filter-input, .filter-select {
+      padding: 0.625rem 0.75rem;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      background: var(--color-bg-primary);
+      color: var(--color-text-primary);
+      font-size: 0.875rem;
+    }
+    
+    .stats-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    
+    .stat-box {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      margin-bottom: 0.5rem;
+    }
+    
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .stat-change {
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+    }
+    
+    .stat-change.positive {
+      color: #16a34a;
+    }
+    
+    .stat-change.negative {
+      color: #dc2626;
+    }
+    
+    .export-section {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    
+    canvas {
+      max-height: 300px;
+    }
+    
+    .data-table {
+      margin-top: 1.5rem;
+      overflow-x: auto;
+    }
+    
+    .metric-card {
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+      color: white;
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    
+    .metric-card .stat-value,
+    .metric-card .stat-label {
+      color: white;
+    }
+    
+    @media print {
+      .sidebar, .header, .filter-section, .export-section {
+        display: none;
+      }
+      
+      .main-content {
+        margin: 0;
+        padding: 1rem;
+      }
+      
+      .chart-card {
+        page-break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="14" height="14" rx="2" fill="currentColor"/>
+          <rect x="4" y="20" width="14" height="14" rx="2" fill="currentColor" opacity="0.8"/>
+          <rect x="20" y="4" width="14" height="14" rx="2" fill="currentColor" opacity="0.6"/>
+          <rect x="20" y="20" width="14" height="14" rx="2" fill="currentColor" opacity="0.9"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Transportation Management System</div>
+        </div>
+      </div>
+      <div style="flex: 1;"></div>
+      
+      <button class="header-btn" onclick="openSearch()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <span>Search</span>
+        <kbd style="margin-left: 8px; padding: 2px 6px; background: rgba(0,0,0,0.1); border-radius: 4px; font-size: 11px;">⌘K</kbd>
+      </button>
+      
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <a href="tms-dashboard.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="tms-shipments.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path>
+            <path d="M2 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path>
+            <path d="M7 21h10"></path>
+            <path d="M12 3v18"></path>
+            <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path>
+          </svg>
+          <span>Shipments</span>
+        </a>
+        <a href="tms-carriers.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+          </svg>
+          <span>Carriers</span>
+        </a>
+        <a href="tms-routes.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="6" cy="19" r="3"></circle>
+            <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"></path>
+            <circle cx="18" cy="5" r="3"></circle>
+          </svg>
+          <span>Routes</span>
+        </a>
+        <a href="tms-fleet.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"></path>
+            <path d="M15 18H9"></path>
+            <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"></path>
+            <circle cx="17" cy="18" r="2"></circle>
+            <circle cx="7" cy="18" r="2"></circle>
+          </svg>
+          <span>Fleet</span>
+        </a>
+        <a href="tms-compliance.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="M9 12l2 2 4-4"></path>
+          </svg>
+          <span>Compliance</span>
+        </a>
+        <a href="tms-reports.html" class="sidebar-link active">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Reports</span>
+        </a>
+        <a href="tms-cost-analysis.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <span>Cost Analysis</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Reports & Analytics</h1>
+          <p class="page-description">Comprehensive TMS performance metrics and insights</p>
+        </div>
+        <div class="export-section">
+          <button class="btn btn-secondary" onclick="printReport()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print
+          </button>
+          <button class="btn btn-secondary" onclick="exportToPDF()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Export PDF
+          </button>
+          <button class="btn btn-primary" onclick="exportToExcel()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export Excel
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h3 style="margin: 0; font-size: 1rem; font-weight: 600;">Filters</h3>
+          <button class="btn btn-sm btn-secondary" onclick="resetFilters()">Reset</button>
+        </div>
+        <div class="filter-grid">
+          <div class="filter-group">
+            <label class="filter-label">Date Range</label>
+            <select class="filter-select" id="dateRange" onchange="applyFilters()">
+              <option value="7">Last 7 Days</option>
+              <option value="30" selected>Last 30 Days</option>
+              <option value="90">Last 90 Days</option>
+              <option value="365">Last Year</option>
+              <option value="custom">Custom Range</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Start Date</label>
+            <input type="date" class="filter-input" id="startDate" onchange="applyFilters()">
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">End Date</label>
+            <input type="date" class="filter-input" id="endDate" onchange="applyFilters()">
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Carrier</label>
+            <select class="filter-select" id="carrierFilter" onchange="applyFilters()">
+              <option value="">All Carriers</option>
+              <option value="swift">Swift Transportation</option>
+              <option value="jb">J.B. Hunt</option>
+              <option value="werner">Werner Enterprises</option>
+              <option value="schneider">Schneider National</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Status</label>
+            <select class="filter-select" id="statusFilter" onchange="applyFilters()">
+              <option value="">All Statuses</option>
+              <option value="delivered">Delivered</option>
+              <option value="in_transit">In Transit</option>
+              <option value="pending">Pending</option>
+              <option value="delayed">Delayed</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label class="filter-label">Route</label>
+            <select class="filter-select" id="routeFilter" onchange="applyFilters()">
+              <option value="">All Routes</option>
+              <option value="east">East Coast</option>
+              <option value="west">West Coast</option>
+              <option value="midwest">Midwest</option>
+              <option value="south">South</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Statistics -->
+      <div class="stats-summary">
+        <div class="metric-card">
+          <div class="stat-value" id="totalShipments">1,247</div>
+          <div class="stat-label">Total Shipments</div>
+          <div class="stat-change positive">↑ 12.5% vs last period</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="onTimeDelivery">94.2%</div>
+          <div class="stat-label">On-Time Delivery</div>
+          <div class="stat-change positive">↑ 2.3%</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="totalRevenue">$2.4M</div>
+          <div class="stat-label">Total Revenue</div>
+          <div class="stat-change positive">↑ 8.7%</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="avgCostPerMile">$1.87</div>
+          <div class="stat-label">Avg Cost/Mile</div>
+          <div class="stat-change negative">↑ 3.2%</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="activeCarriers">23</div>
+          <div class="stat-label">Active Carriers</div>
+          <div class="stat-change">—</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="fleetUtilization">87.5%</div>
+          <div class="stat-label">Fleet Utilization</div>
+          <div class="stat-change positive">↑ 5.1%</div>
+        </div>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="reports-grid">
+        <!-- Shipment Trends Chart -->
+        <div class="chart-card" style="grid-column: span 2;">
+          <div class="chart-header">
+            <h3 class="chart-title">Shipment Trends</h3>
+            <div class="chart-actions">
+              <button class="btn-icon" title="Refresh" onclick="refreshChart('shipmentTrends')">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"></polyline>
+                  <polyline points="1 20 1 14 7 14"></polyline>
+                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <canvas id="shipmentTrendsChart"></canvas>
+        </div>
+
+        <!-- Carrier Performance Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title">Carrier Performance</h3>
+          </div>
+          <canvas id="carrierPerformanceChart"></canvas>
+        </div>
+
+        <!-- Route Efficiency Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title">Route Efficiency</h3>
+          </div>
+          <canvas id="routeEfficiencyChart"></canvas>
+        </div>
+
+        <!-- Shipment Status Distribution -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title">Shipment Status</h3>
+          </div>
+          <canvas id="shipmentStatusChart"></canvas>
+        </div>
+
+        <!-- Delivery Performance -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title">Delivery Performance</h3>
+          </div>
+          <canvas id="deliveryPerformanceChart"></canvas>
+        </div>
+
+        <!-- Fleet Utilization -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title">Fleet Utilization Trend</h3>
+          </div>
+          <canvas id="fleetUtilizationChart"></canvas>
+        </div>
+
+        <!-- Compliance Score -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3 class="chart-title">Compliance Score</h3>
+          </div>
+          <canvas id="complianceScoreChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Top Performers Table -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Top Performing Carriers</h3>
+        </div>
+        <div class="data-table">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Carrier</th>
+                <th>Shipments</th>
+                <th>On-Time %</th>
+                <th>Avg Rating</th>
+                <th>Total Revenue</th>
+                <th>Cost/Mile</th>
+              </tr>
+            </thead>
+            <tbody id="topCarriersTable">
+              <tr>
+                <td><strong>Swift Transportation</strong></td>
+                <td>342</td>
+                <td><span class="status-badge status-success">96.8%</span></td>
+                <td>⭐ 4.8</td>
+                <td>$647,200</td>
+                <td>$1.82</td>
+              </tr>
+              <tr>
+                <td><strong>J.B. Hunt</strong></td>
+                <td>287</td>
+                <td><span class="status-badge status-success">95.2%</span></td>
+                <td>⭐ 4.6</td>
+                <td>$534,100</td>
+                <td>$1.89</td>
+              </tr>
+              <tr>
+                <td><strong>Werner Enterprises</strong></td>
+                <td>256</td>
+                <td><span class="status-badge status-warning">92.1%</span></td>
+                <td>⭐ 4.4</td>
+                <td>$478,300</td>
+                <td>$1.91</td>
+              </tr>
+              <tr>
+                <td><strong>Schneider National</strong></td>
+                <td>198</td>
+                <td><span class="status-badge status-success">94.5%</span></td>
+                <td>⭐ 4.7</td>
+                <td>$367,500</td>
+                <td>$1.85</td>
+              </tr>
+              <tr>
+                <td><strong>Prime Inc.</strong></td>
+                <td>164</td>
+                <td><span class="status-badge status-warning">91.3%</span></td>
+                <td>⭐ 4.3</td>
+                <td>$298,700</td>
+                <td>$1.94</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/tms-common.js"></script>
+  <script src="../js/tms-side-panel.js"></script>
+  <script>
+    // Initialize charts when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeCharts();
+      setDefaultDates();
+    });
+
+    let charts = {};
+
+    function initializeCharts() {
+      // Shipment Trends Chart
+      const shipmentTrendsCtx = document.getElementById('shipmentTrendsChart').getContext('2d');
+      charts.shipmentTrends = new Chart(shipmentTrendsCtx, {
+        type: 'line',
+        data: {
+          labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+          datasets: [{
+            label: 'Completed',
+            data: [285, 312, 298, 342],
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            tension: 0.4,
+            fill: true
+          }, {
+            label: 'In Transit',
+            data: [156, 178, 164, 189],
+            borderColor: '#f59e0b',
+            backgroundColor: 'rgba(245, 158, 11, 0.1)',
+            tension: 0.4,
+            fill: true
+          }, {
+            label: 'Delayed',
+            data: [23, 18, 21, 15],
+            borderColor: '#dc2626',
+            backgroundColor: 'rgba(220, 38, 38, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      // Carrier Performance Chart
+      const carrierPerformanceCtx = document.getElementById('carrierPerformanceChart').getContext('2d');
+      charts.carrierPerformance = new Chart(carrierPerformanceCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Swift', 'J.B. Hunt', 'Werner', 'Schneider', 'Prime'],
+          datasets: [{
+            label: 'On-Time %',
+            data: [96.8, 95.2, 92.1, 94.5, 91.3],
+            backgroundColor: '#3b82f6'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100
+            }
+          }
+        }
+      });
+
+      // Route Efficiency Chart
+      const routeEfficiencyCtx = document.getElementById('routeEfficiencyChart').getContext('2d');
+      charts.routeEfficiency = new Chart(routeEfficiencyCtx, {
+        type: 'radar',
+        data: {
+          labels: ['East Coast', 'West Coast', 'Midwest', 'South', 'Northeast'],
+          datasets: [{
+            label: 'Efficiency Score',
+            data: [88, 92, 85, 90, 87],
+            backgroundColor: 'rgba(59, 130, 246, 0.2)',
+            borderColor: '#3b82f6',
+            pointBackgroundColor: '#3b82f6'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          scales: {
+            r: {
+              beginAtZero: true,
+              max: 100
+            }
+          }
+        }
+      });
+
+      // Shipment Status Chart
+      const shipmentStatusCtx = document.getElementById('shipmentStatusChart').getContext('2d');
+      charts.shipmentStatus = new Chart(shipmentStatusCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Delivered', 'In Transit', 'Pending', 'Delayed'],
+          datasets: [{
+            data: [645, 342, 178, 82],
+            backgroundColor: ['#16a34a', '#3b82f6', '#f59e0b', '#dc2626']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+
+      // Delivery Performance Chart
+      const deliveryPerformanceCtx = document.getElementById('deliveryPerformanceChart').getContext('2d');
+      charts.deliveryPerformance = new Chart(deliveryPerformanceCtx, {
+        type: 'line',
+        data: {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          datasets: [{
+            label: 'On-Time %',
+            data: [94.2, 95.8, 93.1, 96.2, 94.7, 92.3, 91.8],
+            borderColor: '#16a34a',
+            backgroundColor: 'rgba(22, 163, 74, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              min: 85,
+              max: 100
+            }
+          }
+        }
+      });
+
+      // Fleet Utilization Chart
+      const fleetUtilizationCtx = document.getElementById('fleetUtilizationChart').getContext('2d');
+      charts.fleetUtilization = new Chart(fleetUtilizationCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          datasets: [{
+            label: 'Utilization %',
+            data: [89, 92, 88, 91, 87, 78, 72],
+            backgroundColor: '#f59e0b'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100
+            }
+          }
+        }
+      });
+
+      // Compliance Score Chart
+      const complianceScoreCtx = document.getElementById('complianceScoreChart').getContext('2d');
+      charts.complianceScore = new Chart(complianceScoreCtx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Compliance Score',
+            data: [88, 91, 89, 93, 92, 94],
+            borderColor: '#16a34a',
+            backgroundColor: 'rgba(22, 163, 74, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: false,
+              min: 80,
+              max: 100
+            }
+          }
+        }
+      });
+    }
+
+    function setDefaultDates() {
+      const endDate = new Date();
+      const startDate = new Date();
+      startDate.setDate(startDate.getDate() - 30);
+      
+      document.getElementById('startDate').valueAsDate = startDate;
+      document.getElementById('endDate').valueAsDate = endDate;
+    }
+
+    function applyFilters() {
+      console.log('Applying filters...');
+      const dateRange = document.getElementById('dateRange').value;
+      const carrier = document.getElementById('carrierFilter').value;
+      const status = document.getElementById('statusFilter').value;
+      const route = document.getElementById('routeFilter').value;
+      
+      // In a real app, this would fetch filtered data from the API
+      alert(`Filters applied:\nDate Range: ${dateRange} days\nCarrier: ${carrier || 'All'}\nStatus: ${status || 'All'}\nRoute: ${route || 'All'}`);
+    }
+
+    function resetFilters() {
+      document.getElementById('dateRange').value = '30';
+      document.getElementById('carrierFilter').value = '';
+      document.getElementById('statusFilter').value = '';
+      document.getElementById('routeFilter').value = '';
+      setDefaultDates();
+      applyFilters();
+    }
+
+    function refreshChart(chartName) {
+      console.log(`Refreshing ${chartName}...`);
+      // In a real app, this would fetch fresh data from the API
+      alert('Chart data refreshed!');
+    }
+
+    function printReport() {
+      window.print();
+    }
+
+    function exportToPDF() {
+      alert('PDF export functionality will be implemented with a library like jsPDF or html2pdf.js\n\nThis would generate a PDF report with all charts and tables.');
+    }
+
+    function exportToExcel() {
+      alert('Excel export functionality will be implemented with a library like SheetJS (xlsx)\n\nThis would generate an Excel file with all report data.');
+    }
+  </script>
+</body>
+</html>

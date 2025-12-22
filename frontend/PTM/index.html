@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Trip - Discover Incredible India</title>
+    <meta name="description" content="Curated travel experiences across India. Book handpicked trips, explore heritage sites, and create unforgettable memories.">
+    <link rel="stylesheet" href="css/landing-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                    <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+                <span>Pixel Trip</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#destinations">Destinations</a></li>
+                <li><a href="#featured">Featured Trips</a></li>
+                <li><a href="#why-us">Why Us</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="admin/login.html" class="btn-secondary">Agent Login</a>
+                <a href="#featured" class="btn-primary">Book Now</a>
+            </div>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                    <span>Powered by Government Tourism Data</span>
+                </div>
+                <h1 class="hero-title">Discover Incredible India</h1>
+                <p class="hero-subtitle">Handpicked journeys across India's heritage sites, natural wonders, and cultural treasures. Expert-curated trips. Unforgettable experiences.</p>
+                
+                <!-- Quick Search -->
+                <div class="search-card">
+                    <div class="search-grid">
+                        <div class="search-field">
+                            <label>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                Destination
+                            </label>
+                            <input type="text" placeholder="Where do you want to go?" id="searchDestination">
+                        </div>
+                        <div class="search-field">
+                            <label>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                Duration
+                            </label>
+                            <select id="searchDuration">
+                                <option>Any Duration</option>
+                                <option>Weekend (2-3 Days)</option>
+                                <option>Week (5-7 Days)</option>
+                                <option>Extended (10+ Days)</option>
+                            </select>
+                        </div>
+                        <div class="search-field">
+                            <label>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                                Budget
+                            </label>
+                            <select id="searchBudget">
+                                <option>Any Budget</option>
+                                <option>Budget (Under ₹15,000)</option>
+                                <option>Standard (₹15k - ₹30k)</option>
+                                <option>Premium (₹30k - ₹50k)</option>
+                                <option>Luxury (₹50k+)</option>
+                            </select>
+                        </div>
+                        <button class="btn-search" onclick="searchTrips()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.35-4.35"/>
+                            </svg>
+                            Search Trips
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">250+</div>
+                        <div class="stat-label">Curated Trips</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">28</div>
+                        <div class="stat-label">States Covered</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">15K+</div>
+                        <div class="stat-label">Happy Travelers</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">4.9★</div>
+                        <div class="stat-label">Average Rating</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <div class="container">
+            <div class="categories-grid">
+                <a href="#" class="category-card" onclick="filterByCategory('heritage')">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        <polyline points="9 22 9 12 15 12 15 22"/>
+                    </svg>
+                    <h3>Heritage Sites</h3>
+                    <p>40 UNESCO Sites</p>
+                </a>
+                <a href="#" class="category-card" onclick="filterByCategory('mountains')">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M3 20h18L13 4 8 13l-5 7z"/>
+                    </svg>
+                    <h3>Mountains</h3>
+                    <p>Trek & Explore</p>
+                </a>
+                <a href="#" class="category-card" onclick="filterByCategory('beaches')">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 2v20M2 12h20"/>
+                    </svg>
+                    <h3>Beaches</h3>
+                    <p>Coast & Islands</p>
+                </a>
+                <a href="#" class="category-card" onclick="filterByCategory('wildlife')">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M16 12l-4-4-4 4M12 16V8"/>
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <h3>Wildlife</h3>
+                    <p>National Parks</p>
+                </a>
+                <a href="#" class="category-card" onclick="filterByCategory('pilgrimage')">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <h3>Spiritual</h3>
+                    <p>Sacred Journeys</p>
+                </a>
+                <a href="#" class="category-card" onclick="filterByCategory('adventure')">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                    </svg>
+                    <h3>Adventure</h3>
+                    <p>Thrills & Chills</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Trips -->
+    <section class="featured-trips" id="featured">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured Journeys</h2>
+                <p>Expertly curated experiences across Incredible India</p>
+            </div>
+
+            <div class="trips-grid" id="tripsGrid">
+                <!-- Trip Card 1 - Rajasthan Heritage -->
+                <div class="trip-card" data-category="heritage">
+                    <div class="trip-image">
+                        <div class="trip-badge">UNESCO Site</div>
+                        <div class="placeholder-image">
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                                <polyline points="9 22 9 12 15 12 15 22"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="trip-content">
+                        <div class="trip-meta">
+                            <span class="trip-duration">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                7 Days
+                            </span>
+                            <span class="trip-category">Heritage</span>
+                        </div>
+                        <h3>Royal Rajasthan Circuit</h3>
+                        <p class="trip-description">Explore Jaipur, Udaipur & Jodhpur forts, palaces, and UNESCO heritage sites</p>
+                        <div class="trip-highlights">
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> 5 Forts</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Local Crafts</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg> Rajasthani Cuisine</span>
+                        </div>
+                        <div class="trip-footer">
+                            <div class="trip-price">
+                                <span class="price">₹35,999</span>
+                                <span class="per-person">per person</span>
+                            </div>
+                            <button class="btn-book" onclick="viewTrip('RAJ-001')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Card 2 - Kerala Backwaters -->
+                <div class="trip-card" data-category="beaches">
+                    <div class="trip-image">
+                        <div class="trip-badge">Nature</div>
+                        <div class="placeholder-image">
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 2v20M2 12h20"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="trip-content">
+                        <div class="trip-meta">
+                            <span class="trip-duration">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                5 Days
+                            </span>
+                            <span class="trip-category">Coastal</span>
+                        </div>
+                        <h3>Kerala Backwaters & Beaches</h3>
+                        <p class="trip-description">Houseboat stays, Ayurvedic spas, and pristine beaches of God's Own Country</p>
+                        <div class="trip-highlights">
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M2 20a8 8 0 0 1 16 0M9 8a3 3 0 1 0 6 0a3 3 0 0 0-6 0"/><path d="M2 9l9 9 13-13"/></svg> Houseboat</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Beach Resort</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Ayurveda Spa</span>
+                        </div>
+                        <div class="trip-footer">
+                            <div class="trip-price">
+                                <span class="price">₹28,999</span>
+                                <span class="per-person">per person</span>
+                            </div>
+                            <button class="btn-book" onclick="viewTrip('KER-001')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Card 3 - Himalayan Trek -->
+                <div class="trip-card" data-category="mountains">
+                    <div class="trip-image">
+                        <div class="trip-badge">Adventure</div>
+                        <div class="placeholder-image">
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <path d="M3 20h18L13 4 8 13l-5 7z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="trip-content">
+                        <div class="trip-meta">
+                            <span class="trip-duration">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                6 Days
+                            </span>
+                            <span class="trip-category">Mountains</span>
+                        </div>
+                        <h3>Manali Snow Adventure</h3>
+                        <p class="trip-description">Skiing, snowboarding & mountain views in the heart of Himalayas</p>
+                        <div class="trip-highlights">
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M3 20h18L13 4 8 13l-5 7z"/></svg> Snow Sports</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M3 20h18L13 4 8 13l-5 7z"/></svg> Valley Tours</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M12 2v10m0 0L8 8m4 4l4-4M5 15l2 2 2-2m10 0l-2 2-2-2"/></svg> Bonfire Nights</span>
+                        </div>
+                        <div class="trip-footer">
+                            <div class="trip-price">
+                                <span class="price">₹22,499</span>
+                                <span class="per-person">per person</span>
+                            </div>
+                            <button class="btn-book" onclick="viewTrip('MAN-001')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Card 4 - Goa Beach -->
+                <div class="trip-card" data-category="beaches">
+                    <div class="trip-image">
+                        <div class="trip-badge">Popular</div>
+                        <div class="placeholder-image">
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="trip-content">
+                        <div class="trip-meta">
+                            <span class="trip-duration">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                4 Days
+                            </span>
+                            <span class="trip-category">Beach</span>
+                        </div>
+                        <h3>Goa Beach Escape</h3>
+                        <p class="trip-description">Beaches, water sports, nightlife & Portuguese heritage</p>
+                        <div class="trip-highlights">
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg> Beach Resort</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"/></svg> Water Sports</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Nightlife</span>
+                        </div>
+                        <div class="trip-footer">
+                            <div class="trip-price">
+                                <span class="price">₹15,999</span>
+                                <span class="per-person">per person</span>
+                            </div>
+                            <button class="btn-book" onclick="viewTrip('GOA-001')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Card 5 - Ladakh -->
+                <div class="trip-card" data-category="adventure">
+                    <div class="trip-image">
+                        <div class="trip-badge">Adventure</div>
+                        <div class="placeholder-image">
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <path d="M3 20h18L13 4 8 13l-5 7z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="trip-content">
+                        <div class="trip-meta">
+                            <span class="trip-duration">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                8 Days
+                            </span>
+                            <span class="trip-category">Adventure</span>
+                        </div>
+                        <h3>Ladakh: Land of High Passes</h3>
+                        <p class="trip-description">Pangong Lake, Nubra Valley & monasteries at 11,000ft altitude</p>
+                        <div class="trip-highlights">
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M3 20h18L13 4 8 13l-5 7z"/></svg> High Altitude</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><circle cx="12" cy="13" r="4"/><path d="M12 3v7M18.5 8l-3 5.5M23 16l-5-3M1 16l5-3M5.5 8l3 5.5"/></svg> Bike Rides</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Monasteries</span>
+                        </div>
+                        <div class="trip-footer">
+                            <div class="trip-price">
+                                <span class="price">₹42,999</span>
+                                <span class="per-person">per person</span>
+                            </div>
+                            <button class="btn-book" onclick="viewTrip('LAD-001')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trip Card 6 - Varanasi -->
+                <div class="trip-card" data-category="pilgrimage">
+                    <div class="trip-image">
+                        <div class="trip-badge">Spiritual</div>
+                        <div class="placeholder-image">
+                            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                                <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="trip-content">
+                        <div class="trip-meta">
+                            <span class="trip-duration">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                3 Days
+                            </span>
+                            <span class="trip-category">Spiritual</span>
+                        </div>
+                        <h3>Varanasi Sacred Journey</h3>
+                        <p class="trip-description">Ghats, temples, Ganga Aarti & ancient wisdom of Kashi</p>
+                        <div class="trip-highlights">
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> Temples</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M2 20a8 8 0 0 1 16 0M9 8a3 3 0 1 0 6 0a3 3 0 0 0-6 0"/></svg> Boat Ride</span>
+                            <span><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-right: 4px;"><path d="M9 18V5l12-2v13M6 14v8M3 16v6"/></svg> Ganga Aarti</span>
+                        </div>
+                        <div class="trip-footer">
+                            <div class="trip-price">
+                                <span class="price">₹12,999</span>
+                                <span class="per-person">per person</span>
+                            </div>
+                            <button class="btn-book" onclick="viewTrip('VAR-001')">View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="view-all">
+                <a href="destinations.html" class="btn-secondary">
+                    View All Destinations
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                        <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="why-us" id="why-us">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Choose Pixel Trip</h2>
+                <p>Your trusted partner for exploring Incredible India</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                        </svg>
+                    </div>
+                    <h3>Curated by Experts</h3>
+                    <p>Every trip designed by travel specialists with local knowledge and years of experience</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4M12 8h.01"/>
+                        </svg>
+                    </div>
+                    <h3>Government Data Verified</h3>
+                    <p>All destinations verified using official tourism and archaeological data from Government of India</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <h3>Dedicated Travel Agents</h3>
+                    <p>Personal agent assigned to every booking for planning, support, and 24/7 assistance</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                            <line x1="1" y1="10" x2="23" y2="10"/>
+                        </svg>
+                    </div>
+                    <h3>Best Price Guarantee</h3>
+                    <p>Competitive pricing with transparent costs. No hidden charges, ever.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3>Secure Booking</h3>
+                    <p>100% secure payment gateway with instant confirmation and travel insurance options</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Round-the-clock customer support before, during, and after your journey</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container cta-container">
+            <h2>Ready to Explore India?</h2>
+            <p>Start planning your perfect journey today</p>
+            <div class="cta-actions">
+                <a href="#destinations" class="btn-primary">Browse All Trips</a>
+                <a href="tel:+918888888888" class="btn-secondary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                    </svg>
+                    Call Us: +91 888-888-8888
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                            <polyline points="9 22 9 12 15 12 15 22"/>
+                        </svg>
+                        <span>Pixel Trip</span>
+                    </div>
+                    <p>Discover Incredible India with expertly curated travel experiences.</p>
+                    <div class="social-links">
+                        <a href="#" aria-label="Facebook">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Instagram">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#destinations">All Destinations</a></li>
+                        <li><a href="#featured">Featured Trips</a></li>
+                        <li><a href="#why-us">Why Choose Us</a></li>
+                        <li><a href="#">About Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Booking Policy</a></li>
+                        <li><a href="#">Cancellation</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Contact</h3>
+                    <ul class="contact-info">
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                            +91 888-888-8888
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            support@pixeltrip.in
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            Mumbai, India
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 Pixel Trip. Part of Pixel Ecosystem. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Sitemap</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/landing-script.js"></script>
+</body>
+</html>

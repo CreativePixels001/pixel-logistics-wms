@@ -1,5 +1,5 @@
 /**
- * DLT WMS - Advanced Notification System
+ * Pixel WMS - Advanced Notification System
  * Provides toast notifications, alerts, and confirmation dialogs
  * with support for different types, positions, and actions
  */

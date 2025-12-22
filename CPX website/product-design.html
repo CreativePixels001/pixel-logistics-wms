@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Design Services - CreativePixels</title>
+    <meta name="description" content="Beautiful, intuitive UX/UI design and comprehensive design systems. We create user experiences that users love and businesses value.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #000000; --dark: #000000; --light: #FFFFFF; --gray: #666666; --border: 2px; }
+        body { font-family: 'Inter', sans-serif; background: white; color: var(--dark); }
+        h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: white; border-bottom: var(--border) solid black; padding: 1.5rem 0; transition: box-shadow 0.3s ease; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: black; text-decoration: none; }
+        .nav-menu { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-menu a { color: black; text-decoration: none; font-weight: 500; transition: opacity 0.3s ease; }
+        .nav-menu a:hover { opacity: 0.6; }
+        .cta-btn { padding: 0.75rem 1.5rem; background: black; color: white !important; border: var(--border) solid black; transition: all 0.3s ease; }
+        .cta-btn:hover { background: white; color: black !important; }
+        
+        .hero { padding: 10rem 0 6rem; background: black; color: white; text-align: center; }
+        .hero-badge { display: inline-block; padding: 0.5rem 1rem; background: white; color: black; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2rem; }
+        .hero-title { font-size: clamp(2.5rem, 6vw, 5rem); font-weight: 700; margin-bottom: 1.5rem; line-height: 1.1; }
+        .hero-subtitle { font-size: 1.25rem; color: rgba(255, 255, 255, 0.7); max-width: 800px; margin: 0 auto; line-height: 1.8; }
+        
+        .services-section { padding: 6rem 0; background: white; }
+        .service-block { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; margin-bottom: 6rem; }
+        .service-content h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 1.5rem; }
+        .service-content p { font-size: 1.125rem; line-height: 1.8; color: var(--gray); margin-bottom: 1.5rem; }
+        .service-list { list-style: none; padding: 0; }
+        .service-list li { padding: 0.75rem 0; border-bottom: 1px solid rgba(0, 0, 0, 0.1); display: flex; align-items: center; gap: 0.75rem; }
+        .service-list li svg { width: 20px; height: 20px; flex-shrink: 0; }
+        .service-visual { background: black; height: 400px; display: flex; align-items: center; justify-content: center; color: white; border: var(--border) solid black; }
+        .service-visual-alt { background: rgba(0, 0, 0, 0.05); height: 400px; display: flex; align-items: center; justify-content: center; border: var(--border) solid black; }
+        .service-visual p, .service-visual-alt p { font-size: 2rem; font-weight: 700; }
+        
+        .cta-section { padding: 6rem 0; background: black; color: white; text-align: center; }
+        .cta-section h2 { font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1.5rem; }
+        .cta-section p { font-size: 1.125rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+        .cta-white { display: inline-block; padding: 1rem 2.5rem; background: white; color: black; text-decoration: none; font-weight: 600; border: var(--border) solid white; transition: all 0.3s ease; }
+        .cta-white:hover { background: black; color: white; }
+        
+        footer { background: black; color: white; padding: 4rem 0 2rem; }
+        .footer-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+        .footer-brand h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .footer-brand p { color: rgba(255, 255, 255, 0.7); line-height: 1.8; margin-bottom: 1.5rem; }
+        .footer-social { display: flex; gap: 1rem; }
+        .social-link { width: 40px; height: 40px; border: var(--border) solid white; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .social-link:hover { background: white; }
+        .social-link:hover svg { stroke: black; }
+        .social-link svg { stroke: white; transition: stroke 0.3s ease; }
+        .footer-column h4 { margin-bottom: 1rem; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 0.75rem; }
+        .footer-links a { color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: color 0.3s ease; }
+        .footer-links a:hover { color: white; }
+        .footer-bottom { padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center; }
+        .footer-bottom p { color: rgba(255, 255, 255, 0.5); }
+        .footer-legal { display: flex; gap: 2rem; }
+        .footer-legal a { color: rgba(255, 255, 255, 0.5); text-decoration: none; transition: color 0.3s ease; }
+        .footer-legal a:hover { color: white; }
+        
+        @media (max-width: 968px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-brand { grid-column: 1 / -1; } .service-block { grid-template-columns: 1fr; } .service-visual, .service-visual-alt { height: 300px; } }
+        @media (max-width: 640px) { .nav-menu { gap: 1rem; font-size: 0.9rem; } .footer-grid { grid-template-columns: 1fr; } .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; } .footer-legal { flex-direction: column; gap: 0.5rem; } }
+    </style>
+</head>
+<body>
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">CreativePixels</a>
+            <ul class="nav-menu">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="pixelgram.html">PixelGram</a></li>
+                <li><a href="pixel-world.html">Pixel World</a></li>
+                <li><a href="pixelverse.html">PixelVerse</a></li>
+                <li><a href="get-in-touch.html" class="cta-btn">Get in Touch</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">PRODUCT DESIGN</div>
+            <h1 class="hero-title">Beautiful, Intuitive Design<br>That Users Love</h1>
+            <p class="hero-subtitle">Create exceptional user experiences through research-driven design, rapid prototyping, and comprehensive design systems that maintain brand integrity at scale.</p>
+        </div>
+    </section>
+
+    <section class="services-section">
+        <div class="container">
+            <div class="service-block">
+                <div class="service-content">
+                    <h2>UX/UI Design</h2>
+                    <p>We create user experiences that are both beautiful and functional. Our design process focuses on understanding your users and creating interfaces that delight them while achieving business objectives.</p>
+                    <ul class="service-list">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            User Research & Personas
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20h9"/>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                            </svg>
+                            Wireframing & Prototyping
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                <line x1="8" y1="21" x2="16" y2="21"/>
+                                <line x1="12" y1="17" x2="12" y2="21"/>
+                            </svg>
+                            Visual Design & Branding
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            Usability Testing
+                        </li>
+                    </ul>
+                </div>
+                <div class="service-visual">
+                    <p>Design</p>
+                </div>
+            </div>
+
+            <div class="service-block">
+                <div class="service-visual-alt">
+                    <p>Systems</p>
+                </div>
+                <div class="service-content">
+                    <h2>Design Systems</h2>
+                    <p>Build scalable, consistent design systems that maintain brand integrity across all touchpoints and accelerate development. Our comprehensive approach ensures design quality at scale.</p>
+                    <ul class="service-list">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="3" y1="9" x2="21" y2="9"/>
+                                <line x1="9" y1="21" x2="9" y2="9"/>
+                            </svg>
+                            Component Libraries
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                            Style Guides
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M12 1v6m0 6v6"/>
+                            </svg>
+                            Design Tokens
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                            </svg>
+                            Documentation
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Let's Create Something Beautiful</h2>
+            <p>Ready to elevate your product with exceptional design? Let's discuss how we can help you create experiences that users love.</p>
+            <a href="get-in-touch.html" class="cta-white">Start a Project →</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>CreativePixels</h3>
+                    <p>Transforming thoughts into monetizable products through innovative design, machine learning, and creative problem-solving.</p>
+                    <p style="margin-top: 1rem; font-size: 0.95rem;"><strong>Email:</strong> <a href="mailto:connect@creativepixels.in" style="color: rgba(255,255,255,0.8); text-decoration: none;">connect@creativepixels.in</a></p>
+                    <p style="font-size: 0.95rem;"><strong>Call/WhatsApp:</strong> <a href="tel:+919004789969" style="color: rgba(255,255,255,0.8); text-decoration: none;">+91 90047 89969</a></p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                <rect x="2" y="9" width="4" height="12"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about-us.html">About Us</a></li>
+                        <li><a href="our-approach.html">Our Approach</a></li>
+                        <li><a href="pixel-world.html">Pixel World</a></li>
+                        <li><a href="pixelgram.html">PixelGram</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="digital-transformation.html">Digital Transformation</a></li>
+                        <li><a href="ai-ml.html">AI & Machine Learning</a></li>
+                        <li><a href="product-design.html">Product Design</a></li>
+                        <li><a href="development.html">Development</a></li>
+                        <li><a href="consulting.html">Consulting</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="get-in-touch.html">Get in Touch</a></li>
+                        <li><a href="support.html">Support</a></li>
+                        <li><a href="partners.html">Partners</a></li>
+                        <li><a href="press-kit.html">Press Kit</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 CreativePixels. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
+                    <a href="cookie-policy.html">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            else navbar.style.boxShadow = 'none';
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -100px 0px' });
+
+        document.querySelectorAll('.service-block').forEach((block) => {
+            block.style.opacity = '0';
+            block.style.transform = 'translateY(30px)';
+            block.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(block);
+        });
+    </script>
+</body>
+</html>

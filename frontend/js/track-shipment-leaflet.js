@@ -5,7 +5,7 @@ let markers = [];
 let activeMarker = null;
 
 // Sample shipment data - Major Indian Cities
-const shipments = [
+window.shipments = [
   {
     id: 'ORD-2024-001',
     customer: 'Tech Solutions Inc.',
@@ -285,7 +285,7 @@ function initMap() {
   renderOrderCards();
 
   // Add markers for all shipments
-  shipments.forEach((shipment, index) => {
+  window.shipments.forEach((shipment, index) => {
     addShipmentMarker(shipment, index);
   });
 
@@ -298,9 +298,9 @@ function renderOrderCards() {
   const ordersList = document.getElementById('ordersList');
   const shipmentCount = document.getElementById('shipmentCount');
   
-  shipmentCount.textContent = shipments.length;
+  shipmentCount.textContent = window.shipments.length;
   
-  ordersList.innerHTML = shipments.map((shipment, index) => `
+  ordersList.innerHTML = window.shipments.map((shipment, index) => `
     <div class="order-card" data-index="${index}" onclick="selectOrder(${index})">
       <div class="order-card-header">
         <span class="order-id">${shipment.id}</span>
@@ -349,12 +349,19 @@ function renderOrderCards() {
 
 // Add shipment marker to map
 function addShipmentMarker(shipment, index) {
-  // Create custom truck icon
-  const truckIcon = L.icon({
-    iconUrl: 'assets/Images/truck-top-view.png',
-    iconSize: [40, 40],
-    iconAnchor: [20, 20],
-    popupAnchor: [0, -20]
+  // Create custom white truck icon with glow
+  const truckIcon = L.divIcon({
+    className: 'custom-truck-marker',
+    html: `
+      <div class="truck-marker-container">
+        <div class="truck-marker-glow"></div>
+        <img src="assets/Images/truck-top-view.png" class="truck-marker-icon" alt="Truck">
+        <div class="truck-marker-ping"></div>
+      </div>
+    `,
+    iconSize: [50, 50],
+    iconAnchor: [25, 25],
+    popupAnchor: [0, -25]
   });
 
   // Create marker
@@ -375,7 +382,7 @@ function addShipmentMarker(shipment, index) {
 
 // Select order - highlight card and show details
 function selectOrder(index) {
-  const shipment = shipments[index];
+  const shipment = window.shipments[index];
   
   // Remove active class from all cards
   document.querySelectorAll('.order-card').forEach(card => {
@@ -507,7 +514,7 @@ function toggleTraffic() {
 // Animate moving trucks
 function animateShipments() {
   setInterval(() => {
-    shipments.forEach((shipment, index) => {
+    window.shipments.forEach((shipment, index) => {
       if (shipment.status === 'in-transit' && shipment.progress < 99) {
         // Calculate new position (move slightly towards destination)
         const currentLat = shipment.currentLocation.lat;

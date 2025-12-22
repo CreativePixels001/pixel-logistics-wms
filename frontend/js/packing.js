@@ -1,4 +1,4 @@
-// DLT WMS - Packing & Staging Module JavaScript
+// Pixel WMS - Packing & Staging Module JavaScript
 // Handles packing workbench, carton management, label generation, and staging
 
 let currentPackOrder = null;

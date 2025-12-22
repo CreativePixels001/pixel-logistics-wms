@@ -1,0 +1,403 @@
+{
+  "id": "restaurant-safety",
+  "name": "Restaurant Safety Audit",
+  "description": "Comprehensive safety and hygiene audit for restaurants, covering food licensing, kitchen hygiene, fire safety, and staff compliance.",
+  "category": "Travel",
+  "icon": "🍽️",
+  "estimatedTime": "45 minutes",
+  "totalItems": 40,
+  "categories": [
+    {
+      "id": "food-license",
+      "name": "Food License & Compliance",
+      "itemCount": 8
+    },
+    {
+      "id": "kitchen-hygiene",
+      "name": "Kitchen Hygiene",
+      "itemCount": 12
+    },
+    {
+      "id": "fire-safety",
+      "name": "Fire Safety",
+      "itemCount": 6
+    },
+    {
+      "id": "staff-training",
+      "name": "Staff Training",
+      "itemCount": 5
+    },
+    {
+      "id": "storage",
+      "name": "Storage & Refrigeration",
+      "itemCount": 5
+    },
+    {
+      "id": "customer-area",
+      "name": "Customer Area Cleanliness",
+      "itemCount": 4
+    }
+  ],
+  "checklist": [
+    {
+      "id": 1,
+      "question": "Is a valid FSSAI license displayed prominently at the entrance?",
+      "category": "food-license",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 2,
+      "question": "Is the FSSAI license number clearly visible and not expired?",
+      "category": "food-license",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 3,
+      "question": "Are health certificates for all kitchen staff current and displayed?",
+      "category": "food-license",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 4,
+      "question": "Is pest control certification up-to-date (within last 3 months)?",
+      "category": "food-license",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 5,
+      "question": "Is water testing report available and current?",
+      "category": "food-license",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 6,
+      "question": "Are all food handlers trained in food safety practices?",
+      "category": "food-license",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 7,
+      "question": "Is there a documented food safety management system in place?",
+      "category": "food-license",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 8,
+      "question": "Are cleaning schedules and logs maintained properly?",
+      "category": "food-license",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 9,
+      "question": "Are all kitchen staff wearing hair nets or caps?",
+      "category": "kitchen-hygiene",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 10,
+      "question": "Are kitchen staff wearing clean aprons and gloves while handling food?",
+      "category": "kitchen-hygiene",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 11,
+      "question": "Are separate cutting boards used for vegetarian and non-vegetarian items?",
+      "category": "kitchen-hygiene",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 12,
+      "question": "Are all work surfaces clean and sanitized?",
+      "category": "kitchen-hygiene",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 13,
+      "question": "Are cooking utensils and equipment properly cleaned after each use?",
+      "category": "kitchen-hygiene",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 14,
+      "question": "Is the kitchen floor clean, dry, and free from grease?",
+      "category": "kitchen-hygiene",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 15,
+      "question": "Are garbage bins covered and emptied regularly?",
+      "category": "kitchen-hygiene",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 16,
+      "question": "Is there adequate ventilation and exhaust system in the kitchen?",
+      "category": "kitchen-hygiene",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 17,
+      "question": "Are hand washing stations available with soap and paper towels?",
+      "category": "kitchen-hygiene",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 18,
+      "question": "Is there evidence of pest infestation (rodents, cockroaches)?",
+      "category": "kitchen-hygiene",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 19,
+      "question": "Are raw and cooked food items stored separately?",
+      "category": "kitchen-hygiene",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 20,
+      "question": "Are all food preparation areas free from cross-contamination risks?",
+      "category": "kitchen-hygiene",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 21,
+      "question": "Are fire extinguishers present and easily accessible in the kitchen?",
+      "category": "fire-safety",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 22,
+      "question": "Have fire extinguishers been serviced in the last 12 months?",
+      "category": "fire-safety",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 23,
+      "question": "Are emergency exit routes clearly marked and unobstructed?",
+      "category": "fire-safety",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 24,
+      "question": "Is there a fire blanket available near cooking areas?",
+      "category": "fire-safety",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 25,
+      "question": "Are staff trained in fire safety and evacuation procedures?",
+      "category": "fire-safety",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 26,
+      "question": "Is electrical wiring safe and free from damage or overloading?",
+      "category": "fire-safety",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 27,
+      "question": "Have all staff completed food safety training in the last 6 months?",
+      "category": "staff-training",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 28,
+      "question": "Do staff understand proper hand washing techniques?",
+      "category": "staff-training",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 29,
+      "question": "Are staff aware of allergen management procedures?",
+      "category": "staff-training",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 30,
+      "question": "Is there a designated person responsible for food safety compliance?",
+      "category": "staff-training",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 31,
+      "question": "Are staff uniforms clean and in good condition?",
+      "category": "staff-training",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 32,
+      "question": "Are refrigerators maintaining temperature below 4°C (39°F)?",
+      "category": "storage",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 33,
+      "question": "Are freezers maintaining temperature below -18°C (0°F)?",
+      "category": "storage",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 34,
+      "question": "Are all food items properly labeled with date of storage?",
+      "category": "storage",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 35,
+      "question": "Are food items stored off the floor and in sealed containers?",
+      "category": "storage",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 36,
+      "question": "Is FIFO (First In, First Out) method being followed for stock rotation?",
+      "category": "storage",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 37,
+      "question": "Are customer washrooms clean with functional soap dispensers?",
+      "category": "customer-area",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 38,
+      "question": "Are dining tables and chairs clean and sanitized between customers?",
+      "category": "customer-area",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 39,
+      "question": "Is the dining area floor clean and free from spills?",
+      "category": "customer-area",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 40,
+      "question": "Are menus clean and in good condition?",
+      "category": "customer-area",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    }
+  ]
+}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPX Website - Navigation Test</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+        .status {
+            padding: 30px 40px;
+            background: #f0f9ff;
+            border-left: 5px solid #0ea5e9;
+            margin: 30px;
+            border-radius: 10px;
+        }
+        .status h2 {
+            color: #0369a1;
+            margin-bottom: 15px;
+        }
+        .status-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            font-size: 1.1em;
+        }
+        .status-item .icon {
+            margin-right: 15px;
+            font-size: 1.5em;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 40px;
+        }
+        .card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: #667eea;
+        }
+        .card h3 {
+            color: #1f2937;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        .card p {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .footer {
+            text-align: center;
+            padding: 30px;
+            background: #f9fafb;
+            color: #6b7280;
+        }
+        .server-info {
+            background: #ecfdf5;
+            border-left: 5px solid #10b981;
+            padding: 20px;
+            margin: 30px;
+            border-radius: 10px;
+        }
+        .server-info code {
+            background: #d1fae5;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            color: #065f46;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 CreativePixels Website</h1>
+            <p>Quick Navigation & Testing Hub</p>
+        </div>
+
+        <div class="status">
+            <h2>✅ Server Status</h2>
+            <div class="status-item">
+                <span class="icon">🚀</span>
+                <span><strong>Status:</strong> Running on port 8080</span>
+            </div>
+            <div class="status-item">
+                <span class="icon">📁</span>
+                <span><strong>Location:</strong> CPX website folder</span>
+            </div>
+            <div class="status-item">
+                <span class="icon">🌐</span>
+                <span><strong>All files:</strong> Found and ready</span>
+            </div>
+        </div>
+
+        <div class="server-info">
+            <h3 style="color: #065f46; margin-bottom: 15px;">📡 Access URLs:</h3>
+            <div style="margin: 10px 0;"><strong>Main Landing:</strong> <code>http://localhost:8080/index.html</code></div>
+            <div style="margin: 10px 0;"><strong>Ecosystem:</strong> <code>http://localhost:8080/ecosystem.html</code></div>
+            <div style="margin: 10px 0;"><strong>Studio:</strong> <code>http://localhost:8080/studio.html</code></div>
+        </div>
+
+        <div class="grid">
+            <div class="card" onclick="window.location.href='index.html'">
+                <h3>🏠 Main Landing</h3>
+                <p>CreativePixels main landing page with portfolio, services, and company information.</p>
+                <a href="index.html" class="btn">Visit Landing →</a>
+            </div>
+
+            <div class="card" onclick="window.location.href='ecosystem.html'">
+                <h3>🌐 Pixel Ecosystem</h3>
+                <p>Explore our complete ecosystem of WMS, TMS, AMS, and other enterprise solutions.</p>
+                <a href="ecosystem.html" class="btn">View Ecosystem →</a>
+            </div>
+
+            <div class="card" onclick="window.location.href='studio.html'">
+                <h3>🎨 Pixel Studio</h3>
+                <p>Design services, UI/UX solutions, and creative projects showcase.</p>
+                <a href="studio.html" class="btn">Enter Studio →</a>
+            </div>
+
+            <div class="card" onclick="window.location.href='checkout.html'">
+                <h3>💳 Checkout Demo</h3>
+                <p>Payment gateway integration demo with Stripe.</p>
+                <a href="checkout.html" class="btn">Try Checkout →</a>
+            </div>
+
+            <div class="card" onclick="window.location.href='test.html'">
+                <h3>🧪 Test Page</h3>
+                <p>Testing and development page for experiments.</p>
+                <a href="test.html" class="btn">Run Tests →</a>
+            </div>
+
+            <div class="card" onclick="window.location.href='Low/UX Study /motherboard.html'">
+                <h3>🔗 Pixel Connect</h3>
+                <p>UX study and connection platform.</p>
+                <a href="Low/UX Study /motherboard.html" class="btn">Connect →</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Server Running:</strong> Python HTTP Server on port 8080</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">To stop server: Press Ctrl+C in terminal</p>
+        </div>
+    </div>
+
+    <script>
+        console.log('✅ CPX Website Test Page Loaded');
+        console.log('📁 All assets should be loading from:', window.location.origin);
+        
+        // Test CSS files
+        const cssFiles = ['css/vendor.css', 'css/styles.css', 'css/custom-enhancements.css'];
+        cssFiles.forEach(css => {
+            fetch(css)
+                .then(res => console.log(`✅ ${css} - ${res.status}`))
+                .catch(err => console.error(`❌ ${css} - Failed`));
+        });
+        
+        // Test JS files
+        const jsFiles = ['js/plugins.js', 'js/main.js'];
+        jsFiles.forEach(js => {
+            fetch(js)
+                .then(res => console.log(`✅ ${js} - ${res.status}`))
+                .catch(err => console.error(`❌ ${js} - Failed`));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Reports - Amazon - Pixel Commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #000;
+            --secondary: #333;
+            --tertiary: #666;
+            --border: #e5e7eb;
+            --bg: #fff;
+            --bg-secondary: #f9fafb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--primary);
+            line-height: 1.5;
+        }
+
+        /* Layout */
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 240px;
+            background: var(--bg);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo {
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .logo-text {
+            font-size: 1.125rem;
+            font-weight: 800;
+        }
+
+        .nav-section {
+            padding: 16px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 12px 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            color: var(--secondary);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .nav-link:hover {
+            background: var(--bg-secondary);
+            color: var(--primary);
+        }
+
+        .nav-link.active {
+            background: var(--primary);
+            color: var(--bg);
+        }
+
+        .nav-link svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .platform-switcher {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .platform-btn {
+            width: 100%;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 240px;
+            padding: 24px;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .page-subtitle {
+            color: var(--tertiary);
+            font-size: 0.875rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn:hover {
+            background: var(--bg-secondary);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg);
+            border-color: var(--primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+        }
+
+        .btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Report Tabs */
+        .report-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 8px;
+            overflow-x: auto;
+        }
+
+        .report-tab {
+            flex: 1;
+            padding: 10px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+            min-width: 120px;
+        }
+
+        .report-tab:hover {
+            background: var(--bg-secondary);
+        }
+
+        .report-tab.active {
+            background: var(--primary);
+            color: var(--bg);
+        }
+
+        /* Date Range Picker */
+        .date-range-bar {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .date-input {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-family: inherit;
+        }
+
+        .quick-range-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .quick-range-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--bg);
+            cursor: pointer;
+        }
+
+        .quick-range-btn.active {
+            background: var(--primary);
+            color: var(--bg);
+            border-color: var(--primary);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--tertiary);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .stat-change {
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        .stat-change.negative {
+            color: var(--danger);
+        }
+
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .chart-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .chart-card.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .chart-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Data Table */
+        .table-container {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--tertiary);
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border);
+        }
+
+        tbody tr:hover {
+            background: var(--bg-secondary);
+        }
+
+        tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        td {
+            padding: 12px 16px;
+            font-size: 0.875rem;
+        }
+
+        .product-name {
+            font-weight: 600;
+        }
+
+        .amount {
+            font-weight: 700;
+        }
+
+        .percentage {
+            font-weight: 600;
+        }
+
+        .profit-positive {
+            color: var(--success);
+        }
+
+        .profit-negative {
+            color: var(--danger);
+        }
+
+        /* Export Options */
+        .export-menu {
+            position: relative;
+        }
+
+        .export-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: none;
+            min-width: 150px;
+            z-index: 10;
+        }
+
+        .export-dropdown.show {
+            display: block;
+        }
+
+        .export-option {
+            padding: 10px 16px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .export-option:last-child {
+            border-bottom: none;
+        }
+
+        .export-option:hover {
+            background: var(--bg-secondary);
+        }
+
+        .export-option svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <path d="M3 9h18"/>
+                    <path d="M9 21V9"/>
+                </svg>
+                <span class="logo-text">Pixel Commerce</span>
+            </div>
+
+            <div class="platform-switcher">
+                <button class="platform-btn">
+                    <span>Amazon</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </button>
+            </div>
+
+            <nav>
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../platforms/amazon.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <a href="../products/amazon-catalog.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                            <line x1="7" y1="7" x2="7.01" y2="7"/>
+                        </svg>
+                        Products
+                    </a>
+                    <a href="../orders/amazon-orders.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Orders
+                    </a>
+                    <a href="../tracking/amazon-track-order.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        Track Orders
+                    </a>
+                    <a href="../inventory/amazon-stock.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                        Inventory
+                    </a>
+                    <a href="../analytics/amazon-analytics.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        Analytics
+                    </a>
+                    <a href="../customers/amazon-customers.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Customers
+                    </a>
+                    <a href="amazon-reports.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                        Reports
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="#" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M12 1v6m0 6v6"/>
+                        </svg>
+                        Account
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="header-top">
+                    <div>
+                        <h1 class="page-title">Advanced Reports</h1>
+                        <p class="page-subtitle">Comprehensive analytics and insights for your Amazon business</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn" onclick="scheduleReport()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            Schedule
+                        </button>
+                        <div class="export-menu">
+                            <button class="btn btn-primary" onclick="toggleExportMenu()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Export
+                            </button>
+                            <div class="export-dropdown" id="exportDropdown">
+                                <div class="export-option" onclick="exportReport('excel')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                    </svg>
+                                    Export to Excel
+                                </div>
+                                <div class="export-option" onclick="exportReport('pdf')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                    </svg>
+                                    Export to PDF
+                                </div>
+                                <div class="export-option" onclick="exportReport('csv')">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                                        <polyline points="13 2 13 9 20 9"/>
+                                    </svg>
+                                    Export to CSV
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Report Tabs -->
+            <div class="report-tabs">
+                <button class="report-tab active" onclick="switchReport('sales')">Sales Report</button>
+                <button class="report-tab" onclick="switchReport('tax')">Tax Report</button>
+                <button class="report-tab" onclick="switchReport('inventory')">Inventory Report</button>
+                <button class="report-tab" onclick="switchReport('profit')">Profitability</button>
+            </div>
+
+            <!-- Date Range Picker -->
+            <div class="date-range-bar">
+                <label style="font-size: 0.875rem; font-weight: 600;">Date Range:</label>
+                <input type="date" class="date-input" id="startDate" value="2024-11-01">
+                <span style="color: var(--tertiary);">to</span>
+                <input type="date" class="date-input" id="endDate" value="2024-11-30">
+                <div class="quick-range-btns">
+                    <button class="quick-range-btn" onclick="setQuickRange('today')">Today</button>
+                    <button class="quick-range-btn" onclick="setQuickRange('week')">This Week</button>
+                    <button class="quick-range-btn active" onclick="setQuickRange('month')">This Month</button>
+                    <button class="quick-range-btn" onclick="setQuickRange('quarter')">This Quarter</button>
+                    <button class="quick-range-btn" onclick="setQuickRange('year')">This Year</button>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Revenue</div>
+                    <div class="stat-value">₹1,24,500</div>
+                    <div class="stat-change positive">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="18 15 12 9 6 15"/>
+                        </svg>
+                        +18.2%
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Total Orders</div>
+                    <div class="stat-value">528</div>
+                    <div class="stat-change positive">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="18 15 12 9 6 15"/>
+                        </svg>
+                        +12.5%
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">Net Profit</div>
+                    <div class="stat-value">₹43,575</div>
+                    <div class="stat-change positive">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="18 15 12 9 6 15"/>
+                        </svg>
+                        +21.8%
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-label">GST Collected</div>
+                    <div class="stat-value">₹22,410</div>
+                    <div class="stat-change positive">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="18 15 12 9 6 15"/>
+                        </svg>
+                        +18.2%
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card full-width">
+                    <h3 class="chart-title">Sales Trend (November 2024)</h3>
+                    <div class="chart-container">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">Top Products by Revenue</h3>
+                    <div class="chart-container">
+                        <canvas id="productsChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-card">
+                    <h3 class="chart-title">GST Breakdown</h3>
+                    <div class="chart-container">
+                        <canvas id="taxChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="table-container" id="reportTable">
+                <!-- Table populated by JavaScript based on selected report -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sample data
+        const salesData = {
+            labels: ['Nov 1-5', 'Nov 6-10', 'Nov 11-15', 'Nov 16-20', 'Nov 21-25', 'Nov 26-30'],
+            revenue: [18500, 22300, 19800, 25100, 21300, 17500],
+            orders: [78, 94, 83, 106, 90, 77]
+        };
+
+        const productData = [
+            { name: 'Red Titan Robot', revenue: 45880, units: 115, profit: 16058 },
+            { name: 'Blue Titan Robot', revenue: 23920, units: 60, profit: 8372 },
+            { name: 'Green Titan Robot', revenue: 19140, units: 48, profit: 6699 },
+            { name: 'Yellow Titan Robot', revenue: 15560, units: 39, profit: 5446 },
+            { name: 'Black Titan Robot', revenue: 12760, units: 32, profit: 4466 },
+            { name: 'White Titan Robot', revenue: 7240, units: 18, profit: 2534 }
+        ];
+
+        // Initialize Charts
+        let salesChart, productsChart, taxChart;
+
+        function initCharts() {
+            // Sales Trend Chart
+            const salesCtx = document.getElementById('salesChart').getContext('2d');
+            salesChart = new Chart(salesCtx, {
+                type: 'line',
+                data: {
+                    labels: salesData.labels,
+                    datasets: [{
+                        label: 'Revenue (₹)',
+                        data: salesData.revenue,
+                        borderColor: '#000',
+                        backgroundColor: 'rgba(0,0,0,0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Products Chart
+            const productsCtx = document.getElementById('productsChart').getContext('2d');
+            productsChart = new Chart(productsCtx, {
+                type: 'bar',
+                data: {
+                    labels: productData.slice(0, 5).map(p => p.name.split(' ')[0]),
+                    datasets: [{
+                        label: 'Revenue',
+                        data: productData.slice(0, 5).map(p => p.revenue),
+                        backgroundColor: '#000'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Tax Chart
+            const taxCtx = document.getElementById('taxChart').getContext('2d');
+            taxChart = new Chart(taxCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['CGST 9%', 'SGST 9%'],
+                    datasets: [{
+                        data: [11205, 11205],
+                        backgroundColor: ['#000', '#666']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        // Switch Report
+        function switchReport(type) {
+            // Update active tab
+            document.querySelectorAll('.report-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Render appropriate table
+            const tableContainer = document.getElementById('reportTable');
+            
+            if (type === 'sales') {
+                tableContainer.innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                <th>Orders</th>
+                                <th>Revenue</th>
+                                <th>Avg Order Value</th>
+                                <th>Growth</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${salesData.labels.map((label, i) => `
+                                <tr>
+                                    <td>${label}</td>
+                                    <td>${salesData.orders[i]}</td>
+                                    <td class="amount">₹${salesData.revenue[i].toLocaleString()}</td>
+                                    <td>₹${Math.round(salesData.revenue[i]/salesData.orders[i])}</td>
+                                    <td class="percentage profit-positive">+${Math.round(Math.random()*20)}%</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } else if (type === 'profit') {
+                tableContainer.innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Units Sold</th>
+                                <th>Revenue</th>
+                                <th>Net Profit</th>
+                                <th>Margin %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${productData.map(product => `
+                                <tr>
+                                    <td class="product-name">${product.name}</td>
+                                    <td>${product.units}</td>
+                                    <td class="amount">₹${product.revenue.toLocaleString()}</td>
+                                    <td class="amount profit-positive">₹${product.profit.toLocaleString()}</td>
+                                    <td class="percentage">${Math.round((product.profit/product.revenue)*100)}%</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } else if (type === 'tax') {
+                tableContainer.innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tax Component</th>
+                                <th>Taxable Amount</th>
+                                <th>Rate</th>
+                                <th>Tax Amount</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="product-name">CGST</td>
+                                <td class="amount">₹1,24,500</td>
+                                <td>9%</td>
+                                <td class="amount">₹11,205</td>
+                                <td class="amount">₹1,35,705</td>
+                            </tr>
+                            <tr>
+                                <td class="product-name">SGST</td>
+                                <td class="amount">₹1,24,500</td>
+                                <td>9%</td>
+                                <td class="amount">₹11,205</td>
+                                <td class="amount">₹1,35,705</td>
+                            </tr>
+                            <tr style="background: var(--bg-secondary); font-weight: 700;">
+                                <td>Total GST Collected</td>
+                                <td class="amount">₹1,24,500</td>
+                                <td>18%</td>
+                                <td class="amount">₹22,410</td>
+                                <td class="amount">₹1,46,910</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+            } else if (type === 'inventory') {
+                tableContainer.innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Opening Stock</th>
+                                <th>Received</th>
+                                <th>Sold</th>
+                                <th>Closing Stock</th>
+                                <th>Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${productData.map(product => {
+                                const opening = product.units + 50;
+                                const received = 30;
+                                const sold = product.units;
+                                const closing = opening + received - sold;
+                                return `
+                                    <tr>
+                                        <td class="product-name">${product.name}</td>
+                                        <td>${opening}</td>
+                                        <td>${received}</td>
+                                        <td>${sold}</td>
+                                        <td>${closing}</td>
+                                        <td class="amount">₹${(closing * 399).toLocaleString()}</td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+        }
+
+        // Export Report
+        function exportReport(format) {
+            toggleExportMenu();
+            alert(`Exporting report to ${format.toUpperCase()}...`);
+            // Implement actual export logic here
+        }
+
+        // Toggle Export Menu
+        function toggleExportMenu() {
+            const dropdown = document.getElementById('exportDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Schedule Report
+        function scheduleReport() {
+            alert('Schedule report functionality will be implemented');
+        }
+
+        // Set Quick Range
+        function setQuickRange(range) {
+            document.querySelectorAll('.quick-range-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            const today = new Date();
+            const startDate = document.getElementById('startDate');
+            const endDate = document.getElementById('endDate');
+
+            switch(range) {
+                case 'today':
+                    startDate.value = today.toISOString().split('T')[0];
+                    endDate.value = today.toISOString().split('T')[0];
+                    break;
+                case 'week':
+                    const weekStart = new Date(today);
+                    weekStart.setDate(today.getDate() - today.getDay());
+                    startDate.value = weekStart.toISOString().split('T')[0];
+                    endDate.value = today.toISOString().split('T')[0];
+                    break;
+                case 'month':
+                    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+                    startDate.value = monthStart.toISOString().split('T')[0];
+                    endDate.value = today.toISOString().split('T')[0];
+                    break;
+                case 'quarter':
+                    const quarter = Math.floor(today.getMonth() / 3);
+                    const quarterStart = new Date(today.getFullYear(), quarter * 3, 1);
+                    startDate.value = quarterStart.toISOString().split('T')[0];
+                    endDate.value = today.toISOString().split('T')[0];
+                    break;
+                case 'year':
+                    const yearStart = new Date(today.getFullYear(), 0, 1);
+                    startDate.value = yearStart.toISOString().split('T')[0];
+                    endDate.value = today.toISOString().split('T')[0];
+                    break;
+            }
+        }
+
+        // Close export menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.export-menu')) {
+                document.getElementById('exportDropdown').classList.remove('show');
+            }
+        });
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            switchReport('sales');
+        });
+    </script>
+</body>
+</html>

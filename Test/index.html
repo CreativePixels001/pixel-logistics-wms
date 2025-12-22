@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive 3D Particle System with Hand Gestures</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #canvas-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        #video {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 200px;
+            height: 150px;
+            border: 2px solid #00ff88;
+            border-radius: 8px;
+            transform: scaleX(-1);
+            z-index: 10;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+        }
+
+        #controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            color: #fff;
+            z-index: 10;
+            max-width: 300px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        #controls h2 {
+            margin-bottom: 15px;
+            color: #00ff88;
+            font-size: 18px;
+        }
+
+        #controls .control-group {
+            margin-bottom: 15px;
+        }
+
+        #controls label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        #controls select, #controls button {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #controls button {
+            margin-top: 10px;
+            background: rgba(0, 255, 136, 0.2);
+            transition: all 0.3s;
+        }
+
+        #controls button:hover {
+            background: rgba(0, 255, 136, 0.4);
+        }
+
+        #gesture-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px 20px;
+            border-radius: 10px;
+            color: #fff;
+            z-index: 10;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        #gesture-info h3 {
+            color: #00ff88;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        #gesture-info ul {
+            list-style: none;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        #gesture-info li {
+            margin-bottom: 5px;
+        }
+
+        #gesture-info .gesture-icon {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            background: #00ff88;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        #status {
+            position: absolute;
+            top: 190px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: #00ff88;
+            z-index: 10;
+            font-size: 14px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #00ff88;
+            font-size: 20px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <div id="loading" class="loading">Loading hand tracking...</div>
+        <video id="video" autoplay playsinline></video>
+        <div id="status">Status: Initializing...</div>
+        
+        <div id="controls">
+            <h2>🎨 Particle Controls</h2>
+            
+            <div class="control-group">
+                <label for="template-select">Particle Template:</label>
+                <select id="template-select">
+                    <option value="heart">❤️ Hearts</option>
+                    <option value="flower">🌸 Flowers</option>
+                    <option value="saturn">🪐 Saturn</option>
+                    <option value="fireworks">🎆 Fireworks</option>
+                    <option value="stars">⭐ Stars</option>
+                    <option value="spiral">🌀 Spiral</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="color-mode">Color Mode:</label>
+                <select id="color-mode">
+                    <option value="rainbow">🌈 Rainbow</option>
+                    <option value="fire">🔥 Fire</option>
+                    <option value="ocean">🌊 Ocean</option>
+                    <option value="forest">🌲 Forest</option>
+                    <option value="sunset">🌅 Sunset</option>
+                </select>
+            </div>
+
+            <button id="reset-btn">Reset Particles</button>
+        </div>
+
+        <div id="gesture-info">
+            <h3>✋ Hand Gestures:</h3>
+            <ul>
+                <li><span class="gesture-icon"></span> Open Palm: Expand particles</li>
+                <li><span class="gesture-icon"></span> Closed Fist: Contract particles</li>
+                <li><span class="gesture-icon"></span> Peace Sign: Change colors</li>
+                <li><span class="gesture-icon"></span> Thumbs Up: Rotate faster</li>
+                <li><span class="gesture-icon"></span> Point: Move particles to hand</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- MediaPipe Hands -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+    <script src="particles.js"></script>
+    <script src="gestures.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>

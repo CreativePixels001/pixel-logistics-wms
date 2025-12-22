@@ -14,6 +14,11 @@ function toggleTheme() {
   
   // Save preference to localStorage
   localStorage.setItem('theme', newTheme);
+  
+  // Reinitialize warehouse heat map with new theme
+  if (typeof initializeWarehouseHeatMap === 'function') {
+    initializeWarehouseHeatMap();
+  }
 }
 
 // Initialize theme on page load
@@ -29,6 +34,13 @@ function initializeTheme() {
     // Default to light theme if no preference saved
     document.body.classList.remove('dark-theme');
   }
+  
+  // Trigger heat map initialization after theme is set
+  setTimeout(function() {
+    if (typeof initializeWarehouseHeatMap === 'function') {
+      initializeWarehouseHeatMap();
+    }
+  }, 200);
 }
 
 // Run on page load

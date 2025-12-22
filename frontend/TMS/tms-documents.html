@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documents - Pixel Logistics TMS</title>
+    <link rel="stylesheet" href="../css/tms-main.css">
+    <link rel="stylesheet" href="../css/tms-side-panel.css">
+    <link rel="stylesheet" href="../css/document-manager.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Side Panel -->
+        <div id="sidePanel" class="side-panel">
+            <div class="panel-header">
+                <h2>📋 TMS Menu</h2>
+                <button class="close-panel" onclick="togglePanel()">×</button>
+            </div>
+            <nav class="panel-nav">
+                <a href="tms-dashboard.html">📊 Dashboard</a>
+                <a href="tms-shipments.html">📦 Shipments</a>
+                <a href="tms-carriers.html">🚛 Carriers</a>
+                <a href="tms-routes.html">🗺️ Routes</a>
+                <a href="tms-fleet.html">🚗 Fleet</a>
+                <a href="tms-compliance.html">✅ Compliance</a>
+                <a href="tms-documents.html" class="active">📄 Documents</a>
+                <a href="tms-live-tracking.html">📍 Live Tracking</a>
+                <a href="tms-reports.html">📈 Reports</a>
+                <a href="tms-cost-analysis.html">💰 Cost Analysis</a>
+            </nav>
+        </div>
+
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <button class="menu-toggle" onclick="togglePanel()">☰</button>
+                    <h1>📄 Document Management</h1>
+                </div>
+                <div class="top-bar-right">
+                    <button class="notification-btn" onclick="showNotifications()">
+                        🔔
+                        <span class="notification-badge" id="notificationBadge">0</span>
+                    </button>
+                    <div class="user-profile">
+                        <span>Admin User</span>
+                        <div class="user-avatar">A</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📄</div>
+                    <div class="stat-info">
+                        <h3 id="totalDocuments">-</h3>
+                        <p>Total Documents</p>
+                    </div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-info">
+                        <h3 id="expiringDocuments">-</h3>
+                        <p>Expiring Soon</p>
+                    </div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-icon">❌</div>
+                    <div class="stat-info">
+                        <h3 id="expiredDocuments">-</h3>
+                        <p>Expired</p>
+                    </div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <h3 id="verifiedDocuments">-</h3>
+                        <p>Verified</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters and Actions -->
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <select id="categoryFilter" onchange="filterDocuments()">
+                        <option value="">All Categories</option>
+                        <option value="carrier">Carrier</option>
+                        <option value="driver">Driver</option>
+                        <option value="vehicle">Vehicle</option>
+                        <option value="shipment">Shipment</option>
+                        <option value="compliance">Compliance</option>
+                    </select>
+
+                    <select id="typeFilter" onchange="filterDocuments()">
+                        <option value="">All Types</option>
+                        <option value="insurance">Insurance</option>
+                        <option value="license">License</option>
+                        <option value="medical">Medical Certificate</option>
+                        <option value="registration">Registration</option>
+                        <option value="inspection">Inspection</option>
+                        <option value="pod">Proof of Delivery</option>
+                        <option value="bol">Bill of Lading</option>
+                        <option value="invoice">Invoice</option>
+                    </select>
+
+                    <select id="statusFilter" onchange="filterDocuments()">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="expired">Expired</option>
+                        <option value="pending">Pending</option>
+                        <option value="rejected">Rejected</option>
+                    </select>
+
+                    <input 
+                        type="search" 
+                        id="searchInput" 
+                        placeholder="Search documents..." 
+                        oninput="searchDocuments()"
+                    >
+                </div>
+
+                <div class="toolbar-right">
+                    <button class="btn-primary" onclick="showUploadForm()">
+                        <span>📤</span> Upload Document
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upload Form Container (Hidden by default) -->
+            <div id="uploadFormContainer"></div>
+
+            <!-- Document Tabs -->
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('all')">All Documents</button>
+                <button class="tab" onclick="switchTab('expiring')">Expiring Soon</button>
+                <button class="tab" onclick="switchTab('expired')">Expired</button>
+                <button class="tab" onclick="switchTab('pending')">Pending Verification</button>
+            </div>
+
+            <!-- Documents Container -->
+            <div id="documentsContainer" class="documents-container">
+                <div class="loading">
+                    <div class="spinner-large"></div>
+                    <p>Loading documents...</p>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination"></div>
+        </div>
+    </div>
+
+    <!-- Common Scripts -->
+    <script src="../js/tms-common.js"></script>
+    <script src="../js/document-manager.js"></script>
+
+    <script>
+        let currentTab = 'all';
+        let currentPage = 1;
+        let documentsData = [];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadStats();
+            await loadDocuments();
+            checkExpiringAlerts();
+        });
+
+        // Load statistics
+        async function loadStats() {
+            try {
+                const response = await fetch('http://localhost:3000/api/v1/tms/documents');
+                const result = await response.json();
+
+                if (result.success) {
+                    documentsData = result.data;
+
+                    // Calculate stats
+                    const total = documentsData.length;
+                    const expiring = documentsData.filter(doc => {
+                        if (!doc.metadata?.expiryDate) return false;
+                        const days = Math.ceil((new Date(doc.metadata.expiryDate) - new Date()) / (1000 * 60 * 60 * 24));
+                        return days > 0 && days <= 30;
+                    }).length;
+                    const expired = documentsData.filter(doc => doc.isExpired).length;
+                    const verified = documentsData.filter(doc => doc.verification?.isVerified).length;
+
+                    document.getElementById('totalDocuments').textContent = total;
+                    document.getElementById('expiringDocuments').textContent = expiring;
+                    document.getElementById('expiredDocuments').textContent = expired;
+                    document.getElementById('verifiedDocuments').textContent = verified;
+                    document.getElementById('notificationBadge').textContent = expiring + expired;
+                }
+            } catch (error) {
+                console.error('Load stats error:', error);
+            }
+        }
+
+        // Load documents
+        async function loadDocuments() {
+            const container = document.getElementById('documentsContainer');
+            
+            try {
+                let url = 'http://localhost:3000/api/v1/tms/documents';
+                
+                // Add filters based on current tab
+                if (currentTab === 'expiring') {
+                    url = 'http://localhost:3000/api/v1/tms/documents/expiring';
+                } else if (currentTab === 'expired') {
+                    url = 'http://localhost:3000/api/v1/tms/documents/expired';
+                } else if (currentTab === 'pending') {
+                    url += '?status=pending';
+                }
+
+                const response = await fetch(url);
+                const result = await response.json();
+
+                if (result.success) {
+                    const docList = new DocumentList();
+                    docList.renderDocuments(container, result.data);
+                } else {
+                    throw new Error(result.error?.message || 'Failed to load documents');
+                }
+
+            } catch (error) {
+                console.error('Load documents error:', error);
+                container.innerHTML = `<p class="error">Failed to load documents: ${error.message}</p>`;
+            }
+        }
+
+        // Show upload form
+        function showUploadForm() {
+            const uploader = new DocumentUploader({
+                category: 'shipment',
+                onUploadComplete: async (data) => {
+                    document.getElementById('uploadFormContainer').innerHTML = '';
+                    await loadStats();
+                    await loadDocuments();
+                }
+            });
+
+            uploader.createUploadForm('uploadFormContainer');
+        }
+
+        // Switch tabs
+        async function switchTab(tab) {
+            currentTab = tab;
+            
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            await loadDocuments();
+        }
+
+        // Filter documents
+        async function filterDocuments() {
+            const category = document.getElementById('categoryFilter').value;
+            const type = document.getElementById('typeFilter').value;
+            const status = document.getElementById('statusFilter').value;
+
+            const params = new URLSearchParams();
+            if (category) params.append('category', category);
+            if (type) params.append('documentType', type);
+            if (status) params.append('status', status);
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/v1/tms/documents?${params}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    const docList = new DocumentList();
+                    docList.renderDocuments(document.getElementById('documentsContainer'), result.data);
+                }
+            } catch (error) {
+                console.error('Filter error:', error);
+            }
+        }
+
+        // Search documents
+        function searchDocuments() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            if (!searchTerm) {
+                loadDocuments();
+                return;
+            }
+
+            const filtered = documentsData.filter(doc => 
+                doc.originalName.toLowerCase().includes(searchTerm) ||
+                doc.documentType.toLowerCase().includes(searchTerm) ||
+                doc.category.toLowerCase().includes(searchTerm)
+            );
+
+            const docList = new DocumentList();
+            docList.renderDocuments(document.getElementById('documentsContainer'), filtered);
+        }
+
+        // Check for expiring alerts
+        function checkExpiringAlerts() {
+            const expiringCount = parseInt(document.getElementById('expiringDocuments').textContent);
+            const expiredCount = parseInt(document.getElementById('expiredDocuments').textContent);
+
+            if (expiredCount > 0) {
+                showNotification(`You have ${expiredCount} expired document(s)!`, 'error');
+            } else if (expiringCount > 0) {
+                showNotification(`${expiringCount} document(s) expiring soon`, 'warning');
+            }
+        }
+    </script>
+
+    <style>
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .spinner-large {
+            display: inline-block;
+            width: 48px;
+            height: 48px;
+            border: 4px solid #e5e7eb;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-left {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-left select,
+        .toolbar-left input {
+            padding: 10px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .toolbar-left input[type="search"] {
+            min-width: 250px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin: 20px 0;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            color: #6b7280;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: #3b82f6;
+            background-color: #f0f9ff;
+        }
+
+        .tab.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+        }
+
+        .documents-container {
+            min-height: 400px;
+        }
+
+        @media (max-width: 768px) {
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar-left {
+                flex-direction: column;
+            }
+
+            .toolbar-left input[type="search"] {
+                min-width: auto;
+                width: 100%;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+</body>
+</html>

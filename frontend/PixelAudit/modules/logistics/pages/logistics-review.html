@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Audit - PixelAudit Logistics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../assets/css/global.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f5f5; color: #000000; }
+        .dashboard-layout { display: flex; min-height: 100vh; }
+        .main-content { flex: 1; margin-left: 260px; }
+        .page-content { padding: 2rem; max-width: 1400px; }
+
+        .review-layout {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 1.5rem;
+        }
+
+        .review-sidebar {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            padding: 1.5rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 1rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: #666666;
+            font-weight: 600;
+        }
+
+        .info-value {
+            font-size: 0.875rem;
+            color: #000000;
+            font-weight: 500;
+        }
+
+        .review-items {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            padding: 1.5rem;
+        }
+
+        .review-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-question {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 0.5rem;
+        }
+
+        .item-response {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 3px;
+            margin-right: 0.5rem;
+        }
+
+        .response-yes { background: #D1FAE5; color: #065F46; }
+        .response-no { background: #FEE2E2; color: #991B1B; }
+        .response-na { background: #F3F4F6; color: #374151; }
+
+        .item-notes {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #666666;
+            font-style: italic;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 3px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-approve {
+            background: #10B981;
+            color: #ffffff;
+        }
+
+        .btn-reject {
+            background: #EF4444;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebarContainer"></div>
+
+        <main class="main-content">
+            <div id="headerContainer"></div>
+
+            <div class="page-content">
+                <h1 style="font-size: 2rem; font-weight: 800; margin-bottom: 2rem;">📋 Review Audit</h1>
+
+                <div class="review-layout">
+                    <div class="review-sidebar">
+                        <h3 class="sidebar-title">Audit Details</h3>
+                        <div class="info-row">
+                            <span class="info-label">AUDIT ID</span>
+                            <span class="info-value" id="auditId">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">TEMPLATE</span>
+                            <span class="info-value" id="templateName">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">CLIENT</span>
+                            <span class="info-value" id="clientName">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">LOCATION</span>
+                            <span class="info-value" id="location">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">AUDITOR</span>
+                            <span class="info-value" id="auditorName">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">COMPLETED</span>
+                            <span class="info-value" id="completedDate">-</span>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="btn btn-approve" onclick="approveAudit()">✓ Approve</button>
+                            <button class="btn btn-reject" onclick="rejectAudit()">✗ Reject</button>
+                        </div>
+                    </div>
+
+                    <div class="review-items" id="reviewItems">
+                        <p style="text-align: center; color: #999999;">Loading audit...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/components.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('sidebarContainer').innerHTML = renderSidebar('dashboard');
+            document.getElementById('headerContainer').innerHTML = renderHeader();
+            
+            loadAuditForReview();
+        });
+
+        function loadAuditForReview() {
+            const params = new URLSearchParams(window.location.search);
+            const auditId = params.get('id');
+            
+            if (!auditId) {
+                alert('No audit selected');
+                return;
+            }
+
+            const audits = JSON.parse(localStorage.getItem('pixelaudit_logistics_audits') || '[]');
+            const audit = audits.find(a => a.id === auditId);
+            
+            if (!audit || !audit.responses) {
+                alert('Audit not found or not completed');
+                return;
+            }
+
+            // Populate sidebar
+            document.getElementById('auditId').textContent = audit.id;
+            document.getElementById('templateName').textContent = audit.templateName;
+            document.getElementById('clientName').textContent = audit.clientName;
+            document.getElementById('location').textContent = audit.location;
+            document.getElementById('auditorName').textContent = audit.auditorName;
+            document.getElementById('completedDate').textContent = audit.completedAt ? 
+                new Date(audit.completedAt).toLocaleString() : '-';
+
+            // Render responses
+            const container = document.getElementById('reviewItems');
+            container.innerHTML = '';
+
+            Object.keys(audit.responses).forEach((itemId, index) => {
+                const response = audit.responses[itemId];
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'review-item';
+                
+                itemDiv.innerHTML = `
+                    <div class="item-question">${index + 1}. Question ${itemId}</div>
+                    <span class="item-response response-${response.answer}">${response.answer.toUpperCase()}</span>
+                    ${response.notes ? `<div class="item-notes">Notes: ${response.notes}</div>` : ''}
+                `;
+                
+                container.appendChild(itemDiv);
+            });
+        }
+
+        function approveAudit() {
+            if (confirm('Approve this audit?')) {
+                alert('✅ Audit approved successfully!');
+                window.location.href = 'logistics-dashboard.html';
+            }
+        }
+
+        function rejectAudit() {
+            const reason = prompt('Reason for rejection:');
+            if (reason) {
+                alert('❌ Audit rejected. Auditor will be notified.');
+                window.location.href = 'logistics-dashboard.html';
+            }
+        }
+    </script>
+</body>
+</html>

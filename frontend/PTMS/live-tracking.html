@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Live Tracking - Real-time Employee Shuttle Tracking">
+  <title>Live Tracking - PTMS | Pixel Logistics</title>
+  
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tms-dashboard.css">
+  <style>
+    /* Black and White Theme */
+    body {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    /* Full-screen map layout */
+    .map-layout {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      background: #000000;
+    }
+
+    /* Sidebar for active trips */
+    .trips-sidebar {
+      width: 320px;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      padding: 1.25rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-badge {
+      background: #000000;
+      color: white;
+      padding: 0.25rem 0.625rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid white;
+    }
+
+    /* Trip cards */
+    .trip-card {
+      background: rgba(20, 20, 20, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .trip-card:hover {
+      background: rgba(40, 40, 40, 0.95);
+      border-color: white;
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    }
+
+    .trip-card.active {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: white;
+      border-width: 2px;
+    }
+
+    .trip-id {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    .trip-route {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .trip-driver {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .trip-vehicle {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .trip-status {
+      display: inline-block;
+      padding: 0.25rem 0.625rem;
+      border-radius: 12px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-in-transit {
+      background: #000000;
+      color: white;
+      border: 1px solid white;
+    }
+
+    .status-delayed {
+      background: #000000;
+      color: #ffffff;
+      border: 1px solid #000000;
+    }
+
+    .trip-eta {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .trip-employees {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    /* Map container */
+    .map-container {
+      flex: 1;
+      position: relative;
+      background: #000000;
+      overflow: hidden;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    .map-background {
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .map-placeholder {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .map-placeholder svg {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+    }
+
+    /* Map controls */
+    .map-controls {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 1000;
+    }
+
+    .map-control-btn {
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: white;
+    }
+
+    .map-control-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: white;
+    }
+
+    /* Back button */
+    .back-button {
+      position: absolute;
+      top: 20px;
+      right: 80px;
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      padding: 0.625rem 1.25rem;
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 1000;
+      text-decoration: none;
+    }
+
+    .back-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: white;
+      transform: translateX(2px);
+    }
+
+    /* Search box on map */
+    .map-search {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 380px;
+      max-width: 400px;
+      z-index: 1000;
+    }
+
+    .map-search-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      color: white;
+      font-size: 0.875rem;
+    }
+
+    .map-search-input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .map-search-input:focus {
+      border-color: white;
+      outline: none;
+    }
+
+    .map-search-icon {
+      position: absolute;
+      left: 0.875rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Stats overlay */
+    .stats-overlay {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      right: 380px;
+      display: flex;
+      gap: 1rem;
+      z-index: 1000;
+    }
+
+    .stat-box {
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 1rem;
+      flex: 1;
+      max-width: 200px;
+    }
+
+    .stat-box-label {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-box-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    /* Filter tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .filter-tab {
+      padding: 0.375rem 0.75rem;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 6px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-tab:hover {
+      border-color: rgba(255, 255, 255, 0.4);
+      color: white;
+    }
+
+    .filter-tab.active {
+      background: white;
+      color: black;
+      border-color: white;
+    }
+
+    /* Location markers on map */
+    .vehicle-marker {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      transition: all 0.2s;
+      animation: markerPulse 2s infinite;
+    }
+
+    .vehicle-marker:hover {
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    @keyframes markerPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .marker-icon {
+      width: 32px;
+      height: 32px;
+      background: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid #000000;
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+    }
+
+    @media (max-width: 768px) {
+      .trips-sidebar {
+        width: 100%;
+        max-width: 320px;
+        position: absolute;
+        left: 0;
+        transform: translateX(-100%);
+        transition: transform 0.3s;
+      }
+
+      .trips-sidebar.open {
+        transform: translateX(0);
+      }
+
+      .map-search {
+        right: 20px;
+      }
+
+      .stats-overlay {
+        right: 20px;
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+          <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+          <rect x="24" y="24" width="4" height="4" fill="var(--color-white)"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Live Tracking</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="map-layout">
+    <!-- Sidebar -->
+    <div class="trips-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <span>Active Trips</span>
+          <span class="sidebar-badge">32</span>
+        </div>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" onclick="filterTrips('all')">All</button>
+        <button class="filter-tab" onclick="filterTrips('morning')">Morning</button>
+        <button class="filter-tab" onclick="filterTrips('evening')">Evening</button>
+        <button class="filter-tab" onclick="filterTrips('night')">Night</button>
+      </div>
+
+      <!-- Trip Cards -->
+      <div class="trip-card active" onclick="selectTrip('TP-001')">
+        <div class="trip-id">TP-001 • Morning Shift</div>
+        <div class="trip-route">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="10" r="3"></circle>
+            <path d="M12 2v6M12 14v8"></path>
+          </svg>
+          Andheri - Goregaon - Malad
+        </div>
+        <div class="trip-driver">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Rajesh Kumar
+        </div>
+        <div class="trip-vehicle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+          </svg>
+          Bus MH01-AB-1234
+        </div>
+        <span class="trip-status status-in-transit">In Transit</span>
+        <div class="trip-employees">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          </svg>
+          89 employees onboard
+        </div>
+        <div class="trip-eta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ETA: 15 min to destination
+        </div>
+      </div>
+
+      <div class="trip-card" onclick="selectTrip('TP-002')">
+        <div class="trip-id">TP-002 • Morning Shift</div>
+        <div class="trip-route">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="10" r="3"></circle>
+            <path d="M12 2v6M12 14v8"></path>
+          </svg>
+          Powai - Vikhroli - Ghatkopar
+        </div>
+        <div class="trip-driver">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Amit Sharma
+        </div>
+        <div class="trip-vehicle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+          </svg>
+          Bus MH01-CD-5678
+        </div>
+        <span class="trip-status status-in-transit">In Transit</span>
+        <div class="trip-employees">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          </svg>
+          76 employees onboard
+        </div>
+        <div class="trip-eta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ETA: 22 min to destination
+        </div>
+      </div>
+
+      <div class="trip-card" onclick="selectTrip('TP-003')">
+        <div class="trip-id">TP-003 • Evening Shift</div>
+        <div class="trip-route">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="10" r="3"></circle>
+            <path d="M12 2v6M12 14v8"></path>
+          </svg>
+          Manesar - Sector 18 - DLF
+        </div>
+        <div class="trip-driver">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Vikram Singh
+        </div>
+        <div class="trip-vehicle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+          </svg>
+          Bus DL01-EF-9101
+        </div>
+        <span class="trip-status status-delayed">Delayed 5min</span>
+        <div class="trip-employees">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          </svg>
+          92 employees onboard
+        </div>
+        <div class="trip-eta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ETA: 30 min to destination
+        </div>
+      </div>
+
+      <div class="trip-card" onclick="selectTrip('TP-004')">
+        <div class="trip-id">TP-004 • Morning Shift</div>
+        <div class="trip-route">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="10" r="3"></circle>
+            <path d="M12 2v6M12 14v8"></path>
+          </svg>
+          Whitefield - Marathahalli - Koramangala
+        </div>
+        <div class="trip-driver">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Suresh Reddy
+        </div>
+        <div class="trip-vehicle">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+          </svg>
+          Bus KA01-GH-1213
+        </div>
+        <span class="trip-status status-in-transit">In Transit</span>
+        <div class="trip-employees">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+            <circle cx="9" cy="7" r="4"></circle>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          </svg>
+          68 employees onboard
+        </div>
+        <div class="trip-eta">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ETA: 18 min to destination
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Map Container -->
+    <div class="map-container">
+      <!-- Map Search -->
+      <div class="map-search">
+        <svg class="map-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <input type="text" class="map-search-input" placeholder="Search trip, route, or location...">
+      </div>
+
+      <!-- Back Button -->
+      <a href="dashboard.html" class="back-button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        Back to Dashboard
+      </a>
+
+      <!-- Map Controls -->
+      <div class="map-controls">
+        <button class="map-control-btn" title="Zoom In">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <button class="map-control-btn" title="Zoom Out">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <button class="map-control-btn" title="Center Map">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <line x1="12" y1="1" x2="12" y2="5"></line>
+            <line x1="12" y1="19" x2="12" y2="23"></line>
+            <line x1="1" y1="12" x2="5" y2="12"></line>
+            <line x1="19" y1="12" x2="23" y2="12"></line>
+          </svg>
+        </button>
+        <button class="map-control-btn" title="Refresh">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Map (Google Maps will be loaded here) -->
+      <div id="map">
+        <div class="map-background">
+          <div class="map-placeholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <div style="font-size: 1.125rem; font-weight: 500; margin-bottom: 0.5rem;">Live Map Loading...</div>
+            <div style="font-size: 0.875rem;">Google Maps integration will show real-time vehicle locations</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Overlay -->
+      <div class="stats-overlay">
+        <div class="stat-box">
+          <div class="stat-box-label">Trips in Progress</div>
+          <div class="stat-box-value">32</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Employees Traveling</div>
+          <div class="stat-box-value">2,487</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">On-Time Performance</div>
+          <div class="stat-box-value">94.8%</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-label">Delayed Trips</div>
+          <div class="stat-box-value" style="color: var(--color-text);">2</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/theme.js"></script>
+  <script>
+    // Filter trips by shift
+    function filterTrips(shift) {
+      // Remove active class from all tabs
+      document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Add active class to clicked tab
+      event.target.classList.add('active');
+      
+      console.log('Filtering trips for shift:', shift);
+      // TODO: Implement filtering logic
+    }
+
+    // Select trip
+    function selectTrip(tripId) {
+      // Remove active class from all cards
+      document.querySelectorAll('.trip-card').forEach(card => {
+        card.classList.remove('active');
+      });
+      
+      // Add active class to clicked card
+      event.currentTarget.classList.add('active');
+      
+      console.log('Selected trip:', tripId);
+      // TODO: Center map on selected trip location
+      // TODO: Show trip details and route
+    }
+
+    // Auto-refresh trips every 30 seconds
+    setInterval(() => {
+      console.log('Refreshing trip data...');
+      // TODO: Fetch updated trip data from API
+    }, 30000);
+
+    // TODO: Initialize Google Maps
+    // function initMap() {
+    //   const map = new google.maps.Map(document.getElementById('map'), {
+    //     zoom: 12,
+    //     center: { lat: 19.0760, lng: 72.8777 }, // Mumbai
+    //     styles: darkMapStyles
+    //   });
+    // }
+  </script>
+
+</body>
+</html>

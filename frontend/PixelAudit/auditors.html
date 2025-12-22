@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auditor Management - PixelAudit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/global.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Container -->
+        <div id="sidebarContainer"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header Container -->
+            <div id="headerContainer"></div>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Action Bar -->
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <div>
+                        <input type="text" id="searchInput" placeholder="Search auditors..." style="padding: 0.75rem 1rem; border: 1px solid #e5e5e5; border-radius: 4px; width: 300px; font-size: 0.9375rem;" onkeyup="filterClients()">
+                    </div>
+                    <button onclick="openAddClientModal()" style="padding: 0.875rem 1.5rem; background: #000; color: #fff; border: none; border-radius: 4px; font-size: 0.9375rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add Auditor
+                    </button>
+                </div>
+
+                <!-- Clients Table -->
+                <div class="card">
+                    <table class="table" id="auditorsTable">
+                        <thead>
+                            <tr>
+                                <th>Auditor Name</th>
+                                <th>Role</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>GST</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditorsTableBody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Client Modal -->
+    <div id="auditorModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: #fff; border-radius: 8px; max-width: 500px; width: 90%; box-shadow: 0 4px 24px rgba(0,0,0,0.15);">
+            <div style="padding: 1.5rem; border-bottom: 1px solid #e5e5e5; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="margin: 0; font-size: 1.25rem; font-weight: 700;" id="modalTitle">Add New Client</h2>
+                <button onclick="closeClientModal()" style="background: none; border: none; cursor: pointer; padding: 0.5rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="auditorForm" style="padding: 1.5rem;">
+                <input type="hidden" id="auditorId">
+                
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Auditor Name *</label>
+                    <input type="text" id="auditorName" required placeholder="e.g., Mahindra Logistics" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Role</label>
+                    <input type="text" id="auditorContact" placeholder="e.g., Vishal Sharma" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Email</label>
+                    <input type="email" id="auditorEmail" placeholder="contact@company.com" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Phone</label>
+                    <input type="tel" id="auditorPhone" placeholder="+91 98765 43210" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Employee ID</label>
+                    <input type="text" id="auditorGST" placeholder="27AABCM1234F1Z5" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                </div>
+
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" onclick="closeClientModal()" style="padding: 0.75rem 1.5rem; background: #fff; border: 1px solid #e5e5e5; border-radius: 4px; cursor: pointer; font-weight: 600;">
+                        Cancel
+                    </button>
+                    <button type="submit" style="padding: 0.75rem 1.5rem; background: #000; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
+                        Save Auditor
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let editingClientId = null;
+
+        // Load and display auditors
+        function loadClients() {
+            const auditors = JSON.parse(localStorage.getItem('pixelaudit_auditors') || '[]');
+            const tbody = document.getElementById('auditorsTableBody');
+            
+            if (auditors.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 3rem; color: #666;">No auditors yet. Add your first auditor!</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = auditors.map(auditor => `
+                <tr>
+                    <td><strong>${auditor.name}</strong></td>
+                    <td>${auditor.contact || '-'}</td>
+                    <td>${auditor.email || '-'}</td>
+                    <td>${auditor.phone || '-'}</td>
+                    <td>${auditor.gst || '-'}</td>
+                    <td>
+                        <button onclick="editClient('${auditor.id}')" style="padding: 0.5rem 0.75rem; background: #f5f5f5; border: 1px solid #e5e5e5; border-radius: 4px; cursor: pointer; margin-right: 0.5rem;">
+                            Edit
+                        </button>
+                        <button onclick="deleteClient('${auditor.id}')" style="padding: 0.5rem 0.75rem; background: #fee; border: 1px solid #fcc; border-radius: 4px; cursor: pointer; color: #c00;">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Filter auditors
+        function filterClients() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const auditors = JSON.parse(localStorage.getItem('pixelaudit_auditors') || '[]');
+            const filtered = auditors.filter(auditor => 
+                auditor.name.toLowerCase().includes(searchTerm) ||
+                (auditor.contact && auditor.contact.toLowerCase().includes(searchTerm)) ||
+                (auditor.email && auditor.email.toLowerCase().includes(searchTerm))
+            );
+            
+            const tbody = document.getElementById('auditorsTableBody');
+            tbody.innerHTML = filtered.map(auditor => `
+                <tr>
+                    <td><strong>${auditor.name}</strong></td>
+                    <td>${auditor.contact || '-'}</td>
+                    <td>${auditor.email || '-'}</td>
+                    <td>${auditor.phone || '-'}</td>
+                    <td>${auditor.gst || '-'}</td>
+                    <td>
+                        <button onclick="editClient('${auditor.id}')" style="padding: 0.5rem 0.75rem; background: #f5f5f5; border: 1px solid #e5e5e5; border-radius: 4px; cursor: pointer; margin-right: 0.5rem;">
+                            Edit
+                        </button>
+                        <button onclick="deleteClient('${auditor.id}')" style="padding: 0.5rem 0.75rem; background: #fee; border: 1px solid #fcc; border-radius: 4px; cursor: pointer; color: #c00;">
+                            Delete
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Modal functions
+        function openAddClientModal() {
+            editingClientId = null;
+            document.getElementById('modalTitle').textContent = 'Add New Client';
+            document.getElementById('auditorForm').reset();
+            document.getElementById('auditorModal').style.display = 'flex';
+        }
+
+        function closeClientModal() {
+            document.getElementById('auditorModal').style.display = 'none';
+            document.getElementById('auditorForm').reset();
+            editingClientId = null;
+        }
+
+        function editClient(id) {
+            const auditors = JSON.parse(localStorage.getItem('pixelaudit_auditors') || '[]');
+            const auditor = auditors.find(c => c.id === id);
+            
+            if (auditor) {
+                editingClientId = id;
+                document.getElementById('modalTitle').textContent = 'Edit Client';
+                document.getElementById('auditorId').value = auditor.id;
+                document.getElementById('auditorName').value = auditor.name;
+                document.getElementById('auditorContact').value = auditor.contact || '';
+                document.getElementById('auditorEmail').value = auditor.email || '';
+                document.getElementById('auditorPhone').value = auditor.phone || '';
+                document.getElementById('auditorGST').value = auditor.gst || '';
+                document.getElementById('auditorModal').style.display = 'flex';
+            }
+        }
+
+        function deleteClient(id) {
+            if (confirm('Are you sure you want to delete this auditor?')) {
+                const auditors = JSON.parse(localStorage.getItem('pixelaudit_auditors') || '[]');
+                const filtered = auditors.filter(c => c.id !== id);
+                localStorage.setItem('pixelaudit_auditors', JSON.stringify(filtered));
+                loadClients();
+            }
+        }
+
+        // Form submit
+        document.getElementById('auditorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const auditors = JSON.parse(localStorage.getItem('pixelaudit_auditors') || '[]');
+            
+            const auditorData = {
+                id: editingClientId || 'auditor_' + Date.now(),
+                name: document.getElementById('auditorName').value,
+                contact: document.getElementById('auditorContact').value,
+                email: document.getElementById('auditorEmail').value,
+                phone: document.getElementById('auditorPhone').value,
+                gst: document.getElementById('auditorGST').value,
+                updatedAt: new Date().toISOString()
+            };
+            
+            if (editingClientId) {
+                // Update existing
+                const index = auditors.findIndex(c => c.id === editingClientId);
+                if (index !== -1) {
+                    auditors[index] = { ...auditors[index], ...auditorData };
+                }
+            } else {
+                // Add new
+                auditorData.createdAt = new Date().toISOString();
+                auditors.push(auditorData);
+            }
+            
+            localStorage.setItem('pixelaudit_auditors', JSON.stringify(auditors));
+            closeClientModal();
+            loadClients();
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadClients);
+    </script>
+
+    <!-- Components -->
+    <script src="assets/js/components.js"></script>
+    <script>
+        // Initialize components when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const headerActions = `
+                <button onclick="openAddClientModal()" class="btn btn-secondary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Add Auditor
+                </button>
+            `;
+            
+            initializeComponents('auditors', 'Auditors', 'Manage your field auditors and team', headerActions);
+        });
+    </script>
+</body>
+</html>

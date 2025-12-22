@@ -1,0 +1,322 @@
+{
+  "id": "restaurant-safety-audit",
+  "name": "Restaurant Safety Audit",
+  "description": "Comprehensive safety and compliance audit for restaurants covering food licensing, kitchen hygiene, fire safety, and staff compliance",
+  "category": "retail",
+  "version": "1.0",
+  "totalItems": 40,
+  "estimatedTime": "45-60 minutes",
+  "categories": [
+    {
+      "name": "Food License & Compliance",
+      "items": [
+        {
+          "id": "R001",
+          "question": "Is valid FSSAI license displayed prominently?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true,
+          "notes": "License should be visible to customers"
+        },
+        {
+          "id": "R002",
+          "question": "Is FSSAI license number matching registration documents?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": true
+        },
+        {
+          "id": "R003",
+          "question": "Is food handler medical certificate up to date?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R004",
+          "question": "Is pest control certificate valid and displayed?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "R005",
+          "question": "Are ingredient labels in compliance with regulations?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "R006",
+          "question": "Is 'No Smoking' signage displayed as per law?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "R007",
+          "question": "Are allergen warnings displayed on menu?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "R008",
+          "question": "Is waste disposal license valid?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        }
+      ]
+    },
+    {
+      "name": "Kitchen Hygiene",
+      "items": [
+        {
+          "id": "R009",
+          "question": "Are kitchen staff wearing hair nets/caps?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R010",
+          "question": "Are kitchen staff wearing clean aprons and gloves?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R011",
+          "question": "Is hand washing station available with soap and sanitizer?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R012",
+          "question": "Are separate cutting boards used for veg/non-veg?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R013",
+          "question": "Are kitchen surfaces and equipment sanitized?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R014",
+          "question": "Is kitchen floor clean and free from water/oil spills?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "R015",
+          "question": "Are garbage bins covered with lids?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "R016",
+          "question": "Is exhaust/chimney system functioning properly?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "R017",
+          "question": "Are cooking utensils stored hygienically?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "R018",
+          "question": "Is dishwashing area separate and organized?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "R019",
+          "question": "Are expired ingredients/food items removed?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R020",
+          "question": "Is kitchen free from pests (rodents, cockroaches)?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        }
+      ]
+    },
+    {
+      "name": "Fire Safety",
+      "items": [
+        {
+          "id": "R021",
+          "question": "Are fire extinguishers present and accessible?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R022",
+          "question": "Are fire extinguishers serviced within last 12 months?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R023",
+          "question": "Are emergency exit routes clearly marked?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R024",
+          "question": "Are emergency exits unobstructed?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R025",
+          "question": "Is fire alarm system installed and functional?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "R026",
+          "question": "Is LPG cylinder stored in well-ventilated area?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        }
+      ]
+    },
+    {
+      "name": "Staff Training & Hygiene",
+      "items": [
+        {
+          "id": "R027",
+          "question": "Have staff received food safety training?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "R028",
+          "question": "Are staff health checkup records maintained?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": true
+        },
+        {
+          "id": "R029",
+          "question": "Do staff maintain personal hygiene (clean nails, no jewelry)?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "R030",
+          "question": "Are staff uniforms clean and in good condition?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "R031",
+          "question": "Is first aid kit available and stocked?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        }
+      ]
+    },
+    {
+      "name": "Storage & Refrigeration",
+      "items": [
+        {
+          "id": "R032",
+          "question": "Is refrigerator temperature below 4°C?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R033",
+          "question": "Is freezer temperature below -18°C?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R034",
+          "question": "Are raw and cooked foods stored separately?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R035",
+          "question": "Are food items stored off the floor (6 inches minimum)?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "R036",
+          "question": "Are food containers labeled with dates?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        }
+      ]
+    },
+    {
+      "name": "Customer Area Cleanliness",
+      "items": [
+        {
+          "id": "R037",
+          "question": "Are dining tables and chairs clean?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "R038",
+          "question": "Are washrooms clean with soap and sanitizer available?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R039",
+          "question": "Is drinking water safe and properly stored?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "R040",
+          "question": "Is customer area free from unpleasant odors?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        }
+      ]
+    }
+  ]
+}

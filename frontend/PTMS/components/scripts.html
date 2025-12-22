@@ -1,0 +1,68 @@
+<!-- Common PTMS Scripts -->
+<script>
+// Theme Toggle
+function toggleTheme() {
+  const html = document.documentElement;
+  const currentTheme = html.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  
+  // Update theme icons
+  const lightIcon = document.querySelector('.theme-icon-light');
+  const darkIcon = document.querySelector('.theme-icon-dark');
+  if (newTheme === 'dark') {
+    lightIcon.style.display = 'none';
+    darkIcon.style.display = 'block';
+  } else {
+    lightIcon.style.display = 'block';
+    darkIcon.style.display = 'none';
+  }
+}
+
+// Initialize theme from localStorage
+document.addEventListener('DOMContentLoaded', function() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  
+  const lightIcon = document.querySelector('.theme-icon-light');
+  const darkIcon = document.querySelector('.theme-icon-dark');
+  if (savedTheme === 'dark') {
+    lightIcon.style.display = 'none';
+    darkIcon.style.display = 'block';
+  }
+});
+
+// User Menu Toggle
+function toggleUserMenu() {
+  const dropdown = document.getElementById('userDropdown');
+  dropdown.classList.toggle('show');
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+  const userMenu = document.getElementById('userMenu');
+  const dropdown = document.getElementById('userDropdown');
+  if (userMenu && dropdown && !userMenu.contains(event.target)) {
+    dropdown.classList.remove('show');
+  }
+});
+
+// Search Modal
+function openSearch() {
+  alert('Search functionality coming soon!');
+}
+
+// Keyboard shortcut for search (Cmd+K / Ctrl+K)
+document.addEventListener('keydown', function(e) {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    e.preventDefault();
+    openSearch();
+  }
+});
+
+// Notifications Toggle
+function toggleNotifications() {
+  alert('Notifications panel coming soon!');
+}
+</script>

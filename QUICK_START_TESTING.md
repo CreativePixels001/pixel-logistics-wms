@@ -1,4 +1,4 @@
-# Quick Start Testing Guide - DLT WMS
+# Quick Start Testing Guide - Pixel Logistics WMS
 
 **Welcome back!** 🎉
 
@@ -32,7 +32,7 @@ Phase 12B (Slotting & Labor Management) has been completed during your break. He
 
 ### Step 1: Start Local Server
 ```bash
-cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS/frontend"
+cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS/frontend"
 python3 -m http.server 8080
 ```
 
@@ -161,7 +161,7 @@ frontend/
 
 ### Documentation
 ```
-DLT WMS/
+Pixel Logistics WMS/
 ├── PHASE_12B_COMPLETION.md (Comprehensive report)
 └── END_TO_END_TESTING_CHECKLIST.md (250+ test cases)
 ```

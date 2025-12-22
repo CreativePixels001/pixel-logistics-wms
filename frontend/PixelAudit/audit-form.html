@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conduct Audit - PixelAudit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/global.css">
+    <style>
+        .audit-progress-bar {
+            position: sticky;
+            top: 0;
+            background: #FFFFFF;
+            padding: 1rem 2.5rem;
+            border-bottom: 1px solid #E0E0E0;
+            z-index: 99;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-stats {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.875rem;
+        }
+
+        .progress-stats span {
+            color: #666666;
+        }
+
+        .progress-stats strong {
+            color: #000000;
+            margin-left: 0.25rem;
+        }
+
+        .category-section {
+            background: #FFFFFF;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .category-header {
+            background: #F9F9F9;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #E0E0E0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .category-header h3 {
+            margin: 0;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .category-count {
+            font-size: 0.875rem;
+            color: #666666;
+        }
+
+        .checklist-item {
+            padding: 1.5rem;
+            border-bottom: 1px solid #F0F0F0;
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-item.critical {
+            background: #FFF9F9;
+            border-left: 3px solid #000000;
+        }
+
+        .item-header {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .item-number {
+            width: 32px;
+            height: 32px;
+            background: #000000;
+            color: #FFFFFF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .item-question {
+            font-weight: 500;
+            color: #000000;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .item-badges {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .badge-critical {
+            background: #000000;
+            color: #FFFFFF;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .badge-photo {
+            background: #F5F5F5;
+            color: #000000;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            border-radius: 4px;
+            font-weight: 500;
+            border: 1px solid #E0E0E0;
+        }
+
+        .response-options {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .response-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #E0E0E0;
+            background: #FFFFFF;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .response-btn:hover {
+            border-color: #CCCCCC;
+            background: #F9F9F9;
+        }
+
+        .response-btn.selected {
+            background: #000000;
+            color: #FFFFFF;
+            border-color: #000000;
+        }
+
+        .response-btn.pass.selected {
+            background: #000000;
+            border-color: #000000;
+        }
+
+        .response-btn.fail.selected {
+            background: #666666;
+            border-color: #666666;
+        }
+
+        .response-btn.na.selected {
+            background: #CCCCCC;
+            border-color: #CCCCCC;
+        }
+
+        .photo-upload-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #F9F9F9;
+            border-radius: 8px;
+            border: 2px dashed #E0E0E0;
+        }
+
+        .photo-upload-section.has-photo {
+            border-color: #000000;
+            background: #FFFFFF;
+        }
+
+        .upload-area {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .upload-btn {
+            background: #000000;
+            color: #FFFFFF;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .upload-btn:hover {
+            background: #333333;
+        }
+
+        .photo-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .photo-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid #E0E0E0;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-remove {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            background: #000000;
+            color: #FFFFFF;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .notes-section {
+            margin-top: 1rem;
+        }
+
+        .notes-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.875rem;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .notes-textarea:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        .form-actions {
+            position: sticky;
+            bottom: 0;
+            background: #FFFFFF;
+            padding: 1.5rem 2.5rem;
+            border-top: 1px solid #E0E0E0;
+            display: flex;
+            gap: 1rem;
+            justify-content: space-between;
+        }
+
+        .btn-save-draft {
+            background: #F5F5F5;
+            color: #000000;
+            border: 1px solid #E0E0E0;
+        }
+
+        .btn-save-draft:hover {
+            background: #E5E5E5;
+        }
+
+        .score-display {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000000;
+        }
+
+        .score-label {
+            font-size: 0.875rem;
+            color: #666666;
+            margin-bottom: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Container -->
+        <div id="sidebarContainer"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header Container -->
+            <div id="headerContainer"></div>
+
+            <!-- Progress Bar -->
+            <div class="audit-progress-bar">
+                <div class="progress-info">
+                    <div class="progress-stats">
+                        <span>Progress: <strong id="progressText">0/0</strong></span>
+                        <span>Score: <strong id="scoreText">0%</strong></span>
+                    </div>
+                    <div class="score-display" id="currentScore">0%</div>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Page Content -->
+            <div class="page-content" id="auditContent" style="max-width: 60%; margin: 0 auto;">
+                <div id="categoriesContainer"></div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-secondary btn-save-draft" onclick="saveDraft()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+                            <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/>
+                            <polyline points="17 21 17 13 7 13 7 21"/>
+                            <polyline points="7 3 7 8 15 8"/>
+                        </svg>
+                        Save Draft
+                    </button>
+                    <button class="btn btn-secondary" onclick="window.history.back()">
+                        Cancel
+                    </button>
+                </div>
+                <button class="btn btn-primary" onclick="submitAudit()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    Submit Audit
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Components -->
+    <script src="assets/js/components.js"></script>
+    <script>
+        // Audit data
+        let auditData = {
+            template: null,
+            templateId: null,
+            client: null,
+            location: null,
+            responses: {},
+            photos: {},
+            notes: {},
+            startTime: new Date().toISOString(),
+            completedItems: 0,
+            totalItems: 0
+        };
+
+        // Get URL parameters
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                template: params.get('template'),
+                client: params.get('client'),
+                location: params.get('location')
+            };
+        }
+
+        // Load template
+        async function loadTemplate(templateId) {
+            try {
+                // Map template IDs to file names
+                const templateFiles = {
+                    'restaurant': 'restaurant-safety.json',
+                    'warehouse': 'warehouse-compliance.json',
+                    'retail': 'retail-store.json',
+                    'restaurant-safety': 'restaurant-safety.json',
+                    'warehouse-compliance': 'warehouse-compliance.json',
+                    'retail-store': 'retail-store.json',
+                    'hotel': 'restaurant-safety.json',
+                    'construction': 'warehouse-compliance.json',
+                    'office': 'retail-store.json',
+                    'manufacturing': 'warehouse-compliance.json',
+                    'healthcare': 'restaurant-safety.json',
+                    'school': 'retail-store.json'
+                };
+
+                const fileName = templateFiles[templateId] || 'restaurant-safety.json';
+                console.log('Loading template:', templateId, 'from file:', fileName);
+                
+                const response = await fetch(`templates/${fileName}`);
+                console.log('Fetch response:', response.status, response.statusText);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const template = await response.json();
+                console.log('Template loaded:', template);
+                
+                auditData.template = template;
+                auditData.templateId = templateId;
+                auditData.totalItems = template.totalItems;
+                renderAuditForm(template);
+            } catch (error) {
+                console.error('Detailed error:', error);
+                
+                // If fetch fails (CORS/file protocol issue), use demo data
+                console.warn('Failed to load template from file, using demo data');
+                useDemoTemplate(templateId);
+            }
+        }
+
+        // Demo template fallback
+        function useDemoTemplate(templateId) {
+            const demoTemplate = {
+                id: templateId,
+                name: "Demo Audit Template",
+                description: "This is a demo template for testing",
+                estimatedTime: "30 minutes",
+                totalItems: 10,
+                categories: [
+                    {
+                        id: "safety",
+                        name: "Safety & Compliance",
+                        itemCount: 5
+                    },
+                    {
+                        id: "quality",
+                        name: "Quality Standards",
+                        itemCount: 5
+                    }
+                ],
+                checklist: [
+                    {
+                        id: 1,
+                        question: "Are safety protocols being followed?",
+                        category: "safety",
+                        type: "yes-no-na",
+                        photoRequired: true,
+                        critical: true,
+                        notes: ""
+                    },
+                    {
+                        id: 2,
+                        question: "Is emergency equipment accessible?",
+                        category: "safety",
+                        type: "yes-no-na",
+                        photoRequired: true,
+                        critical: true,
+                        notes: ""
+                    },
+                    {
+                        id: 3,
+                        question: "Are safety signs clearly visible?",
+                        category: "safety",
+                        type: "yes-no-na",
+                        photoRequired: false,
+                        critical: false,
+                        notes: ""
+                    },
+                    {
+                        id: 4,
+                        question: "Is the area clean and organized?",
+                        category: "safety",
+                        type: "yes-no-na",
+                        photoRequired: true,
+                        critical: false,
+                        notes: ""
+                    },
+                    {
+                        id: 5,
+                        question: "Are all staff wearing proper PPE?",
+                        category: "safety",
+                        type: "yes-no-na",
+                        photoRequired: true,
+                        critical: true,
+                        notes: ""
+                    },
+                    {
+                        id: 6,
+                        question: "Are quality standards documented?",
+                        category: "quality",
+                        type: "yes-no-na",
+                        photoRequired: false,
+                        critical: false,
+                        notes: ""
+                    },
+                    {
+                        id: 7,
+                        question: "Is equipment properly maintained?",
+                        category: "quality",
+                        type: "yes-no-na",
+                        photoRequired: true,
+                        critical: false,
+                        notes: ""
+                    },
+                    {
+                        id: 8,
+                        question: "Are inspection records up to date?",
+                        category: "quality",
+                        type: "yes-no-na",
+                        photoRequired: true,
+                        critical: false,
+                        notes: ""
+                    },
+                    {
+                        id: 9,
+                        question: "Is quality control process followed?",
+                        category: "quality",
+                        type: "yes-no-na",
+                        photoRequired: false,
+                        critical: true,
+                        notes: ""
+                    },
+                    {
+                        id: 10,
+                        question: "Are defects documented and tracked?",
+                        category: "quality",
+                        type: "yes-no-na",
+                        photoRequired: true,
+                        critical: false,
+                        notes: ""
+                    }
+                ]
+            };
+
+            auditData.template = demoTemplate;
+            auditData.templateId = templateId;
+            auditData.totalItems = demoTemplate.totalItems;
+            renderAuditForm(demoTemplate);
+        }
+
+        // Render audit form
+        function renderAuditForm(template) {
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = '';
+
+            template.categories.forEach(category => {
+                const categorySection = document.createElement('div');
+                categorySection.className = 'category-section';
+                categorySection.id = `category-${category.id}`;
+
+                // Category header
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.innerHTML = `
+                    <h3>${category.name}</h3>
+                    <span class="category-count">${category.itemCount} items</span>
+                `;
+                categorySection.appendChild(header);
+
+                // Get checklist items for this category
+                const categoryItems = template.checklist.filter(item => item.category === category.id);
+
+                // Render each item
+                categoryItems.forEach(item => {
+                    const itemDiv = renderChecklistItem(item);
+                    categorySection.appendChild(itemDiv);
+                });
+
+                container.appendChild(categorySection);
+            });
+
+            updateProgress();
+        }
+
+        // Render individual checklist item
+        function renderChecklistItem(item) {
+            const div = document.createElement('div');
+            div.className = `checklist-item ${item.critical ? 'critical' : ''}`;
+            div.id = `item-${item.id}`;
+
+            div.innerHTML = `
+                <div class="item-header">
+                    <div class="item-number">${item.id}</div>
+                    <div class="item-content">
+                        <div class="item-question">${item.question}</div>
+                        <div class="item-badges">
+                            ${item.critical ? '<span class="badge-critical">CRITICAL</span>' : ''}
+                            ${item.photoRequired ? '<span class="badge-photo">📷 Photo Required</span>' : ''}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="response-options">
+                    <button class="response-btn pass" onclick="selectResponse(${item.id}, 'pass')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        Pass
+                    </button>
+                    <button class="response-btn fail" onclick="selectResponse(${item.id}, 'fail')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                        Fail
+                    </button>
+                    <button class="response-btn na" onclick="selectResponse(${item.id}, 'na')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        N/A
+                    </button>
+                </div>
+
+                <div class="photo-upload-section" id="photo-section-${item.id}">
+                    <div class="upload-area">
+                        <input type="file" id="photo-input-${item.id}" accept="image/*" capture="environment" multiple style="display: none;" onchange="handlePhotoUpload(${item.id}, this)">
+                        <button class="upload-btn" onclick="document.getElementById('photo-input-${item.id}').click()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                            ${item.photoRequired ? 'Upload Photo (Required)' : 'Upload Photo (Optional)'}
+                        </button>
+                        <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #666;">Click to upload or drag and drop</p>
+                    </div>
+                    <div class="photo-preview" id="photo-preview-${item.id}"></div>
+                </div>
+
+                <div class="notes-section">
+                    <textarea class="notes-textarea" placeholder="Add notes or observations..." id="notes-${item.id}" onchange="saveNotes(${item.id}, this.value)"></textarea>
+                </div>
+            `;
+
+            return div;
+        }
+
+        // Select response
+        function selectResponse(itemId, response) {
+            // Update button states
+            const item = document.getElementById(`item-${itemId}`);
+            const buttons = item.querySelectorAll('.response-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+            item.querySelector(`.response-btn.${response}`).classList.add('selected');
+
+            // Save response
+            auditData.responses[itemId] = response;
+
+            // Update progress
+            updateProgress();
+        }
+
+        // Handle photo upload
+        function handlePhotoUpload(itemId, input) {
+            const files = Array.from(input.files);
+            if (!auditData.photos[itemId]) {
+                auditData.photos[itemId] = [];
+            }
+
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    auditData.photos[itemId].push({
+                        name: file.name,
+                        data: e.target.result,
+                        timestamp: new Date().toISOString()
+                    });
+                    renderPhotoPreview(itemId);
+                };
+                reader.readAsDataURL(file);
+            });
+
+            // Update section styling
+            const section = document.getElementById(`photo-section-${itemId}`);
+            section.classList.add('has-photo');
+        }
+
+        // Render photo preview
+        function renderPhotoPreview(itemId) {
+            const container = document.getElementById(`photo-preview-${itemId}`);
+            const photos = auditData.photos[itemId] || [];
+
+            container.innerHTML = photos.map((photo, index) => `
+                <div class="photo-item">
+                    <img src="${photo.data}" alt="Photo ${index + 1}">
+                    <button class="photo-remove" onclick="removePhoto(${itemId}, ${index})" title="Remove photo">×</button>
+                </div>
+            `).join('');
+        }
+
+        // Remove photo
+        function removePhoto(itemId, photoIndex) {
+            auditData.photos[itemId].splice(photoIndex, 1);
+            if (auditData.photos[itemId].length === 0) {
+                delete auditData.photos[itemId];
+                const section = document.getElementById(`photo-section-${itemId}`);
+                section.classList.remove('has-photo');
+            }
+            renderPhotoPreview(itemId);
+        }
+
+        // Save notes
+        function saveNotes(itemId, notes) {
+            auditData.notes[itemId] = notes;
+        }
+
+        // Update progress and score
+        function updateProgress() {
+            const completed = Object.keys(auditData.responses).length;
+            const total = auditData.totalItems;
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+            // Calculate score (pass/total applicable)
+            let passCount = 0;
+            let applicableCount = 0;
+            Object.values(auditData.responses).forEach(response => {
+                if (response !== 'na') {
+                    applicableCount++;
+                    if (response === 'pass') passCount++;
+                }
+            });
+
+            const score = applicableCount > 0 ? Math.round((passCount / applicableCount) * 100) : 0;
+
+            // Update UI
+            document.getElementById('progressText').textContent = `${completed}/${total}`;
+            document.getElementById('progressBar').style.width = `${percentage}%`;
+            document.getElementById('scoreText').textContent = `${score}%`;
+            document.getElementById('currentScore').textContent = `${score}%`;
+
+            auditData.completedItems = completed;
+        }
+
+        // Save draft
+        function saveDraft() {
+            auditData.status = 'draft';
+            auditData.savedAt = new Date().toISOString();
+
+            // Save to localStorage
+            const drafts = JSON.parse(localStorage.getItem('auditDrafts') || '[]');
+            const existingIndex = drafts.findIndex(d => 
+                d.templateId === auditData.templateId && 
+                d.client === auditData.client && 
+                d.location === auditData.location
+            );
+
+            if (existingIndex >= 0) {
+                drafts[existingIndex] = auditData;
+            } else {
+                drafts.push(auditData);
+            }
+
+            localStorage.setItem('auditDrafts', JSON.stringify(drafts));
+            alert('Audit saved as draft!');
+        }
+
+        // Submit audit
+        function submitAudit() {
+            // Validate required fields
+            const incomplete = [];
+            const missingPhotos = [];
+
+            auditData.template.checklist.forEach(item => {
+                if (!auditData.responses[item.id]) {
+                    incomplete.push(item.id);
+                }
+                if (item.photoRequired && (!auditData.photos[item.id] || auditData.photos[item.id].length === 0)) {
+                    missingPhotos.push(item.id);
+                }
+            });
+
+            if (incomplete.length > 0) {
+                alert(`Please complete all ${incomplete.length} remaining items before submitting.`);
+                // Scroll to first incomplete item
+                document.getElementById(`item-${incomplete[0]}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            if (missingPhotos.length > 0) {
+                if (!confirm(`${missingPhotos.length} items require photos. Submit anyway?`)) {
+                    document.getElementById(`item-${missingPhotos[0]}`).scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+            }
+
+            // Calculate final score
+            let passCount = 0;
+            let applicableCount = 0;
+            Object.values(auditData.responses).forEach(response => {
+                if (response !== 'na') {
+                    applicableCount++;
+                    if (response === 'pass') passCount++;
+                }
+            });
+            const finalScore = applicableCount > 0 ? Math.round((passCount / applicableCount) * 100) : 0;
+
+            // Create audit record
+            const audit = {
+                id: `AUD${Date.now()}`,
+                templateId: auditData.templateId,
+                templateName: auditData.template.name,
+                client: auditData.client || 'Test Client',
+                location: auditData.location || 'Test Location',
+                auditor: localStorage.getItem('currentUser') || 'Admin User',
+                date: new Date().toISOString().split('T')[0],
+                time: new Date().toLocaleTimeString(),
+                score: finalScore,
+                status: 'Completed',
+                responses: auditData.responses,
+                photos: auditData.photos,
+                notes: auditData.notes,
+                startTime: auditData.startTime,
+                endTime: new Date().toISOString(),
+                totalItems: auditData.totalItems,
+                completedItems: auditData.completedItems
+            };
+
+            // Save to localStorage
+            const audits = JSON.parse(localStorage.getItem('audits') || '[]');
+            audits.unshift(audit);
+            localStorage.setItem('audits', JSON.stringify(audits));
+
+            // Remove from drafts if exists
+            const drafts = JSON.parse(localStorage.getItem('auditDrafts') || '[]');
+            const filteredDrafts = drafts.filter(d => 
+                !(d.templateId === auditData.templateId && 
+                  d.client === auditData.client && 
+                  d.location === auditData.location)
+            );
+            localStorage.setItem('auditDrafts', JSON.stringify(filteredDrafts));
+
+            alert(`Audit submitted successfully!\n\nScore: ${finalScore}%\nAudit ID: ${audit.id}`);
+            window.location.href = 'dashboard.html';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            const params = getUrlParams();
+            const templateId = params.template || 'restaurant-safety';
+            
+            auditData.client = params.client;
+            auditData.location = params.location;
+
+            // Initialize components
+            const title = 'Conduct Audit';
+            const subtitle = `Template: ${templateId}`;
+            initializeComponents('audits', title, subtitle, '');
+
+            // Load template
+            loadTemplate(templateId);
+        });
+    </script>
+</body>
+</html>

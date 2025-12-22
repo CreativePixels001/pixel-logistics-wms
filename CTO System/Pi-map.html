@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIXEL Command Center - CTO System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Scanlines overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(255, 255, 255, 0.03) 0px,
+                rgba(255, 255, 255, 0.03) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* Vignette effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.8) 100%);
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .ecosystem-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: #000;
+        }
+
+        /* Particles background */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                transform: translate(100px, -100vh);
+                opacity: 0;
+            }
+        }
+
+        /* Grid background */
+        .grid-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* HUD Rings - rotating geometric shapes */
+        .hud-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .hud-ring-1 {
+            width: 350px;
+            height: 350px;
+            animation: rotateClockwise 60s linear infinite;
+            border-style: solid;
+            border-top-color: rgba(255,255,255,0.3);
+        }
+
+        .hud-ring-2 {
+            width: 500px;
+            height: 500px;
+            animation: rotateCounter 40s linear infinite;
+            border-style: dashed;
+            border-right-color: rgba(255,255,255,0.25);
+        }
+
+        .hud-ring-3 {
+            width: 700px;
+            height: 700px;
+            animation: rotateClockwise 80s linear infinite;
+            border-style: dotted;
+        }
+
+        .hud-ring-4 {
+            width: 900px;
+            height: 900px;
+            animation: rotateCounter 100s linear infinite;
+            border-style: solid;
+            border-left-color: rgba(255,255,255,0.2);
+        }
+
+        @keyframes rotateClockwise {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @keyframes rotateCounter {
+            from { transform: translate(-50%, -50%) rotate(360deg); }
+            to { transform: translate(-50%, -50%) rotate(0deg); }
+        }
+
+        /* Center - Pi System Core */
+        .core {
+            position: absolute;
+            top: 50%;
+            left: 45%;
+            transform: translate(-50%, -50%);
+            width: 280px;
+            height: 280px;
+            z-index: 100;
+        }
+
+        .core-circle {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 35% 35%, #ffffff 0%, #f5f5f5 25%, #e8e8e8 50%, #d0d0d0 75%, #b8b8b8 100%);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 80px rgba(255,255,255,0.8),
+                0 0 150px rgba(255,255,255,0.5),
+                0 20px 60px rgba(0,0,0,0.3),
+                inset -20px -20px 40px rgba(0,0,0,0.15),
+                inset 20px 20px 40px rgba(255,255,255,0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border: 5px solid rgba(255,255,255,0.9);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: corePulse 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        .core-circle:hover {
+            box-shadow: 
+                0 0 120px rgba(255,255,255,1),
+                0 0 200px rgba(255,255,255,0.7),
+                0 25px 80px rgba(0,0,0,0.4),
+                inset -25px -25px 50px rgba(0,0,0,0.2),
+                inset 25px 25px 50px rgba(255,255,255,1);
+            transform: scale(1.05);
+            border-color: #fff;
+        }
+
+
+
+        .core-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 0.5rem;
+            z-index: 1;
+        }
+
+        .core-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #000;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.8));
+        }
+
+        /* Mathematical Pi symbol */
+        .pi-symbol {
+            font-size: 7rem;
+            font-family: 'Times New Roman', Times, serif;
+            font-weight: 400;
+            color: #000;
+            text-align: center;
+            line-height: 1;
+            font-style: italic;
+            text-shadow: 
+                0 2px 4px rgba(0,0,0,0.3),
+                0 0 20px rgba(255,255,255,0.5);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .core-circle:hover .pi-symbol {
+            text-shadow: 
+                0 3px 6px rgba(0,0,0,0.4),
+                0 0 40px rgba(255,255,255,0.9),
+                0 0 60px rgba(255,255,255,0.6);
+            transform: scale(1.1);
+        }
+
+        @keyframes corePulse {
+            0%, 100% { 
+                box-shadow: 
+                    0 0 80px rgba(255,255,255,0.8),
+                    0 0 150px rgba(255,255,255,0.5),
+                    0 20px 60px rgba(0,0,0,0.3),
+                    inset -20px -20px 40px rgba(0,0,0,0.15),
+                    inset 20px 20px 40px rgba(255,255,255,0.8);
+            }
+            50% { 
+                box-shadow: 
+                    0 0 100px rgba(255,255,255,1),
+                    0 0 180px rgba(255,255,255,0.6),
+                    0 22px 65px rgba(0,0,0,0.35),
+                    inset -22px -22px 45px rgba(0,0,0,0.18),
+                    inset 22px 22px 45px rgba(255,255,255,0.9);
+            }
+        }
+
+
+
+        /* Database Container - Bordered Section */
+        .database-container {
+            position: absolute;
+            left: 40px;
+            top: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 90;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 16px;
+            box-shadow: 
+                0 8px 32px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .database-container:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 
+                0 10px 40px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        .database-center {
+            width: 140px;
+            height: 200px;
+            background: #fff;
+            border: 2px solid #000;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(255,255,255,0.3);
+            display: flex;
+            flex-direction: column;
+            padding: 0.75rem 0.5rem;
+            position: relative;
+        }
+
+        .database-center#db-primary {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 50%, #f0f0f0 100%);
+            opacity: 1;
+            box-shadow: 
+                0 0 60px rgba(255,255,255,0.9),
+                0 0 100px rgba(255,255,255,0.6),
+                0 10px 40px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.8),
+                inset 0 -1px 0 rgba(0,0,0,0.1);
+            border: 3px solid rgba(0,0,0,0.8);
+            transition: all 0.3s ease;
+        }
+
+        .database-center#db-primary:hover {
+            box-shadow: 
+                0 0 80px rgba(255,255,255,1),
+                0 0 120px rgba(255,255,255,0.8),
+                0 12px 50px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,1),
+                inset 0 -1px 0 rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Disabled/Offline buildings */
+        .database-center.disabled {
+            background: #e0e0e0;
+            border-color: #999;
+            opacity: 0.5;
+        }
+
+        .database-center.disabled .server-column {
+            background: repeating-linear-gradient(
+                0deg,
+                #bbb 0px,
+                #bbb 6px,
+                #ddd 6px,
+                #ddd 8px,
+                transparent 8px,
+                transparent 10px
+            );
+            border-color: #999;
+        }
+
+        .database-center.disabled .database-label,
+        .database-center.disabled .database-sublabel,
+        .database-center.disabled .db-stat {
+            color: #999;
+        }
+
+        .database-center.disabled .database-label::after {
+            content: ' [OFFLINE]';
+            font-size: 0.6rem;
+            color: #c00;
+        }
+
+        /* Server rack lines */
+        .database-center::before {
+            content: '';
+            position: absolute;
+            width: calc(100% - 1rem);
+            height: calc(100% - 4.5rem);
+            top: 3.5rem;
+            left: 0.5rem;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 10px,
+                rgba(0,0,0,0.15) 10px,
+                rgba(0,0,0,0.15) 12px
+            );
+            border-radius: 4px;
+        }
+
+        /* Vertical server columns */
+        .server-columns {
+            display: flex;
+            justify-content: space-around;
+            height: calc(100% - 4.5rem);
+            margin-top: 3.5rem;
+            position: relative;
+            z-index: 1;
+            padding: 0 0.5rem;
+        }
+
+        .server-column {
+            width: 16px;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                #444 0px,
+                #444 5px,
+                #888 5px,
+                #888 7px,
+                transparent 7px,
+                transparent 9px
+            );
+            border: 1px solid #666;
+            border-radius: 2px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .database-label {
+            position: absolute;
+            top: 0.4rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: #000;
+            z-index: 2;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(255,255,255,0.95);
+            padding: 0.2rem 0;
+        }
+
+        .database-sublabel {
+            position: absolute;
+            bottom: 0.4rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 0.5rem;
+            color: #000;
+            z-index: 2;
+            background: rgba(255,255,255,0.95);
+            padding: 0.15rem 0;
+            font-weight: 600;
+        }
+
+        .database-stats {
+            position: absolute;
+            top: 1.5rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 2;
+            background: rgba(255,255,255,0.98);
+            padding: 0.3rem 0;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .db-stat {
+            font-size: 0.55rem;
+            color: #000;
+            margin: 0.15rem 0;
+            font-weight: 700;
+        }
+
+        .db-stat-label {
+            font-size: 0.45rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* Orbital rings */
+        .orbit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .orbit-1 { 
+            width: 400px; 
+            height: 400px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+        .orbit-2 { 
+            width: 600px; 
+            height: 600px; 
+            border-style: dashed;
+        }
+        .orbit-3 { 
+            width: 800px; 
+            height: 800px;
+            box-shadow: 0 0 30px rgba(255,255,255,0.05);
+        }
+        .orbit-4 { 
+            width: 1000px; 
+            height: 1000px; 
+            border-style: dashed;
+        }
+
+        /* Solid white pipes from database to Pi */
+        .data-pipe {
+            position: absolute;
+            background: linear-gradient(180deg, #ffffff 0%, #f0f0f0 50%, #ffffff 100%);
+            box-shadow: 
+                0 0 20px rgba(255,255,255,0.7),
+                0 4px 15px rgba(0,0,0,0.3),
+                inset 0 2px 4px rgba(255,255,255,0.8),
+                inset 0 -2px 4px rgba(0,0,0,0.2);
+            z-index: 2;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .data-pipe::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: flowEnergy 2s linear infinite;
+        }
+
+        @keyframes flowEnergy {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .pipe-horizontal {
+            height: 12px;
+            border-radius: 6px;
+        }
+
+        .pipe-vertical {
+            width: 12px;
+            border-radius: 6px;
+        }
+
+        .data-pipe:hover {
+            box-shadow: 
+                0 0 30px rgba(255,255,255,1),
+                0 0 60px rgba(255,255,255,0.8),
+                0 6px 20px rgba(0,0,0,0.4),
+                inset 0 2px 6px rgba(255,255,255,1),
+                inset 0 -2px 6px rgba(0,0,0,0.3);
+        }
+
+        .pipe-horizontal:hover {
+            transform: scaleY(1.15);
+        }
+
+        /* Application nodes */
+        .app-node {
+            position: absolute;
+            width: 140px;
+            height: 140px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #fff;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 150;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 0 30px rgba(255,255,255,0.2),
+                inset 0 0 20px rgba(255,255,255,0.05);
+        }
+
+        .app-node:hover {
+            transform: scale(1.15) translateY(-5px);
+            border-color: #fff;
+            box-shadow: 
+                0 0 60px rgba(255,255,255,0.9),
+                0 0 100px rgba(255,255,255,0.5),
+                0 10px 40px rgba(0,0,0,0.4),
+                inset 0 1px 0 rgba(255,255,255,0.3),
+                inset 0 0 40px rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(15px);
+        }
+
+        .app-node.active {
+            border-color: #fff;
+            box-shadow: 
+                0 0 60px rgba(255,255,255,0.8),
+                0 0 100px rgba(255,255,255,0.5);
+            animation: nodeGlow 1.5s ease-in-out infinite;
+        }
+
+        @keyframes nodeGlow {
+            0%, 100% { box-shadow: 0 0 60px rgba(255,255,255,0.8); }
+            50% { box-shadow: 0 0 80px rgba(255,255,255,1); }
+        }
+
+        .app-icon {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 0.5rem;
+        }
+
+        .app-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #fff;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+        }
+
+        .app-name {
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .app-status {
+            font-size: 0.65rem;
+            color: #00ff00;
+            margin-top: 0.25rem;
+        }
+
+        .app-status.offline {
+            color: #ff4444;
+        }
+
+        /* Internet Gateway */
+        .internet-gateway {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #fff;
+            border-radius: 15px;
+            text-align: center;
+            z-index: 60;
+            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 0 40px rgba(255,255,255,0.3),
+                inset 0 0 20px rgba(255,255,255,0.05);
+        }
+
+        .internet-icon {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 0.5rem;
+        }
+
+        .internet-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #fff;
+            filter: drop-shadow(0 0 5px rgba(255,255,255,0.5));
+        }
+
+        .internet-label {
+            font-size: 0.875rem;
+            font-weight: 700;
+        }
+
+        .internet-sublabel {
+            font-size: 0.65rem;
+            color: #ccc;
+            margin-top: 0.25rem;
+        }
+
+        /* API nodes - smaller satellites */
+        .api-node {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: rgba(0, 0, 0, 0.85);
+            border: 2px solid #999;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 140;
+            backdrop-filter: blur(8px);
+            box-shadow: 
+                0 0 20px rgba(255,255,255,0.1),
+                inset 0 0 15px rgba(255,255,255,0.03);
+        }
+
+        .api-node:hover {
+            transform: scale(1.15) translateY(-3px);
+            border-color: #fff;
+            box-shadow: 
+                0 0 50px rgba(255, 255, 255, 0.8),
+                0 0 80px rgba(255, 255, 255, 0.4),
+                0 8px 30px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.25),
+                inset 0 0 25px rgba(255,255,255,0.12);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+        }
+
+        .api-icon {
+            width: 35px;
+            height: 35px;
+            margin-bottom: 0.25rem;
+        }
+
+        .api-icon svg {
+            width: 100%;
+            height: 100%;
+            stroke: #fff;
+            filter: drop-shadow(0 0 3px rgba(255,255,255,0.3));
+        }
+
+        .api-name {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        /* Solid white pipes from database to Pi */
+        .data-pipe {
+            position: absolute;
+            background: #fff;
+            box-shadow: 
+                0 0 15px rgba(255,255,255,0.6),
+                inset 0 2px 4px rgba(0,0,0,0.1),
+                inset 0 -2px 4px rgba(0,0,0,0.1);
+            z-index: 2;
+        }
+
+        .pipe-horizontal {
+            height: 12px;
+            border-radius: 6px;
+        }
+
+        .pipe-vertical {
+            width: 12px;
+            border-radius: 6px;
+        }
+
+        .data-pipe:hover {
+            box-shadow: 
+                0 0 25px rgba(255,255,255,0.9),
+                0 0 40px rgba(255,255,255,0.5),
+                inset 0 2px 4px rgba(0,0,0,0.1),
+                inset 0 -2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Data packets */
+        .data-packet {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #fff, 0 0 25px rgba(255,255,255,0.5);
+            z-index: 10;
+            animation: packetMove 3s linear infinite;
+        }
+
+        @keyframes packetMove {
+            0% { opacity: 0; transform: scale(0.5); }
+            10% { opacity: 1; transform: scale(1); }
+            90% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.5); }
+        }
+
+        /* System Matrix - Bottom Footer */
+        .system-matrix {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: #000;
+            border-top: 2px solid #fff;
+            z-index: 1000;
+            overflow: hidden;
+            box-shadow: 0 -5px 30px rgba(255,255,255,0.2);
+        }
+
+        .matrix-track {
+            display: flex;
+            gap: 0;
+            padding: 0.75rem 0;
+            animation: scrollMatrix 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes scrollMatrix {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .matrix-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0 1.5rem;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .matrix-label {
+            font-size: 0.6rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .matrix-value {
+            font-size: 0.9rem;
+            color: #fff;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+        }
+
+        .matrix-value.active {
+            color: #0f0;
+            text-shadow: 0 0 10px rgba(0,255,0,0.5);
+        }
+
+        .matrix-value.warning {
+            color: #ff0;
+            text-shadow: 0 0 10px rgba(255,255,0,0.5);
+        }
+
+        .matrix-value.critical {
+            color: #f00;
+            text-shadow: 0 0 10px rgba(255,0,0,0.5);
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+
+        }
+
+        .legend-label {
+            font-size: 0.75rem;
+            color: #fff;
+        }
+
+        /* Info tooltip */
+        .info-tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.98);
+            border: 2px solid #fff;
+            border-radius: 10px;
+            padding: 1rem;
+            min-width: 250px;
+            z-index: 300;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s;
+            backdrop-filter: blur(15px);
+            box-shadow: 
+                0 0 40px rgba(255,255,255,0.3),
+                inset 0 0 20px rgba(255,255,255,0.05);
+        }
+
+        .info-tooltip.show {
+            opacity: 1;
+        }
+
+        .info-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-detail {
+            font-size: 0.75rem;
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .info-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            padding-top: 0.5rem;
+            border-top: 1px solid #555;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            color: #aaa;
+        }
+
+        .stat-value {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 0 8px rgba(255,255,255,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="ecosystem-container" id="ecosystem">
+        <div class="grid-background"></div>
+
+        <!-- Particle system -->
+        <div class="particles" id="particles"></div>
+
+        <!-- HUD Rings -->
+        <div class="hud-ring hud-ring-1"></div>
+        <div class="hud-ring hud-ring-2"></div>
+        <div class="hud-ring hud-ring-3"></div>
+        <div class="hud-ring hud-ring-4"></div>
+
+        <!-- Database Centers - Bordered Section -->
+        <div class="database-container">
+            <!-- Primary Database - Active -->
+            <div class="database-center" id="db-primary" data-info="database">
+                <div class="database-label">PRIMARY</div>
+                <div class="database-stats">
+                    <div class="db-stat">2.4TB</div>
+                    <div class="db-stat">3.8K Q/s</div>
+                </div>
+                <div class="server-columns">
+                    <div class="server-column"></div>
+                    <div class="server-column"></div>
+                    <div class="server-column"></div>
+                </div>
+                <div class="database-sublabel">Active</div>
+            </div>
+
+            <!-- Secondary Database - Disabled -->
+            <div class="database-center disabled" id="db-secondary" data-info="database-secondary">
+                <div class="database-label">BACKUP</div>
+                <div class="database-stats">
+                    <div class="db-stat">---</div>
+                    <div class="db-stat">---</div>
+                </div>
+                <div class="server-columns">
+                    <div class="server-column"></div>
+                    <div class="server-column"></div>
+                    <div class="server-column"></div>
+                </div>
+                <div class="database-sublabel">Offline</div>
+            </div>
+
+            <!-- Tertiary Database - Disabled -->
+            <div class="database-center disabled" id="db-tertiary" data-info="database-tertiary">
+                <div class="database-label">ARCHIVE</div>
+                <div class="database-stats">
+                    <div class="db-stat">---</div>
+                    <div class="db-stat">---</div>
+                </div>
+                <div class="server-columns">
+                    <div class="server-column"></div>
+                    <div class="server-column"></div>
+                    <div class="server-column"></div>
+                </div>
+                <div class="database-sublabel">Offline</div>
+            </div>
+        </div>
+
+        <!-- Solid White Data Pipes from Database to Pi -->
+        <div class="data-pipe pipe-horizontal" id="pipe-1"></div>
+        <div class="data-pipe pipe-horizontal" id="pipe-2"></div>
+
+        <!-- Center - Pi System Core -->
+        <div class="core">
+            <div class="core-circle" data-info="pi-core">
+                <div class="pi-symbol">π</div>
+            </div>
+        </div>
+
+        <!-- Internet Gateway -->
+        <div class="internet-gateway" data-info="internet">
+            <div class="internet-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+            </div>
+            <div class="internet-label">Internet Gateway</div>
+            <div class="internet-sublabel">CDN + Load Balancer</div>
+        </div>
+
+        <!-- Application Nodes - will be positioned by JS -->
+        <div class="app-node" id="wms" data-info="wms">
+            <div class="app-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>
+            </div>
+            <div class="app-name">WMS</div>
+            <div class="app-status">● Online</div>
+        </div>
+
+        <div class="app-node" id="tms" data-info="tms">
+            <div class="app-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <rect x="1" y="3" width="15" height="13"/>
+                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                    <circle cx="5.5" cy="18.5" r="2.5"/>
+                    <circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+            </div>
+            <div class="app-name">TMS</div>
+            <div class="app-status">● Online</div>
+        </div>
+
+        <div class="app-node" id="ems" data-info="ems">
+            <div class="app-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"/>
+                    <circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                </svg>
+            </div>
+            <div class="app-name">EMS</div>
+            <div class="app-status">● Online</div>
+        </div>
+
+        <div class="app-node" id="cpx" data-info="cpx">
+            <div class="app-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+            </div>
+            <div class="app-name">CPX Website</div>
+            <div class="app-status">● Online</div>
+        </div>
+
+        <div class="app-node" id="pi" data-info="pi">
+            <div class="app-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <circle cx="12" cy="12" r="3"/>
+                    <line x1="12" y1="2" x2="12" y2="5"/>
+                    <line x1="12" y1="19" x2="12" y2="22"/>
+                    <line x1="4.93" y1="4.93" x2="7.05" y2="7.05"/>
+                    <line x1="16.95" y1="16.95" x2="19.07" y2="19.07"/>
+                    <line x1="2" y1="12" x2="5" y2="12"/>
+                    <line x1="19" y1="12" x2="22" y2="12"/>
+                    <line x1="4.93" y1="19.07" x2="7.05" y2="16.95"/>
+                    <line x1="16.95" y1="7.05" x2="19.07" y2="4.93"/>
+                </svg>
+            </div>
+            <div class="app-name">Pi Assistant</div>
+            <div class="app-status">● Online</div>
+        </div>
+
+        <!-- Government API Nodes -->
+        <div class="api-node" id="eway" data-info="eway">
+            <div class="api-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="16" y1="13" x2="8" y2="13"/>
+                    <line x1="16" y1="17" x2="8" y2="17"/>
+                    <polyline points="10 9 9 9 8 9"/>
+                </svg>
+            </div>
+            <div class="api-name">e-Way Bill<br>API</div>
+        </div>
+
+        <div class="api-node" id="fastag" data-info="fastag">
+            <div class="api-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                    <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+            </div>
+            <div class="api-name">FASTag<br>API</div>
+        </div>
+
+        <div class="api-node" id="vahan" data-info="vahan">
+            <div class="api-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <path d="M18 18.5a2.5 2.5 0 0 0-2.5-2.5H8.5a2.5 2.5 0 0 0-2.5 2.5v0a2.5 2.5 0 0 0 2.5 2.5h7a2.5 2.5 0 0 0 2.5-2.5v0z"/>
+                    <path d="M3 12l2-9h14l2 9"/>
+                    <circle cx="8" cy="18" r="2"/>
+                    <circle cx="16" cy="18" r="2"/>
+                </svg>
+            </div>
+            <div class="api-name">Vahan<br>API</div>
+        </div>
+
+        <div class="api-node" id="navic" data-info="navic">
+            <div class="api-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <circle cx="12" cy="12" r="2"/>
+                    <path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/>
+                </svg>
+            </div>
+            <div class="api-name">NavIC<br>GPS</div>
+        </div>
+
+        <!-- E-commerce API Nodes -->
+        <div class="api-node" id="amazon" data-info="amazon">
+            <div class="api-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                </svg>
+            </div>
+            <div class="api-name">Amazon<br>API</div>
+        </div>
+
+        <div class="api-node" id="flipkart" data-info="flipkart">
+            <div class="api-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
+                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                    <line x1="12" y1="22.08" x2="12" y2="12"/>
+                </svg>
+            </div>
+            <div class="api-name">Flipkart<br>API</div>
+        </div>
+
+        <div class="api-node" id="meesho" data-info="meesho">
+            <div class="api-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+                    <line x1="7" y1="7" x2="7.01" y2="7"/>
+                </svg>
+            </div>
+            <div class="api-name">Meesho<br>API</div>
+        </div>
+
+        <!-- Payment Gateway -->
+        <div class="api-node" id="cashfree" data-info="cashfree">
+            <div class="api-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                    <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+            </div>
+            <div class="api-name">Cashfree<br>Payment</div>
+        </div>
+    </div>
+
+    <!-- Info Tooltip -->
+    <div class="info-tooltip" id="tooltip"></div>
+
+    <script>
+        // Create particle system
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+
+        createParticles();
+
+        // Position nodes in circular orbits
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+
+        // Application positions (inner orbit - 380px radius for proper spacing)
+        const appPositions = {
+            wms: { angle: 0, radius: 380 },
+            tms: { angle: 72, radius: 380 },
+            ems: { angle: 144, radius: 380 },
+            cpx: { angle: 216, radius: 380 },
+            pi: { angle: 288, radius: 380 }
+        };
+
+        // API positions (outer orbit - 550px radius for proper spacing)
+        const apiPositions = {
+            // Government APIs
+            eway: { angle: 30, radius: 550 },
+            fastag: { angle: 60, radius: 550 },
+            vahan: { angle: 120, radius: 550 },
+            navic: { angle: 150, radius: 550 },
+            
+            // E-commerce APIs
+            amazon: { angle: 210, radius: 550 },
+            flipkart: { angle: 240, radius: 550 },
+            meesho: { angle: 270, radius: 550 },
+            
+            // Payment
+            cashfree: { angle: 330, radius: 550 }
+        };
+
+        // Position elements
+        function positionNode(id, angle, radius) {
+            const element = document.getElementById(id);
+            if (!element) return;
+            
+            const rad = (angle - 90) * Math.PI / 180;
+            const x = centerX + radius * Math.cos(rad);
+            const y = centerY + radius * Math.sin(rad);
+            
+            element.style.left = (x - element.offsetWidth / 2) + 'px';
+            element.style.top = (y - element.offsetHeight / 2) + 'px';
+        }
+
+        // Position all nodes
+        Object.entries(appPositions).forEach(([id, pos]) => {
+            positionNode(id, pos.angle, pos.radius);
+        });
+
+        Object.entries(apiPositions).forEach(([id, pos]) => {
+            positionNode(id, pos.angle, pos.radius);
+        });
+
+        // Draw solid white pipes from database to Pi
+        function drawDataPipes() {
+            const dbContainer = document.querySelector('.database-container');
+            const piCore = document.querySelector('.core-circle');
+            
+            if (!dbContainer || !piCore) return;
+            
+            const dbRect = dbContainer.getBoundingClientRect();
+            const piRect = piCore.getBoundingClientRect();
+            
+            // Pipe 1 - Upper pipe
+            const pipe1 = document.getElementById('pipe-1');
+            const y1 = dbRect.top + (dbRect.height * 0.35);
+            const x1 = dbRect.right;
+            const x2 = piRect.left;
+            
+            pipe1.style.left = x1 + 'px';
+            pipe1.style.top = (y1 - 6) + 'px';
+            pipe1.style.width = (x2 - x1) + 'px';
+            
+            // Pipe 2 - Lower pipe
+            const pipe2 = document.getElementById('pipe-2');
+            const y2 = dbRect.top + (dbRect.height * 0.65);
+            
+            pipe2.style.left = x1 + 'px';
+            pipe2.style.top = (y2 - 6) + 'px';
+            pipe2.style.width = (x2 - x1) + 'px';
+        }
+
+        // Create connection lines (for apps and APIs)
+        function createConnection(from, to, className = '') {
+            const fromEl = document.getElementById(from);
+            const toEl = to === 'center' ? document.querySelector('.core-circle') : document.getElementById(to);
+            
+            if (!fromEl || !toEl) return;
+            
+            const fromRect = fromEl.getBoundingClientRect();
+            const toRect = toEl.getBoundingClientRect();
+            
+            const x1 = fromRect.left + fromRect.width / 2;
+            const y1 = fromRect.top + fromRect.height / 2;
+            const x2 = toRect.left + toRect.width / 2;
+            const y2 = toRect.top + toRect.height / 2;
+            
+            const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+            const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+            
+            const line = document.createElement('div');
+            line.style.position = 'absolute';
+            line.style.height = '1.5px';
+            line.style.background = '#666';
+            line.style.opacity = '0.4';
+            line.style.width = length + 'px';
+            line.style.left = x1 + 'px';
+            line.style.top = y1 + 'px';
+            line.style.transform = `rotate(${angle}deg)`;
+            line.style.transformOrigin = 'left center';
+            line.style.zIndex = '1';
+            line.style.transition = 'all 0.3s ease';
+            
+            line.addEventListener('mouseenter', () => {
+                line.style.opacity = '1';
+                line.style.background = '#fff';
+                line.style.height = '2.5px';
+                line.style.boxShadow = '0 0 15px rgba(255,255,255,0.8), 0 0 25px rgba(255,255,255,0.4)';
+            });
+            
+            line.addEventListener('mouseleave', () => {
+                line.style.opacity = '0.4';
+                line.style.background = '#666';
+                line.style.height = '1.5px';
+                line.style.boxShadow = 'none';
+            });
+            
+            document.getElementById('ecosystem').appendChild(line);
+        }
+
+        // Draw connections
+        window.addEventListener('load', () => {
+            // Draw solid white pipes from database to Pi
+            drawDataPipes();
+            
+            // Pi to Apps (outgoing)
+            ['wms', 'tms', 'ems', 'cpx', 'pi'].forEach(app => {
+                createConnection('center', app);
+            });
+            
+            // APIs to Apps
+            createConnection('eway', 'tms');
+            createConnection('fastag', 'tms');
+            createConnection('vahan', 'tms');
+            createConnection('navic', 'tms');
+            
+            createConnection('amazon', 'ems');
+            createConnection('flipkart', 'ems');
+            createConnection('meesho', 'ems');
+            
+            createConnection('cashfree', 'cpx');
+            
+            // Pi uses multiple APIs
+            createConnection('vahan', 'pi');
+            createConnection('cashfree', 'pi');
+        });
+
+        // Information data
+        const infoData = {
+            database: {
+                title: 'Database Primary - Active',
+                details: 'Primary MongoDB Cluster with replica sets for high availability. Handles all live production traffic.',
+                stats: [
+                    { label: 'Storage', value: '2.4 TB' },
+                    { label: 'Queries/sec', value: '3,892' },
+                    { label: 'Uptime', value: '99.98%' },
+                    { label: 'Connections', value: '847' }
+                ]
+            },
+            'database-secondary': {
+                title: 'Database Backup - Standby',
+                details: 'Secondary MongoDB instance in standby mode. Ready for failover in case of primary failure.',
+                stats: [
+                    { label: 'Status', value: 'Offline' },
+                    { label: 'Last Sync', value: '2 hours ago' }
+                ]
+            },
+            'database-tertiary': {
+                title: 'Database Archive - Cold Storage',
+                details: 'Tertiary MongoDB instance for cold storage and historical data archival. Currently offline.',
+                stats: [
+                    { label: 'Status', value: 'Offline' },
+                    { label: 'Mode', value: 'Archive Only' }
+                ]
+            },
+            'pi-core': {
+                title: 'Pi System - Command Center',
+                details: 'Central AI-powered control system managing all Pixel applications and data flow. Real-time monitoring and orchestration.',
+                stats: [
+                    { label: 'Active Systems', value: '5' },
+                    { label: 'Data Throughput', value: '1.2 GB/s' },
+                    { label: 'Response Time', value: '12ms' }
+                ]
+            },
+            internet: {
+                title: 'Internet Gateway',
+                details: 'CDN + Load Balancer handling incoming traffic from users. Cloudflare for DDoS protection.',
+                stats: [
+                    { label: 'Requests/sec', value: '1,247' },
+                    { label: 'Bandwidth', value: '450 Mbps' },
+                    { label: 'Cache Hit', value: '94.7%' }
+                ]
+            },
+            wms: {
+                title: 'Warehouse Management System',
+                details: 'Manages inventory, stock levels, warehouse operations, and fulfillment.',
+                stats: [
+                    { label: 'Active Users', value: '324' },
+                    { label: 'Inventory Items', value: '45,892' },
+                    { label: 'Daily Orders', value: '1,247' }
+                ]
+            },
+            tms: {
+                title: 'Transportation Management System',
+                details: 'Real-time vehicle tracking, route optimization, and delivery management.',
+                stats: [
+                    { label: 'Active Vehicles', value: '156' },
+                    { label: 'GPS Updates/min', value: '2,340' },
+                    { label: 'Routes Optimized', value: '89' }
+                ]
+            },
+            ems: {
+                title: 'E-commerce Management System',
+                details: 'Multi-platform e-commerce management for Amazon, Flipkart, and Meesho.',
+                stats: [
+                    { label: 'Products', value: '12,458' },
+                    { label: 'Orders Today', value: '1,847' },
+                    { label: 'Platforms', value: '3' }
+                ]
+            },
+            cpx: {
+                title: 'CPX Website',
+                details: 'Main customer-facing website with payment gateway and user portal.',
+                stats: [
+                    { label: 'Daily Visitors', value: '8,924' },
+                    { label: 'Active Sessions', value: '342' },
+                    { label: 'Avg Load Time', value: '1.2s' }
+                ]
+            },
+            pi: {
+                title: 'Pi - AI Assistant',
+                details: 'Conversational AI assistant for Indian government services with 9 integrated APIs. Multilingual support.',
+                stats: [
+                    { label: 'Active Chats', value: '2,847' },
+                    { label: 'API Calls Today', value: '12,458' },
+                    { label: 'Response Time', value: '320ms' }
+                ]
+            },
+            eway: {
+                title: 'e-Way Bill API',
+                details: 'Government API for GST compliance and goods transportation documentation.',
+                stats: [
+                    { label: 'Bills Today', value: '247' },
+                    { label: 'Success Rate', value: '99.2%' },
+                    { label: 'Avg Response', value: '850ms' }
+                ]
+            },
+            fastag: {
+                title: 'FASTag API',
+                details: 'NHAI FASTag integration for automated toll collection and tracking.',
+                stats: [
+                    { label: 'Toll Crossings', value: '89' },
+                    { label: 'Amount Today', value: '₹12,450' },
+                    { label: 'Success Rate', value: '100%' }
+                ]
+            },
+            vahan: {
+                title: 'Vahan API',
+                details: 'Vehicle registration and verification from Ministry of Road Transport.',
+                stats: [
+                    { label: 'Verifications', value: '156' },
+                    { label: 'Success Rate', value: '98.5%' },
+                    { label: 'Avg Response', value: '1.2s' }
+                ]
+            },
+            navic: {
+                title: 'NavIC GPS',
+                details: 'Indian Regional Navigation Satellite System for accurate location tracking.',
+                stats: [
+                    { label: 'Satellites', value: '8' },
+                    { label: 'Accuracy', value: '<3m' },
+                    { label: 'Coverage', value: 'India+1500km' }
+                ]
+            },
+            amazon: {
+                title: 'Amazon Seller API',
+                details: 'Integration with Amazon Seller Central for inventory and order management.',
+                stats: [
+                    { label: 'Products Synced', value: '4,892' },
+                    { label: 'Orders Today', value: '678' },
+                    { label: 'API Calls/min', value: '124' }
+                ]
+            },
+            flipkart: {
+                title: 'Flipkart Seller API',
+                details: 'Integration with Flipkart Seller Hub for multi-channel selling.',
+                stats: [
+                    { label: 'Products Synced', value: '3,847' },
+                    { label: 'Orders Today', value: '456' },
+                    { label: 'API Calls/min', value: '98' }
+                ]
+            },
+            meesho: {
+                title: 'Meesho Supplier API',
+                details: 'Integration with Meesho supplier panel for social commerce.',
+                stats: [
+                    { label: 'Products Synced', value: '2,719' },
+                    { label: 'Orders Today', value: '389' },
+                    { label: 'API Calls/min', value: '76' }
+                ]
+            },
+            cashfree: {
+                title: 'Cashfree Payment Gateway',
+                details: 'Payment processing for subscriptions and one-time purchases.',
+                stats: [
+                    { label: 'Transactions Today', value: '147' },
+                    { label: 'Success Rate', value: '99.5%' },
+                    { label: 'Revenue', value: '₹2,45,680' }
+                ]
+            }
+        };
+
+        // Tooltip handling
+        const tooltip = document.getElementById('tooltip');
+        
+        document.querySelectorAll('[data-info]').forEach(el => {
+            el.addEventListener('mouseenter', (e) => {
+                const key = el.getAttribute('data-info');
+                const data = infoData[key];
+                
+                if (!data) return;
+                
+                let statsHTML = '';
+                if (data.stats) {
+                    statsHTML = data.stats.map(stat => 
+                        `<div class="info-stat">
+                            <span class="stat-label">${stat.label}:</span>
+                            <span class="stat-value">${stat.value}</span>
+                        </div>`
+                    ).join('');
+                }
+                
+                tooltip.innerHTML = `
+                    <div class="info-title">${data.title}</div>
+                    <div class="info-detail">${data.details}</div>
+                    ${statsHTML}
+                `;
+                
+                tooltip.classList.add('show');
+            });
+            
+            el.addEventListener('mousemove', (e) => {
+                tooltip.style.left = (e.clientX + 20) + 'px';
+                tooltip.style.top = (e.clientY + 20) + 'px';
+            });
+            
+            el.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('show');
+            });
+        });
+
+        // Live update system matrix values
+        function updateMatrixMetrics() {
+            // Total Requests
+            const requests = document.getElementById('total-requests');
+            if (requests) {
+                const current = parseInt(requests.textContent.replace(/,/g, ''));
+                requests.textContent = (current + Math.floor(Math.random() * 100)).toLocaleString();
+            }
+
+            // Active Users
+            const users = document.getElementById('active-users');
+            if (users) {
+                const current = parseInt(users.textContent.replace(/,/g, ''));
+                const change = Math.floor(Math.random() * 20) - 10;
+                users.textContent = Math.max(0, current + change).toLocaleString();
+            }
+
+            // DB Queries
+            const queries = document.getElementById('db-queries');
+            if (queries) {
+                const base = 3800;
+                queries.textContent = (base + Math.floor(Math.random() * 300)).toLocaleString();
+            }
+
+            // Response Time
+            const responseTime = document.getElementById('response-time');
+            if (responseTime) {
+                const time = 100 + Math.floor(Math.random() * 50);
+                responseTime.textContent = time + 'ms';
+                responseTime.className = 'matrix-value ' + (time > 150 ? 'warning' : 'active');
+            }
+
+            // Cache Hit Rate
+            const cacheHit = document.getElementById('cache-hit');
+            if (cacheHit) {
+                const rate = (94 + Math.random() * 4).toFixed(1);
+                cacheHit.textContent = rate + '%';
+            }
+
+            // API Calls
+            const apiCalls = document.getElementById('api-calls');
+            if (apiCalls) {
+                const current = parseInt(apiCalls.textContent.replace(/,/g, ''));
+                apiCalls.textContent = (current + Math.floor(Math.random() * 50)).toLocaleString();
+            }
+
+            // WMS Orders
+            const wmsOrders = document.getElementById('wms-orders');
+            if (wmsOrders) {
+                const current = parseInt(wmsOrders.textContent.replace(/,/g, ''));
+                wmsOrders.textContent = (current + Math.floor(Math.random() * 10)).toLocaleString();
+            }
+
+            // TMS Shipments
+            const tmsShipments = document.getElementById('tms-shipments');
+            if (tmsShipments) {
+                const current = parseInt(tmsShipments.textContent.replace(/,/g, ''));
+                tmsShipments.textContent = (current + Math.floor(Math.random() * 5)).toLocaleString();
+            }
+
+            // EMS Products
+            const emsProducts = document.getElementById('ems-products');
+            if (emsProducts) {
+                const current = parseInt(emsProducts.textContent.replace(/,/g, ''));
+                const change = Math.floor(Math.random() * 20) - 5;
+                emsProducts.textContent = Math.max(0, current + change).toLocaleString();
+            }
+
+            // Pi Chats
+            const piChats = document.getElementById('pi-chats');
+            if (piChats) {
+                const current = parseInt(piChats.textContent.replace(/,/g, ''));
+                piChats.textContent = (current + Math.floor(Math.random() * 3)).toLocaleString();
+            }
+
+            // CPU Usage
+            const cpuUsage = document.getElementById('cpu-usage');
+            if (cpuUsage) {
+                const cpu = 50 + Math.floor(Math.random() * 30);
+                cpuUsage.textContent = cpu + '%';
+                cpuUsage.className = 'matrix-value ' + 
+                    (cpu > 80 ? 'critical' : cpu > 70 ? 'warning' : 'active');
+            }
+
+            // Memory Usage
+            const memUsage = document.getElementById('memory-usage');
+            if (memUsage) {
+                const mem = (8 + Math.random() * 2).toFixed(1);
+                memUsage.textContent = mem + 'GB';
+            }
+
+            // Network I/O
+            const networkIO = document.getElementById('network-io');
+            if (networkIO) {
+                const io = (1.0 + Math.random() * 0.5).toFixed(1);
+                networkIO.textContent = io + 'GB/s';
+            }
+        }
+
+        // Update matrix metrics every 1.5 seconds
+        setInterval(updateMatrixMetrics, 1500);
+
+        // Click to highlight connections
+        document.querySelectorAll('.app-node, .api-node').forEach(node => {
+            node.addEventListener('click', () => {
+                document.querySelectorAll('.app-node, .api-node').forEach(n => {
+                    n.classList.remove('active');
+                });
+                node.classList.add('active');
+            });
+        });
+    </script>
+
+    <!-- System Matrix - Bottom Footer -->
+    <div class="system-matrix">
+        <div class="matrix-track" id="matrixTrack">
+            <!-- First set of metrics -->
+            <div class="matrix-item">
+                <div class="matrix-label">Total Requests:</div>
+                <div class="matrix-value active" id="total-requests">2,847,392</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Active Users:</div>
+                <div class="matrix-value active" id="active-users">8,429</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">DB Queries/s:</div>
+                <div class="matrix-value active" id="db-queries">3,892</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Response:</div>
+                <div class="matrix-value active" id="response-time">124ms</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Cache Hit:</div>
+                <div class="matrix-value active" id="cache-hit">94.7%</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">API Calls:</div>
+                <div class="matrix-value active" id="api-calls">12,458</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">WMS Orders:</div>
+                <div class="matrix-value active" id="wms-orders">3,247</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">TMS Shipments:</div>
+                <div class="matrix-value active" id="tms-shipments">1,892</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">EMS Products:</div>
+                <div class="matrix-value active" id="ems-products">24,891</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Pi Chats:</div>
+                <div class="matrix-value active" id="pi-chats">2,847</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Uptime:</div>
+                <div class="matrix-value active" id="uptime">99.98%</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">CPU:</div>
+                <div class="matrix-value warning" id="cpu-usage">67%</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Memory:</div>
+                <div class="matrix-value active" id="memory-usage">8.4GB</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Network:</div>
+                <div class="matrix-value active" id="network-io">1.2GB/s</div>
+            </div>
+            
+            <!-- Duplicate set for seamless scrolling -->
+            <div class="matrix-item">
+                <div class="matrix-label">Total Requests:</div>
+                <div class="matrix-value active">2,847,392</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Active Users:</div>
+                <div class="matrix-value active">8,429</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">DB Queries/s:</div>
+                <div class="matrix-value active">3,892</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Response:</div>
+                <div class="matrix-value active">124ms</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Cache Hit:</div>
+                <div class="matrix-value active">94.7%</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">API Calls:</div>
+                <div class="matrix-value active">12,458</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">WMS Orders:</div>
+                <div class="matrix-value active">3,247</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">TMS Shipments:</div>
+                <div class="matrix-value active">1,892</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">EMS Products:</div>
+                <div class="matrix-value active">24,891</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Pi Chats:</div>
+                <div class="matrix-value active">2,847</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Uptime:</div>
+                <div class="matrix-value active">99.98%</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">CPU:</div>
+                <div class="matrix-value warning">67%</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Memory:</div>
+                <div class="matrix-value active">8.4GB</div>
+            </div>
+            <div class="matrix-item">
+                <div class="matrix-label">Network:</div>
+                <div class="matrix-value active">1.2GB/s</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

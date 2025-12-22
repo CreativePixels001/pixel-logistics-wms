@@ -1,4 +1,4 @@
-// DLT WMS - Picking Operations Module JavaScript
+// Pixel WMS - Picking Operations Module JavaScript
 // Handles discrete, batch, LPN, and wave picking
 
 let currentPickMethod = null;

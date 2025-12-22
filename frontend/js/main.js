@@ -1,8 +1,8 @@
-// DLT WMS - Main JavaScript
+// Pixel WMS - Main JavaScript
 // Global utility functions and common functionality
 
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('DLT WMS System Initialized');
+  console.log('Pixel WMS System Initialized');
   initializeApp();
 });
 

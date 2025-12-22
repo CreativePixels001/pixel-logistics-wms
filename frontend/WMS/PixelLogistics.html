@@ -1,0 +1,2179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Logistics - Leading the Digital Logistics Revolution</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Professional Black & White Theme */
+            --color-primary: #000000;
+            --color-secondary: #1a1a1a;
+            --color-tertiary: #333333;
+            --color-grey-dark: #4a4a4a;
+            --color-grey: #6b6b6b;
+            --color-grey-light: #9b9b9b;
+            --color-grey-lighter: #d1d1d1;
+            --color-grey-lightest: #e8e8e8;
+            --color-background: #f5f5f5;
+            --color-white: #ffffff;
+            
+            --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --transition: 0.3s ease;
+        }
+
+        body {
+            font-family: var(--font-family);
+            line-height: 1.6;
+            color: var(--color-secondary);
+            background-color: var(--color-white);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-grey-lightest);
+            transition: var(--transition);
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-grey);
+            font-weight: 500;
+            font-size: 14px;
+            transition: var(--transition);
+            letter-spacing: 0.3px;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-primary);
+        }
+
+        .cta-button {
+            padding: 10px 28px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.3px;
+        }
+
+        .cta-button:hover {
+            background: var(--color-secondary);
+            transform: translateY(-1px);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            background: var(--color-white);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(90deg, var(--color-grey-lightest) 1px, transparent 1px),
+                linear-gradient(var(--color-grey-lightest) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.4;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 72px;
+            font-weight: 800;
+            color: var(--color-primary);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+        }
+
+        .hero-content .highlight {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-content .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 8px;
+            left: 0;
+            right: 0;
+            height: 12px;
+            background: var(--color-primary);
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            color: var(--color-grey);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+            max-width: 540px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .demo-button {
+            padding: 16px 40px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border: 2px solid var(--color-primary);
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.3px;
+        }
+
+        .demo-button:hover {
+            background: var(--color-secondary);
+            border-color: var(--color-secondary);
+            transform: translateY(-2px);
+        }
+
+        .secondary-button {
+            padding: 16px 40px;
+            background: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.3px;
+        }
+
+        .secondary-button:hover {
+            background: var(--color-primary);
+            color: var(--color-white);
+            transform: translateY(-2px);
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 600px;
+            min-height: 400px;
+        }
+
+        .dashboard-preview {
+            position: absolute;
+            background: var(--color-white);
+            border: 1px solid var(--color-grey-lightest);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .dashboard-preview:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .dashboard-preview.wms {
+            width: 460px;
+            height: 340px;
+            top: 40px;
+            left: 0;
+            z-index: 2;
+        }
+
+        .dashboard-preview.tms {
+            width: 400px;
+            height: 300px;
+            top: 220px;
+            right: 0;
+            z-index: 1;
+        }
+
+        .preview-header {
+            padding: 16px 20px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .preview-body {
+            padding: 24px;
+            background: var(--color-background);
+            height: calc(100% - 50px);
+        }
+
+        .preview-stat {
+            background: var(--color-white);
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border: 1px solid var(--color-grey-lightest);
+        }
+
+        .preview-stat h4 {
+            font-size: 11px;
+            color: var(--color-grey);
+            margin-bottom: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .preview-stat p {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--color-primary);
+            letter-spacing: -0.5px;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 2rem;
+            background: var(--color-background);
+        }
+
+        .features-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 6px 16px;
+            background: var(--color-white);
+            color: var(--color-grey);
+            border: 1px solid var(--color-grey-lighter);
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 12px;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .section-header h2 {
+            font-size: 48px;
+            font-weight: 800;
+            color: var(--color-primary);
+            margin-bottom: 1rem;
+            letter-spacing: -1.5px;
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: var(--color-grey);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: var(--color-white);
+            padding: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--color-grey-lightest);
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+            border-color: var(--color-grey-lighter);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            border: 2px solid var(--color-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--color-primary);
+        }
+
+        .feature-card h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--color-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .feature-card p {
+            color: var(--color-grey);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 15px;
+        }
+
+        .feature-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .feature-list li {
+            padding: 12px 16px;
+            color: var(--color-secondary);
+            background: var(--color-background);
+            border-left: 3px solid var(--color-primary);
+            font-size: 14px;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            color: var(--color-primary);
+            font-weight: 900;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .feature-list li:hover {
+            background: var(--color-white);
+            border-left-width: 5px;
+            padding-left: 14px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Intelligence Section */
+        .intelligence {
+            padding: 120px 2rem;
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        .intelligence-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .intelligence-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .intelligence-content h2 {
+            font-size: 56px;
+            font-weight: 800;
+            margin-bottom: 2rem;
+            letter-spacing: -1.5px;
+        }
+
+        .intelligence-content p {
+            font-size: 18px;
+            color: var(--color-grey-lighter);
+            line-height: 1.8;
+            margin-bottom: 3rem;
+        }
+
+        .ai-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .ai-feature {
+            padding: 32px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .ai-feature:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-4px);
+        }
+
+        .ai-feature svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--color-white);
+            margin-bottom: 1rem;
+        }
+
+        .ai-feature h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.3px;
+        }
+
+        .ai-feature p {
+            font-size: 14px;
+            color: var(--color-grey-lighter);
+            line-height: 1.7;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 100px 2rem;
+            background: var(--color-white);
+        }
+
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 4rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 72px;
+            font-weight: 900;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+            letter-spacing: -2px;
+        }
+
+        .stat-label {
+            font-size: 16px;
+            color: var(--color-grey);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 120px 2rem;
+            background: var(--color-background);
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--color-primary);
+            letter-spacing: -1.5px;
+        }
+
+        .cta-content p {
+            font-size: 18px;
+            color: var(--color-grey);
+            margin-bottom: 2.5rem;
+            line-height: 1.8;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--color-primary);
+            color: var(--color-grey-lighter);
+            padding: 60px 2rem 30px;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-white);
+            margin-bottom: 1rem;
+            letter-spacing: -0.5px;
+        }
+
+        .footer-desc {
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: var(--color-grey-light);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-white);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--color-white);
+            color: var(--color-primary);
+            border-color: var(--color-white);
+        }
+
+        .footer-column h4 {
+            color: var(--color-white);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: var(--color-grey-light);
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .footer-links a:hover {
+            color: var(--color-white);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            font-size: 13px;
+            color: var(--color-grey);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .hero-content {
+                text-align: center;
+                max-width: 100%;
+            }
+
+            .hero-content p {
+                max-width: 100%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .hero-visual {
+                height: 400px;
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            .dashboard-preview.wms {
+                width: 380px;
+                height: 280px;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-60%);
+            }
+
+            .dashboard-preview.tms {
+                width: 340px;
+                height: 240px;
+                top: 140px;
+                right: auto;
+                left: 50%;
+                transform: translateX(-30%);
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-visual {
+                height: auto;
+                position: static;
+            }
+
+            .dashboard-preview {
+                position: static !important;
+                width: 100% !important;
+                max-width: 500px;
+                height: auto !important;
+                margin: 0 auto 1.5rem !important;
+                transform: none !important;
+            }
+
+            .preview-body {
+                height: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 48px;
+            }
+
+            .section-header h2 {
+                font-size: 36px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="4" width="12" height="12" fill="currentColor"/>
+                    <rect x="4" y="20" width="12" height="12" fill="currentColor"/>
+                    <rect x="20" y="4" width="12" height="12" fill="currentColor"/>
+                    <rect x="20" y="20" width="12" height="12" fill="currentColor" opacity="0.5"/>
+                </svg>
+                <span>Pixel Logistics</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#intelligence">Intelligence</a></li>
+                <li><a href="#solutions">Solutions</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="cta-button" onclick="startDemo()">Start Demo</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>
+                    Transform Your Logistics with <span class="highlight">Pixel Intelligence</span>
+                </h1>
+                <p>
+                    Unified Warehouse & Transportation Management powered by AI. 
+                    Streamline operations, optimize routes, and boost efficiency with our 
+                    enterprise-grade WMS + TMS solution.
+                </p>
+                <div class="hero-buttons">
+                    <button class="demo-button" onclick="startDemo()">
+                        Start Free Demo
+                    </button>
+                    <button class="secondary-button" onclick="scrollToFeatures()">
+                        Learn More
+                    </button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="dashboard-preview wms">
+                    <div class="preview-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        </svg>
+                        WMS Dashboard
+                    </div>
+                    <div class="preview-body">
+                        <div class="preview-stat">
+                            <h4>Active Orders</h4>
+                            <p>2,847</p>
+                        </div>
+                        <div class="preview-stat">
+                            <h4>Inventory Items</h4>
+                            <p>45,293</p>
+                        </div>
+                        <div class="preview-stat">
+                            <h4>Warehouse Efficiency</h4>
+                            <p>98.5%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-preview tms">
+                    <div class="preview-header">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="3" width="15" height="13"></rect>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                        </svg>
+                        TMS Dashboard
+                    </div>
+                    <div class="preview-body">
+                        <div class="preview-stat">
+                            <h4>Active Shipments</h4>
+                            <p>1,234</p>
+                        </div>
+                        <div class="preview-stat">
+                            <h4>Fleet Utilization</h4>
+                            <p>94.2%</p>
+                        </div>
+                        <div class="preview-stat">
+                            <h4>On-Time Delivery</h4>
+                            <p>99.1%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <div class="section-header">
+                <span class="section-tag">Complete Solution</span>
+                <h2>Everything You Need to Run Modern Logistics</h2>
+                <p>
+                    From warehouse operations to last-mile delivery, our integrated platform 
+                    handles every aspect of your supply chain with intelligence and precision.
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        </svg>
+                    </div>
+                    <h3>Warehouse Management System</h3>
+                    <p>Complete visibility and control over your warehouse operations with real-time inventory tracking.</p>
+                    <ul class="feature-list">
+                        <li>Real-time Inventory Tracking</li>
+                        <li>Smart Pick, Pack & Ship</li>
+                        <li>Barcode & RFID Integration</li>
+                        <li>Automated Putaway & Replenishment</li>
+                        <li>Multi-location Support</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="1" y="3" width="15" height="13"></rect>
+                            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                        </svg>
+                    </div>
+                    <h3>Transportation Management</h3>
+                    <p>Optimize your fleet operations with intelligent route planning and real-time tracking.</p>
+                    <ul class="feature-list">
+                        <li>AI-Powered Route Optimization</li>
+                        <li>Real-time Fleet Tracking</li>
+                        <li>Carrier Management</li>
+                        <li>Load Planning & Consolidation</li>
+                        <li>Proof of Delivery</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="18" y1="20" x2="18" y2="10"></line>
+                            <line x1="12" y1="20" x2="12" y2="4"></line>
+                            <line x1="6" y1="20" x2="6" y2="14"></line>
+                        </svg>
+                    </div>
+                    <h3>Advanced Analytics</h3>
+                    <p>Make data-driven decisions with comprehensive analytics and actionable insights.</p>
+                    <ul class="feature-list">
+                        <li>Real-time Dashboards</li>
+                        <li>Performance Metrics & KPIs</li>
+                        <li>Predictive Analytics</li>
+                        <li>Custom Reports</li>
+                        <li>Trend Analysis</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                        </svg>
+                    </div>
+                    <h3>Mobile Operations</h3>
+                    <p>Empower your workforce with mobile apps for warehouse and driver operations.</p>
+                    <ul class="feature-list">
+                        <li>Driver Mobile App</li>
+                        <li>Warehouse Mobile Scanner</li>
+                        <li>Offline Mode Support</li>
+                        <li>Digital Signatures</li>
+                        <li>Photo Documentation</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="16 18 22 12 16 6"></polyline>
+                            <polyline points="8 6 2 12 8 18"></polyline>
+                        </svg>
+                    </div>
+                    <h3>Seamless Integration</h3>
+                    <p>Connect with your existing systems through our powerful API and integration platform.</p>
+                    <ul class="feature-list">
+                        <li>RESTful API</li>
+                        <li>ERP Integration (SAP, Oracle)</li>
+                        <li>E-commerce Platforms</li>
+                        <li>Shipping Carriers</li>
+                        <li>Payment Gateways</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <h3>Enterprise Security</h3>
+                    <p>Bank-grade security with role-based access control and complete audit trails.</p>
+                    <ul class="feature-list">
+                        <li>256-bit Encryption</li>
+                        <li>Role-Based Access Control</li>
+                        <li>Complete Audit Logs</li>
+                        <li>SOC 2 Compliance</li>
+                        <li>Data Backup & Recovery</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Intelligence Section -->
+    <section class="intelligence" id="intelligence">
+        <div class="intelligence-container">
+            <div class="intelligence-content">
+                <h2>Powered by Pixel Intelligence</h2>
+                <p>
+                    Our AI-driven platform learns from your operations, continuously optimizing 
+                    every aspect of your logistics workflow. From predictive inventory management 
+                    to intelligent route optimization, Pixel Intelligence ensures you stay ahead 
+                    of the competition.
+                </p>
+            </div>
+            <div class="ai-features">
+                <div class="ai-feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2a10 10 0 1 0 10 10H12V2z"></path>
+                        <path d="M12 12v10a10 10 0 0 0 10-10H12z"></path>
+                    </svg>
+                    <h4>Smart Inventory Forecasting</h4>
+                    <p>AI predicts demand patterns to optimize stock levels and prevent stockouts</p>
+                </div>
+                <div class="ai-feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                    </svg>
+                    <h4>Intelligent Route Planning</h4>
+                    <p>Machine learning optimizes routes based on traffic, weather, and delivery windows</p>
+                </div>
+                <div class="ai-feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                    </svg>
+                    <h4>Automated Warehouse Tasks</h4>
+                    <p>Smart algorithms automate putaway, picking, and replenishment decisions</p>
+                </div>
+                <div class="ai-feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    <h4>Predictive Maintenance</h4>
+                    <p>AI monitors equipment health and predicts maintenance needs before failures</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-number">99.5%</div>
+                <div class="stat-label">Order Accuracy</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">40%</div>
+                <div class="stat-label">Cost Reduction</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">3x</div>
+                <div class="stat-label">Faster Processing</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Real-time Visibility</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="contact">
+        <div class="cta-content">
+            <h2>Ready to Transform Your Logistics?</h2>
+            <p>
+                Join thousands of enterprises worldwide who trust Pixel Logistics to power their supply chain operations.
+            </p>
+            <div class="cta-buttons">
+                <button class="demo-button" onclick="startDemo()">
+                    Start Free Demo
+                </button>
+                <button class="secondary-button" onclick="contactSales()">
+                    Contact Sales
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div>
+                <div class="footer-logo">
+                    Pixel Logistics
+                </div>
+                <p class="footer-desc">
+                    Enterprise-grade Warehouse & Transportation Management System 
+                    powered by artificial intelligence. Serving logistics enterprises worldwide.
+                </p>
+                <div class="social-links">
+                    <a href="#" aria-label="LinkedIn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                            <rect x="2" y="9" width="4" height="12"></rect>
+                            <circle cx="4" cy="4" r="2"></circle>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="Twitter">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path>
+                        </svg>
+                    </a>
+                    <a href="#" aria-label="GitHub">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="showWMSFeatures(); return false;">WMS Features</a></li>
+                    <li><a href="#" onclick="showTMSFeatures(); return false;">TMS Features</a></li>
+                    <li><a href="#" onclick="showPricing(); return false;">Pricing</a></li>
+                    <li><a href="#" onclick="showIntegrations(); return false;">Integrations</a></li>
+                    <li><a href="#" onclick="showAPIDocumentation(); return false;">API Documentation</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="showAboutUs(); return false;">About Us</a></li>
+                    <li><a href="#" onclick="showCareers(); return false;">Careers</a></li>
+                    <li><a href="#" onclick="showBlog(); return false;">Blog</a></li>
+                    <li><a href="#" onclick="showCaseStudies(); return false;">Case Studies</a></li>
+                    <li><a href="#" onclick="showPartners(); return false;">Partners</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul class="footer-links">
+                    <li><a href="#" onclick="showHelpCenter(); return false;">Help Center</a></li>
+                    <li><a href="#" onclick="showContactSupport(); return false;">Contact Support</a></li>
+                    <li><a href="#" onclick="showSystemStatus(); return false;">System Status</a></li>
+                    <li><a href="#" onclick="showPrivacyPolicy(); return false;">Privacy Policy</a></li>
+                    <li><a href="#" onclick="showTermsOfService(); return false;">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Pixel Logistics. All rights reserved. Powered by Pixel Intelligence™</p>
+        </div>
+    </footer>
+
+    <!-- Overlay Modal -->
+    <div id="overlay-modal" class="overlay-modal">
+        <div class="overlay-content">
+            <button class="overlay-close" onclick="closeOverlay()">&times;</button>
+            <div id="overlay-body"></div>
+        </div>
+    </div>
+
+    <style>
+        .overlay-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .overlay-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .overlay-content {
+            background: var(--color-white);
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
+            border-radius: 0;
+            position: relative;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .overlay-close {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: var(--color-white);
+            border: 2px solid var(--color-primary);
+            border-radius: 50%;
+            font-size: 32px;
+            font-weight: 300;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            z-index: 10001;
+            color: var(--color-primary);
+        }
+
+        .overlay-close:hover {
+            background: var(--color-primary);
+            color: var(--color-white);
+            transform: rotate(90deg);
+        }
+
+        #overlay-body {
+            padding: 80px 60px 60px;
+        }
+
+        .overlay-header {
+            margin-bottom: 40px;
+            border-bottom: 3px solid var(--color-primary);
+            padding-bottom: 20px;
+        }
+
+        .overlay-header h1 {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+
+        .overlay-header p {
+            font-size: 18px;
+            color: var(--color-grey);
+        }
+
+        .overlay-section {
+            margin-bottom: 40px;
+        }
+
+        .overlay-section h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 20px;
+            border-left: 5px solid var(--color-primary);
+            padding-left: 20px;
+        }
+
+        .overlay-section h3 {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--color-secondary);
+            margin: 30px 0 15px;
+        }
+
+        .overlay-section p, .overlay-section li {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--color-grey-dark);
+            margin-bottom: 15px;
+        }
+
+        .overlay-section ul {
+            margin-left: 0;
+            list-style: none;
+        }
+
+        .overlay-section ul li {
+            padding-left: 35px;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .overlay-section ul li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--color-primary);
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .feature-grid-overlay {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .feature-box-overlay {
+            background: var(--color-white);
+            padding: 30px;
+            border: 2px solid var(--color-grey-lightest);
+            border-radius: 0;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .feature-box-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--color-primary);
+            transform: scaleY(0);
+            transition: var(--transition);
+        }
+
+        .feature-box-overlay:hover::before {
+            transform: scaleY(1);
+        }
+
+        .feature-box-overlay:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .feature-box-overlay h4 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-box-overlay h4::before {
+            content: '▸';
+            font-size: 24px;
+            color: var(--color-primary);
+        }
+
+        .feature-list-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+            list-style: none;
+        }
+
+        .feature-list-grid li {
+            padding: 18px 20px;
+            background: var(--color-background);
+            border-left: 3px solid var(--color-primary);
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--color-secondary);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .feature-list-grid li::before {
+            content: '✓';
+            color: var(--color-primary);
+            font-weight: 900;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .feature-list-grid li:hover {
+            background: var(--color-white);
+            border-left-width: 5px;
+            padding-left: 18px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .info-box {
+            background: var(--color-background);
+            padding: 25px 30px;
+            border-left: 5px solid var(--color-primary);
+            margin: 25px 0;
+        }
+
+        .info-box p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+
+        .info-box strong {
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #e8f5e9;
+            border: 1px solid #4caf50;
+            border-radius: 30px;
+            font-weight: 600;
+            color: #2e7d32;
+            margin: 15px 0;
+        }
+
+        .status-indicator::before {
+            content: '●';
+            font-size: 20px;
+            color: #4caf50;
+        }
+
+        @media (max-width: 768px) {
+            .overlay-content {
+                width: 100%;
+                height: 100%;
+                max-height: 100%;
+                border-radius: 0;
+            }
+            
+            #overlay-body {
+                padding: 80px 30px 30px;
+            }
+
+            .overlay-close {
+                top: 15px;
+                right: 15px;
+                width: 40px;
+                height: 40px;
+                font-size: 24px;
+            }
+
+            .overlay-header h1 {
+                font-size: 32px;
+            }
+
+            .feature-grid-overlay {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+
+    <script>
+        // Overlay Modal Functions
+        function openOverlay(content) {
+            const modal = document.getElementById('overlay-modal');
+            const body = document.getElementById('overlay-body');
+            body.innerHTML = content;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeOverlay() {
+            const modal = document.getElementById('overlay-modal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeOverlay();
+        });
+
+        // Close on background click
+        document.getElementById('overlay-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'overlay-modal') closeOverlay();
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Start Demo - Redirect to WMS Login
+        function startDemo() {
+            window.location.href = 'login.html';
+        }
+
+        // Contact Sales
+        function contactSales() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>Contact Sales</h1>
+                    <p>Get in touch with our enterprise sales team</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>Sales Information</h2>
+                    <p><strong>Email:</strong> enterprise@pixellogistics.com</p>
+                    <p><strong>Phone:</strong> +1 (800) PIXEL-WMS</p>
+                    <p><strong>Hours:</strong> Monday - Friday, 9:00 AM - 6:00 PM EST</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>What to Expect</h2>
+                    <div class="feature-grid-overlay">
+                        <div class="feature-box-overlay">
+                            <h4>Response Time</h4>
+                            <p>Our team will reach out within 2 business hours during office hours.</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Discovery Call</h4>
+                            <p>30-minute consultation to understand your business needs and requirements.</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Live Demo</h4>
+                            <p>Personalized walkthrough of the platform tailored to your use cases.</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Custom Proposal</h4>
+                            <p>Detailed proposal with pricing, implementation timeline, and ROI analysis.</p>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        // Scroll to Features
+        function scrollToFeatures() {
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Footer Link Functions
+        function showWMSFeatures() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>WMS Features</h1>
+                    <p>Comprehensive warehouse management capabilities</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>Inbound Operations</h2>
+                    <ul class="feature-list-grid">
+                        <li>ASN Receipt Processing</li>
+                        <li>Quality Inspection</li>
+                        <li>Intelligent Put-away</li>
+                        <li>Cross-docking</li>
+                        <li>Barcode Scanning</li>
+                        <li>Automated Validation</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>Outbound Operations</h2>
+                    <ul class="feature-list-grid">
+                        <li>Order Management</li>
+                        <li>Wave Planning</li>
+                        <li>Smart Picking Routes</li>
+                        <li>Batch Picking</li>
+                        <li>Automated Packing</li>
+                        <li>Cartonization</li>
+                        <li>Shipping Labels</li>
+                        <li>Carrier Integration</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>Inventory Management</h2>
+                    <ul class="feature-list-grid">
+                        <li>Real-time Visibility</li>
+                        <li>LPN Tracking</li>
+                        <li>Serial Numbers</li>
+                        <li>Lot Traceability</li>
+                        <li>Expiry Management</li>
+                        <li>Cycle Counting</li>
+                        <li>ABC Analysis</li>
+                        <li>Slotting Optimization</li>
+                    </ul>
+                </div>
+            `);
+        }
+
+        function showTMSFeatures() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>TMS Features</h1>
+                    <p>Advanced transportation management system</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>Route Optimization</h2>
+                    <ul class="feature-list-grid">
+                        <li>AI Route Planning</li>
+                        <li>Multi-stop Optimization</li>
+                        <li>Traffic Integration</li>
+                        <li>Driver Assignment</li>
+                        <li>Load Balancing</li>
+                        <li>Fuel Optimization</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>Fleet Management</h2>
+                    <ul class="feature-list-grid">
+                        <li>Live GPS Tracking</li>
+                        <li>Maintenance Scheduling</li>
+                        <li>Fuel Monitoring</li>
+                        <li>Driver Performance</li>
+                        <li>Vehicle Analytics</li>
+                        <li>Compliance Tracking</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>Delivery Management</h2>
+                    <ul class="feature-list-grid">
+                        <li>Electronic POD</li>
+                        <li>Customer Notifications</li>
+                        <li>ETA Updates</li>
+                        <li>Failed Delivery Mgmt</li>
+                        <li>Returns Processing</li>
+                        <li>Signature Capture</li>
+                    </ul>
+                </div>
+            `);
+        }
+
+        function showPricing() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>Pricing Plans</h1>
+                    <p>Flexible pricing for businesses of all sizes</p>
+                </div>
+                <div class="feature-grid-overlay">
+                    <div class="feature-box-overlay">
+                        <h4>Starter</h4>
+                        <h3 style="color: #000; font-size: 36px; margin: 20px 0;">$499<span style="font-size: 18px;">/mo</span></h3>
+                        <p>Perfect for small warehouses</p>
+                        <ul>
+                            <li>Up to 1,000 orders/month</li>
+                            <li>5 users included</li>
+                            <li>Basic WMS features</li>
+                            <li>Email support</li>
+                        </ul>
+                    </div>
+                    <div class="feature-box-overlay" style="border-left: 4px solid #000;">
+                        <h4>Professional</h4>
+                        <h3 style="color: #000; font-size: 36px; margin: 20px 0;">$1,499<span style="font-size: 18px;">/mo</span></h3>
+                        <p>For growing businesses</p>
+                        <ul>
+                            <li>Up to 10,000 orders/month</li>
+                            <li>15 users included</li>
+                            <li>Full WMS + TMS</li>
+                            <li>Priority support</li>
+                            <li>API access</li>
+                        </ul>
+                    </div>
+                    <div class="feature-box-overlay">
+                        <h4>Enterprise</h4>
+                        <h3 style="color: #000; font-size: 36px; margin: 20px 0;">Custom</h3>
+                        <p>For large operations</p>
+                        <ul>
+                            <li>Unlimited orders</li>
+                            <li>Unlimited users</li>
+                            <li>All features included</li>
+                            <li>24/7 dedicated support</li>
+                            <li>Custom integrations</li>
+                            <li>SLA guarantee</li>
+                        </ul>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showIntegrations() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>Integrations</h1>
+                    <p>Seamlessly connect with your existing systems</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>ERP Systems</h2>
+                    <ul class="feature-list-grid">
+                        <li>SAP S/4HANA</li>
+                        <li>SAP ECC</li>
+                        <li>Oracle NetSuite</li>
+                        <li>Microsoft Dynamics 365</li>
+                        <li>Infor CloudSuite</li>
+                        <li>Epicor ERP</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>E-commerce Platforms</h2>
+                    <ul class="feature-list-grid">
+                        <li>Shopify</li>
+                        <li>Magento</li>
+                        <li>WooCommerce</li>
+                        <li>BigCommerce</li>
+                        <li>Amazon Seller Central</li>
+                        <li>eBay</li>
+                        <li>Walmart Marketplace</li>
+                        <li>Custom Platforms</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>Carrier Integration</h2>
+                    <ul class="feature-list-grid">
+                        <li>FedEx</li>
+                        <li>UPS</li>
+                        <li>DHL Express</li>
+                        <li>USPS</li>
+                        <li>Regional Carriers</li>
+                        <li>Custom Carriers</li>
+                    </ul>
+                </div>
+            `);
+        }
+
+        function showAPIDocumentation() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>API Documentation</h1>
+                    <p>Powerful APIs for custom integrations</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>RESTful API Endpoints</h2>
+                    <ul class="feature-list-grid">
+                        <li>Inventory Management</li>
+                        <li>Order Processing</li>
+                        <li>Shipping & Tracking</li>
+                        <li>Analytics & Reports</li>
+                        <li>User Management</li>
+                        <li>Warehouse Operations</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>Webhooks & Events</h2>
+                    <ul class="feature-list-grid">
+                        <li>Order Status Updates</li>
+                        <li>Inventory Alerts</li>
+                        <li>Shipment Tracking</li>
+                        <li>Quality Inspection</li>
+                        <li>Custom Events</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>SDK & Libraries</h2>
+                    <div class="info-box">
+                        <p><strong>Languages:</strong> JavaScript, Python, PHP, Java, Ruby, .NET</p>
+                        <p><strong>Documentation:</strong> Interactive API explorer with code examples</p>
+                        <p><strong>Support:</strong> Dedicated developer support channel</p>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showAboutUs() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>About Pixel Logistics</h1>
+                    <p>Transforming supply chain operations worldwide</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>Our Mission</h2>
+                    <p>To empower enterprises with intelligent, AI-driven logistics technology that simplifies complex supply chain operations and drives measurable business results.</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>Our Story</h2>
+                    <p>Founded in 2020, Pixel Logistics emerged from a vision to revolutionize warehouse and transportation management through artificial intelligence and modern technology. Our founders, with over 50 years of combined experience in logistics and software engineering, recognized the need for a truly intelligent, user-friendly platform.</p>
+                    <p>Today, we serve over 500 enterprises across 30 countries, managing millions of shipments and inventory transactions daily.</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>Our Values</h2>
+                    <div class="feature-grid-overlay">
+                        <div class="feature-box-overlay">
+                            <h4>Innovation</h4>
+                            <p>Continuously pushing boundaries with AI and machine learning</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Reliability</h4>
+                            <p>99.99% uptime SLA with enterprise-grade infrastructure</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Partnership</h4>
+                            <p>Your success is our success - we grow together</p>
+                        </div>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showCareers() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>Careers at Pixel Logistics</h1>
+                    <p>Join our team and shape the future of logistics</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>Why Work With Us</h2>
+                    <ul>
+                        <li>Work on cutting-edge AI and logistics technology</li>
+                        <li>Competitive salary and equity packages</li>
+                        <li>Flexible remote work options</li>
+                        <li>Comprehensive health benefits</li>
+                        <li>Learning & development budget</li>
+                        <li>Collaborative, innovation-driven culture</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>Open Positions</h2>
+                    <div class="feature-grid-overlay">
+                        <div class="feature-box-overlay">
+                            <h4>Senior Full Stack Engineer</h4>
+                            <p>Location: Remote</p>
+                            <p>Build scalable features for our WMS/TMS platform</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Machine Learning Engineer</h4>
+                            <p>Location: Remote / Hybrid</p>
+                            <p>Develop AI models for route optimization and demand forecasting</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Product Manager</h4>
+                            <p>Location: Remote</p>
+                            <p>Drive product strategy and roadmap for logistics solutions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="overlay-section">
+                    <p><strong>Interested?</strong> Send your resume to careers@pixellogistics.com</p>
+                </div>
+            `);
+        }
+
+        function showBlog() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>Pixel Logistics Blog</h1>
+                    <p>Industry insights and product updates</p>
+                </div>
+                <div class="overlay-section">
+                    <h3>Latest Articles</h3>
+                    <div class="feature-box-overlay" style="margin-bottom: 20px; cursor: pointer;" onclick="window.location.href='blogs.html'">
+                        <h4>The Future of AI in Warehouse Management</h4>
+                        <p style="color: #999; font-size: 14px;">December 5, 2025 • 8 min read</p>
+                        <p>Exploring how artificial intelligence is transforming inventory optimization and labor management...</p>
+                    </div>
+                    <div class="feature-box-overlay" style="margin-bottom: 20px; cursor: pointer;" onclick="window.location.href='blogs.html'">
+                        <h4>5 Ways to Reduce Last-Mile Delivery Costs</h4>
+                        <p style="color: #999; font-size: 14px;">November 28, 2025 • 6 min read</p>
+                        <p>Practical strategies for optimizing your last-mile operations and cutting delivery expenses by up to 40%...</p>
+                    </div>
+                    <div class="feature-box-overlay" style="cursor: pointer;" onclick="window.location.href='blogs.html'">
+                        <h4>Case Study: How Company X Achieved 3x ROI in 6 Months</h4>
+                        <p style="color: #999; font-size: 14px;">November 15, 2025 • 10 min read</p>
+                        <p>A deep dive into how a mid-sized retailer transformed their logistics operations with Pixel Logistics...</p>
+                    </div>
+                </div>
+                <div class="overlay-section" style="text-align: center; margin-top: 40px;">
+                    <button onclick="window.location.href='blogs.html'" style="padding: 16px 48px; background: #000; color: #fff; border: none; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.3s;">
+                        View All Blog Posts →
+                    </button>
+                </div>
+            `);
+        }
+
+        function showCaseStudies() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>Case Studies</h1>
+                    <p>Success stories from our customers</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>Global E-Commerce Retailer</h2>
+                    <h3>Challenge</h3>
+                    <p>Managing 5 warehouses across 3 countries with legacy systems causing inventory inaccuracies and delayed shipments.</p>
+                    <h3>Solution</h3>
+                    <p>Implemented Pixel Logistics WMS with real-time inventory sync and automated order routing.</p>
+                    <h3>Results</h3>
+                    <div class="feature-grid-overlay">
+                        <div class="feature-box-overlay">
+                            <h4>Inventory Accuracy</h4>
+                            <p style="font-size: 32px; font-weight: 900; color: #000; margin: 10px 0;">99.8%</p>
+                            <p>Up from 92%</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Fulfillment Time</h4>
+                            <p style="font-size: 32px; font-weight: 900; color: #000; margin: 10px 0;">-40%</p>
+                            <p>Faster processing</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Cost Savings</h4>
+                            <p style="font-size: 32px; font-weight: 900; color: #000; margin: 10px 0;">$2M</p>
+                            <p>Annual savings</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Satisfaction</h4>
+                            <p style="font-size: 32px; font-weight: 900; color: #000; margin: 10px 0;">+35%</p>
+                            <p>Customer happiness</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="overlay-section">
+                    <h2>3PL Provider</h2>
+                    <h3>Challenge</h3>
+                    <p>Needed multi-client warehouse management with separate billing and reporting for 50+ clients.</p>
+                    <h3>Solution</h3>
+                    <p>Deployed Pixel Logistics with multi-tenant architecture and custom billing engine.</p>
+                    <h3>Results</h3>
+                    <ul class="feature-list-grid">
+                        <li>20 New Clients in Q1</li>
+                        <li>60% Admin Time Saved</li>
+                        <li>Real-time Dashboards</li>
+                        <li>Automated Billing</li>
+                    </ul>
+                </div>
+            `);
+        }
+
+        function showPartners() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>Partners</h1>
+                    <p>Strategic partnerships for comprehensive solutions</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>Technology Partners</h2>
+                    <ul class="feature-list-grid">
+                        <li>Zebra Technologies</li>
+                        <li>Amazon Web Services</li>
+                        <li>Google Cloud</li>
+                        <li>MongoDB</li>
+                        <li>Stripe Payments</li>
+                        <li>Twilio Communications</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>Implementation Partners</h2>
+                    <p>Certified system integrators who can help deploy and customize Pixel Logistics:</p>
+                    <ul class="feature-list-grid">
+                        <li>Deloitte Digital</li>
+                        <li>Accenture</li>
+                        <li>Capgemini</li>
+                        <li>PwC</li>
+                        <li>KPMG</li>
+                        <li>Regional Partners (30+ countries)</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>Become a Partner</h2>
+                    <div class="info-box">
+                        <p>Interested in becoming a Pixel Logistics partner?</p>
+                        <p><strong>Contact:</strong> partners@pixellogistics.com</p>
+                        <p><strong>Benefits:</strong> Revenue sharing, co-marketing, technical training</p>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showHelpCenter() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>Help Center</h1>
+                    <p>Get answers and support</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>Popular Topics</h2>
+                    <div class="feature-grid-overlay">
+                        <div class="feature-box-overlay">
+                            <h4>Getting Started</h4>
+                            <p>New to Pixel Logistics? Start here with setup guides and tutorials.</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>User Guides</h4>
+                            <p>Step-by-step instructions for all features and workflows.</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Video Tutorials</h4>
+                            <p>Watch and learn with our comprehensive video library.</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>FAQs</h4>
+                            <p>Frequently asked questions and quick answers.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="overlay-section">
+                    <h2>Still Need Help?</h2>
+                    <p>Our support team is available 24/7 for enterprise customers.</p>
+                    <p><strong>Email:</strong> support@pixellogistics.com</p>
+                    <p><strong>Phone:</strong> +1 (800) PIXEL-HELP</p>
+                </div>
+            `);
+        }
+
+        function showContactSupport() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>Contact Support</h1>
+                    <p>We're here to help</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>Support Channels</h2>
+                    <div class="feature-grid-overlay">
+                        <div class="feature-box-overlay">
+                            <h4>Email Support</h4>
+                            <p>support@pixellogistics.com</p>
+                            <p>Response time: &lt; 2 hours</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Phone Support</h4>
+                            <p>+1 (800) PIXEL-HELP</p>
+                            <p>Available: 24/7 for Enterprise</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Live Chat</h4>
+                            <p>Available in your dashboard</p>
+                            <p>Instant responses during business hours</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Dedicated Manager</h4>
+                            <p>Enterprise customers only</p>
+                            <p>Direct line to your success manager</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="overlay-section">
+                    <h2>Priority Levels</h2>
+                    <ul>
+                        <li><strong>P1 - Critical:</strong> System down, data loss - Response in 15 minutes</li>
+                        <li><strong>P2 - High:</strong> Major functionality impaired - Response in 1 hour</li>
+                        <li><strong>P3 - Medium:</strong> Minor functionality issues - Response in 4 hours</li>
+                        <li><strong>P4 - Low:</strong> Questions, feature requests - Response in 24 hours</li>
+                    </ul>
+                </div>
+            `);
+        }
+
+        function showSystemStatus() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>System Status</h1>
+                    <p>Real-time system health and performance</p>
+                </div>
+                <div class="overlay-section">
+                    <div class="status-indicator">All Systems Operational</div>
+                    <div class="feature-grid-overlay">
+                        <div class="feature-box-overlay">
+                            <h4>WMS Application</h4>
+                            <p style="color: #4caf50; font-weight: bold; font-size: 18px;">● Operational</p>
+                            <p style="margin: 0;">Uptime: 99.99%</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>TMS Application</h4>
+                            <p style="color: #4caf50; font-weight: bold; font-size: 18px;">● Operational</p>
+                            <p style="margin: 0;">Uptime: 99.98%</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>API Services</h4>
+                            <p style="color: #4caf50; font-weight: bold; font-size: 18px;">● Operational</p>
+                            <p style="margin: 0;">Response: 45ms</p>
+                        </div>
+                        <div class="feature-box-overlay">
+                            <h4>Mobile Apps</h4>
+                            <p style="color: #4caf50; font-weight: bold; font-size: 18px;">● Operational</p>
+                            <p style="margin: 0;">Sync: &lt;2 seconds</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="overlay-section">
+                    <h2>Performance Metrics</h2>
+                    <ul class="feature-list-grid">
+                        <li>99.99% Uptime SLA</li>
+                        <li>45ms Avg Response</li>
+                        <li>Zero Data Loss</li>
+                        <li>Daily Backups</li>
+                        <li>24/7 Monitoring</li>
+                        <li>Auto-scaling Active</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <div class="info-box">
+                        <p><strong>Scheduled Maintenance:</strong> None planned</p>
+                        <p>All maintenance windows are announced 7 days in advance via email and status page.</p>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showPrivacyPolicy() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>Privacy Policy</h1>
+                    <p>Last updated: December 1, 2025</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>Information We Collect</h2>
+                    <ul class="feature-list-grid">
+                        <li>Account Information</li>
+                        <li>Operational Data</li>
+                        <li>Usage Analytics</li>
+                        <li>Technical Data</li>
+                        <li>Communication Logs</li>
+                        <li>Payment Information</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>How We Use Your Information</h2>
+                    <ul class="feature-list-grid">
+                        <li>Service Delivery</li>
+                        <li>Platform Improvement</li>
+                        <li>Transaction Processing</li>
+                        <li>Customer Support</li>
+                        <li>Security & Fraud Prevention</li>
+                        <li>Legal Compliance</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>Data Security Measures</h2>
+                    <ul class="feature-list-grid">
+                        <li>256-bit SSL/TLS Encryption</li>
+                        <li>AES-256 Data Encryption</li>
+                        <li>SOC 2 Type II Certified</li>
+                        <li>Regular Security Audits</li>
+                        <li>Penetration Testing</li>
+                        <li>Role-based Access Control</li>
+                        <li>Multi-factor Authentication</li>
+                        <li>24/7 Security Monitoring</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <div class="info-box">
+                        <p><strong>Your Rights:</strong> Access, correct, delete, or export your data anytime</p>
+                        <p><strong>Contact:</strong> privacy@pixellogistics.com</p>
+                        <p><strong>Compliance:</strong> GDPR, CCPA, SOC 2 compliant</p>
+                    </div>
+                </div>
+            `);
+        }
+
+        function showTermsOfService() {
+            openOverlay(`
+                <div class="overlay-header">
+                    <h1>Terms of Service</h1>
+                    <p>Last updated: December 1, 2025</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>1. Acceptance of Terms</h2>
+                    <p>By accessing or using Pixel Logistics services, you agree to be bound by these Terms of Service and all applicable laws and regulations.</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>2. Service Description</h2>
+                    <p>Pixel Logistics provides cloud-based warehouse management (WMS) and transportation management (TMS) software as a service (SaaS).</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>3. User Responsibilities</h2>
+                    <ul>
+                        <li>Maintain confidentiality of account credentials</li>
+                        <li>Use services in compliance with applicable laws</li>
+                        <li>Provide accurate information</li>
+                        <li>Not attempt to breach security or reverse engineer</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>4. Service Level Agreement</h2>
+                    <ul>
+                        <li><strong>Uptime Guarantee:</strong> 99.9% for Professional plans, 99.99% for Enterprise</li>
+                        <li><strong>Support Response:</strong> As defined in your plan level</li>
+                        <li><strong>Data Backup:</strong> Daily automated backups with 30-day retention</li>
+                    </ul>
+                </div>
+                <div class="overlay-section">
+                    <h2>5. Payment Terms</h2>
+                    <p>Fees are billed monthly or annually in advance. All fees are non-refundable except as required by law.</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>6. Intellectual Property</h2>
+                    <p>Pixel Logistics retains all rights to the software and services. You retain rights to your data.</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>7. Limitation of Liability</h2>
+                    <p>Pixel Logistics liability is limited to fees paid in the 12 months preceding the claim.</p>
+                </div>
+                <div class="overlay-section">
+                    <h2>Contact</h2>
+                    <p>For questions about these terms, contact legal@pixellogistics.com</p>
+                </div>
+            `);
+        }
+    </script>
+</body>
+</html>

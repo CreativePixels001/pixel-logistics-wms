@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Logistics - Intelligent Warehouse & Transportation Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --dark-bg: #0f172a;
+            --light-bg: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 32px;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .cta-button {
+            padding: 12px 32px;
+            background: var(--gradient-1);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 64px;
+            font-weight: 900;
+            color: white;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero-content .highlight {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content p {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .demo-button {
+            padding: 16px 48px;
+            background: white;
+            color: var(--primary-color);
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .demo-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .secondary-button {
+            padding: 16px 48px;
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .secondary-button:hover {
+            background: white;
+            color: var(--primary-color);
+        }
+
+        .hero-visual {
+            position: relative;
+            height: 600px;
+        }
+
+        .dashboard-preview {
+            position: absolute;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-preview:hover {
+            transform: translateY(-10px);
+        }
+
+        .dashboard-preview.wms {
+            width: 450px;
+            height: 320px;
+            top: 50px;
+            left: 0;
+            z-index: 2;
+        }
+
+        .dashboard-preview.tms {
+            width: 380px;
+            height: 280px;
+            top: 200px;
+            right: 0;
+            z-index: 1;
+        }
+
+        .preview-header {
+            padding: 15px;
+            background: var(--gradient-1);
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .preview-body {
+            padding: 20px;
+            background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+            height: calc(100% - 51px);
+        }
+
+        .preview-stat {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .preview-stat h4 {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .preview-stat p {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 120px 2rem;
+            background: var(--light-bg);
+        }
+
+        .features-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-tag {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(102, 126, 234, 0.1);
+            color: var(--primary-color);
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 1rem;
+        }
+
+        .section-header h2 {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .feature-card:nth-child(1) .feature-icon {
+            background: var(--gradient-1);
+        }
+
+        .feature-card:nth-child(2) .feature-icon {
+            background: var(--gradient-2);
+        }
+
+        .feature-card:nth-child(3) .feature-icon {
+            background: var(--gradient-3);
+        }
+
+        .feature-card:nth-child(4) .feature-icon {
+            background: var(--gradient-4);
+        }
+
+        .feature-card:nth-child(5) .feature-icon {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+
+        .feature-card:nth-child(6) .feature-icon {
+            background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-list li i {
+            color: var(--success-color);
+            font-size: 14px;
+        }
+
+        /* Intelligence Section */
+        .intelligence {
+            padding: 120px 2rem;
+            background: var(--dark-bg);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intelligence::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .intelligence-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .intelligence-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .intelligence-content h2 {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .intelligence-content p {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+            margin-bottom: 3rem;
+        }
+
+        .ai-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .ai-feature {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .ai-feature:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .ai-feature i {
+            font-size: 40px;
+            margin-bottom: 1rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ai-feature h4 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .ai-feature p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 80px 2rem;
+            background: white;
+        }
+
+        .stats-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 64px;
+            font-weight: 900;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 18px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 120px 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-content p {
+            font-size: 20px;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-bg);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 60px 2rem 30px;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-desc {
+            font-size: 14px;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: var(--primary-color);
+            transform: translateY(-3px);
+        }
+
+        .footer-column h4 {
+            color: white;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-container {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+
+            .hero-visual {
+                display: none;
+            }
+
+            .hero-buttons {
+                justify-content: center;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 42px;
+            }
+
+            .section-header h2 {
+                font-size: 36px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-cube"></i>
+                <span>Pixel Logistics</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#intelligence">AI Intelligence</a></li>
+                <li><a href="#solutions">Solutions</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <button class="cta-button" onclick="startDemo()">Start Demo</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container fade-in-up">
+            <div class="hero-content">
+                <h1>
+                    Transform Your Logistics with <span class="highlight">Pixel Intelligence</span>
+                </h1>
+                <p>
+                    Unified Warehouse & Transportation Management powered by AI. 
+                    Streamline operations, optimize routes, and boost efficiency with our 
+                    enterprise-grade WMS + TMS solution.
+                </p>
+                <div class="hero-buttons">
+                    <button class="demo-button" onclick="startDemo()">
+                        <i class="fas fa-rocket"></i> Start Free Demo
+                    </button>
+                    <button class="secondary-button" onclick="scrollToFeatures()">
+                        Learn More <i class="fas fa-arrow-down"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="dashboard-preview wms">
+                    <div class="preview-header">
+                        <i class="fas fa-warehouse"></i>
+                        WMS Dashboard
+                    </div>
+                    <div class="preview-body">
+                        <div class="preview-stat">
+                            <h4>Active Orders</h4>
+                            <p>2,847</p>
+                        </div>
+                        <div class="preview-stat">
+                            <h4>Inventory Items</h4>
+                            <p>45,293</p>
+                        </div>
+                        <div class="preview-stat">
+                            <h4>Warehouse Efficiency</h4>
+                            <p>98.5%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="dashboard-preview tms">
+                    <div class="preview-header">
+                        <i class="fas fa-truck"></i>
+                        TMS Dashboard
+                    </div>
+                    <div class="preview-body">
+                        <div class="preview-stat">
+                            <h4>Active Shipments</h4>
+                            <p>1,234</p>
+                        </div>
+                        <div class="preview-stat">
+                            <h4>Fleet Utilization</h4>
+                            <p>94.2%</p>
+                        </div>
+                        <div class="preview-stat">
+                            <h4>On-Time Delivery</h4>
+                            <p>99.1%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features-container">
+            <div class="section-header fade-in-up">
+                <span class="section-tag">COMPLETE SOLUTION</span>
+                <h2>Everything You Need to Run Modern Logistics</h2>
+                <p>
+                    From warehouse operations to last-mile delivery, our integrated platform 
+                    handles every aspect of your supply chain with intelligence and precision.
+                </p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-warehouse"></i>
+                    </div>
+                    <h3>Warehouse Management System</h3>
+                    <p>Complete visibility and control over your warehouse operations with real-time inventory tracking.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> Real-time Inventory Tracking</li>
+                        <li><i class="fas fa-check-circle"></i> Smart Pick, Pack & Ship</li>
+                        <li><i class="fas fa-check-circle"></i> Barcode & RFID Integration</li>
+                        <li><i class="fas fa-check-circle"></i> Automated Putaway & Replenishment</li>
+                        <li><i class="fas fa-check-circle"></i> Multi-location Support</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck-moving"></i>
+                    </div>
+                    <h3>Transportation Management</h3>
+                    <p>Optimize your fleet operations with intelligent route planning and real-time tracking.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> AI-Powered Route Optimization</li>
+                        <li><i class="fas fa-check-circle"></i> Real-time Fleet Tracking</li>
+                        <li><i class="fas fa-check-circle"></i> Carrier Management</li>
+                        <li><i class="fas fa-check-circle"></i> Load Planning & Consolidation</li>
+                        <li><i class="fas fa-check-circle"></i> Proof of Delivery</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Advanced Analytics</h3>
+                    <p>Make data-driven decisions with comprehensive analytics and actionable insights.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> Real-time Dashboards</li>
+                        <li><i class="fas fa-check-circle"></i> Performance Metrics & KPIs</li>
+                        <li><i class="fas fa-check-circle"></i> Predictive Analytics</li>
+                        <li><i class="fas fa-check-circle"></i> Custom Reports</li>
+                        <li><i class="fas fa-check-circle"></i> Trend Analysis</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile Operations</h3>
+                    <p>Empower your workforce with mobile apps for warehouse and driver operations.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> Driver Mobile App</li>
+                        <li><i class="fas fa-check-circle"></i> Warehouse Mobile Scanner</li>
+                        <li><i class="fas fa-check-circle"></i> Offline Mode Support</li>
+                        <li><i class="fas fa-check-circle"></i> Digital Signatures</li>
+                        <li><i class="fas fa-check-circle"></i> Photo Documentation</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-plug"></i>
+                    </div>
+                    <h3>Seamless Integration</h3>
+                    <p>Connect with your existing systems through our powerful API and integration platform.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> RESTful API</li>
+                        <li><i class="fas fa-check-circle"></i> ERP Integration (SAP, Oracle)</li>
+                        <li><i class="fas fa-check-circle"></i> E-commerce Platforms</li>
+                        <li><i class="fas fa-check-circle"></i> Shipping Carriers</li>
+                        <li><i class="fas fa-check-circle"></i> Payment Gateways</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card fade-in-up">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Enterprise Security</h3>
+                    <p>Bank-grade security with role-based access control and complete audit trails.</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check-circle"></i> 256-bit Encryption</li>
+                        <li><i class="fas fa-check-circle"></i> Role-Based Access Control</li>
+                        <li><i class="fas fa-check-circle"></i> Complete Audit Logs</li>
+                        <li><i class="fas fa-check-circle"></i> SOC 2 Compliance</li>
+                        <li><i class="fas fa-check-circle"></i> Data Backup & Recovery</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Intelligence Section -->
+    <section class="intelligence" id="intelligence">
+        <div class="intelligence-container">
+            <div class="intelligence-content fade-in-up">
+                <h2>Powered by Pixel Intelligence</h2>
+                <p>
+                    Our AI-driven platform learns from your operations, continuously optimizing 
+                    every aspect of your logistics workflow. From predictive inventory management 
+                    to intelligent route optimization, Pixel Intelligence ensures you stay ahead 
+                    of the competition.
+                </p>
+            </div>
+            <div class="ai-features">
+                <div class="ai-feature fade-in-up">
+                    <i class="fas fa-brain"></i>
+                    <h4>Smart Inventory Forecasting</h4>
+                    <p>AI predicts demand patterns to optimize stock levels and prevent stockouts</p>
+                </div>
+                <div class="ai-feature fade-in-up">
+                    <i class="fas fa-route"></i>
+                    <h4>Intelligent Route Planning</h4>
+                    <p>Machine learning optimizes routes based on traffic, weather, and delivery windows</p>
+                </div>
+                <div class="ai-feature fade-in-up">
+                    <i class="fas fa-robot"></i>
+                    <h4>Automated Warehouse Tasks</h4>
+                    <p>Smart algorithms automate putaway, picking, and replenishment decisions</p>
+                </div>
+                <div class="ai-feature fade-in-up">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h4>Predictive Maintenance</h4>
+                    <p>AI monitors equipment health and predicts maintenance needs before failures</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-item fade-in-up">
+                <div class="stat-number">99.5%</div>
+                <div class="stat-label">Order Accuracy</div>
+            </div>
+            <div class="stat-item fade-in-up">
+                <div class="stat-number">40%</div>
+                <div class="stat-label">Cost Reduction</div>
+            </div>
+            <div class="stat-item fade-in-up">
+                <div class="stat-number">3x</div>
+                <div class="stat-label">Faster Processing</div>
+            </div>
+            <div class="stat-item fade-in-up">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Real-time Visibility</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section" id="contact">
+        <div class="cta-content fade-in-up">
+            <h2>Ready to Transform Your Logistics?</h2>
+            <p>
+                Join thousands of enterprises worldwide who trust Pixel Logistics to power their supply chain operations.
+            </p>
+            <div class="cta-buttons">
+                <button class="demo-button" onclick="startDemo()">
+                    <i class="fas fa-rocket"></i> Start Free Demo
+                </button>
+                <button class="secondary-button" onclick="contactSales()">
+                    <i class="fas fa-phone"></i> Contact Sales
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div>
+                <div class="footer-logo">
+                    <i class="fas fa-cube"></i> Pixel Logistics
+                </div>
+                <p class="footer-desc">
+                    Enterprise-grade Warehouse & Transportation Management System 
+                    powered by artificial intelligence. Serving logistics enterprises worldwide.
+                </p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h4>Product</h4>
+                <ul class="footer-links">
+                    <li><a href="#">WMS Features</a></li>
+                    <li><a href="#">TMS Features</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a href="#">Integrations</a></li>
+                    <li><a href="#">API Documentation</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Case Studies</a></li>
+                    <li><a href="#">Partners</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Support</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Contact Support</a></li>
+                    <li><a href="#">System Status</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Pixel Logistics. All rights reserved. Powered by Pixel Intelligence™</p>
+        </div>
+    </footer>
+
+    <script>
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Start Demo - Redirect to WMS Login
+        function startDemo() {
+            window.location.href = 'frontend/WMS/login.html';
+        }
+
+        // Contact Sales
+        function contactSales() {
+            alert('Sales Contact: sales@pixellogistics.com | +1 (555) 123-4567\n\nOur team will reach out to you within 24 hours!');
+        }
+
+        // Scroll to Features
+        function scrollToFeatures() {
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-up').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

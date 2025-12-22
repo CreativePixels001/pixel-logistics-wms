@@ -1,0 +1,247 @@
+// PixelCloud SSL Certificate Manager
+// Based on your friend's SSL automation system
+
+document.addEventListener('DOMContentLoaded', function() {
+    initSSLManager();
+});
+
+/**
+ * Initialize SSL Manager
+ */
+function initSSLManager() {
+    // Certificate type selection
+    const certTypeCards = document.querySelectorAll('.cert-type-card');
+    const dnsSection = document.getElementById('dnsVerificationSection');
+    const domainInput = document.getElementById('sslDomain');
+    const cnameValue = document.getElementById('cnameValue');
+    
+    certTypeCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const radio = this.querySelector('input[type="radio"]');
+            radio.checked = true;
+            
+            // Update active state
+            certTypeCards.forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Show/hide DNS verification for wildcard
+            if (radio.value === 'wildcard') {
+                dnsSection.style.display = 'block';
+                updateCNAMEValue();
+            } else {
+                dnsSection.style.display = 'none';
+            }
+        });
+    });
+    
+    // Update CNAME value when domain changes
+    domainInput.addEventListener('input', updateCNAMEValue);
+    
+    // CNAME Verification
+    document.getElementById('verifyCNAME').addEventListener('click', verifyCNAME);
+    
+    // Generate SSL Button
+    document.getElementById('generateSSLBtn').addEventListener('click', generateSSL);
+    
+    // Initialize first card as active
+    if (certTypeCards.length > 0) {
+        certTypeCards[0].classList.add('active');
+    }
+}
+
+/**
+ * Update CNAME Value Display
+ */
+function updateCNAMEValue() {
+    const domain = document.getElementById('sslDomain').value.trim();
+    const cnameValue = document.getElementById('cnameValue');
+    
+    if (domain) {
+        cnameValue.textContent = `_acme-challenge.${domain}.acme.dvswad.com`;
+    } else {
+        cnameValue.textContent = '_acme-challenge.yourdomain.com.acme.dvswad.com';
+    }
+}
+
+/**
+ * Verify CNAME Record
+ */
+async function verifyCNAME() {
+    const domain = document.getElementById('sslDomain').value.trim();
+    const statusSpan = document.getElementById('verificationStatus');
+    const verifyBtn = document.getElementById('verifyCNAME');
+    
+    if (!domain) {
+        showStatus(statusSpan, 'error', 'Please enter a domain first');
+        return;
+    }
+    
+    // Disable button and show loading
+    verifyBtn.disabled = true;
+    verifyBtn.innerHTML = `
+        <span class="spinner-border spinner-border-sm me-1"></span>
+        Verifying...
+    `;
+    
+    try {
+        // Simulate DNS verification (will connect to backend API)
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        
+        // TODO: Replace with actual API call
+        const verified = Math.random() > 0.3; // Simulate 70% success rate
+        
+        if (verified) {
+            showStatus(statusSpan, 'success', '✓ CNAME verified successfully!');
+        } else {
+            showStatus(statusSpan, 'error', '✗ CNAME not found. Please check your DNS settings.');
+        }
+    } catch (error) {
+        showStatus(statusSpan, 'error', '✗ Verification failed: ' + error.message);
+    } finally {
+        // Re-enable button
+        verifyBtn.disabled = false;
+        verifyBtn.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="me-1">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
+            Verify CNAME
+        `;
+    }
+}
+
+/**
+ * Generate SSL Certificate
+ */
+async function generateSSL() {
+    const domain = document.getElementById('sslDomain').value.trim();
+    const certType = document.querySelector('input[name="certType"]:checked').value;
+    const generateBtn = document.getElementById('generateSSLBtn');
+    const progressSection = document.getElementById('sslProgress');
+    const progressBar = progressSection.querySelector('.progress-bar');
+    const logsDiv = document.getElementById('sslLogs');
+    
+    // Validation
+    if (!domain) {
+        alert('Please enter a domain name');
+        return;
+    }
+    
+    if (!isValidDomain(domain)) {
+        alert('Please enter a valid domain name');
+        return;
+    }
+    
+    // Disable button and show progress
+    generateBtn.disabled = true;
+    progressSection.style.display = 'block';
+    logsDiv.innerHTML = '';
+    
+    try {
+        // Simulate SSL generation process (will connect to Socket.IO backend)
+        const steps = [
+            { progress: 10, message: 'Initializing SSL generation...' },
+            { progress: 20, message: `Validating domain: ${domain}` },
+            { progress: 30, message: certType === 'wildcard' ? 'Preparing DNS-01 challenge...' : 'Preparing HTTP-01 challenge...' },
+            { progress: 50, message: 'Contacting Let\'s Encrypt...' },
+            { progress: 70, message: 'Validating domain ownership...' },
+            { progress: 85, message: 'Generating certificate files...' },
+            { progress: 95, message: 'Installing certificate...' },
+            { progress: 100, message: '✓ Certificate generated successfully!' }
+        ];
+        
+        for (const step of steps) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            updateProgress(progressBar, logsDiv, step.progress, step.message);
+        }
+        
+        // Success notification
+        setTimeout(() => {
+            alert(`SSL certificate generated successfully for ${domain}!`);
+            bootstrap.Modal.getInstance(document.getElementById('generateSSLModal')).hide();
+            // TODO: Refresh certificates list
+        }, 500);
+        
+    } catch (error) {
+        updateProgress(progressBar, logsDiv, 100, '✗ Error: ' + error.message, true);
+    } finally {
+        generateBtn.disabled = false;
+    }
+}
+
+/**
+ * Update Progress Bar and Logs
+ */
+function updateProgress(progressBar, logsDiv, percent, message, isError = false) {
+    progressBar.style.width = percent + '%';
+    progressBar.textContent = percent + '%';
+    
+    if (percent === 100 && !isError) {
+        progressBar.classList.remove('progress-bar-striped', 'progress-bar-animated');
+        progressBar.classList.add('bg-success');
+    }
+    
+    const timestamp = new Date().toLocaleTimeString();
+    const logClass = isError ? 'text-danger' : (percent === 100 ? 'text-success' : 'text-dark');
+    logsDiv.innerHTML += `<div class="${logClass}">[${timestamp}] ${message}</div>`;
+    logsDiv.scrollTop = logsDiv.scrollHeight;
+}
+
+/**
+ * Show Status Message
+ */
+function showStatus(element, type, message) {
+    element.innerHTML = `<span class="badge bg-${type === 'success' ? 'success' : 'danger'}">${message}</span>`;
+}
+
+/**
+ * Validate Domain Name
+ */
+function isValidDomain(domain) {
+    const regex = /^(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$/i;
+    return regex.test(domain);
+}
+
+/**
+ * Download Certificate (attached to download buttons)
+ */
+function downloadCertificate(domain) {
+    // TODO: Connect to backend API
+    console.log('Downloading certificate for:', domain);
+    
+    // Simulate download
+    const link = document.createElement('a');
+    link.href = `/api/download-certificate/${domain}`;
+    link.download = `${domain}-certificates.zip`;
+    link.click();
+}
+
+/**
+ * Renew Certificate
+ */
+async function renewCertificate(domain) {
+    if (!confirm(`Renew SSL certificate for ${domain}?`)) {
+        return;
+    }
+    
+    // TODO: Connect to backend API
+    console.log('Renewing certificate for:', domain);
+    
+    // Simulate renewal
+    alert(`Certificate renewal initiated for ${domain}. This may take a few minutes.`);
+}
+
+/**
+ * Delete Certificate
+ */
+async function deleteCertificate(domain) {
+    if (!confirm(`Delete SSL certificate for ${domain}? This action cannot be undone.`)) {
+        return;
+    }
+    
+    // TODO: Connect to backend API
+    console.log('Deleting certificate for:', domain);
+    
+    alert(`Certificate for ${domain} has been deleted.`);
+}

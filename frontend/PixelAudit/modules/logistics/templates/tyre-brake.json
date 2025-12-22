@@ -1,0 +1,185 @@
+{
+  "id": "tyre-brake",
+  "name": "Tyre & Brake Safety Audit",
+  "category": "Logistics - Vehicle",
+  "description": "Focused safety inspection for tyre condition and brake system performance",
+  "version": "1.0",
+  "items": [
+    {
+      "id": "tb-01",
+      "question": "Front left tyre tread depth above 1.6mm?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "tb-02",
+      "question": "Front right tyre tread depth above 1.6mm?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "tb-03",
+      "question": "Rear left tyre tread depth above 1.6mm?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "tb-04",
+      "question": "Rear right tyre tread depth above 1.6mm?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "tb-05",
+      "question": "Are all tyres inflated to manufacturer's recommended PSI?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tb-06",
+      "question": "Are tyres free from cuts, punctures, or embedded objects?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "tb-07",
+      "question": "Are tyres free from bulges or blisters on sidewalls?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "tb-08",
+      "question": "Is tyre wear even across the surface (no cupping or scalloping)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "tb-09",
+      "question": "Are tyre age indicators showing less than 6 years?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tb-10",
+      "question": "Are valve caps present on all tyres?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tb-11",
+      "question": "Are wheel rims free from cracks or damage?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "tb-12",
+      "question": "Are all wheel nuts/bolts present and tight?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tb-13",
+      "question": "Is spare tyre in good condition with adequate tread?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "tb-14",
+      "question": "Is spare tyre properly inflated?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tb-15",
+      "question": "Are brake pads/shoes above minimum thickness?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tb-16",
+      "question": "Is brake fluid at proper level and color (not dark/contaminated)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tb-17",
+      "question": "Does brake pedal feel firm (no sponginess)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tb-18",
+      "question": "Do brakes respond immediately when applied?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tb-19",
+      "question": "Does vehicle brake in straight line (no pulling to one side)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tb-20",
+      "question": "Are there no unusual noises when braking (squealing, grinding)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tb-21",
+      "question": "Is parking brake holding vehicle securely on incline?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "tb-22",
+      "question": "Overall tyre and brake safety satisfactory for operation?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    }
+  ]
+}

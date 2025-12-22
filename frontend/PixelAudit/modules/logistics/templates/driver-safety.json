@@ -1,0 +1,233 @@
+{
+  "id": "driver-safety",
+  "name": "Driver Safety Audit",
+  "category": "Logistics - Driver",
+  "description": "Safety-focused audit evaluating driver behavior, vehicle operation, and safety practices",
+  "version": "1.0",
+  "items": [
+    {
+      "id": "ds-01",
+      "question": "Does driver wear seatbelt at all times?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ds-02",
+      "question": "Does driver avoid mobile phone use while driving?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-03",
+      "question": "Are hands-free devices used for communication if needed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-04",
+      "question": "Does driver maintain safe following distance?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-05",
+      "question": "Are speed limits and company policies followed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-06",
+      "question": "Does driver use turn signals appropriately?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-07",
+      "question": "Are lane changes executed safely?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-08",
+      "question": "Does driver check blind spots before maneuvers?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-09",
+      "question": "Is aggressive driving avoided (tailgating, speeding)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-10",
+      "question": "Does driver appear alert and focused?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-11",
+      "question": "Does driver complete pre-trip vehicle inspection?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-12",
+      "question": "Are tires, brakes, and lights checked before departure?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-13",
+      "question": "Are fluid levels (oil, coolant, brake) verified?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-14",
+      "question": "Are mirrors adjusted properly before driving?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-15",
+      "question": "Is vehicle cleanliness maintained (windshield, mirrors)?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-16",
+      "question": "Is cargo properly secured before departure?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ds-17",
+      "question": "Are straps, tie-downs, and locks verified?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ds-18",
+      "question": "Is weight distribution balanced?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-19",
+      "question": "Are doors and tailgates secured?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-20",
+      "question": "Is vehicle not overloaded beyond capacity?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-21",
+      "question": "Does driver wear high-visibility vest when outside vehicle?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ds-22",
+      "question": "Are safety shoes worn during loading/unloading?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-23",
+      "question": "Are gloves used when handling materials?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-24",
+      "question": "Is driver aware of weather-related hazards?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-25",
+      "question": "Are emergency supplies on board (first aid, triangle, fire extinguisher)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ds-26",
+      "question": "Does driver know emergency procedures?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-27",
+      "question": "Is driver trained on accident reporting procedures?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ds-28",
+      "question": "Overall driver safety practices and awareness satisfactory?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    }
+  ]
+}

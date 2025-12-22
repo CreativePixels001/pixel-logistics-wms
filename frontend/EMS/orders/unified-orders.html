@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Orders - Pixel Commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <style>
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #666;
+        }
+
+        .filter-select {
+            padding: 0.5rem 1rem;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 0.5rem 1rem;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+
+        .bulk-actions-bar {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .bulk-actions-bar.active {
+            display: flex;
+        }
+
+        .selected-count {
+            font-weight: 600;
+            color: #000;
+        }
+
+        .bulk-action-btn {
+            padding: 0.5rem 1rem;
+            background: #000;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bulk-action-btn:hover {
+            background: #333;
+        }
+
+        .bulk-action-btn.secondary {
+            background: #fff;
+            color: #000;
+            border: 1px solid #E0E0E0;
+        }
+
+        .bulk-action-btn.secondary:hover {
+            background: #f5f5f5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card-mini {
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .stat-card-mini .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-card-mini .label {
+            font-size: 0.75rem;
+            color: #666;
+        }
+
+        .stat-card-mini .change {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .orders-table {
+            width: 100%;
+            background: #fff;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .orders-table th {
+            background: #f5f5f5;
+            padding: 0.75rem 1rem;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .orders-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #E0E0E0;
+            font-size: 0.875rem;
+        }
+
+        .orders-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .orders-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .order-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .platform-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .platform-badge.amazon { background: #000; color: #fff; }
+        .platform-badge.flipkart { background: #333; color: #fff; }
+        .platform-badge.meesho { background: #666; color: #fff; }
+
+        .status-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-badge.pending { background: #e0e0e0; color: #000; }
+        .status-badge.processing { background: #d0d0d0; color: #000; }
+        .status-badge.shipped { background: #b0b0b0; color: #fff; }
+        .status-badge.delivered { background: #f5f5f5; color: #000; border: 1px solid #000; }
+        .status-badge.cancelled { background: #999; color: #fff; }
+
+        .order-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-icon-btn {
+            padding: 0.25rem;
+            background: transparent;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-icon-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .action-icon-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #E0E0E0;
+        }
+
+        .pagination-info {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .pagination-btn {
+            padding: 0.5rem 1rem;
+            background: #fff;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: #f5f5f5;
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-btn.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .quick-filters {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .quick-filter {
+            padding: 0.5rem 1rem;
+            background: #fff;
+            border: 1px solid #E0E0E0;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-filter.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .quick-filter:hover:not(.active) {
+            background: #f5f5f5;
+        }
+
+        .export-menu {
+            position: relative;
+        }
+
+        .export-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background: #fff;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: none;
+            min-width: 150px;
+            z-index: 10;
+        }
+
+        .export-dropdown.show {
+            display: block;
+        }
+
+        .export-option {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: background 0.2s;
+        }
+
+        .export-option:hover {
+            background: #f5f5f5;
+        }
+
+        .export-option:first-child {
+            border-radius: 8px 8px 0 0;
+        }
+
+        .export-option:last-child {
+            border-radius: 0 0 8px 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span>Pixel Commerce</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <a href="../notifications.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        Notifications
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Platforms</div>
+                    <a href="../platforms/amazon.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        Amazon
+                    </a>
+                    <a href="../platforms/flipkart.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                        </svg>
+                        Flipkart
+                    </a>
+                    <a href="../platforms/meesho.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Meesho
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <a href="unified-orders.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        All Orders
+                    </a>
+                    <a href="../products/catalog.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Products
+                    </a>
+                    <a href="../inventory/stock.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Inventory
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="header-right">
+                    <a href="../notifications.html" class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge" id="notificationBadge">0</span>
+                    </a>
+                    <div class="user-menu">
+                        <div class="user-avatar">S</div>
+                        <div class="user-info">
+                            <span class="user-name">Seller Name</span>
+                            <span class="user-role">Multi-Platform Seller</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Unified Order Management</h1>
+                        <p class="page-subtitle">Manage orders from all platforms in one place</p>
+                    </div>
+                    <div class="page-actions">
+                        <div class="export-menu">
+                            <button class="btn btn-secondary" onclick="toggleExport()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                Export
+                            </button>
+                            <div class="export-dropdown" id="exportDropdown">
+                                <div class="export-option" onclick="exportData('csv')">Export as CSV</div>
+                                <div class="export-option" onclick="exportData('excel')">Export as Excel</div>
+                                <div class="export-option" onclick="exportData('pdf')">Export as PDF</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="window.location.href='create-order.html'">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Create Order
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card-mini">
+                        <div class="value" id="totalOrders">1,248</div>
+                        <div class="label">Total Orders</div>
+                        <div class="change" style="color: #000;">↑ 8.2% from last month</div>
+                    </div>
+                    <div class="stat-card-mini">
+                        <div class="value" id="pendingOrders">48</div>
+                        <div class="label">Pending Orders</div>
+                        <div class="change" style="color: #666;">23 need action</div>
+                    </div>
+                    <div class="stat-card-mini">
+                        <div class="value">₹2,45,680</div>
+                        <div class="label">Total Revenue (This Month)</div>
+                        <div class="change" style="color: #000;">↑ 12.5%</div>
+                    </div>
+                    <div class="stat-card-mini">
+                        <div class="value">342</div>
+                        <div class="label">Shipped Today</div>
+                        <div class="change" style="color: #666;">12 in transit</div>
+                    </div>
+                </div>
+
+                <!-- Quick Filters -->
+                <div class="quick-filters">
+                    <div class="quick-filter active" onclick="quickFilter('all')">All Orders</div>
+                    <div class="quick-filter" onclick="quickFilter('pending')">Pending (48)</div>
+                    <div class="quick-filter" onclick="quickFilter('processing')">Processing (123)</div>
+                    <div class="quick-filter" onclick="quickFilter('shipped')">Shipped (342)</div>
+                    <div class="quick-filter" onclick="quickFilter('delivered')">Delivered (685)</div>
+                    <div class="quick-filter" onclick="quickFilter('returns')">Returns (15)</div>
+                </div>
+
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <input type="text" class="search-input" placeholder="Search by order ID, product, customer..." id="searchInput" onkeyup="searchOrders()">
+                    
+                    <div class="filter-group">
+                        <span class="filter-label">Platform:</span>
+                        <select class="filter-select" id="platformFilter" onchange="applyFilters()">
+                            <option value="all">All Platforms</option>
+                            <option value="amazon">Amazon</option>
+                            <option value="flipkart">Flipkart</option>
+                            <option value="meesho">Meesho</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <span class="filter-label">Status:</span>
+                        <select class="filter-select" id="statusFilter" onchange="applyFilters()">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <span class="filter-label">Date:</span>
+                        <select class="filter-select" id="dateFilter" onchange="applyFilters()">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                            <option value="custom">Custom Range</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Bulk Actions Bar -->
+                <div class="bulk-actions-bar" id="bulkActionsBar">
+                    <span class="selected-count"><span id="selectedCount">0</span> orders selected</span>
+                    <button class="bulk-action-btn" onclick="bulkUpdateStatus('processing')">Mark as Processing</button>
+                    <button class="bulk-action-btn" onclick="bulkUpdateStatus('shipped')">Mark as Shipped</button>
+                    <button class="bulk-action-btn secondary" onclick="bulkPrint()">Print Labels</button>
+                    <button class="bulk-action-btn secondary" onclick="bulkExport()">Export Selected</button>
+                    <button class="bulk-action-btn secondary" onclick="clearSelection()">Clear Selection</button>
+                </div>
+
+                <!-- Orders Table -->
+                <table class="orders-table" id="ordersTable">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" class="order-checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
+                            <th>Order ID</th>
+                            <th>Platform</th>
+                            <th>Customer</th>
+                            <th>Product</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody">
+                        <!-- Orders will be rendered here -->
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <div class="pagination">
+                    <div class="pagination-info">
+                        Showing <span id="showingStart">1</span>-<span id="showingEnd">20</span> of <span id="totalRecords">1,248</span> orders
+                    </div>
+                    <div class="pagination-controls">
+                        <button class="pagination-btn" onclick="changePage('prev')" id="prevBtn">Previous</button>
+                        <button class="pagination-btn active">1</button>
+                        <button class="pagination-btn" onclick="changePage(2)">2</button>
+                        <button class="pagination-btn" onclick="changePage(3)">3</button>
+                        <button class="pagination-btn" onclick="changePage(4)">4</button>
+                        <button class="pagination-btn" onclick="changePage(5)">5</button>
+                        <button class="pagination-btn" onclick="changePage('next')" id="nextBtn">Next</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../js/notification-service.js"></script>
+    <script>
+        // Sample orders data
+        const allOrders = [
+            { id: '#AMZ-2025-8945', platform: 'amazon', customer: 'Raj Kumar', product: 'Wireless Earbuds', amount: 1299, status: 'pending', date: '2025-11-30' },
+            { id: '#FLK-2025-8892', platform: 'flipkart', customer: 'Priya Shah', product: 'Smart Watch', amount: 2499, status: 'processing', date: '2025-11-30' },
+            { id: '#MSH-2025-1156', platform: 'meesho', customer: 'Amit Verma', product: 'Cotton T-Shirt', amount: 349, status: 'shipped', date: '2025-11-29' },
+            { id: '#AMZ-2025-3421', platform: 'amazon', customer: 'Sneha Reddy', product: 'Wireless Headphones', amount: 1299, status: 'delivered', date: '2025-11-29' },
+            { id: '#FLK-2025-7654', platform: 'flipkart', customer: 'Vikram Singh', product: 'LED Lamp', amount: 599, status: 'pending', date: '2025-11-30' },
+            { id: '#AMZ-2025-3420', platform: 'amazon', customer: 'Anita Desai', product: 'Phone Case', amount: 199, status: 'delivered', date: '2025-11-28' },
+            { id: '#MSH-2025-2234', platform: 'meesho', customer: 'Rahul Jain', product: 'Yoga Mat', amount: 899, status: 'processing', date: '2025-11-30' },
+            { id: '#FLK-2025-5678', platform: 'flipkart', customer: 'Kavita Patel', product: 'Shoes', amount: 1999, status: 'shipped', date: '2025-11-29' },
+            { id: '#AMZ-2025-9876', platform: 'amazon', customer: 'Suresh Kumar', product: 'Laptop Stand', amount: 1599, status: 'pending', date: '2025-11-30' },
+            { id: '#MSH-2025-4321', platform: 'meesho', customer: 'Deepa Singh', product: 'Kurta Set', amount: 799, status: 'delivered', date: '2025-11-28' },
+            { id: '#FLK-2025-1111', platform: 'flipkart', customer: 'Ravi Sharma', product: 'Water Bottle', amount: 399, status: 'processing', date: '2025-11-30' },
+            { id: '#AMZ-2025-2222', platform: 'amazon', customer: 'Meena Iyer', product: 'Book Set', amount: 999, status: 'shipped', date: '2025-11-29' },
+            { id: '#MSH-2025-3333', platform: 'meesho', customer: 'Arun Gupta', product: 'Wall Clock', amount: 449, status: 'delivered', date: '2025-11-28' },
+            { id: '#FLK-2025-4444', platform: 'flipkart', customer: 'Pooja Nair', product: 'Backpack', amount: 1299, status: 'pending', date: '2025-11-30' },
+            { id: '#AMZ-2025-5555', platform: 'amazon', customer: 'Kiran Reddy', product: 'Mouse Pad', amount: 249, status: 'processing', date: '2025-11-30' },
+            { id: '#MSH-2025-6666', platform: 'meesho', customer: 'Neha Kapoor', product: 'Saree', amount: 1899, status: 'shipped', date: '2025-11-29' },
+            { id: '#FLK-2025-7777', platform: 'flipkart', customer: 'Manoj Kumar', product: 'Fitness Band', amount: 1499, status: 'delivered', date: '2025-11-28' },
+            { id: '#AMZ-2025-8888', platform: 'amazon', customer: 'Sita Ram', product: 'Cookware Set', amount: 3499, status: 'pending', date: '2025-11-30' },
+            { id: '#MSH-2025-9999', platform: 'meesho', customer: 'Geeta Devi', product: 'Bedsheet', amount: 599, status: 'processing', date: '2025-11-30' },
+            { id: '#FLK-2025-0000', platform: 'flipkart', customer: 'Ramesh Babu', product: 'Camera', amount: 12999, status: 'shipped', date: '2025-11-29' }
+        ];
+
+        let filteredOrders = [...allOrders];
+        let selectedOrders = new Set();
+        let currentPage = 1;
+        const ordersPerPage = 20;
+
+        // Render orders table
+        function renderOrders() {
+            const tbody = document.getElementById('ordersTableBody');
+            const start = (currentPage - 1) * ordersPerPage;
+            const end = start + ordersPerPage;
+            const pageOrders = filteredOrders.slice(start, end);
+
+            if (pageOrders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 3rem; color: #999;">No orders found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = pageOrders.map(order => `
+                <tr>
+                    <td><input type="checkbox" class="order-checkbox" value="${order.id}" ${selectedOrders.has(order.id) ? 'checked' : ''} onchange="toggleOrderSelection('${order.id}')"></td>
+                    <td><strong>${order.id}</strong></td>
+                    <td><span class="platform-badge ${order.platform}">${order.platform.toUpperCase()}</span></td>
+                    <td>${order.customer}</td>
+                    <td>${order.product}</td>
+                    <td>₹${order.amount.toLocaleString()}</td>
+                    <td><span class="status-badge ${order.status}">${order.status.charAt(0).toUpperCase() + order.status.slice(1)}</span></td>
+                    <td>${formatDate(order.date)}</td>
+                    <td>
+                        <div class="order-actions">
+                            <button class="action-icon-btn" title="View Details" onclick="viewOrder('${order.id}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </button>
+                            <button class="action-icon-btn" title="Track Order" onclick="trackOrder('${order.id}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                            </button>
+                            <button class="action-icon-btn" title="Print Label" onclick="printLabel('${order.id}')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 6 2 18 2 18 9"/>
+                                    <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                                    <rect x="6" y="14" width="12" height="8"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            updatePagination();
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            if (date.toDateString() === today.toDateString()) return 'Today';
+            if (date.toDateString() === yesterday.toDateString()) return 'Yesterday';
+            return date.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' });
+        }
+
+        function toggleOrderSelection(orderId) {
+            if (selectedOrders.has(orderId)) {
+                selectedOrders.delete(orderId);
+            } else {
+                selectedOrders.add(orderId);
+            }
+            updateBulkActions();
+        }
+
+        function toggleSelectAll() {
+            const checkbox = document.getElementById('selectAll');
+            const start = (currentPage - 1) * ordersPerPage;
+            const end = start + ordersPerPage;
+            const pageOrders = filteredOrders.slice(start, end);
+
+            if (checkbox.checked) {
+                pageOrders.forEach(order => selectedOrders.add(order.id));
+            } else {
+                pageOrders.forEach(order => selectedOrders.delete(order.id));
+            }
+            updateBulkActions();
+            renderOrders();
+        }
+
+        function updateBulkActions() {
+            const count = selectedOrders.size;
+            document.getElementById('selectedCount').textContent = count;
+            document.getElementById('bulkActionsBar').classList.toggle('active', count > 0);
+        }
+
+        function clearSelection() {
+            selectedOrders.clear();
+            document.getElementById('selectAll').checked = false;
+            updateBulkActions();
+            renderOrders();
+        }
+
+        function quickFilter(type) {
+            document.querySelectorAll('.quick-filter').forEach(f => f.classList.remove('active'));
+            event.target.classList.add('active');
+
+            if (type === 'all') {
+                filteredOrders = [...allOrders];
+            } else if (type === 'returns') {
+                filteredOrders = allOrders.filter(o => o.status === 'cancelled');
+            } else {
+                filteredOrders = allOrders.filter(o => o.status === type);
+            }
+
+            currentPage = 1;
+            renderOrders();
+        }
+
+        function applyFilters() {
+            const platform = document.getElementById('platformFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+
+            filteredOrders = allOrders.filter(order => {
+                const matchPlatform = platform === 'all' || order.platform === platform;
+                const matchStatus = status === 'all' || order.status === status;
+                const matchSearch = !search || 
+                    order.id.toLowerCase().includes(search) ||
+                    order.customer.toLowerCase().includes(search) ||
+                    order.product.toLowerCase().includes(search);
+
+                return matchPlatform && matchStatus && matchSearch;
+            });
+
+            currentPage = 1;
+            renderOrders();
+        }
+
+        function searchOrders() {
+            applyFilters();
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+            document.getElementById('showingStart').textContent = filteredOrders.length === 0 ? 0 : (currentPage - 1) * ordersPerPage + 1;
+            document.getElementById('showingEnd').textContent = Math.min(currentPage * ordersPerPage, filteredOrders.length);
+            document.getElementById('totalRecords').textContent = filteredOrders.length;
+
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+            
+            if (page === 'prev' && currentPage > 1) {
+                currentPage--;
+            } else if (page === 'next' && currentPage < totalPages) {
+                currentPage++;
+            } else if (typeof page === 'number') {
+                currentPage = page;
+            }
+
+            renderOrders();
+        }
+
+        function viewOrder(id) {
+            alert(`View details for order ${id}`);
+        }
+
+        function trackOrder(id) {
+            const order = allOrders.find(o => o.id === id);
+            if (order) {
+                window.location.href = `../tracking/${order.platform}-track-order.html`;
+            }
+        }
+
+        function printLabel(id) {
+            alert(`Printing label for order ${id}`);
+        }
+
+        function bulkUpdateStatus(status) {
+            if (selectedOrders.size === 0) return;
+            alert(`Updating ${selectedOrders.size} orders to status: ${status}`);
+            clearSelection();
+        }
+
+        function bulkPrint() {
+            if (selectedOrders.size === 0) return;
+            alert(`Printing labels for ${selectedOrders.size} orders`);
+        }
+
+        function bulkExport() {
+            if (selectedOrders.size === 0) return;
+            alert(`Exporting ${selectedOrders.size} orders`);
+        }
+
+        function toggleExport() {
+            document.getElementById('exportDropdown').classList.toggle('show');
+        }
+
+        function exportData(format) {
+            alert(`Exporting orders as ${format.toUpperCase()}`);
+            document.getElementById('exportDropdown').classList.remove('show');
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Close export dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const exportMenu = document.querySelector('.export-menu');
+            if (exportMenu && !exportMenu.contains(event.target)) {
+                document.getElementById('exportDropdown').classList.remove('show');
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderOrders();
+            if (window.notificationService) {
+                window.notificationService.init();
+            }
+        });
+    </script>
+</body>
+</html>

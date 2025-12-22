@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backend API Integration Test - Pixel Logistics</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      font-size: 32px;
+      color: #1a202c;
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      color: #718096;
+      font-size: 16px;
+    }
+
+    .status-banner {
+      padding: 16px 24px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-banner.online {
+      background: #c6f6d5;
+      color: #22543d;
+      border: 2px solid #68d391;
+    }
+
+    .status-banner.offline {
+      background: #fed7d7;
+      color: #742a2a;
+      border: 2px solid #fc8181;
+    }
+
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 24px;
+      margin-bottom: 30px;
+    }
+
+    .test-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .test-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .test-card h3 {
+      font-size: 18px;
+      color: #1a202c;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .test-card p {
+      color: #718096;
+      font-size: 14px;
+      margin-bottom: 16px;
+      line-height: 1.6;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      width: 100%;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: scale(1.02);
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .result-box {
+      background: #f7fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      max-height: 300px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .result-box.show {
+      display: block;
+    }
+
+    .result-box pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .icon-success { color: #48bb78; }
+    .icon-error { color: #f56565; }
+    .icon-warning { color: #ed8936; }
+    .icon-info { color: #4299e1; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 24px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stat-card h4 {
+      font-size: 14px;
+      opacity: 0.9;
+      margin-bottom: 8px;
+    }
+
+    .stat-card p {
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>🚀 Backend API Integration Test</h1>
+      <p>Test suite for WMS-TMS integrated system</p>
+    </div>
+
+    <div id="statusBanner" class="status-banner offline">
+      <span>⚠️</span>
+      <span>Checking backend connection...</span>
+    </div>
+
+    <div class="test-grid">
+      <!-- Test 1: Health Check -->
+      <div class="test-card">
+        <h3>
+          <span class="icon-info">🏥</span>
+          Health Check
+        </h3>
+        <p>Verify backend server is running and responding</p>
+        <button class="btn" onclick="testHealth()">Run Health Check</button>
+        <div class="result-box" id="result-health"></div>
+      </div>
+
+      <!-- Test 2: Login -->
+      <div class="test-card">
+        <h3>
+          <span class="icon-info">🔐</span>
+          Authentication
+        </h3>
+        <p>Test login with demo credentials</p>
+        <button class="btn" onclick="testLogin()">Test Login</button>
+        <div class="result-box" id="result-login"></div>
+      </div>
+
+      <!-- Test 3: Inventory API -->
+      <div class="test-card">
+        <h3>
+          <span class="icon-info">📦</span>
+          Inventory API
+        </h3>
+        <p>Fetch inventory data from backend</p>
+        <button class="btn" onclick="testInventory()">Test Inventory</button>
+        <div class="result-box" id="result-inventory"></div>
+      </div>
+
+      <!-- Test 4: Integration Dashboard -->
+      <div class="test-card">
+        <h3>
+          <span class="icon-info">📊</span>
+          Integration Dashboard
+        </h3>
+        <p>Test WMS-TMS unified dashboard API</p>
+        <button class="btn" onclick="testDashboard()">Test Dashboard</button>
+        <div class="result-box" id="result-dashboard"></div>
+      </div>
+
+      <!-- Test 5: Create Shipment -->
+      <div class="test-card">
+        <h3>
+          <span class="icon-info">🚚</span>
+          Create Shipment
+        </h3>
+        <p>Test WMS to TMS shipment creation</p>
+        <button class="btn" onclick="testCreateShipment()">Create Test Shipment</button>
+        <div class="result-box" id="result-shipment"></div>
+      </div>
+
+      <!-- Test 6: Track Shipment -->
+      <div class="test-card">
+        <h3>
+          <span class="icon-info">📍</span>
+          Shipment Tracking
+        </h3>
+        <p>Track order PIX202512PXW001 status</p>
+        <button class="btn" onclick="testTracking()">Track Shipment</button>
+        <div class="result-box" id="result-tracking"></div>
+      </div>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="header">
+      <h2 style="margin-bottom: 16px;">📈 System Statistics</h2>
+      <div id="statsGrid" class="stats-grid">
+        <div class="stat-card">
+          <h4>API Calls</h4>
+          <p id="stat-calls">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Successful</h4>
+          <p id="stat-success">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Failed</h4>
+          <p id="stat-failed">0</p>
+        </div>
+        <div class="stat-card">
+          <h4>Success Rate</h4>
+          <p id="stat-rate">0%</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/api-config.js"></script>
+  <script>
+    let stats = {
+      totalCalls: 0,
+      successful: 0,
+      failed: 0
+    };
+
+    function updateStats() {
+      document.getElementById('stat-calls').textContent = stats.totalCalls;
+      document.getElementById('stat-success').textContent = stats.successful;
+      document.getElementById('stat-failed').textContent = stats.failed;
+      
+      const rate = stats.totalCalls > 0 
+        ? Math.round((stats.successful / stats.totalCalls) * 100) 
+        : 0;
+      document.getElementById('stat-rate').textContent = rate + '%';
+    }
+
+    function showResult(id, data, success = true) {
+      const box = document.getElementById(`result-${id}`);
+      box.classList.add('show');
+      
+      const icon = success ? '✅' : '❌';
+      const formatted = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+      
+      box.innerHTML = `<pre>${icon} ${formatted}</pre>`;
+      
+      stats.totalCalls++;
+      if (success) stats.successful++;
+      else stats.failed++;
+      updateStats();
+    }
+
+    async function testHealth() {
+      try {
+        const response = await fetch('http://localhost:5000/health');
+        const data = await response.json();
+        showResult('health', data, response.ok);
+        
+        if (response.ok) {
+          updateBackendStatus(true);
+        }
+      } catch (error) {
+        showResult('health', `Error: ${error.message}`, false);
+        updateBackendStatus(false);
+      }
+    }
+
+    async function testLogin() {
+      try {
+        const result = await window.API.AUTH.login({
+          username: 'admin',
+          password: 'admin123'
+        });
+        showResult('login', result, result.success);
+      } catch (error) {
+        showResult('login', `Error: ${error.message}`, false);
+      }
+    }
+
+    async function testInventory() {
+      try {
+        const result = await window.API.INVENTORY.getAll({ limit: 5 });
+        showResult('inventory', result, result.success);
+      } catch (error) {
+        showResult('inventory', `Error: ${error.message}`, false);
+      }
+    }
+
+    async function testDashboard() {
+      try {
+        const result = await window.API.INTEGRATION.getDashboard();
+        showResult('dashboard', result, result.success);
+      } catch (error) {
+        showResult('dashboard', `Error: ${error.message}`, false);
+      }
+    }
+
+    async function testCreateShipment() {
+      try {
+        const result = await window.API.INTEGRATION.createShipment({
+          wmsOrderId: `TEST-${Date.now()}`,
+          wmsOrderNumber: `SO-TEST-${Date.now()}`,
+          customerName: 'Test Customer',
+          origin: {
+            city: 'Mumbai',
+            state: 'Maharashtra',
+            address: 'Test Address'
+          },
+          destination: {
+            city: 'Delhi',
+            state: 'Delhi',
+            address: 'Delivery Address'
+          },
+          cargo: [{
+            description: 'Test Item',
+            quantity: 10,
+            weight: { value: 50, unit: 'kg' }
+          }],
+          priority: 'Normal',
+          shipmentType: 'Surface'
+        });
+        showResult('shipment', result, result.success);
+      } catch (error) {
+        showResult('shipment', `Error: ${error.message}`, false);
+      }
+    }
+
+    async function testTracking() {
+      try {
+        const result = await window.API.INTEGRATION.getShipmentStatus('PIX202512PXW001');
+        showResult('tracking', result, result.success);
+      } catch (error) {
+        showResult('tracking', `Error: ${error.message}`, false);
+      }
+    }
+
+    function updateBackendStatus(online) {
+      const banner = document.getElementById('statusBanner');
+      if (online) {
+        banner.className = 'status-banner online';
+        banner.innerHTML = '<span>✅</span><span>Backend is online and responding</span>';
+      } else {
+        banner.className = 'status-banner offline';
+        banner.innerHTML = '<span>❌</span><span>Backend is offline - tests will use mock data</span>';
+      }
+    }
+
+    // Auto-check backend on load
+    window.addEventListener('DOMContentLoaded', async () => {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const available = await window.checkBackendAvailability();
+      updateBackendStatus(available);
+    });
+  </script>
+</body>
+</html>

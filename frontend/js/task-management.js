@@ -1,4 +1,4 @@
-// DLT WMS - Task Management Module JavaScript
+// Pixel WMS - Task Management Module JavaScript
 // Handles task orchestration, assignment, prioritization, and worker performance tracking
 
 let selectedTasks = new Set();

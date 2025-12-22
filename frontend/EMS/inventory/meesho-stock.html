@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management - Meesho - ONNGEO</title>
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Header Logo */
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Inventory Specific Styles */
+        .inventory-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .inventory-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+            margin-bottom: -2px;
+        }
+
+        .inventory-tab:hover {
+            color: var(--primary-color);
+        }
+
+        .inventory-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .inventory-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .inventory-table thead {
+            background: var(--bg-light);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .inventory-table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .inventory-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .inventory-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .inventory-table tbody tr:hover {
+            background: var(--bg-light);
+        }
+
+        .product-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .product-image {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-md);
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .product-image svg {
+            width: 30px;
+            height: 30px;
+            color: var(--text-secondary);
+        }
+
+        .product-details {
+            flex: 1;
+        }
+
+        .product-name {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .product-sku {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .stock-badge {
+            display: inline-block;
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--radius-md);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .stock-badge.in-stock {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .stock-badge.low-stock {
+            background: rgba(0, 0, 0, 0.05);
+            color: #f59e0b;
+            border: 1px solid #f59e0b;
+        }
+
+        .stock-badge.out-of-stock {
+            background: rgba(0, 0, 0, 0.05);
+            color: #ef4444;
+            border: 1px solid #ef4444;
+        }
+
+        .fulfillment-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.7rem;
+            font-weight: 600;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .action-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .filters-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .filter-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .alert-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid #f59e0b;
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+        }
+
+        .alert-icon {
+            width: 24px;
+            height: 24px;
+            color: #f59e0b;
+            flex-shrink: 0;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-message {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .alert-products {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .alert-product-tag {
+            padding: 0.375rem 0.75rem;
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .restock-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .restock-modal.show {
+            display: flex;
+        }
+
+        .restock-content {
+            background: var(--bg-white);
+            max-width: 500px;
+            width: 90%;
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .restock-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .quantity-input {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .qty-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .qty-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .qty-display {
+            flex: 1;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span>Pixel Commerce</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Meesho</div>
+                    <a href="../platforms/meesho.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Meesho Dashboard
+                    </a>
+                    <a href="../products/meesho-catalog.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Products
+                    </a>
+                    <a href="../orders/meesho-orders.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Orders
+                    </a>
+                    <a href="meesho-stock.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                        Inventory
+                    </a>
+                    <a href="../analytics/meesho-analytics.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        Analytics
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="../settings/account.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="platform-switcher" onclick="showPlatformMenu()">
+                        <span id="currentPlatform">Meesho</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search products, SKU, ASIN...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">AU</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Admin User</span>
+                            <span class="user-role" id="userRole">ONNGEO</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Inventory Management - ONNGEO</h1>
+                        <p class="page-subtitle">Manage stock levels for Titan Robot Action Figures</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-secondary" onclick="exportInventory()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Export
+                        </button>
+                        <button class="btn btn-primary" onclick="syncInventory()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"/>
+                                <polyline points="1 20 1 14 7 14"/>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                            </svg>
+                            Sync Stock
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Low Stock Alert -->
+                <div class="alert-card">
+                    <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                    <div class="alert-content">
+                        <div class="alert-title">Low Stock Alert</div>
+                        <div class="alert-message">3 products are running low on stock and need restocking</div>
+                        <div class="alert-products">
+                            <span class="alert-product-tag">Red Titan Robot (FBA)</span>
+                            <span class="alert-product-tag">Yellow Titan Robot (FBA)</span>
+                            <span class="alert-product-tag">Blue Titan Robot (FBM)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stat-cards-grid" style="margin-bottom: 2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem;">
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--bg-light); color: var(--primary-color);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            </svg>
+                        </div>
+                        <div class="stat-details">
+                            <div class="stat-value">342</div>
+                            <div class="stat-label">Total Units</div>
+                            <div class="stat-change">Across all products</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--bg-light); color: var(--primary-color);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                            </svg>
+                        </div>
+                        <div class="stat-details">
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">Active Products</div>
+                            <div class="stat-change positive">All ONNGEO items</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--bg-light); color: #f59e0b;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                <line x1="12" y1="9" x2="12" y2="13"/>
+                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                            </svg>
+                        </div>
+                        <div class="stat-details">
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Low Stock Items</div>
+                            <div class="stat-change" style="color: #f59e0b;">Needs attention</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon" style="background: var(--bg-light); color: var(--primary-color);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                        </div>
+                        <div class="stat-details">
+                            <div class="stat-value">₹1,36,680</div>
+                            <div class="stat-label">Inventory Value</div>
+                            <div class="stat-change">@ ₹399/unit avg</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inventory Tabs -->
+                <div class="inventory-tabs">
+                    <button class="inventory-tab active" onclick="switchTab('all')">
+                        All Inventory (8)
+                    </button>
+                    <button class="inventory-tab" onclick="switchTab('fba')">
+                        FBA (5)
+                    </button>
+                    <button class="inventory-tab" onclick="switchTab('fbm')">
+                        FBM (3)
+                    </button>
+                    <button class="inventory-tab" onclick="switchTab('low-stock')">
+                        Low Stock (3)
+                    </button>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <label class="filter-label">Stock Status</label>
+                        <select class="form-select" onchange="filterByStatus(this.value)">
+                            <option value="all">All Status</option>
+                            <option value="in-stock">In Stock</option>
+                            <option value="low-stock">Low Stock</option>
+                            <option value="out-of-stock">Out of Stock</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Product Variant</label>
+                        <select class="form-select" onchange="filterByVariant(this.value)">
+                            <option value="all">All Variants</option>
+                            <option value="red">Red Titan Robot</option>
+                            <option value="yellow">Yellow Titan Robot</option>
+                            <option value="blue">Blue Titan Robot</option>
+                            <option value="green">Green Titan Robot</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label class="filter-label">Sort By</label>
+                        <select class="form-select" onchange="sortInventory(this.value)">
+                            <option value="name">Product Name</option>
+                            <option value="stock-asc">Stock (Low to High)</option>
+                            <option value="stock-desc">Stock (High to Low)</option>
+                            <option value="value">Inventory Value</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Inventory Table -->
+                <div class="card-container" style="padding: 0; overflow: hidden;">
+                    <table class="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>SKU / ASIN</th>
+                                <th>Fulfillment</th>
+                                <th>Available</th>
+                                <th>Reserved</th>
+                                <th>Inbound</th>
+                                <th>Status</th>
+                                <th>Value</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventoryTableBody">
+                            <!-- Row 1 -->
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-image">
+                                            <svg viewBox="0 0 200 200" fill="none">
+                                                <rect width="200" height="200" fill="#f3f4f6"/>
+                                                <circle cx="100" cy="80" r="25" fill="#ef4444"/>
+                                                <rect x="75" y="110" width="50" height="60" rx="5" fill="#dc2626"/>
+                                                <rect x="70" y="130" width="15" height="40" rx="3" fill="#b91c1c"/>
+                                                <rect x="115" y="130" width="15" height="40" rx="3" fill="#b91c1c"/>
+                                            </svg>
+                                        </div>
+                                        <div class="product-details">
+                                            <div class="product-name">ONNGEO Red Titan Robot</div>
+                                            <div class="product-sku">Price: ₹399</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 600; margin-bottom: 0.25rem;">SKU-RED-001</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">B0FWTBSFMK</div>
+                                </td>
+                                <td><span class="fulfillment-badge">FBA</span></td>
+                                <td><strong>18</strong></td>
+                                <td>5</td>
+                                <td>20</td>
+                                <td><span class="stock-badge low-stock">Low Stock</span></td>
+                                <td><strong>₹7,182</strong></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn" onclick="openRestockModal('Red Titan Robot', 'SKU-RED-001', 18)" title="Restock">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-btn" onclick="viewDetails('SKU-RED-001')" title="View Details">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 2 -->
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-image">
+                                            <svg viewBox="0 0 200 200" fill="none">
+                                                <rect width="200" height="200" fill="#f3f4f6"/>
+                                                <circle cx="100" cy="80" r="25" fill="#fbbf24"/>
+                                                <rect x="75" y="110" width="50" height="60" rx="5" fill="#f59e0b"/>
+                                                <rect x="70" y="130" width="15" height="40" rx="3" fill="#d97706"/>
+                                                <rect x="115" y="130" width="15" height="40" rx="3" fill="#d97706"/>
+                                            </svg>
+                                        </div>
+                                        <div class="product-details">
+                                            <div class="product-name">ONNGEO Yellow Titan Robot</div>
+                                            <div class="product-sku">Price: ₹399</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 600; margin-bottom: 0.25rem;">SKU-YEL-001</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">B0FWTBSFML</div>
+                                </td>
+                                <td><span class="fulfillment-badge">FBA</span></td>
+                                <td><strong>22</strong></td>
+                                <td>8</td>
+                                <td>30</td>
+                                <td><span class="stock-badge low-stock">Low Stock</span></td>
+                                <td><strong>₹8,778</strong></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn" onclick="openRestockModal('Yellow Titan Robot', 'SKU-YEL-001', 22)" title="Restock">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-btn" onclick="viewDetails('SKU-YEL-001')" title="View Details">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 3 -->
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-image">
+                                            <svg viewBox="0 0 200 200" fill="none">
+                                                <rect width="200" height="200" fill="#f3f4f6"/>
+                                                <circle cx="100" cy="80" r="25" fill="#3b82f6"/>
+                                                <rect x="75" y="110" width="50" height="60" rx="5" fill="#2563eb"/>
+                                                <rect x="70" y="130" width="15" height="40" rx="3" fill="#1d4ed8"/>
+                                                <rect x="115" y="130" width="15" height="40" rx="3" fill="#1d4ed8"/>
+                                            </svg>
+                                        </div>
+                                        <div class="product-details">
+                                            <div class="product-name">ONNGEO Blue Titan Robot</div>
+                                            <div class="product-sku">Price: ₹399</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 600; margin-bottom: 0.25rem;">SKU-BLU-001</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">B0FWTBSFMN</div>
+                                </td>
+                                <td><span class="fulfillment-badge">FBM</span></td>
+                                <td><strong>15</strong></td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td><span class="stock-badge low-stock">Low Stock</span></td>
+                                <td><strong>₹5,985</strong></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn" onclick="openRestockModal('Blue Titan Robot', 'SKU-BLU-001', 15)" title="Restock">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-btn" onclick="viewDetails('SKU-BLU-001')" title="View Details">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 4 -->
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-image">
+                                            <svg viewBox="0 0 200 200" fill="none">
+                                                <rect width="200" height="200" fill="#f3f4f6"/>
+                                                <circle cx="100" cy="80" r="25" fill="#22c55e"/>
+                                                <rect x="75" y="110" width="50" height="60" rx="5" fill="#16a34a"/>
+                                                <rect x="70" y="130" width="15" height="40" rx="3" fill="#15803d"/>
+                                                <rect x="115" y="130" width="15" height="40" rx="3" fill="#15803d"/>
+                                            </svg>
+                                        </div>
+                                        <div class="product-details">
+                                            <div class="product-name">ONNGEO Green Titan Robot</div>
+                                            <div class="product-sku">Price: ₹399</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 600; margin-bottom: 0.25rem;">SKU-GRN-001</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">B0FWTBSFMP</div>
+                                </td>
+                                <td><span class="fulfillment-badge">FBA</span></td>
+                                <td><strong>45</strong></td>
+                                <td>12</td>
+                                <td>0</td>
+                                <td><span class="stock-badge in-stock">In Stock</span></td>
+                                <td><strong>₹17,955</strong></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn" onclick="openRestockModal('Green Titan Robot', 'SKU-GRN-001', 45)" title="Restock">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-btn" onclick="viewDetails('SKU-GRN-001')" title="View Details">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 5 -->
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-image">
+                                            <svg viewBox="0 0 200 200" fill="none">
+                                                <rect width="200" height="200" fill="#f3f4f6"/>
+                                                <circle cx="100" cy="80" r="25" fill="#8b5cf6"/>
+                                                <rect x="75" y="110" width="50" height="60" rx="5" fill="#7c3aed"/>
+                                                <rect x="70" y="130" width="15" height="40" rx="3" fill="#6d28d9"/>
+                                                <rect x="115" y="130" width="15" height="40" rx="3" fill="#6d28d9"/>
+                                            </svg>
+                                        </div>
+                                        <div class="product-details">
+                                            <div class="product-name">ONNGEO Purple Titan Robot</div>
+                                            <div class="product-sku">Price: ₹399</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 600; margin-bottom: 0.25rem;">SKU-PUR-001</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">B0FWTBSFMQ</div>
+                                </td>
+                                <td><span class="fulfillment-badge">FBA</span></td>
+                                <td><strong>38</strong></td>
+                                <td>6</td>
+                                <td>25</td>
+                                <td><span class="stock-badge in-stock">In Stock</span></td>
+                                <td><strong>₹15,162</strong></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn" onclick="openRestockModal('Purple Titan Robot', 'SKU-PUR-001', 38)" title="Restock">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-btn" onclick="viewDetails('SKU-PUR-001')" title="View Details">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 6 -->
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-image">
+                                            <svg viewBox="0 0 200 200" fill="none">
+                                                <rect width="200" height="200" fill="#f3f4f6"/>
+                                                <circle cx="100" cy="80" r="25" fill="#f97316"/>
+                                                <rect x="75" y="110" width="50" height="60" rx="5" fill="#ea580c"/>
+                                                <rect x="70" y="130" width="15" height="40" rx="3" fill="#c2410c"/>
+                                                <rect x="115" y="130" width="15" height="40" rx="3" fill="#c2410c"/>
+                                            </svg>
+                                        </div>
+                                        <div class="product-details">
+                                            <div class="product-name">ONNGEO Orange Titan Robot</div>
+                                            <div class="product-sku">Price: ₹399</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 600; margin-bottom: 0.25rem;">SKU-ORG-001</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">B0FWTBSFMR</div>
+                                </td>
+                                <td><span class="fulfillment-badge">FBM</span></td>
+                                <td><strong>52</strong></td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td><span class="stock-badge in-stock">In Stock</span></td>
+                                <td><strong>₹20,748</strong></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn" onclick="openRestockModal('Orange Titan Robot', 'SKU-ORG-001', 52)" title="Restock">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-btn" onclick="viewDetails('SKU-ORG-001')" title="View Details">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 7 -->
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-image">
+                                            <svg viewBox="0 0 200 200" fill="none">
+                                                <rect width="200" height="200" fill="#f3f4f6"/>
+                                                <circle cx="100" cy="80" r="25" fill="#ec4899"/>
+                                                <rect x="75" y="110" width="50" height="60" rx="5" fill="#db2777"/>
+                                                <rect x="70" y="130" width="15" height="40" rx="3" fill="#be185d"/>
+                                                <rect x="115" y="130" width="15" height="40" rx="3" fill="#be185d"/>
+                                            </svg>
+                                        </div>
+                                        <div class="product-details">
+                                            <div class="product-name">ONNGEO Pink Titan Robot</div>
+                                            <div class="product-sku">Price: ₹399</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 600; margin-bottom: 0.25rem;">SKU-PNK-001</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">B0FWTBSFMS</div>
+                                </td>
+                                <td><span class="fulfillment-badge">FBM</span></td>
+                                <td><strong>65</strong></td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td><span class="stock-badge in-stock">In Stock</span></td>
+                                <td><strong>₹25,935</strong></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn" onclick="openRestockModal('Pink Titan Robot', 'SKU-PNK-001', 65)" title="Restock">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-btn" onclick="viewDetails('SKU-PNK-001')" title="View Details">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 8 -->
+                            <tr>
+                                <td>
+                                    <div class="product-info">
+                                        <div class="product-image">
+                                            <svg viewBox="0 0 200 200" fill="none">
+                                                <rect width="200" height="200" fill="#f3f4f6"/>
+                                                <circle cx="100" cy="80" r="25" fill="#64748b"/>
+                                                <rect x="75" y="110" width="50" height="60" rx="5" fill="#475569"/>
+                                                <rect x="70" y="130" width="15" height="40" rx="3" fill="#334155"/>
+                                                <rect x="115" y="130" width="15" height="40" rx="3" fill="#334155"/>
+                                            </svg>
+                                        </div>
+                                        <div class="product-details">
+                                            <div class="product-name">ONNGEO Black Titan Robot</div>
+                                            <div class="product-sku">Price: ₹399</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 600; margin-bottom: 0.25rem;">SKU-BLK-001</div>
+                                    <div style="font-size: 0.75rem; color: var(--text-secondary);">B0FWTBSFMT</div>
+                                </td>
+                                <td><span class="fulfillment-badge">FBA</span></td>
+                                <td><strong>87</strong></td>
+                                <td>18</td>
+                                <td>50</td>
+                                <td><span class="stock-badge in-stock">In Stock</span></td>
+                                <td><strong>₹34,713</strong></td>
+                                <td>
+                                    <div class="action-buttons">
+                                        <button class="action-btn" onclick="openRestockModal('Black Titan Robot', 'SKU-BLK-001', 87)" title="Restock">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                                <line x1="5" y1="12" x2="19" y2="12"/>
+                                            </svg>
+                                        </button>
+                                        <button class="action-btn" onclick="viewDetails('SKU-BLK-001')" title="View Details">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                <circle cx="12" cy="12" r="3"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Restock Modal -->
+    <div class="restock-modal" id="restockModal">
+        <div class="restock-content">
+            <div class="restock-header">
+                <h2 style="font-size: 1.25rem; font-weight: 800; margin: 0;">Restock Product</h2>
+                <button class="overlay-close" onclick="closeRestockModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 20px; height: 20px;">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <div style="font-weight: 600; margin-bottom: 0.5rem;" id="restockProductName">ONNGEO Red Titan Robot</div>
+                <div style="font-size: 0.875rem; color: var(--text-secondary);">
+                    <span id="restockSKU">SKU-RED-001</span> • Current Stock: <span id="currentStock">18</span> units
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label class="filter-label" style="display: block; margin-bottom: 0.5rem;">Restock Quantity</label>
+                <div class="quantity-input">
+                    <button class="qty-btn" onclick="decreaseQty()">−</button>
+                    <div class="qty-display" id="restockQty">50</div>
+                    <button class="qty-btn" onclick="increaseQty()">+</button>
+                </div>
+            </div>
+
+            <div style="background: var(--bg-light); padding: 1rem; border-radius: var(--radius-md); margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="color: var(--text-secondary);">New Stock Total:</span>
+                    <span style="font-weight: 700;" id="newStockTotal">68 units</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-secondary);">Estimated Value:</span>
+                    <span style="font-weight: 700;">₹<span id="estimatedValue">19,950</span></span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem;">
+                <button class="btn btn-secondary" onclick="closeRestockModal()" style="flex: 1;">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmRestock()" style="flex: 1;">Confirm Restock</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let restockData = {
+            quantity: 50,
+            currentStock: 0,
+            productName: '',
+            sku: ''
+        };
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function showPlatformMenu() {
+            alert('Platform switcher - Coming soon!\n\nAvailable platforms:\n• Meesho\n• Flipkart (Coming Soon)\n• Meesho (Coming Soon)');
+        }
+
+        function switchTab(tab) {
+            const tabs = document.querySelectorAll('.inventory-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Filter table based on tab
+            console.log('Switched to tab:', tab);
+            showToast('Showing ' + tab + ' inventory', 'info');
+        }
+
+        function filterByStatus(status) {
+            console.log('Filter by status:', status);
+            showToast('Filtering by status: ' + status, 'info');
+        }
+
+        function filterByVariant(variant) {
+            console.log('Filter by variant:', variant);
+            showToast('Filtering by variant: ' + variant, 'info');
+        }
+
+        function sortInventory(sortBy) {
+            console.log('Sort by:', sortBy);
+            showToast('Sorting by: ' + sortBy, 'info');
+        }
+
+        function openRestockModal(productName, sku, currentStock) {
+            restockData.productName = productName;
+            restockData.sku = sku;
+            restockData.currentStock = currentStock;
+            restockData.quantity = 50;
+
+            document.getElementById('restockProductName').textContent = 'ONNGEO ' + productName;
+            document.getElementById('restockSKU').textContent = sku;
+            document.getElementById('currentStock').textContent = currentStock;
+            document.getElementById('restockQty').textContent = 50;
+            updateRestockCalculations();
+
+            document.getElementById('restockModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeRestockModal() {
+            document.getElementById('restockModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function increaseQty() {
+            restockData.quantity += 10;
+            document.getElementById('restockQty').textContent = restockData.quantity;
+            updateRestockCalculations();
+        }
+
+        function decreaseQty() {
+            if (restockData.quantity > 10) {
+                restockData.quantity -= 10;
+                document.getElementById('restockQty').textContent = restockData.quantity;
+                updateRestockCalculations();
+            }
+        }
+
+        function updateRestockCalculations() {
+            const newTotal = restockData.currentStock + restockData.quantity;
+            const value = restockData.quantity * 399;
+            
+            document.getElementById('newStockTotal').textContent = newTotal + ' units';
+            document.getElementById('estimatedValue').textContent = value.toLocaleString('en-IN');
+        }
+
+        function confirmRestock() {
+            showToast('Restock request submitted for ' + restockData.productName + ' (' + restockData.quantity + ' units)', 'success');
+            closeRestockModal();
+        }
+
+        function viewDetails(sku) {
+            showToast('Viewing details for ' + sku, 'info');
+        }
+
+        function exportInventory() {
+            showToast('Exporting inventory data...', 'info');
+        }
+
+        function syncInventory() {
+            showToast('Syncing inventory with Meesho...', 'info');
+        }
+
+        function showToast(message, type) {
+            const existingToast = document.querySelector('.toast');
+            if (existingToast) {
+                existingToast.remove();
+            }
+
+            const toast = document.createElement('div');
+            toast.className = 'toast show';
+            toast.innerHTML = '<div class="toast-content">' +
+                '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">' +
+                '<polyline points="20 6 9 17 4 12"/>' +
+                '</svg>' +
+                '<span>' + message + '</span>' +
+                '</div>';
+            
+            document.body.appendChild(toast);
+
+            setTimeout(function() {
+                toast.classList.remove('show');
+                setTimeout(function() {
+                    toast.remove();
+                }, 300);
+            }, 3000);
+        }
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeRestockModal();
+            }
+        });
+    </script>
+</body>
+</html>

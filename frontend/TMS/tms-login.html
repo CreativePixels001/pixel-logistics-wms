@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TMS Login - Pixel Logistics</title>
+  <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" href="../css/auth.css">
+</head>
+<body class="auth-page">
+  <div class="auth-container-new">
+    <!-- Login Form Container -->
+    <div class="login-form-wrapper">
+      <div class="auth-form-container">
+        <div class="auth-header">
+          <div class="brand-mark">
+            <svg class="pixel-logo" width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="1" y="6" width="10" height="10" rx="1"/>
+              <polygon points="12 9 17 9 20 12 20 16 12 16 12 9"/>
+              <circle cx="5" cy="18" r="2"/>
+              <circle cx="15" cy="18" r="2"/>
+            </svg>
+          </div>
+          <h2 class="auth-title">Transportation Portal</h2>
+          <p class="auth-description">Sign in to access TMS Dashboard</p>
+        </div>
+
+        <form id="tmsLoginForm" class="auth-form">
+          <!-- Error Message -->
+          <div id="errorMessage" class="auth-error"></div>
+
+          <!-- Username Field -->
+          <div class="form-group">
+            <label for="username">Username or Email</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <input 
+                type="text" 
+                id="username" 
+                name="username" 
+                class="form-control" 
+                placeholder="Enter your username or email"
+                required
+                autocomplete="username"
+              >
+            </div>
+          </div>
+
+          <!-- Password Field -->
+          <div class="form-group">
+            <label for="password">Password</label>
+            <div class="input-wrapper">
+              <svg class="input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+              </svg>
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                class="form-control" 
+                placeholder="Enter your password"
+                required
+                autocomplete="current-password"
+              >
+              <button type="button" class="toggle-password" onclick="togglePassword()">
+                <svg id="showIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <svg id="hideIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Me & Forgot Password -->
+          <div class="form-options">
+            <label class="checkbox-label">
+              <input type="checkbox" id="rememberMe" name="rememberMe">
+              <span>Remember me</span>
+            </label>
+            <a href="#" class="forgot-password" onclick="showForgotPassword(); return false;">Forgot password?</a>
+          </div>
+
+          <!-- Login Button -->
+          <button type="submit" class="btn-auth btn-primary" id="loginBtn">
+            <span class="btn-text">Sign In to TMS</span>
+            <span class="btn-loader" style="display: none;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+              </svg>
+            </span>
+          </button>
+        </form>
+
+        <!-- Demo Credentials -->
+        <div class="demo-credentials">
+          <p class="demo-text">Demo Credentials</p>
+          <p class="demo-info"><strong>Email:</strong> demo@transport.com</p>
+          <p class="demo-info"><strong>Password:</strong> Demo@123</p>
+        </div>
+
+        <!-- Additional Links -->
+        <div class="auth-footer">
+          <p>Need access? <a href="register.html" class="signup-link">Contact Admin</a></p>
+          <p class="back-link"><a href="landing.html">← Back to Home</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Feature Showcase -->
+    <div class="auth-showcase">
+      <div class="showcase-content">
+        <div class="showcase-badge">
+          <svg width="8" height="8" viewBox="0 0 8 8">
+            <circle cx="4" cy="4" r="4" fill="#fff"/>
+          </svg>
+          <span>Transportation Management</span>
+        </div>
+        
+        <h1 class="showcase-title">Next-Gen<br/>Freight Solutions</h1>
+        
+        <p class="showcase-description">
+          Manage your entire transportation network with AI-powered route optimization, 
+          real-time tracking, and comprehensive carrier management.
+        </p>
+
+        <div class="showcase-features">
+          <div class="feature-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="10" r="3"/>
+              <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/>
+            </svg>
+            <div>
+              <h3>Real-Time GPS Tracking</h3>
+              <p>Track every shipment with precision</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+            <div>
+              <h3>Smart Route Optimization</h3>
+              <p>AI-driven routing for cost savings</p>
+            </div>
+          </div>
+
+          <div class="feature-item">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+            <div>
+              <h3>DOT Compliance</h3>
+              <p>Automated compliance management</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="showcase-stats">
+          <div class="stat">
+            <div class="stat-value">40%</div>
+            <div class="stat-label">Cost Reduction</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <div class="stat-value">5K+</div>
+            <div class="stat-label">Active Routes</div>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat">
+            <div class="stat-value">98%</div>
+            <div class="stat-label">On-Time Rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle Password Visibility
+    function togglePassword() {
+      const passwordInput = document.getElementById('password');
+      const showIcon = document.getElementById('showIcon');
+      const hideIcon = document.getElementById('hideIcon');
+      
+      if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        showIcon.style.display = 'none';
+        hideIcon.style.display = 'block';
+      } else {
+        passwordInput.type = 'password';
+        showIcon.style.display = 'block';
+        hideIcon.style.display = 'none';
+      }
+    }
+
+    // Handle TMS Login
+    document.getElementById('tmsLoginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const loginBtn = document.getElementById('loginBtn');
+      const btnText = loginBtn.querySelector('.btn-text');
+      const btnLoader = loginBtn.querySelector('.btn-loader');
+      const errorMessage = document.getElementById('errorMessage');
+
+      // Show loading state
+      btnText.style.display = 'none';
+      btnLoader.style.display = 'inline-block';
+      loginBtn.disabled = true;
+      errorMessage.textContent = '';
+      errorMessage.style.display = 'none';
+
+      // Simulate authentication (replace with actual API call)
+      setTimeout(() => {
+        // Demo credentials
+        if (username === 'demo@transport.com' && password === 'Demo@123') {
+          // Success - redirect to TMS dashboard
+          window.location.href = 'tms-dashboard.html';
+        } else {
+          // Error
+          errorMessage.textContent = 'Invalid credentials. Use demo@transport.com / Demo@123';
+          errorMessage.style.display = 'block';
+          btnText.style.display = 'inline';
+          btnLoader.style.display = 'none';
+          loginBtn.disabled = false;
+        }
+      }, 1000);
+    });
+
+    // Show Forgot Password (placeholder)
+    function showForgotPassword() {
+      alert('Please contact your system administrator to reset your password.');
+    }
+
+    // Auto-fill demo credentials on page load
+    window.addEventListener('load', function() {
+      document.getElementById('username').value = 'demo@transport.com';
+      document.getElementById('password').value = 'Demo@123';
+    });
+  </script>
+</body>
+</html>

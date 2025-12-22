@@ -1,6 +1,6 @@
 # Onclick Function Validation Report
 
-This document lists all onclick handlers across the DLT WMS application and confirms they are properly defined.
+This document lists all onclick handlers across the Pixel Logistics WMS application and confirms they are properly defined.
 
 ## Create Receipt Page (create-receipt.html)
 
@@ -255,7 +255,7 @@ To verify all onclick handlers work:
 
 ## Conclusion:
 
-All onclick handlers in the DLT WMS application have been verified and are properly functioning. The main issue was dependency on the notification system which has been resolved with fallback handlers.
+All onclick handlers in the Pixel Logistics WMS application have been verified and are properly functioning. The main issue was dependency on the notification system which has been resolved with fallback handlers.
 
 ---
 **Last Updated:** November 16, 2025

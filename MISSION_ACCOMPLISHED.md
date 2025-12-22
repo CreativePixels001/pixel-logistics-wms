@@ -218,7 +218,7 @@ In just a few hours this morning, we've transformed your WMS from a development 
 **Hour 1: Deploy Demo Environment** ✅
 ```bash
 npm install -g netlify-cli
-cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS/frontend"
+cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS/frontend"
 netlify login
 netlify deploy --prod
 ```
@@ -442,7 +442,7 @@ netlify deploy --prod
 ```bash
 # Open Terminal and run:
 npm install -g netlify-cli
-cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS/frontend"
+cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS/frontend"
 netlify login
 netlify deploy --prod
 ```
@@ -662,7 +662,7 @@ netlify deploy --prod
 **Open your terminal and run:**
 ```bash
 npm install -g netlify-cli
-cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS/frontend"
+cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS/frontend"
 netlify login
 netlify deploy --prod
 ```
@@ -714,7 +714,7 @@ All created today and ready for use:
 4. **EXECUTIVE_SUMMARY_GO_TO_MARKET.md** - Business strategy
 5. **QUICK_START_LAUNCH_GUIDE.md** - Immediate action plan
 
-**Location:** `/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS/`
+**Location:** `/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS/`
 
 ---
 

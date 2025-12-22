@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Use Cases - PixelNotes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .navbar {
+            background: #000000;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid #000000;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1.5rem;
+            border: 2px solid #ffffff;
+            transition: all 0.3s;
+        }
+
+        .back-button:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateX(-5px);
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: #ffffff;
+            padding: 5rem 0 3rem;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .hero-section p {
+            font-size: 1.25rem;
+            color: #999999;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .use-cases-section {
+            padding: 5rem 0;
+        }
+
+        .use-case-card {
+            background: #ffffff;
+            border: 3px solid #000000;
+            padding: 0;
+            margin-bottom: 4rem;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .use-case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .use-case-header {
+            background: #000000;
+            color: #ffffff;
+            padding: 3rem;
+            position: relative;
+        }
+
+        .use-case-icon {
+            width: 80px;
+            height: 80px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin-bottom: 1.5rem;
+        }
+
+        .use-case-header h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .use-case-header p {
+            font-size: 1.125rem;
+            color: #cccccc;
+        }
+
+        .use-case-body {
+            padding: 3rem;
+        }
+
+        .use-case-scenario {
+            margin-bottom: 3rem;
+        }
+
+        .use-case-scenario h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+
+        .use-case-scenario h3::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: #000000;
+        }
+
+        .use-case-scenario p {
+            color: #666666;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .benefit-item {
+            background: #f5f5f5;
+            padding: 1.5rem;
+            border-left: 3px solid #000000;
+        }
+
+        .benefit-item h4 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-item p {
+            color: #666666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        .workflow-steps {
+            background: #f5f5f5;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        .workflow-steps h4 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .step {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            align-items: start;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: #000000;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .step-content h5 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-content p {
+            color: #666666;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            .use-case-header h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="landing.html" class="back-button">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1>Real-World Use Cases</h1>
+            <p>Discover how teams across industries use PixelNotes to transform their workflows and boost productivity</p>
+        </div>
+    </section>
+
+    <!-- Use Cases Section -->
+    <section class="use-cases-section">
+        <div class="container">
+            <!-- Meeting Notes -->
+            <div class="use-case-card">
+                <div class="use-case-header">
+                    <div class="use-case-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <h2>Meeting Notes & Minutes</h2>
+                    <p>Transform chaotic meetings into organized, actionable documentation</p>
+                </div>
+                <div class="use-case-body">
+                    <div class="use-case-scenario">
+                        <h3>The Challenge</h3>
+                        <p>Teams spend hours in meetings but struggle to capture decisions, track action items, and ensure everyone is aligned. Important discussions get lost, follow-ups are missed, and meeting time becomes wasted time.</p>
+                    </div>
+
+                    <div class="use-case-scenario">
+                        <h3>The PixelNotes Solution</h3>
+                        <p>Use voice input to capture meeting discussions in real-time, even in multiple languages. PI automatically extracts action items, decisions, and key points. Smart sections organize meeting notes by date, making it easy to reference past discussions.</p>
+                    </div>
+
+                    <div class="workflow-steps">
+                        <h4>Meeting Workflow</h4>
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h5>Pre-Meeting Setup</h5>
+                                <p>Create a meeting note template with agenda items. Share with participants.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h5>During Meeting</h5>
+                                <p>Use voice input to capture discussions. PI adds timestamps automatically.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h5>Auto-Processing</h5>
+                                <p>PI extracts action items, decisions, and assigns them to participants.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h5>Post-Meeting</h5>
+                                <p>Share summary with team. Track action items to completion.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <h4>Save 2-3 Hours/Week</h4>
+                            <p>Eliminate manual note-taking and meeting summaries</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>100% Capture Rate</h4>
+                            <p>Never miss important decisions or action items</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>Better Accountability</h4>
+                            <p>Clear action items with automatic tracking</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>Searchable History</h4>
+                            <p>Find any past discussion instantly</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task Management -->
+            <div class="use-case-card">
+                <div class="use-case-header">
+                    <div class="use-case-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                        </svg>
+                    </div>
+                    <h2>Task Management & Productivity</h2>
+                    <p>Turn notes into actionable tasks and track everything in one place</p>
+                </div>
+                <div class="use-case-body">
+                    <div class="use-case-scenario">
+                        <h3>The Challenge</h3>
+                        <p>Information scattered across emails, chat messages, and sticky notes. Tasks get forgotten, priorities unclear, and team members lose track of responsibilities. Switching between multiple tools kills productivity.</p>
+                    </div>
+
+                    <div class="use-case-scenario">
+                        <h3>The PixelNotes Solution</h3>
+                        <p>Capture tasks naturally as notes, then let PI convert them into structured action items. Weekly sections keep you organized. Tags and categories help prioritize. Search makes everything findable instantly.</p>
+                    </div>
+
+                    <div class="workflow-steps">
+                        <h4>Task Management Workflow</h4>
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h5>Capture Everything</h5>
+                                <p>Write notes naturally. Include todos, ideas, and deadlines as you think.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h5>PI Extracts Tasks</h5>
+                                <p>AI identifies action items, deadlines, and priorities automatically.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h5>Organize & Prioritize</h5>
+                                <p>Tag by project, category, or urgency. Weekly sections keep timeline clear.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h5>Track & Complete</h5>
+                                <p>Dashboard shows progress. Archive completed tasks while keeping history.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <h4>40% More Productive</h4>
+                            <p>Spend time doing, not organizing tasks</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>Nothing Falls Through</h4>
+                            <p>Every task captured and tracked</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>Context Preserved</h4>
+                            <p>Tasks linked to original notes and discussions</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>One Tool For All</h4>
+                            <p>Notes, tasks, and knowledge in one place</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Development -->
+            <div class="use-case-card">
+                <div class="use-case-header">
+                    <div class="use-case-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                            <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                        </svg>
+                    </div>
+                    <h2>Product Development & Engineering</h2>
+                    <p>Document technical decisions, track features, and build institutional knowledge</p>
+                </div>
+                <div class="use-case-body">
+                    <div class="use-case-scenario">
+                        <h3>The Challenge</h3>
+                        <p>Product ideas scattered everywhere. Technical decisions not documented. User feedback lost in emails. New team members can't find historical context. Engineering knowledge trapped in individual heads.</p>
+                    </div>
+
+                    <div class="use-case-scenario">
+                        <h3>The PixelNotes Solution</h3>
+                        <p>Create living documentation for each feature. Capture user feedback directly. Document technical decisions with context. Smart search makes all knowledge instantly accessible. Team collaboration ensures everyone stays aligned.</p>
+                    </div>
+
+                    <div class="workflow-steps">
+                        <h4>Product Development Workflow</h4>
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h5>Feature Planning</h5>
+                                <p>Create note for each feature. Link user feedback, requirements, and specs.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h5>Development Tracking</h5>
+                                <p>Log technical decisions, challenges, and solutions. Weekly sections show progress.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h5>Knowledge Base</h5>
+                                <p>PI suggests related notes. Build searchable technical documentation.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h5>Team Onboarding</h5>
+                                <p>New members search history to understand context and decisions.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <h4>Faster Onboarding</h4>
+                            <p>New engineers productive in days, not weeks</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>Better Decisions</h4>
+                            <p>Learn from past choices and avoid repeating mistakes</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>Living Documentation</h4>
+                            <p>Always up-to-date, searchable technical docs</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>Context Retention</h4>
+                            <p>Understand why decisions were made, not just what</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Calls -->
+            <div class="use-case-card">
+                <div class="use-case-header">
+                    <div class="use-case-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <h2>Customer Calls & Sales</h2>
+                    <p>Document every customer interaction and share insights across teams</p>
+                </div>
+                <div class="use-case-body">
+                    <div class="use-case-scenario">
+                        <h3>The Challenge</h3>
+                        <p>Sales and support calls documented inconsistently. Customer insights lost after calls. Team members can't access conversation history. Follow-ups missed because notes weren't clear. No way to share learnings across team.</p>
+                    </div>
+
+                    <div class="use-case-scenario">
+                        <h3>The PixelNotes Solution</h3>
+                        <p>Record customer calls with voice input, even in multiple languages. PI extracts pain points, requirements, and next steps automatically. Tag by customer, product, or issue type. Share insights instantly with sales, product, and support teams.</p>
+                    </div>
+
+                    <div class="workflow-steps">
+                        <h4>Customer Call Workflow</h4>
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h5>During Call</h5>
+                                <p>Use voice input to capture discussion. PI timestamps key moments.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h5>Auto-Analysis</h5>
+                                <p>PI identifies pain points, objections, requirements, and action items.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h5>Categorization</h5>
+                                <p>Tag by customer name, product interest, deal stage, priority level.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h5>Share Insights</h5>
+                                <p>Export summaries to CRM or share with product team for feedback loop.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="benefits-grid">
+                        <div class="benefit-item">
+                            <h4>Better Follow-Up</h4>
+                            <p>Clear action items mean faster deal closure</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>Product Insights</h4>
+                            <p>Customer feedback directly informs roadmap</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>Team Alignment</h4>
+                            <p>Everyone sees same customer conversation history</p>
+                        </div>
+                        <div class="benefit-item">
+                            <h4>Win More Deals</h4>
+                            <p>Nothing missed, professional follow-through</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

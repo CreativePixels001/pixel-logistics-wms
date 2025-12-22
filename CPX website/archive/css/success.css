@@ -1,0 +1,343 @@
+/* ===================================================================
+ * Success Page Styles
+ *
+ * ------------------------------------------------------------------- */
+
+/* Success Section
+ * ------------------------------------------------------------------- */
+.s-success {
+    padding: 8rem 0;
+    background-color: var(--color-body);
+    min-height: 80vh;
+}
+
+.success-container {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+
+/* Success Icon
+ * ------------------------------------------------------------------- */
+.success-icon {
+    margin-bottom: 3rem;
+    animation: scaleIn 0.6s ease;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.success-icon svg {
+    filter: drop-shadow(0 10px 30px rgba(16, 185, 129, 0.3));
+}
+
+
+/* Success Message
+ * ------------------------------------------------------------------- */
+.success-title {
+    font-size: 4.8rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+    animation: fadeInUp 0.6s ease 0.2s backwards;
+}
+
+.success-subtitle {
+    font-size: 2rem;
+    color: var(--color-text-light);
+    margin-bottom: 5rem;
+    animation: fadeInUp 0.6s ease 0.3s backwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+
+/* Order Details
+ * ------------------------------------------------------------------- */
+.order-details {
+    background: var(--color-bg);
+    border-radius: 1.2rem;
+    padding: 3.5rem;
+    margin-bottom: 4rem;
+    text-align: left;
+    animation: fadeInUp 0.6s ease 0.4s backwards;
+}
+
+.order-details h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-size: 1.5rem;
+    color: var(--color-text-light);
+    font-weight: 500;
+}
+
+.detail-value {
+    font-size: 1.6rem;
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.license-key {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.license-key code {
+    background: rgba(102, 126, 234, 0.1);
+    padding: 0.8rem 1.6rem;
+    border-radius: 0.6rem;
+    font-family: 'Courier New', monospace;
+    font-size: 1.4rem;
+    color: var(--color-1);
+}
+
+.copy-btn {
+    padding: 0.6rem 1.4rem;
+    background: var(--color-1);
+    color: white;
+    border: none;
+    border-radius: 0.4rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+}
+
+.copy-btn.copied {
+    background: #10b981;
+}
+
+
+/* Download Section
+ * ------------------------------------------------------------------- */
+.download-section {
+    background: var(--color-bg);
+    border-radius: 1.2rem;
+    padding: 3.5rem;
+    margin-bottom: 4rem;
+    animation: fadeInUp 0.6s ease 0.5s backwards;
+}
+
+.download-section h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 1.5rem;
+}
+
+.download-note {
+    font-size: 1.5rem;
+    color: var(--color-text-light);
+    margin-bottom: 3rem;
+}
+
+.btn-download {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.8rem 4rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-bottom: 3rem;
+}
+
+.download-info {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.4rem;
+    color: var(--color-text-light);
+}
+
+.info-item svg {
+    color: var(--color-1);
+}
+
+
+/* Next Steps
+ * ------------------------------------------------------------------- */
+.next-steps {
+    margin-bottom: 4rem;
+    animation: fadeInUp 0.6s ease 0.6s backwards;
+}
+
+.next-steps h2 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 3rem;
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2.5rem;
+    margin-top: 3rem;
+}
+
+.step-card {
+    background: var(--color-bg);
+    border-radius: 1.2rem;
+    padding: 3rem 2.5rem;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.step-card:hover {
+    transform: translateY(-5px);
+}
+
+.step-number {
+    width: 5rem;
+    height: 5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: white;
+    margin: 0 auto 2rem;
+}
+
+.step-card h3 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+}
+
+.step-card p {
+    font-size: 1.4rem;
+    color: var(--color-text-light);
+    line-height: 1.6;
+    margin: 0;
+}
+
+
+/* Support Section
+ * ------------------------------------------------------------------- */
+.support-section {
+    background: var(--color-bg);
+    border-radius: 1.2rem;
+    padding: 3.5rem;
+    animation: fadeInUp 0.6s ease 0.7s backwards;
+}
+
+.support-section h3 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+}
+
+.support-section > p {
+    font-size: 1.6rem;
+    color: var(--color-text-light);
+    margin-bottom: 3rem;
+}
+
+.support-actions {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.support-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.4rem 2.5rem;
+    font-size: 1.5rem;
+}
+
+
+/* Responsive
+ * ------------------------------------------------------------------- */
+@media screen and (max-width: 768px) {
+    .success-title {
+        font-size: 3.6rem;
+    }
+    
+    .success-subtitle {
+        font-size: 1.6rem;
+    }
+    
+    .order-details,
+    .download-section,
+    .support-section {
+        padding: 2.5rem 2rem;
+    }
+    
+    .detail-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .license-key {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .download-info {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - PixelAudit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/global.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Container -->
+        <div id="sidebarContainer"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header Container -->
+            <div id="headerContainer"></div>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Filter Bar -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select id="statusFilter" onchange="filterReports()">
+                            <option value="all">All Audits</option>
+                            <option value="completed">Completed</option>
+                            <option value="pending">Pending</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Client</label>
+                        <select id="clientFilter" onchange="filterReports()">
+                            <option value="all">All Clients</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Date Range</label>
+                        <select id="dateFilter" onchange="filterReports()">
+                            <option value="all">All Time</option>
+                            <option value="today">Today</option>
+                            <option value="week">This Week</option>
+                            <option value="month">This Month</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <input type="text" id="searchInput" placeholder="Search audits..." onkeyup="filterReports()">
+                    </div>
+                </div>
+
+                <!-- Reports Table -->
+                <div class="card">
+                    <table class="table" id="reportsTable">
+                        <thead>
+                            <tr>
+                                <th>Audit ID</th>
+                                <th>Client</th>
+                                <th>Template</th>
+                                <th>Auditor</th>
+                                <th>Status</th>
+                                <th>Score</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTableBody">
+                            <!-- Populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- View Report Modal -->
+    <div id="viewReportModal" class="modal">
+        <div class="modal-content" style="max-width: 900px;">
+            <div class="modal-header">
+                <h2 id="reportModalTitle">Audit Report</h2>
+                <button onclick="closeReportModal()" class="modal-close">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="modal-body" id="reportModalBody">
+                <!-- Report details loaded here -->
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeReportModal()">Close</button>
+                <button class="btn btn-primary" onclick="downloadPDF()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download PDF
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allReports = [];
+
+        // Load reports
+        function loadReports() {
+            const audits = JSON.parse(localStorage.getItem('pixelaudit_audits') || '[]');
+            const clients = JSON.parse(localStorage.getItem('pixelaudit_clients') || '[]');
+            const auditors = JSON.parse(localStorage.getItem('pixelaudit_auditors') || '[]');
+            
+            allReports = audits.map(audit => {
+                const client = clients.find(c => c.id === audit.clientId);
+                const auditor = auditors.find(a => a.id === audit.auditorId);
+                
+                return {
+                    ...audit,
+                    clientName: client ? client.name : 'Unknown Client',
+                    auditorName: auditor ? auditor.name : 'Self Audit',
+                    score: audit.status === 'completed' ? Math.floor(Math.random() * 30 + 70) : null
+                };
+            });
+            
+            displayReports(allReports);
+            loadClientFilter();
+        }
+
+        // Display reports
+        function displayReports(reports) {
+            const tbody = document.getElementById('reportsTableBody');
+            
+            if (reports.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 3rem; color: #666;">No reports found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = reports.map(report => {
+                const statusBadge = report.status === 'completed' 
+                    ? '<span class="badge badge-completed">Completed</span>'
+                    : '<span class="badge badge-pending">Pending</span>';
+                
+                const scoreDisplay = report.score !== null 
+                    ? `<span class="score-badge ${report.score >= 85 ? 'score-excellent' : report.score >= 70 ? 'score-good' : 'score-poor'}">${report.score}%</span>`
+                    : '-';
+                
+                const date = new Date(report.dueDate).toLocaleDateString('en-IN', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+                
+                return `
+                    <tr>
+                        <td><strong>${report.id.substring(0, 8).toUpperCase()}</strong></td>
+                        <td>${report.clientName}<br><small class="text-muted">${report.location}</small></td>
+                        <td>${report.templateName.split('(')[0]}</td>
+                        <td>${report.auditorName}</td>
+                        <td>${statusBadge}</td>
+                        <td>${scoreDisplay}</td>
+                        <td>${date}</td>
+                        <td>
+                            ${report.status === 'completed' 
+                                ? `
+                                    <button onclick="viewReport('${report.id}')" class="btn-icon" title="View Report">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                            <circle cx="12" cy="12" r="3"/>
+                                        </svg>
+                                    </button>
+                                    <button onclick="downloadPDFReport('${report.id}')" class="btn-icon" title="Download PDF">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                            <polyline points="7 10 12 15 17 10"/>
+                                            <line x1="12" y1="15" x2="12" y2="3"/>
+                                        </svg>
+                                    </button>
+                                `
+                                : `
+                                    <button onclick="window.location.href='audit-form.html?audit=${report.id}'" class="btn-icon" title="Continue Audit">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                        </svg>
+                                    </button>
+                                `
+                            }
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Filter reports
+        function filterReports() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const clientFilter = document.getElementById('clientFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filtered = allReports;
+            
+            // Status filter
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(r => r.status === statusFilter);
+            }
+            
+            // Client filter
+            if (clientFilter !== 'all') {
+                filtered = filtered.filter(r => r.clientId === clientFilter);
+            }
+            
+            // Date filter
+            if (dateFilter !== 'all') {
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                
+                filtered = filtered.filter(r => {
+                    const auditDate = new Date(r.dueDate);
+                    
+                    if (dateFilter === 'today') {
+                        return auditDate >= today;
+                    } else if (dateFilter === 'week') {
+                        const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+                        return auditDate >= weekAgo;
+                    } else if (dateFilter === 'month') {
+                        const monthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+                        return auditDate >= monthAgo;
+                    }
+                    return true;
+                });
+            }
+            
+            // Search filter
+            if (searchTerm) {
+                filtered = filtered.filter(r => 
+                    r.clientName.toLowerCase().includes(searchTerm) ||
+                    r.templateName.toLowerCase().includes(searchTerm) ||
+                    r.location.toLowerCase().includes(searchTerm) ||
+                    r.auditorName.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            displayReports(filtered);
+        }
+
+        // Load client filter options
+        function loadClientFilter() {
+            const clients = JSON.parse(localStorage.getItem('pixelaudit_clients') || '[]');
+            const select = document.getElementById('clientFilter');
+            
+            clients.forEach(client => {
+                const option = document.createElement('option');
+                option.value = client.id;
+                option.textContent = client.name;
+                select.appendChild(option);
+            });
+        }
+
+        // View report
+        function viewReport(auditId) {
+            const report = allReports.find(r => r.id === auditId);
+            if (!report) return;
+            
+            document.getElementById('reportModalTitle').textContent = `Audit Report - ${report.clientName}`;
+            document.getElementById('reportModalBody').innerHTML = `
+                <div class="report-summary">
+                    <div class="report-header">
+                        <div>
+                            <h3>${report.templateName}</h3>
+                            <p class="text-muted">${report.location}</p>
+                        </div>
+                        <div class="score-large ${report.score >= 85 ? 'score-excellent' : report.score >= 70 ? 'score-good' : 'score-poor'}">
+                            ${report.score}%
+                        </div>
+                    </div>
+                    
+                    <div class="report-grid">
+                        <div class="report-stat">
+                            <label>Audit ID</label>
+                            <strong>${report.id.substring(0, 8).toUpperCase()}</strong>
+                        </div>
+                        <div class="report-stat">
+                            <label>Auditor</label>
+                            <strong>${report.auditorName}</strong>
+                        </div>
+                        <div class="report-stat">
+                            <label>Date</label>
+                            <strong>${new Date(report.dueDate).toLocaleDateString('en-IN')}</strong>
+                        </div>
+                        <div class="report-stat">
+                            <label>Status</label>
+                            <strong class="badge badge-completed">Completed</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="report-message">
+                        <h4>Summary</h4>
+                        <p>This audit has been completed and reviewed. The overall compliance score is <strong>${report.score}%</strong>. 
+                        ${report.score >= 85 ? 'Excellent compliance! All critical areas meet standards.' : 
+                          report.score >= 70 ? 'Good compliance with some areas for improvement.' : 
+                          'Action required. Several areas need attention.'}</p>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                        <div>
+                            <strong>Full Report Available</strong>
+                            <p>Download the complete PDF report with photos, checklist details, and recommendations.</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('viewReportModal').style.display = 'flex';
+        }
+
+        // Close modal
+        function closeReportModal() {
+            document.getElementById('viewReportModal').style.display = 'none';
+        }
+
+        // Download PDF
+        function downloadPDF() {
+            alert('PDF generation feature coming soon!\n\nThe report will include:\n• Full checklist with responses\n• All uploaded photos\n• Compliance score breakdown\n• Recommendations\n• Digital signature');
+        }
+
+        function downloadPDFReport(auditId) {
+            downloadPDF();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadReports);
+    </script>
+
+    <!-- Components -->
+    <script src="assets/js/components.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const headerActions = `
+                <button class="btn btn-secondary" onclick="alert('Export all reports feature coming soon!')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Export All
+                </button>
+            `;
+            
+            initializeComponents('reports', 'Reports', 'View and download audit reports', headerActions);
+        });
+    </script>
+</body>
+</html>

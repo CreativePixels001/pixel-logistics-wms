@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Departments - Pixel Resource</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <style>
+        /* Department Cards */
+        .departments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .department-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: all var(--transition-normal);
+            cursor: pointer;
+        }
+
+        .department-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .department-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .department-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .department-info {
+            flex: 1;
+        }
+
+        .department-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .department-head {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .department-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Org Chart */
+        .org-chart {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .org-level {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .org-level::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 1rem;
+            background: var(--border-color);
+        }
+
+        .org-level:last-child::after {
+            display: none;
+        }
+
+        .org-node {
+            background: var(--bg-light);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.5rem;
+            min-width: 200px;
+            text-align: center;
+            position: relative;
+        }
+
+        .org-node.ceo {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--bg-white);
+            border-color: var(--primary-color);
+        }
+
+        .org-node-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .org-node-name {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .org-departments {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .org-departments::before {
+            content: '';
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 2px;
+            background: var(--border-color);
+        }
+
+        .org-node-connector {
+            position: absolute;
+            top: -2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 2rem;
+            background: var(--border-color);
+        }
+
+        /* Department Table */
+        .departments-table {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--bg-light);
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .view-btn {
+            padding: 0.5rem 0.75rem;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition-normal);
+        }
+
+        .view-btn.active {
+            background: var(--bg-white);
+            color: var(--text-primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        .view-btn:hover:not(.active) {
+            color: var(--text-primary);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        @media (max-width: 768px) {
+            .departments-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .department-stats {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .org-departments {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .org-departments::before {
+                display: none;
+            }
+
+            .org-node {
+                min-width: 150px;
+                padding: 0.75rem 1rem;
+            }
+
+            .page-actions {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>Pixel Resource</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Employee Management</div>
+                    <a href="../employees/directory.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Employee Directory
+                    </a>
+                    <a href="../employees/add.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <line x1="20" y1="8" x2="20" y2="14"/>
+                            <line x1="23" y1="11" x2="17" y2="11"/>
+                        </svg>
+                        Add Employee
+                    </a>
+                    <a href="index.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="9"/>
+                            <rect x="14" y="3" width="7" height="5"/>
+                            <rect x="14" y="12" width="7" height="9"/>
+                            <rect x="3" y="16" width="7" height="5"/>
+                        </svg>
+                        Departments
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="../settings/configuration.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search departments...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Admin</span>
+                            <span class="user-role" id="userRole">Administrator</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Departments</h1>
+                        <p class="page-subtitle">Manage organizational departments and structure</p>
+                    </div>
+                    <div class="page-actions">
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="cards" onclick="switchView('cards')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                    <rect x="3" y="3" width="7" height="7"/>
+                                    <rect x="14" y="3" width="7" height="7"/>
+                                    <rect x="14" y="14" width="7" height="7"/>
+                                    <rect x="3" y="14" width="7" height="7"/>
+                                </svg>
+                                Cards
+                            </button>
+                            <button class="view-btn" data-view="org" onclick="switchView('org')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                    <path d="M5 12h14"/>
+                                    <path d="M12 5v14"/>
+                                    <rect x="3" y="3" width="6" height="6"/>
+                                    <rect x="15" y="3" width="6" height="6"/>
+                                    <rect x="15" y="15" width="6" height="6"/>
+                                    <rect x="3" y="15" width="6" height="6"/>
+                                </svg>
+                                Org Chart
+                            </button>
+                            <button class="view-btn" data-view="table" onclick="switchView('table')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                    <line x1="8" y1="6" x2="21" y2="6"/>
+                                    <line x1="8" y1="12" x2="21" y2="12"/>
+                                    <line x1="8" y1="18" x2="21" y2="18"/>
+                                    <line x1="3" y1="6" x2="3.01" y2="6"/>
+                                    <line x1="3" y1="12" x2="3.01" y2="12"/>
+                                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                                </svg>
+                                Table
+                            </button>
+                        </div>
+                        <button class="btn btn-primary" onclick="openAddDepartmentModal()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Add Department
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Cards View -->
+                <div id="cardsView" class="departments-grid">
+                    <!-- Department Cards will be rendered here -->
+                </div>
+
+                <!-- Org Chart View -->
+                <div id="orgView" class="org-chart" style="display: none;">
+                    <div class="org-level">
+                        <div class="org-node ceo">
+                            <div class="org-node-title">Chief Executive Officer</div>
+                            <div class="org-node-name">Executive Team</div>
+                        </div>
+                    </div>
+                    <div class="org-level">
+                        <div class="org-departments">
+                            <div class="org-node">
+                                <div class="org-node-connector"></div>
+                                <div class="org-node-title">IT & Technology</div>
+                                <div class="org-node-name">45 employees</div>
+                            </div>
+                            <div class="org-node">
+                                <div class="org-node-connector"></div>
+                                <div class="org-node-title">Operations</div>
+                                <div class="org-node-name">68 employees</div>
+                            </div>
+                            <div class="org-node">
+                                <div class="org-node-connector"></div>
+                                <div class="org-node-title">Finance</div>
+                                <div class="org-node-name">32 employees</div>
+                            </div>
+                            <div class="org-node">
+                                <div class="org-node-connector"></div>
+                                <div class="org-node-title">Sales & Marketing</div>
+                                <div class="org-node-name">54 employees</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="org-level">
+                        <div class="org-departments">
+                            <div class="org-node">
+                                <div class="org-node-connector"></div>
+                                <div class="org-node-title">HR & Admin</div>
+                                <div class="org-node-name">28 employees</div>
+                            </div>
+                            <div class="org-node">
+                                <div class="org-node-connector"></div>
+                                <div class="org-node-title">Support</div>
+                                <div class="org-node-name">41 employees</div>
+                            </div>
+                            <div class="org-node">
+                                <div class="org-node-connector"></div>
+                                <div class="org-node-title">Maintenance</div>
+                                <div class="org-node-name">36 employees</div>
+                            </div>
+                            <div class="org-node">
+                                <div class="org-node-connector"></div>
+                                <div class="org-node-title">Security</div>
+                                <div class="org-node-name">25 employees</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table View -->
+                <div id="tableView" class="departments-table" style="display: none;">
+                    <div class="table-header">
+                        <h3 class="table-title">All Departments</h3>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Department</th>
+                                <th>Department Head</th>
+                                <th>Total Employees</th>
+                                <th>Active</th>
+                                <th>On Leave</th>
+                                <th>Budget</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="departmentTableBody">
+                            <!-- Table rows will be rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Department Modal -->
+    <div class="modal-overlay" id="departmentModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Add New Department</h3>
+                <button class="icon-btn" onclick="closeDepartmentModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="departmentForm">
+                    <div class="form-group">
+                        <label class="form-label required">Department Name</label>
+                        <input type="text" class="form-input" id="deptName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Department Code</label>
+                        <input type="text" class="form-input" id="deptCode" placeholder="e.g., IT, FIN, OPS">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label required">Department Head</label>
+                        <select class="form-select" id="deptHead" required>
+                            <option value="">Select Department Head</option>
+                            <option value="EMP008">Neha Joshi (EMP008)</option>
+                            <option value="EMP002">Priya Kumar (EMP002)</option>
+                            <option value="EMP003">Amit Mehta (EMP003)</option>
+                            <option value="EMP001">Rajesh Sharma (EMP001)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" id="deptDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Location</label>
+                            <input type="text" class="form-input" id="deptLocation">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Annual Budget</label>
+                            <input type="number" class="form-input" id="deptBudget" placeholder="₹">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="deptStatus">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeDepartmentModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveDepartment()">Save Department</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample department data
+        const departments = [
+            {
+                id: 1,
+                name: 'IT & Technology',
+                code: 'IT',
+                head: 'Neha Joshi',
+                headId: 'EMP008',
+                total: 45,
+                active: 42,
+                onLeave: 3,
+                budget: 8500000,
+                status: 'Active'
+            },
+            {
+                id: 2,
+                name: 'Operations',
+                code: 'OPS',
+                head: 'Priya Kumar',
+                headId: 'EMP002',
+                total: 68,
+                active: 65,
+                onLeave: 3,
+                budget: 12000000,
+                status: 'Active'
+            },
+            {
+                id: 3,
+                name: 'Finance',
+                code: 'FIN',
+                head: 'Amit Mehta',
+                headId: 'EMP003',
+                total: 32,
+                active: 30,
+                onLeave: 2,
+                budget: 6500000,
+                status: 'Active'
+            },
+            {
+                id: 4,
+                name: 'Sales & Marketing',
+                code: 'SAL',
+                head: 'Rajesh Sharma',
+                headId: 'EMP001',
+                total: 54,
+                active: 51,
+                onLeave: 3,
+                budget: 9500000,
+                status: 'Active'
+            },
+            {
+                id: 5,
+                name: 'HR & Admin',
+                code: 'HR',
+                head: 'Sunita Verma',
+                headId: 'EMP005',
+                total: 28,
+                active: 27,
+                onLeave: 1,
+                budget: 4500000,
+                status: 'Active'
+            },
+            {
+                id: 6,
+                name: 'Support',
+                code: 'SUP',
+                head: 'Vikram Singh',
+                headId: 'EMP007',
+                total: 41,
+                active: 39,
+                onLeave: 2,
+                budget: 5800000,
+                status: 'Active'
+            },
+            {
+                id: 7,
+                name: 'Maintenance',
+                code: 'MNT',
+                head: 'Ravi Gupta',
+                headId: 'EMP006',
+                total: 36,
+                active: 34,
+                onLeave: 2,
+                budget: 4200000,
+                status: 'Active'
+            },
+            {
+                id: 8,
+                name: 'Security',
+                code: 'SEC',
+                head: 'Karan Patel',
+                headId: 'EMP010',
+                total: 25,
+                active: 24,
+                onLeave: 1,
+                budget: 3500000,
+                status: 'Active'
+            }
+        ];
+
+        let currentView = 'cards';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
+            renderDepartments();
+        });
+
+        // Load user info
+        function loadUserInfo() {
+            const user = JSON.parse(sessionStorage.getItem('hrmsUser') || '{}');
+            if (user.name) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userRole').textContent = user.role;
+                document.getElementById('userAvatar').textContent = user.name.charAt(0);
+            }
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Switch view
+        function switchView(view) {
+            currentView = view;
+            
+            // Update active button
+            document.querySelectorAll('.view-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.view === view) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Show/hide views
+            document.getElementById('cardsView').style.display = view === 'cards' ? 'grid' : 'none';
+            document.getElementById('orgView').style.display = view === 'org' ? 'block' : 'none';
+            document.getElementById('tableView').style.display = view === 'table' ? 'block' : 'none';
+
+            if (view === 'table') {
+                renderTable();
+            }
+        }
+
+        // Render departments
+        function renderDepartments() {
+            const container = document.getElementById('cardsView');
+            container.innerHTML = departments.map(dept => `
+                <div class="department-card" onclick="viewDepartment(${dept.id})">
+                    <div class="department-header">
+                        <div class="department-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                <rect x="3" y="3" width="7" height="9"/>
+                                <rect x="14" y="3" width="7" height="5"/>
+                                <rect x="14" y="12" width="7" height="9"/>
+                                <rect x="3" y="16" width="7" height="5"/>
+                            </svg>
+                        </div>
+                        <div class="department-info">
+                            <div class="department-name">${dept.name}</div>
+                            <div class="department-head">Head: ${dept.head}</div>
+                        </div>
+                    </div>
+                    <div class="department-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">${dept.total}</div>
+                            <div class="stat-label">Total</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" style="color: var(--success-color);">${dept.active}</div>
+                            <div class="stat-label">Active</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" style="color: var(--warning-color);">${dept.onLeave}</div>
+                            <div class="stat-label">On Leave</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render table
+        function renderTable() {
+            const tbody = document.getElementById('departmentTableBody');
+            tbody.innerHTML = departments.map(dept => `
+                <tr>
+                    <td>
+                        <div style="font-weight: 600;">${dept.name}</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary);">${dept.code}</div>
+                    </td>
+                    <td>${dept.head}</td>
+                    <td>${dept.total}</td>
+                    <td><span class="badge badge-success">${dept.active}</span></td>
+                    <td><span class="badge badge-warning">${dept.onLeave}</span></td>
+                    <td>₹${(dept.budget / 100000).toFixed(1)}L</td>
+                    <td><span class="badge badge-success">${dept.status}</span></td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="action-btn" onclick="editDepartment(${dept.id}); event.stopPropagation();" title="Edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                            </button>
+                            <button class="action-btn" onclick="deleteDepartment(${dept.id}); event.stopPropagation();" title="Delete">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // View department
+        function viewDepartment(id) {
+            window.location.href = `../employees/directory.html?dept=${id}`;
+        }
+
+        // Open add modal
+        function openAddDepartmentModal() {
+            document.getElementById('modalTitle').textContent = 'Add New Department';
+            document.getElementById('departmentForm').reset();
+            document.getElementById('departmentModal').classList.add('active');
+        }
+
+        // Close modal
+        function closeDepartmentModal() {
+            document.getElementById('departmentModal').classList.remove('active');
+        }
+
+        // Edit department
+        function editDepartment(id) {
+            const dept = departments.find(d => d.id === id);
+            if (dept) {
+                document.getElementById('modalTitle').textContent = 'Edit Department';
+                document.getElementById('deptName').value = dept.name;
+                document.getElementById('deptCode').value = dept.code;
+                document.getElementById('deptHead').value = dept.headId;
+                document.getElementById('deptBudget').value = dept.budget;
+                document.getElementById('deptStatus').value = dept.status;
+                document.getElementById('departmentModal').classList.add('active');
+            }
+        }
+
+        // Save department
+        function saveDepartment() {
+            const form = document.getElementById('departmentForm');
+            if (form.checkValidity()) {
+                showToast('Department saved successfully!', 'success');
+                closeDepartmentModal();
+                // In real app, send to server and refresh data
+            } else {
+                form.reportValidity();
+            }
+        }
+
+        // Delete department
+        function deleteDepartment(id) {
+            if (confirm('Are you sure you want to delete this department?')) {
+                showToast('Department deleted successfully!', 'success');
+                // In real app, send to server and refresh data
+            }
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">×</button>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('departmentModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeDepartmentModal();
+            }
+        });
+    </script>
+</body>
+</html>

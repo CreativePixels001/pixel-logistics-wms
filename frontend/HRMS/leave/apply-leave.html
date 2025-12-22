@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apply Leave - Pixel Resource</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <style>
+        /* Page Layout */
+        .leave-container {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 2rem;
+        }
+
+        /* Leave Form */
+        .leave-form-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        /* Leave Type Selection */
+        .leave-types {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .leave-type-card {
+            padding: 1.25rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            position: relative;
+        }
+
+        .leave-type-card:hover {
+            border-color: var(--primary-color);
+            background: var(--bg-light);
+        }
+
+        .leave-type-card.selected {
+            border-color: var(--primary-color);
+            background: var(--bg-light);
+        }
+
+        .leave-type-card.selected::before {
+            content: '✓';
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 24px;
+            height: 24px;
+            background: var(--primary-color);
+            color: var(--bg-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .leave-type-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .leave-type-name {
+            font-weight: 700;
+            font-size: 0.9375rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .leave-type-balance {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .leave-type-balance span {
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Date Selection */
+        .date-range {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .duration-info {
+            background: var(--bg-light);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .duration-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .duration-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        /* File Upload */
+        .file-upload-area {
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--primary-color);
+            background: var(--bg-light);
+        }
+
+        .file-upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            opacity: 0.3;
+        }
+
+        .file-upload-text {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .file-upload-text strong {
+            color: var(--primary-color);
+        }
+
+        .uploaded-file {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            margin-top: 0.5rem;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-color);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-white);
+        }
+
+        .file-details {
+            flex: 1;
+        }
+
+        .file-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .file-size {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Sidebar */
+        .leave-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        /* Leave Balance Card */
+        .balance-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .balance-header {
+            margin-bottom: 1.25rem;
+        }
+
+        .balance-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .balance-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .balance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            margin-bottom: 0.75rem;
+        }
+
+        .balance-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .balance-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .balance-value {
+            font-size: 1.25rem;
+            font-weight: 800;
+        }
+
+        .balance-value.positive {
+            color: var(--success-color);
+        }
+
+        .balance-value.negative {
+            color: var(--error-color);
+        }
+
+        /* Guidelines Card */
+        .guidelines-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .guidelines-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .guideline-item {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .guideline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .guideline-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            color: var(--primary-color);
+        }
+
+        /* Recent Leaves */
+        .recent-leaves-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+        }
+
+        .recent-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .leave-history-item {
+            padding: 0.75rem;
+            border-left: 3px solid var(--border-color);
+            margin-bottom: 0.75rem;
+            background: var(--bg-light);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        }
+
+        .leave-history-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .leave-history-item.approved {
+            border-left-color: var(--success-color);
+        }
+
+        .leave-history-item.pending {
+            border-left-color: #F57C00;
+        }
+
+        .leave-history-item.rejected {
+            border-left-color: var(--error-color);
+        }
+
+        .history-type {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.25rem;
+        }
+
+        .history-dates {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .history-status {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--radius-sm);
+            display: inline-block;
+        }
+
+        .history-status.approved {
+            background: var(--success-light);
+            color: var(--success-color);
+        }
+
+        .history-status.pending {
+            background: #FFF3E0;
+            color: #F57C00;
+        }
+
+        @media (max-width: 1024px) {
+            .leave-container {
+                grid-template-columns: 1fr;
+            }
+
+            .leave-types {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .date-range {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>Pixel Resource</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Leave</div>
+                    <a href="apply-leave.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Apply Leave
+                    </a>
+                    <a href="applications.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                        My Applications
+                    </a>
+                    <a href="calendar.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Leave Calendar
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="../settings/configuration.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge">2</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Admin</span>
+                            <span class="user-role" id="userRole">Administrator</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Apply for Leave</h1>
+                        <p class="page-subtitle">Submit a new leave request</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-secondary" onclick="window.location.href='applications.html'">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                            View Applications
+                        </button>
+                    </div>
+                </div>
+
+                <div class="leave-container">
+                    <!-- Main Form -->
+                    <div class="leave-form-card">
+                        <form id="leaveForm">
+                            <!-- Leave Type Selection -->
+                            <div class="form-section">
+                                <h3 class="section-title">Select Leave Type *</h3>
+                                <div class="leave-types">
+                                    <div class="leave-type-card" onclick="selectLeaveType('casual')" data-type="casual">
+                                        <div class="leave-type-icon" style="background: #E3F2FD;">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="#1976D2" stroke-width="2" width="20" height="20">
+                                                <circle cx="12" cy="12" r="10"/>
+                                                <polyline points="12 6 12 12 16 14"/>
+                                            </svg>
+                                        </div>
+                                        <div class="leave-type-name">Casual Leave</div>
+                                        <div class="leave-type-balance">Available: <span>8 days</span></div>
+                                    </div>
+
+                                    <div class="leave-type-card" onclick="selectLeaveType('sick')" data-type="sick">
+                                        <div class="leave-type-icon" style="background: #FFEBEE;">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="#D32F2F" stroke-width="2" width="20" height="20">
+                                                <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                            </svg>
+                                        </div>
+                                        <div class="leave-type-name">Sick Leave</div>
+                                        <div class="leave-type-balance">Available: <span>5 days</span></div>
+                                    </div>
+
+                                    <div class="leave-type-card" onclick="selectLeaveType('earned')" data-type="earned">
+                                        <div class="leave-type-icon" style="background: #E8F5E9;">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="#388E3C" stroke-width="2" width="20" height="20">
+                                                <polyline points="20 6 9 17 4 12"/>
+                                            </svg>
+                                        </div>
+                                        <div class="leave-type-name">Earned Leave</div>
+                                        <div class="leave-type-balance">Available: <span>12 days</span></div>
+                                    </div>
+
+                                    <div class="leave-type-card" onclick="selectLeaveType('comp-off')" data-type="comp-off">
+                                        <div class="leave-type-icon" style="background: #FFF3E0;">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="#F57C00" stroke-width="2" width="20" height="20">
+                                                <polyline points="17 1 21 5 17 9"/>
+                                                <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                                                <polyline points="7 23 3 19 7 15"/>
+                                                <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                                            </svg>
+                                        </div>
+                                        <div class="leave-type-name">Comp-Off</div>
+                                        <div class="leave-type-balance">Available: <span>3 days</span></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Date Selection -->
+                            <div class="form-section">
+                                <h3 class="section-title">Leave Duration *</h3>
+                                <div class="date-range">
+                                    <div class="form-group">
+                                        <label class="form-label">Start Date</label>
+                                        <input type="date" class="form-input" id="startDate" required onchange="calculateDuration()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">End Date</label>
+                                        <input type="date" class="form-input" id="endDate" required onchange="calculateDuration()">
+                                    </div>
+                                </div>
+                                <div class="duration-info">
+                                    <span class="duration-label">Total Days:</span>
+                                    <span class="duration-value" id="totalDays">0</span>
+                                </div>
+                            </div>
+
+                            <!-- Reason -->
+                            <div class="form-section">
+                                <h3 class="section-title">Reason for Leave *</h3>
+                                <div class="form-group">
+                                    <textarea class="form-input" id="leaveReason" rows="4" placeholder="Please provide a detailed reason for your leave request..." required></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Contact Information -->
+                            <div class="form-section">
+                                <h3 class="section-title">Contact During Leave</h3>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Contact Number</label>
+                                        <input type="tel" class="form-input" id="contactNumber" placeholder="+91 98765 43210">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Alternate Email</label>
+                                        <input type="email" class="form-input" id="alternateEmail" placeholder="personal@email.com">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Document Upload -->
+                            <div class="form-section">
+                                <h3 class="section-title">Supporting Documents (if any)</h3>
+                                <div class="file-upload-area" onclick="document.getElementById('fileInput').click()">
+                                    <svg class="file-upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                    <div class="file-upload-text">
+                                        <strong>Click to upload</strong> or drag and drop<br>
+                                        <span style="font-size: 0.75rem;">PDF, JPG, PNG up to 5MB</span>
+                                    </div>
+                                    <input type="file" id="fileInput" style="display: none;" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(event)">
+                                </div>
+                                <div id="uploadedFiles"></div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn btn-primary" style="width: 100%;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                                Submit Leave Request
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <div class="leave-sidebar">
+                        <!-- Leave Balance -->
+                        <div class="balance-card">
+                            <div class="balance-header">
+                                <div class="balance-title">Your Leave Balance</div>
+                                <div class="balance-subtitle">Current Year (2025)</div>
+                            </div>
+                            <div class="balance-item">
+                                <span class="balance-label">Casual Leave</span>
+                                <span class="balance-value positive">8</span>
+                            </div>
+                            <div class="balance-item">
+                                <span class="balance-label">Sick Leave</span>
+                                <span class="balance-value positive">5</span>
+                            </div>
+                            <div class="balance-item">
+                                <span class="balance-label">Earned Leave</span>
+                                <span class="balance-value positive">12</span>
+                            </div>
+                            <div class="balance-item">
+                                <span class="balance-label">Comp-Off</span>
+                                <span class="balance-value positive">3</span>
+                            </div>
+                        </div>
+
+                        <!-- Recent Leaves -->
+                        <div class="recent-leaves-card">
+                            <div class="recent-title">Recent Applications</div>
+                            <div class="leave-history-item approved">
+                                <div class="history-type">Casual Leave</div>
+                                <div class="history-dates">15 Nov - 16 Nov 2025 (2 days)</div>
+                                <span class="history-status approved">Approved</span>
+                            </div>
+                            <div class="leave-history-item pending">
+                                <div class="history-type">Sick Leave</div>
+                                <div class="history-dates">22 Nov 2025 (1 day)</div>
+                                <span class="history-status pending">Pending</span>
+                            </div>
+                        </div>
+
+                        <!-- Guidelines -->
+                        <div class="guidelines-card">
+                            <div class="guidelines-title">Leave Guidelines</div>
+                            <div class="guideline-item">
+                                <svg class="guideline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                <span>Apply at least 2 days in advance for planned leaves</span>
+                            </div>
+                            <div class="guideline-item">
+                                <svg class="guideline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                <span>Medical certificate required for sick leave > 3 days</span>
+                            </div>
+                            <div class="guideline-item">
+                                <svg class="guideline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                <span>Maximum 3 consecutive casual leaves allowed</span>
+                            </div>
+                            <div class="guideline-item">
+                                <svg class="guideline-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                <span>Earned leave can be encashed at year-end</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let selectedLeaveType = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
+            setMinDate();
+        });
+
+        // Load user info
+        function loadUserInfo() {
+            const user = JSON.parse(sessionStorage.getItem('hrmsUser') || '{}');
+            if (user.name) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userRole').textContent = user.role;
+                document.getElementById('userAvatar').textContent = user.name.charAt(0);
+            }
+        }
+
+        // Set minimum date to today
+        function setMinDate() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').min = today;
+            document.getElementById('endDate').min = today;
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Select leave type
+        function selectLeaveType(type) {
+            selectedLeaveType = type;
+            
+            // Remove previous selection
+            document.querySelectorAll('.leave-type-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selection to clicked card
+            document.querySelector(`[data-type="${type}"]`).classList.add('selected');
+        }
+
+        // Calculate duration
+        function calculateDuration() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (startDate && endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                const diff = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                
+                if (diff > 0) {
+                    document.getElementById('totalDays').textContent = diff;
+                } else {
+                    document.getElementById('totalDays').textContent = '0';
+                    showToast('End date must be after start date', 'error');
+                }
+            }
+        }
+
+        // Handle file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('File size must be less than 5MB', 'error');
+                    return;
+                }
+                
+                const uploadedFilesDiv = document.getElementById('uploadedFiles');
+                uploadedFilesDiv.innerHTML = `
+                    <div class="uploaded-file">
+                        <div class="file-info">
+                            <div class="file-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                                    <polyline points="13 2 13 9 20 9"/>
+                                </svg>
+                            </div>
+                            <div class="file-details">
+                                <div class="file-name">${file.name}</div>
+                                <div class="file-size">${fileSize} MB</div>
+                            </div>
+                        </div>
+                        <button class="icon-btn" onclick="removeFile()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Remove file
+        function removeFile() {
+            document.getElementById('uploadedFiles').innerHTML = '';
+            document.getElementById('fileInput').value = '';
+        }
+
+        // Submit form
+        document.getElementById('leaveForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!selectedLeaveType) {
+                showToast('Please select a leave type', 'error');
+                return;
+            }
+            
+            const totalDays = document.getElementById('totalDays').textContent;
+            if (totalDays === '0') {
+                showToast('Please select valid dates', 'error');
+                return;
+            }
+            
+            showToast(`Leave request submitted for ${totalDays} days!`, 'success');
+            setTimeout(() => {
+                window.location.href = 'applications.html';
+            }, 1500);
+        });
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">×</button>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

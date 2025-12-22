@@ -1,0 +1,277 @@
+/* ===================================================================
+ * Pixel Ecosystem - Fresh Design
+ * ================================================================== */
+
+/* ------------------------------------------------------------------- 
+ * Hero Section
+ * ------------------------------------------------------------------- */
+.eco-hero {
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 10rem 2rem 6rem;
+    background: linear-gradient(180deg, rgba(0,0,0,1) 0%, rgba(20,20,20,1) 100%);
+}
+
+.eco-hero-title {
+    font-family: var(--font-heading);
+    font-size: clamp(4rem, 10vw, 8rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin: 0 0 2.5rem 0;
+    background: linear-gradient(135deg, #ffffff 0%, #888888 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.eco-hero-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.6);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* ------------------------------------------------------------------- 
+ * Solutions Section
+ * ------------------------------------------------------------------- */
+.eco-solutions {
+    padding: 4rem 2rem 8rem;
+    background: #000000;
+    min-height: 60vh;
+}
+
+.eco-container {
+    max-width: 1800px;
+    margin: 0 auto;
+    display: flex;
+    gap: 1.5rem;
+    overflow-x: auto;
+    padding: 0 2rem;
+}
+
+/* ------------------------------------------------------------------- 
+ * Solution Cards
+ * ------------------------------------------------------------------- */
+.solution-card {
+    flex: 0 0 380px;
+    width: 380px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    cursor: pointer;
+    height: 520px;
+}
+
+.solution-card:hover {
+    border-color: #000000;
+    transform: translateY(-10px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+/* ------------------------------------------------------------------- 
+ * Card Banner
+ * ------------------------------------------------------------------- */
+.solution-banner {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: #000000;
+    position: relative;
+}
+
+.solution-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.6;
+}
+
+.solution-number {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    z-index: 10;
+}
+
+/* ------------------------------------------------------------------- 
+ * Card Header
+ * ------------------------------------------------------------------- */
+.solution-header {
+    display: none;
+}
+
+.solution-icon {
+    display: none;
+}
+
+/* ------------------------------------------------------------------- 
+ * Card Content
+ * ------------------------------------------------------------------- */
+.solution-content {
+    padding: 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.solution-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    color: #000000;
+    margin: 0 0 1rem 0;
+}
+
+.solution-description {
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: #666666;
+    margin: 0 0 1.5rem 0;
+    flex: 1;
+}
+
+.solution-features {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+
+.solution-features li {
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    color: #000000;
+    padding-left: 1.25rem;
+    position: relative;
+}
+
+.solution-features li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #000000;
+    font-weight: 700;
+}
+
+/* ------------------------------------------------------------------- 
+ * Tags
+ * ------------------------------------------------------------------- */
+.solution-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0 1.75rem 1.75rem;
+}
+
+.solution-tags span {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.5rem 1rem;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    color: #000000;
+    transition: all 0.3s ease;
+}
+
+.solution-card:hover .solution-tags span {
+    background: #000000;
+    border-color: #000000;
+    color: #ffffff;
+}
+
+/* ------------------------------------------------------------------- 
+ * Responsive
+ * ------------------------------------------------------------------- */
+@media screen and (max-width: 1200px) {
+    .eco-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .eco-hero {
+        padding: 6rem 1.5rem 3rem;
+    }
+    
+    .eco-solutions {
+        padding: 3rem 1.5rem 6rem;
+    }
+    
+    .eco-container {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .solution-card {
+        padding: 2rem;
+    }
+@media screen and (max-width: 1400px) {
+    .eco-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .eco-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .solution-number {
+        font-size: 2.5rem;
+    }
+    
+    .solution-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .solution-title {
+        font-size: 1.5rem;
+    }
+    
+    .solution-description {
+        font-size: 0.95rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .solution-card {
+        padding: 1.5rem;
+    }
+    
+    .solution-header {
+        margin-bottom: 0.5rem;
+    }
+    
+    .solution-number {
+        font-size: 2rem;
+    }
+    
+    .solution-icon {
+        width: 40px;
+        height: 40px;
+    }
+}

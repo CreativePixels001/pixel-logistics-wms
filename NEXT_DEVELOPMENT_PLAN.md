@@ -1,4 +1,4 @@
-# DLT WMS - Next Development Plan
+# Pixel Logistics WMS - Next Development Plan
 
 **Date:** November 16, 2025  
 **Current Status:** Phase 12A Complete ✅  

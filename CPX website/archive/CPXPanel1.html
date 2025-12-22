@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html class="no-js ss-preload" lang="en">
+<head>
+
+    <!--- basic page needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>Luther</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- mobile specific metas
+    ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="css/vendor.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- favicons
+    ================================================== -->
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <script>
+            const dropzone = document.getElementById('dropzone');
+            const fileInput = document.getElementById('fileInput');
+            const importBtn = document.getElementById('importBtn');
+            let selectedFile = null;
+
+            dropzone.addEventListener('click', () => fileInput.click());
+
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.classList.add('dragover');
+            });
+
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.classList.remove('dragover');
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.classList.remove('dragover');
+                if (e.dataTransfer.files.length) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
+            });
+
+            fileInput.addEventListener('change', (e) => {
+                if (e.target.files.length) {
+                    handleFile(e.target.files[0]);
+                }
+            });
+
+            function handleFile(file) {
+                if (file && (file.name.endsWith('.html') || file.name.endsWith('.htm'))) {
+                    selectedFile = file;
+                    dropzone.querySelector('span').textContent = file.name;
+                    importBtn.disabled = false;
+                } else {
+                    dropzone.querySelector('span').textContent = 'Invalid file. Please select an HTML file.';
+                    importBtn.disabled = true;
+                }
+            }
+        </script>
+        <style>
+            .ui-panel-dropzone {
+                border: 2px dashed #aaa;
+                border-radius: 8px;
+                padding: 32px 12px;
+                text-align: center;
+                color: #888;
+                cursor: pointer;
+                margin-bottom: 12px;
+                transition: border-color 0.2s, background 0.2s;
+                position: relative;
+                font-family: inherit;
+            }
+            .ui-panel-dropzone.dragover {
+                border-color: #0078d4;
+                background: #f0f8ff;
+                color: #0078d4;
+            }
+            .ui-panel-dropzone input[type="file"] {
+                display: none;
+            }
+        </style>
+</head>
+<body id="top">
+    <!-- # preloader
+    ================================================== -->
+    <div id="preloader">
+        <div id="loader">
+        </div>
+    </div>
+    <!-- # page wrap
+    ================================================== -->
+    <div class="s-pagewrap">
+        <!-- ## main content
+        ==================================================- -->
+        <main class="s-content">
+            <!-- ### Drag and Drop Area Start ================================================== -->
+            <section id="intro" class="s-intro target-section">
+                <div class="row intro-content wide">
+                    <div class="column lg-12 md-12 sm-12 xs-12 intro-text">
+                        <h1 class="intro-title">Drag and Drop HTML Import</h1>
+                        <p class="intro-description">Easily import your HTML files by dragging and dropping them into the designated area below.</p>
+                        <!-- Import Panel -->
+                        <div class="ui-panel-row" style="gap: 32px; justify-content: center;">
+                            <!-- Card 1: Upload -->
+                            <section class="ui-panel-container ui-panel" style="max-width: 340px; min-width: 300px; display: flex; flex-direction: column; align-items: center; justify-content: flex-start;">
+                                <div class="ui-panel-dropzone custom-dropzone" id="dropzone1" style="height: 340px; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                    <svg width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 12px; opacity: 0.4;">
+                                        <rect width="48" height="48" rx="12" fill="#e6f0fa"/>
+                                        <path d="M24 14v16M24 14l-6 6M24 14l6 6" stroke="#0078d4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        <rect x="12" y="32" width="24" height="2" rx="1" fill="#0078d4" opacity="0.2"/>
+                                    </svg>
+                                    <span class="dropzone-label" style="display: block; text-align: center;">Drag &amp; drop your <b>.zip</b> or <b>.html</b> file here</span>
+                                    <span class="dropzone-desc" style="display: block; text-align: center;">or <u>click to browse</u></span>
+                                    <input type="file" id="fileInput1" accept=".html,.htm,.zip">
+                                    <div style="flex: 1;"></div>
+                                    <button class="ui-panel-btn bold" id="importBtn1" disabled style="width: 100%; margin-top: 24px;">IMPORT</button>
+                                </div>
+                            </section>
+                            <!-- Card 2: File Analyzed -->
+                            <section class="ui-panel-container ui-panel file-details-panel" style="max-width: 340px; min-width: 300px; display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start; color: #fff; background: #181c24; border: 2px solid #222; box-shadow: 0 4px 24px rgba(0,0,0,0.25); border-radius: 14px; padding: 32px 24px; margin: 0 0 0 12px; height: auto; min-height: 0;"></section>
+                                <div style="width: 100%; margin-bottom: 22px; background: #181c24; border-radius: 10px; padding: 18px 18px 14px 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.10); border: 1.5px solid #222;">
+                                    <h3 class="dropzone-title" style="margin-bottom: 10px; margin-top: 0; text-align: left; font-size: 1.25rem; font-weight: 700; color: #fff; letter-spacing: 0.01em;">
+                                        <svg style="vertical-align: middle; margin-right: 8px; opacity: 0.7;" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="22" height="22" rx="5" fill="#0078d4"/><path d="M11 6v7M11 6l-3 3M11 6l3 3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="6" y="15" width="10" height="1.2" rx="0.6" fill="#fff" opacity="0.3"/></svg>
+                                        File Details
+                                    </h3>
+                                    <div id="fileDetails" style="width: 100%; color: #fff; font-size: 1.12rem; text-align: left; background: #232733; border-radius: 7px; padding: 14px 14px 10px 14px; margin-bottom: 0;">
+                                        <div style="margin-bottom: 8px; font-size: 18px;">
+                                            <span style="font-weight: 600;  color: #f7c948;">File Name:</span>
+                                            <span id="uploadedFileName" style="font-weight: 500; color: #fff;">No file uploaded</span>
+                                        </div>
+                                        <div>
+                                            <span style="font-weight: 600; font-size: 16px; color: #38bfa7;">Type:</span>
+                                            <span id="uploadedFileType" style="font-weight: 500; font-size: 18px; color: #fff;">Zipped Html</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; flex-direction: column-reverse; width: 100%; gap: 16px; margin-bottom: 22px;">
+                                    <!-- Theme Selection Card -->
+                                    <div style="flex: 1; background: #181c24; border: 1.5px solid #333; border-radius: 14px; padding: 14px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; max-width: 100%;">
+                                        <span style="font-weight: 600; color: #fff; font-size: 1.08rem; margin-bottom: 12px;">Select Theme</span>
+                                        <div style="display: flex; gap: 12px; width: 100%; justify-content: center;">
+                                            <button id="themeLight" type="button" style="background: #fff; color: #222; border: 2px solid #0078d4; border-radius: 14px; padding: 8px 16px; font-weight: 600; font-size: 1rem; cursor: pointer; width: 90px; max-width: 100%;">Light</button>
+                                            <button id="themeDark" type="button" style="background: #222; color: #fff; border: 2px solid #0078d4; border-radius: 14px; padding: 8px 16px; font-weight: 600; font-size: 1rem; cursor: pointer; width: 90px; max-width: 100%;">Dark</button>
+                                        </div>
+                                         <!-- Color Selection Card -->
+                                         <div style="flex: 2; background: #181c24; border: 1.5px solid #333; border-radius: 14px; padding: 14px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; max-width: 100%;">
+                                        <span style="font-weight: 600; color: #fff; font-size: 1.08rem; margin-bottom: 12px;">Select Primary Color</span>
+                                        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; justify-content: center;">
+                                            <button class="color-btn" data-color="#0078d4" data-name="Blue" style="width: 18px; height: 18px; border-radius: 5px; border: 2px solid #0078d4; background: #0078d4; cursor: pointer;" title="Blue"></button>
+                                            <button class="color-btn" data-color="#e4572e" data-name="Orange" style="width: 18px; height: 18px; border-radius: 5px; border: 2px solid #e4572e; background: #e4572e; cursor: pointer;" title="Orange"></button>
+                                            <button class="color-btn" data-color="#f7c948" data-name="Yellow" style="width: 18px; height: 18px; border-radius: 5px; border: 2px solid #f7c948; background: #f7c948; cursor: pointer;" title="Yellow"></button>
+                                            <button class="color-btn" data-color="#38bfa7" data-name="Teal" style="width: 18px; height: 18px; border-radius: 5px; border: 2px solid #38bfa7; background: #38bfa7; cursor: pointer;" title="Teal"></button>
+                                            <button class="color-btn" data-color="#6a4cff" data-name="Purple" style="width: 18px; height: 18px; border-radius: 5px; border: 2px solid #6a4cff; background: #6a4cff; cursor: pointer;" title="Purple"></button>
+                                            <button class="color-btn" data-color="#ff6f91" data-name="Pink" style="width: 18px; height: 18px; border-radius: 5px; border: 2px solid #ff6f91; background: #ff6f91; cursor: pointer;" title="Pink"></button>
+                                        </div>
+                                            <div id="colorName" style="margin-top: 10px; color: #fff; font-size: 1rem; min-height: 22px; text-align: center;"></div>
+                                         </div>
+                                    </div>
+                                    
+                                </div>
+                                <button class="ui-panel-btn bold" id="transformBtn" style="width: 100%; margin-top: 28px; background: #fff; color: #111; font-size: 1.15rem; padding: 14px 0;">Transform Interface</button>
+                                <style>
+                                    .file-details-panel {
+                                        background: #111 !important;
+                                        border: 2px solid #fff !important;
+                                        box-shadow: 0 8px 32px rgba(0,0,0,0.45), 0 1.5px 8px #fff2 inset;
+                                        border-radius: 14px !important;
+                                        position: relative;
+                                        z-index: 2;
+                                        height: auto !important;
+                                        min-height: 0 !important;
+                                        max-height: none !important;
+                                    }
+                                    @media (max-width: 600px) {
+                                        .file-details-panel {
+                                            padding: 18px 8px !important;
+                                        }
+                                    }
+                                </style>
+                            </section>
+                            <!-- Card 3: Placeholder/Result -->
+                            <section class="ui-panel-container ui-panel" style="max-width: 340px; min-width: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                <div class="ui-panel-dropzone custom-dropzone" id="dropzone3" style="height: 340px; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                                    <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 18px; text-align: center;">Ready for Next Step</h2>
+                                    <p style="text-align: center; color: #666; margin-bottom: 24px;">Your interface is ready. Click below to import or proceed further.</p>
+                                    <button class="ui-panel-btn bold" id="importBtn3" disabled style="width: 100%;">IMPORT</button>
+                                </div>
+                            </section>
+                        </div>
+                        <style>
+                            .styled-select {
+                                width: 100%;
+                                padding: 8px 12px;
+                                border-radius: 6px;
+                                border: 1px solid #bfc9d1;
+                                background: #f8fafc;
+                                font-size: 1rem;
+                                color: #222;
+                                transition: border-color 0.2s;
+                                box-shadow: 0 1px 2px rgba(0,0,0,0.01);
+                                outline: none;
+                                appearance: none;
+                            }
+                            .styled-select:focus {
+                                border-color: #0078d4;
+                                background: #f0f8ff;
+                            }
+                            .ui-panel-btn.bold {
+                                font-weight: 600;
+                                font-size: 1.1rem;
+                                border-radius: 6px;
+                                padding: 12px 0;
+                            }
+                        </style>
+                    </div>
+                </div>
+            </section>
+                            </div>
+                        </div>
+                    </div>
+                    <style>
+                        .ui-panel-row {
+                            display: flex;
+                            gap: 24px;
+                            justify-content: center;
+                            align-items: flex-start;
+                            flex-wrap: wrap;
+                        }
+                        .ui-panel-container {
+                            flex: 1 1 320px;
+                            max-width: 400px;
+                        }
+                    </style>
+                </div> <!-- end intro content -->
+                </div> <!-- end Drag and Drop Area -->
+
+                <a href="#about" class="intro-scrolldown smoothscroll">
+                    <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd"><path d="M11 21.883l-6.235-7.527-.765.644 7.521 9 7.479-9-.764-.645-6.236 7.529v-21.884h-1v21.883z"/></svg>
+                </a>
+
+            </section> <!-- end s-intro -->
+
+            <!-- ### contact
+            ================================================== -->
+            <section id="contact" class="s-contact target-section">
+
+                <div class="row contact-top">
+                    <div class="column lg-12">
+                        <h2 class="text-pretitle">
+                            Get In Touch
+                        </h2>
+
+                        <p class="h1">
+                            I love to hear from you.
+                            Whether you have a question or just 
+                            want to chat about design, tech & art — shoot me a message.
+                        </p>
+                    </div>
+                </div> <!-- end contact-top -->
+
+                <div class="row contact-bottom">
+                    <div class="column lg-3 md-5 tab-6 stack-on-550 contact-block">
+                        <h3 class="text-pretitle">Reach me at</h3>
+                        <p class="contact-links">
+                            <a href="mailto:sayhello@luther.com" class="mailtoui">sayhello@luther.com</a> <br>
+                            <a href="tel:+1975432345">+197 543 2345</a>
+                        </p>
+                    </div>
+                    <div class="column lg-4 md-5 tab-6 stack-on-550 contact-block">
+                        <h3 class="text-pretitle">Social</h3>
+                        <ul class="contact-social">
+                            <li><a href="#0">Behance</a></li>
+                            <li><a href="#0">Dribble</a></li>
+                            <li><a href="#0">Twitter</a></li>
+                            <li><a href="#0">Instagram</a></li>
+                            <li><a href="#0">Github</a></li>
+                        </ul>
+                    </div>
+                    <div class="column lg-4 md-12 contact-block">
+                        <a href="mailto:sayhello@luther.com" class="mailtoui btn btn--medium u-fullwidth contact-btn">Say Hello.</a>
+                    </div>
+                </div> <!-- end contact-bottom -->
+
+            </section> <!-- end contact -->
+
+        </main> <!-- end s-content -->
+
+
+        <!-- ## footer
+        ================================================== -->
+        <footer class="s-footer">
+
+            <div class="row">
+                <div class="column ss-copyright">
+                    <span>© Copyright Luther 2021</span> 
+                    <span>Design by <a href="https://www.styleshout.com/">StyleShout</a> Distribution By <a href="https://themewagon.com">Themewagon</a></span>
+                </div>
+
+                <div class="ss-go-top">
+                    <a class="smoothscroll" title="Back to Top" href="#top">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill-rule="evenodd" clip-rule="evenodd"><path d="M11 2.206l-6.235 7.528-.765-.645 7.521-9 7.479 9-.764.646-6.236-7.53v21.884h-1v-21.883z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+        </footer> <!-- end s-footer -->
+
+    </div> <!-- end -s-pagewrap -->
+
+
+    <!-- Java Script
+    ================================================== -->
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>

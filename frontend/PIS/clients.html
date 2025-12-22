@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clients Management - Pixel Safe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="common-styles.css">
+    <style>
+        .content { padding: 2rem; }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+        }
+        
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .stat-change {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #000000;
+        }
+        
+        .filters-bar {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+            margin-bottom: 1.5rem;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .filter-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #666666;
+        }
+        
+        .filter-select {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            background: #ffffff;
+            cursor: pointer;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .client-card {
+            background: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+        
+        .client-card:hover {
+            border-color: #000000;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+        
+        .client-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+        
+        .client-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            background: #fafafa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #666666;
+            flex-shrink: 0;
+        }
+        
+        .client-info {
+            flex: 1;
+        }
+        
+        .client-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .client-id {
+            font-size: 0.75rem;
+            color: #666666;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .client-contact {
+            font-size: 0.8125rem;
+            color: #666666;
+            display: flex;
+            flex-direction: column;
+            gap: 0.125rem;
+        }
+        
+        .client-body {
+            padding: 1.5rem;
+        }
+        
+        .client-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .client-stat {
+            text-align: center;
+        }
+        
+        .client-stat-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .client-stat-label {
+            font-size: 0.6875rem;
+            color: #666666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .client-policies {
+            border-top: 1px solid #f5f5f5;
+            padding-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .policy-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            font-size: 0.8125rem;
+        }
+        
+        .policy-name {
+            font-weight: 600;
+        }
+        
+        .policy-status {
+            padding: 0.125rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .policy-active {
+            background: #000000;
+            color: #ffffff;
+        }
+        
+        .policy-expiring {
+            background: #e8e8e8;
+            color: #333333;
+        }
+        
+        .client-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            flex: 1;
+            padding: 0.625rem;
+            border: 1px solid #e0e0e0;
+            background: #ffffff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            transition: all 0.15s ease;
+        }
+        
+        .action-btn:hover {
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+        
+        .segment-badge {
+            display: inline-block;
+            padding: 0.25rem 0.625rem;
+            border-radius: 4px;
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .segment-premium {
+            background: #000000;
+            color: #ffffff;
+        }
+        
+        .segment-standard {
+            background: #f0f0f0;
+            color: #666666;
+        }
+
+        @media (max-width: 1024px) {
+            .stats-row { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <header class="top-header">
+            <div class="header-left">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <span>Pixel Safe</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="search-bar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="globalSearch" placeholder="Search leads, clients, policies...">
+                    <kbd>⌘K</kbd>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-icon-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="badge">3</span>
+                </button>
+                <button class="header-icon-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span class="badge">5</span>
+                </button>
+                <div class="user-menu">
+                    <div class="user-avatar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <span class="user-name" id="headerAgentName">Agent</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </div>
+            </div>
+        </header>
+
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <a href="dashboard.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="analytics.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        <span>Analytics</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Sales</div>
+                    <a href="leads.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Leads</span>
+                        <span class="nav-badge">24</span>
+                    </a>
+                    <a href="clients.html" class="nav-link active">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <line x1="20" y1="8" x2="20" y2="14"/>
+                            <line x1="23" y1="11" x2="17" y2="11"/>
+                        </svg>
+                        <span>Clients</span>
+                    </a>
+                    <a href="deals.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        <span>Deals</span>
+                        <span class="nav-badge">8</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <a href="policies.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        <span>Policies</span>
+                    </a>
+                    <a href="renewals.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span>Renewals</span>
+                    </a>
+                    <a href="claims.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <span>Claims</span>
+                        <span class="nav-badge">3</span>
+                    </a>
+                    <a href="agents.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Agents</span>
+                    </a>
+                    <a href="reports.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                        <span>Reports</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <div class="page-header-left">
+                    <h1>Clients Management</h1>
+                    <p>Manage your client portfolio and relationships</p>
+                </div>
+                <div class="page-header-right">
+                    <button class="btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Export
+                    </button>
+                    <button class="btn-primary" onclick="openAddClientPanel()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Add Client
+                    </button>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Clients</div>
+                        <div class="stat-value">1,842</div>
+                        <div class="stat-change">+8.2% this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Active Policies</div>
+                        <div class="stat-value">3,247</div>
+                        <div class="stat-change">+12.5% this month</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Premium Clients</div>
+                        <div class="stat-value">284</div>
+                        <div class="stat-change">15.4% of total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Retention Rate</div>
+                        <div class="stat-value">94%</div>
+                        <div class="stat-change">+2.1% this quarter</div>
+                    </div>
+                </div>
+
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <span class="filter-label">Segment:</span>
+                        <select class="filter-select">
+                            <option value="">All Segments</option>
+                            <option value="premium">Premium</option>
+                            <option value="standard">Standard</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Status:</span>
+                        <select class="filter-select">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="expiring">Expiring Soon</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Sort By:</span>
+                        <select class="filter-select">
+                            <option value="name">Name</option>
+                            <option value="policies">Policies</option>
+                            <option value="value">Total Value</option>
+                        </select>
+                    </div>
+                    <input type="text" class="search-input" placeholder="Search by name, email, phone...">
+                </div>
+
+                <div class="clients-grid">
+                    <div class="client-card">
+                        <div class="client-header">
+                            <div class="client-avatar">RK</div>
+                            <div class="client-info">
+                                <div class="client-name">Rajesh Kumar</div>
+                                <div class="client-id">#CL-1842</div>
+                                <div class="client-contact">
+                                    <span>+91 98765 43210</span>
+                                    <span>rajesh@email.com</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="client-body">
+                            <div class="client-stats">
+                                <div class="client-stat">
+                                    <div class="client-stat-value">5</div>
+                                    <div class="client-stat-label">Policies</div>
+                                </div>
+                                <div class="client-stat">
+                                    <div class="client-stat-value">₹12.5L</div>
+                                    <div class="client-stat-label">Total Value</div>
+                                </div>
+                                <div class="client-stat">
+                                    <div class="client-stat-value">3 yrs</div>
+                                    <div class="client-stat-label">Client Since</div>
+                                </div>
+                            </div>
+                            <div class="client-policies">
+                                <div class="policy-item">
+                                    <span class="policy-name">Health Insurance</span>
+                                    <span class="policy-status policy-active">Active</span>
+                                </div>
+                                <div class="policy-item">
+                                    <span class="policy-name">Motor Insurance</span>
+                                    <span class="policy-status policy-expiring">Expiring</span>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <span class="segment-badge segment-premium">Premium</span>
+                            </div>
+                            <div class="client-actions">
+                                <button class="action-btn">View Profile</button>
+                                <button class="action-btn">Contact</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="client-card">
+                        <div class="client-header">
+                            <div class="client-avatar">PS</div>
+                            <div class="client-info">
+                                <div class="client-name">Priya Sharma</div>
+                                <div class="client-id">#CL-1841</div>
+                                <div class="client-contact">
+                                    <span>+91 98765 43211</span>
+                                    <span>priya@email.com</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="client-body">
+                            <div class="client-stats">
+                                <div class="client-stat">
+                                    <div class="client-stat-value">3</div>
+                                    <div class="client-stat-label">Policies</div>
+                                </div>
+                                <div class="client-stat">
+                                    <div class="client-stat-value">₹6.8L</div>
+                                    <div class="client-stat-label">Total Value</div>
+                                </div>
+                                <div class="client-stat">
+                                    <div class="client-stat-value">2 yrs</div>
+                                    <div class="client-stat-label">Client Since</div>
+                                </div>
+                            </div>
+                            <div class="client-policies">
+                                <div class="policy-item">
+                                    <span class="policy-name">Life Insurance</span>
+                                    <span class="policy-status policy-active">Active</span>
+                                </div>
+                                <div class="policy-item">
+                                    <span class="policy-name">Property Insurance</span>
+                                    <span class="policy-status policy-active">Active</span>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <span class="segment-badge segment-standard">Standard</span>
+                            </div>
+                            <div class="client-actions">
+                                <button class="action-btn">View Profile</button>
+                                <button class="action-btn">Contact</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="client-card">
+                        <div class="client-header">
+                            <div class="client-avatar">AP</div>
+                            <div class="client-info">
+                                <div class="client-name">Amit Patel</div>
+                                <div class="client-id">#CL-1840</div>
+                                <div class="client-contact">
+                                    <span>+91 98765 43212</span>
+                                    <span>amit@email.com</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="client-body">
+                            <div class="client-stats">
+                                <div class="client-stat">
+                                    <div class="client-stat-value">7</div>
+                                    <div class="client-stat-label">Policies</div>
+                                </div>
+                                <div class="client-stat">
+                                    <div class="client-stat-value">₹18.2L</div>
+                                    <div class="client-stat-label">Total Value</div>
+                                </div>
+                                <div class="client-stat">
+                                    <div class="client-stat-value">5 yrs</div>
+                                    <div class="client-stat-label">Client Since</div>
+                                </div>
+                            </div>
+                            <div class="client-policies">
+                                <div class="policy-item">
+                                    <span class="policy-name">Term Insurance</span>
+                                    <span class="policy-status policy-active">Active</span>
+                                </div>
+                                <div class="policy-item">
+                                    <span class="policy-name">Health Insurance</span>
+                                    <span class="policy-status policy-active">Active</span>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <span class="segment-badge segment-premium">Premium</span>
+                            </div>
+                            <div class="client-actions">
+                                <button class="action-btn">View Profile</button>
+                                <button class="action-btn">Contact</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="client-card">
+                        <div class="client-header">
+                            <div class="client-avatar">SR</div>
+                            <div class="client-info">
+                                <div class="client-name">Sunita Reddy</div>
+                                <div class="client-id">#CL-1839</div>
+                                <div class="client-contact">
+                                    <span>+91 98765 43213</span>
+                                    <span>sunita@email.com</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="client-body">
+                            <div class="client-stats">
+                                <div class="client-stat">
+                                    <div class="client-stat-value">4</div>
+                                    <div class="client-stat-label">Policies</div>
+                                </div>
+                                <div class="client-stat">
+                                    <div class="client-stat-value">₹9.5L</div>
+                                    <div class="client-stat-label">Total Value</div>
+                                </div>
+                                <div class="client-stat">
+                                    <div class="client-stat-value">1 yr</div>
+                                    <div class="client-stat-label">Client Since</div>
+                                </div>
+                            </div>
+                            <div class="client-policies">
+                                <div class="policy-item">
+                                    <span class="policy-name">Motor Insurance</span>
+                                    <span class="policy-status policy-active">Active</span>
+                                </div>
+                                <div class="policy-item">
+                                    <span class="policy-name">Travel Insurance</span>
+                                    <span class="policy-status policy-expiring">Expiring</span>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <span class="segment-badge segment-standard">Standard</span>
+                            </div>
+                            <div class="client-actions">
+                                <button class="action-btn">View Profile</button>
+                                <button class="action-btn">Contact</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="client-card">
+                        <div class="client-header">
+                            <div class="client-avatar">VS</div>
+                            <div class="client-info">
+                                <div class="client-name">Vikram Singh</div>
+                                <div class="client-id">#CL-1838</div>
+                                <div class="client-contact">
+                                    <span>+91 98765 43214</span>
+                                    <span>vikram@email.com</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="client-body">
+                            <div class="client-stats">
+                                <div class="client-stat">
+                                    <div class="client-stat-value">6</div>
+                                    <div class="client-stat-label">Policies</div>
+                                </div>
+                                <div class="client-stat">
+                                    <div class="client-stat-value">₹15.3L</div>
+                                    <div class="client-stat-label">Total Value</div>
+                                </div>
+                                <div class="client-stat">
+                                    <div class="client-stat-value">4 yrs</div>
+                                    <div class="client-stat-label">Client Since</div>
+                                </div>
+                            </div>
+                            <div class="client-policies">
+                                <div class="policy-item">
+                                    <span class="policy-name">Life Insurance</span>
+                                    <span class="policy-status policy-active">Active</span>
+                                </div>
+                                <div class="policy-item">
+                                    <span class="policy-name">Property Insurance</span>
+                                    <span class="policy-status policy-active">Active</span>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <span class="segment-badge segment-premium">Premium</span>
+                            </div>
+                            <div class="client-actions">
+                                <button class="action-btn">View Profile</button>
+                                <button class="action-btn">Contact</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="client-card">
+                        <div class="client-header">
+                            <div class="client-avatar">NG</div>
+                            <div class="client-info">
+                                <div class="client-name">Neha Gupta</div>
+                                <div class="client-id">#CL-1837</div>
+                                <div class="client-contact">
+                                    <span>+91 98765 43215</span>
+                                    <span>neha@email.com</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="client-body">
+                            <div class="client-stats">
+                                <div class="client-stat">
+                                    <div class="client-stat-value">2</div>
+                                    <div class="client-stat-label">Policies</div>
+                                </div>
+                                <div class="client-stat">
+                                    <div class="client-stat-value">₹4.2L</div>
+                                    <div class="client-stat-label">Total Value</div>
+                                </div>
+                                <div class="client-stat">
+                                    <div class="client-stat-value">6 mo</div>
+                                    <div class="client-stat-label">Client Since</div>
+                                </div>
+                            </div>
+                            <div class="client-policies">
+                                <div class="policy-item">
+                                    <span class="policy-name">Health Insurance</span>
+                                    <span class="policy-status policy-active">Active</span>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <span class="segment-badge segment-standard">Standard</span>
+                            </div>
+                            <div class="client-actions">
+                                <button class="action-btn">View Profile</button>
+                                <button class="action-btn">Contact</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const agent = sessionStorage.getItem('pisAgent');
+        if (!agent) {
+            window.location.href = 'login.html';
+        } else {
+            const agentData = JSON.parse(agent);
+            document.getElementById('headerAgentName').textContent = agentData.name;
+        }
+
+        // Global Search Keyboard Shortcut (Cmd+K / Ctrl+K)
+        document.addEventListener('keydown', function(e) {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('globalSearch').focus();
+            }
+        });
+    </script>
+
+    <!-- Slide Panels -->
+    <script src="slide-panels.js"></script>
+    <script>
+        fetch('slide-panels.html')
+            .then(response => response.text())
+            .then(html => {
+                const div = document.createElement('div');
+                div.innerHTML = html;
+                document.body.appendChild(div);
+            });
+    </script>
+</body>
+</html>

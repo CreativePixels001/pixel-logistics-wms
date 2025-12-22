@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Pixel Notes</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <!-- Google OAuth Configuration -->
+    <script>
+        // Google OAuth Client ID from Google Cloud Console
+        const GOOGLE_CLIENT_ID = '469366716838-3140k3fu6lqrrj7uvfv11u8a29jdsrvb.apps.googleusercontent.com';
+        
+        // Auto-detect if running locally (file:// or localhost)
+        const isLocalEnvironment = window.location.protocol === 'file:' || 
+                                   window.location.hostname === 'localhost' || 
+                                   window.location.hostname === '127.0.0.1';
+        
+        // Use demo mode for local, real OAuth for production
+        const USE_DEMO_MODE = isLocalEnvironment;
+        
+        console.log('Environment:', isLocalEnvironment ? 'Local (Demo Mode)' : 'Production (Google OAuth)');
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            max-width: 450px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: #ffffff;
+            border: 3px solid #000000;
+            padding: 3rem;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+        }
+
+        .logo p {
+            color: #666666;
+            margin-top: 0.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control {
+            border: 2px solid #000000;
+            padding: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: #000000;
+            box-shadow: none;
+            outline: 3px solid #e5e5e5;
+        }
+
+        .btn-login {
+            width: 100%;
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            padding: 0.875rem;
+            font-weight: 600;
+            font-size: 1.125rem;
+            margin-top: 1rem;
+        }
+
+        .btn-login:hover {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #e5e5e5;
+        }
+
+        .divider span {
+            background: #ffffff;
+            padding: 0 1rem;
+            position: relative;
+            color: #666666;
+        }
+
+        .btn-demo {
+            width: 100%;
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+            padding: 0.875rem;
+            font-weight: 600;
+        }
+
+        .btn-demo:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+
+        .back-link a {
+            color: #000000;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .social-login {
+            margin-bottom: 2rem;
+        }
+
+        .btn-google {
+            width: 100%;
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+            padding: 0.875rem;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            transition: all 0.2s;
+        }
+
+        .btn-google:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-demo {
+            width: 100%;
+            padding: 0.875rem;
+            background: #000000;
+            color: #ffffff;
+            border: 2px solid #000000;
+            border-radius: 2px;
+            font-weight: 600;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-demo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-demo:hover::before {
+            left: 100%;
+        }
+
+        .btn-demo:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .traditional-login {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #e5e5e5;
+        }
+
+        .traditional-login-toggle {
+            text-align: center;
+            color: #666666;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+        }
+
+        .traditional-login-toggle:hover {
+            color: #000000;
+        }
+
+        .traditional-login-form {
+            display: none;
+        }
+
+        .traditional-login-form.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Logo -->
+            <div class="logo">
+                <h1>PIXEL NOTES</h1>
+                <p>Access Your Thoughts. Build Better Products.</p>
+            </div>
+
+            <!-- Google Sign-In Button -->
+            <div class="social-login">
+                <button class="btn btn-google" onclick="handleGoogleSignIn()">
+                    <svg class="google-icon" viewBox="0 0 24 24">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Continue with Google
+                </button>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider">
+                <span>OR</span>
+            </div>
+
+            <!-- Try Demo Button -->
+            <button class="btn btn-demo" onclick="handleTryDemo()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                </svg>
+                Try Demo Mode (No Login Required)
+            </button>
+
+            <!-- Demo Access -->
+            <button class="btn btn-demo" onclick="handleDemoAccess()">
+                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                    <polyline points="10 17 15 12 10 7"></polyline>
+                    <line x1="15" y1="12" x2="3" y2="12"></line>
+                </svg>
+                Try Demo (No Login Required)
+            </button>
+
+            <!-- Traditional Login (Hidden by default) -->
+            <div class="traditional-login">
+                <div class="traditional-login-toggle" onclick="toggleTraditionalLogin()">
+                    <small>Or use email/password →</small>
+                </div>
+                
+                <div class="traditional-login-form" id="traditionalLoginForm">
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">
+                                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                                Email
+                            </label>
+                            <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                                Password
+                            </label>
+                            <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-login">
+                            Login
+                            <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Back Link -->
+            <div class="back-link">
+                <a href="landing.html">
+                    <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Toggle traditional login form
+        function toggleTraditionalLogin() {
+            const form = document.getElementById('traditionalLoginForm');
+            form.classList.toggle('active');
+        }
+
+        // Handle Try Demo Mode
+        function handleTryDemo() {
+            const btn = event.target.closest('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span>Loading Demo...</span>';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const demoUser = {
+                    provider: 'demo',
+                    userId: 'demo_user_' + Date.now(),
+                    email: 'demo@pixelnotes.com',
+                    name: 'Demo User',
+                    picture: 'https://ui-avatars.com/api/?name=Demo+User&background=000&color=fff&size=150',
+                    accessToken: 'demo_token',
+                    driveEnabled: false,
+                    loginTime: new Date().toISOString(),
+                    isDemoMode: true
+                };
+
+                completeSignIn(demoUser);
+            }, 500);
+        }
+
+        // Initialize Google Sign-In on page load
+        window.onload = function() {
+            if (!USE_DEMO_MODE && GOOGLE_CLIENT_ID !== 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
+                google.accounts.id.initialize({
+                    client_id: GOOGLE_CLIENT_ID,
+                    callback: handleCredentialResponse,
+                    auto_select: false,
+                    cancel_on_tap_outside: true
+                });
+            }
+        };
+
+        // Google Sign-In Handler
+        function handleGoogleSignIn() {
+            const btn = event.target.closest('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span>Signing in...</span>';
+            btn.disabled = true;
+
+            if (USE_DEMO_MODE) {
+                // DEMO MODE - For testing without Google OAuth setup
+                setTimeout(() => {
+                    const demoEmail = prompt('Enter demo email (or press OK for demo@gmail.com):', 'demo@gmail.com');
+                    const demoName = prompt('Enter demo name (or press OK for Demo User):', 'Demo User');
+                    
+                    const userData = {
+                        provider: 'google',
+                        userId: 'demo_' + btoa(demoEmail), // Base64 encode email as userId
+                        email: demoEmail || 'demo@gmail.com',
+                        name: demoName || 'Demo User',
+                        picture: 'https://ui-avatars.com/api/?name=' + encodeURIComponent(demoName || 'Demo User') + '&background=000&color=fff&size=150',
+                        accessToken: 'demo_token_' + Date.now(),
+                        driveEnabled: false,
+                        loginTime: new Date().toISOString()
+                    };
+
+                    completeSignIn(userData);
+                }, 500);
+            } else {
+                // PRODUCTION MODE - Real Google OAuth
+                if (GOOGLE_CLIENT_ID === 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com') {
+                    alert('Please configure GOOGLE_CLIENT_ID in login.html.\n\nGet your Client ID from:\nhttps://console.cloud.google.com/apis/credentials');
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    return;
+                }
+
+                google.accounts.id.prompt((notification) => {
+                    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                        // Fallback to button sign-in
+                        google.accounts.id.renderButton(
+                            btn,
+                            { theme: 'outline', size: 'large', text: 'continue_with', width: btn.offsetWidth }
+                        );
+                    }
+                });
+            }
+        }
+
+        // Handle Google OAuth Credential Response
+        function handleCredentialResponse(response) {
+            // Decode JWT token to get user info
+            const userInfo = parseJwt(response.credential);
+            
+            const userData = {
+                provider: 'google',
+                userId: 'google_' + userInfo.sub, // Google user ID
+                email: userInfo.email,
+                name: userInfo.name,
+                picture: userInfo.picture,
+                accessToken: response.credential,
+                driveEnabled: true,
+                loginTime: new Date().toISOString(),
+                emailVerified: userInfo.email_verified
+            };
+
+            completeSignIn(userData);
+        }
+
+        // Parse JWT token
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        }
+
+        // Complete sign-in process
+        function completeSignIn(userData) {
+            // Store current user session
+            localStorage.setItem('pixelNotesUser', JSON.stringify(userData));
+            localStorage.setItem('pixelNotesAuthProvider', 'google');
+            localStorage.setItem('pixelNotesCurrentUserId', userData.userId);
+
+            // Initialize user-specific storage
+            initializeUserStorage(userData.userId);
+
+            // Initialize Google Drive sync if enabled
+            if (userData.driveEnabled) {
+                initGoogleDriveSync(userData);
+            }
+
+            // Show success message
+            console.log('✅ Signed in successfully:', userData.name);
+
+            // Redirect to dashboard
+            window.location.href = 'dashboard.html';
+        }
+
+        // Initialize user-specific storage structure
+        function initializeUserStorage(userId) {
+            const storageKey = `pixelNotes_${userId}`;
+            
+            // Check if user has existing notes
+            if (!localStorage.getItem(storageKey)) {
+                // New user - initialize empty notes array
+                localStorage.setItem(storageKey, JSON.stringify([]));
+                console.log('🆕 New user storage initialized:', userId);
+            } else {
+                console.log('👤 Existing user storage loaded:', userId);
+            }
+
+            // Initialize user-specific PI data
+            const piKey = `pixelNotesPI_${userId}`;
+            if (!localStorage.getItem(piKey)) {
+                const defaultPIData = {
+                    writingPatterns: {},
+                    commonTopics: [],
+                    preferredStyle: null,
+                    totalNotes: 0,
+                    learningStarted: new Date().toISOString()
+                };
+                localStorage.setItem(piKey, JSON.stringify(defaultPIData));
+            }
+        }
+
+        // Initialize Google Drive Sync
+        function initGoogleDriveSync(userData) {
+            // Store sync preferences
+            const syncSettings = {
+                enabled: true,
+                lastSync: new Date().toISOString(),
+                autoSync: true,
+                syncInterval: 300000 // 5 minutes
+            };
+            
+            localStorage.setItem('pixelNotesSyncSettings', JSON.stringify(syncSettings));
+            
+            // In production, this would:
+            // 1. Request Google Drive API access
+            // 2. Create/find PixelNotes folder in Drive
+            // 3. Set up auto-sync mechanism
+        }
+
+        // Demo Access Handler
+        function handleDemoAccess() {
+            const demoUser = {
+                provider: 'demo',
+                email: 'demo@pixelnotes.local',
+                name: 'Demo User',
+                driveEnabled: false
+            };
+
+            localStorage.setItem('pixelNotesUser', JSON.stringify(demoUser));
+            localStorage.setItem('pixelNotesAuthProvider', 'demo');
+            
+            window.location.href = 'dashboard.html';
+        }
+
+        // Traditional Login Form Handler
+        const loginForm = document.getElementById('loginForm');
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                if (email && password) {
+                    const userData = {
+                        provider: 'email',
+                        email: email,
+                        name: email.split('@')[0],
+                        driveEnabled: false
+                    };
+
+                    localStorage.setItem('pixelNotesUser', JSON.stringify(userData));
+                    localStorage.setItem('pixelNotesAuthProvider', 'email');
+                    
+                    window.location.href = 'dashboard.html';
+                }
+            });
+        }
+
+        // Check if already logged in
+        window.addEventListener('DOMContentLoaded', function() {
+            const userData = localStorage.getItem('pixelNotesUser');
+            if (userData) {
+                // User already logged in, redirect to dashboard
+                window.location.href = 'dashboard.html';
+            }
+        });
+    </script>
+</body>
+</html>

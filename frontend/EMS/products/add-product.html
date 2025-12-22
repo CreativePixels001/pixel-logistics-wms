@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - Pixel Commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <style>
+        /* Wizard Container */
+        .wizard-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Progress Steps */
+        .wizard-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .wizard-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 0;
+        }
+
+        .wizard-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-white);
+            border: 2px solid var(--border-color);
+            margin: 0 auto 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            transition: all var(--transition-normal);
+        }
+
+        .wizard-step.active .step-circle {
+            background: var(--primary-color);
+            color: var(--text-white);
+            border-color: var(--primary-color);
+        }
+
+        .wizard-step.completed .step-circle {
+            background: var(--success-color);
+            color: var(--text-white);
+            border-color: var(--success-color);
+        }
+
+        .step-label {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .wizard-step.active .step-label {
+            color: var(--text-primary);
+        }
+
+        /* Wizard Content */
+        .wizard-content {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem;
+            min-height: 500px;
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+        /* ASIN Lookup */
+        .asin-lookup {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .asin-lookup input {
+            flex: 1;
+        }
+
+        .lookup-result {
+            display: none;
+            padding: 1.5rem;
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            margin-top: 1.5rem;
+        }
+
+        .lookup-result.show {
+            display: block;
+        }
+
+        .result-content {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .result-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: var(--radius-md);
+            background: var(--bg-white);
+        }
+
+        .result-info {
+            flex: 1;
+        }
+
+        .result-title {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .use-product-btn {
+            margin-top: 1rem;
+        }
+
+        /* Image Upload */
+        .image-upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .image-upload-box {
+            aspect-ratio: 1;
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-md);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-upload-box:hover {
+            border-color: var(--primary-color);
+            background: var(--bg-light);
+        }
+
+        .image-upload-box.has-image {
+            border-style: solid;
+            border-color: var(--success-color);
+        }
+
+        .upload-icon {
+            width: 40px;
+            height: 40px;
+            opacity: 0.3;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-text {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .image-upload-box input[type="file"] {
+            display: none;
+        }
+
+        .uploaded-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--error-color);
+            color: var(--text-white);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        .image-upload-box.has-image:hover .remove-image {
+            display: flex;
+        }
+
+        /* Variants Table */
+        .variants-table {
+            margin-bottom: 2rem;
+        }
+
+        .variant-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr auto;
+            gap: 1rem;
+            align-items: center;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+        }
+
+        .variant-row:first-child {
+            background: transparent;
+            font-weight: 700;
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+        }
+
+        .add-variant-btn {
+            margin-top: 1rem;
+        }
+
+        /* Wizard Navigation */
+        .wizard-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .wizard-nav .btn {
+            min-width: 120px;
+        }
+
+        /* Product Preview */
+        .product-preview {
+            background: var(--bg-light);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+        }
+
+        .preview-images {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .preview-image {
+            aspect-ratio: 1;
+            border-radius: var(--radius-md);
+            background: var(--bg-white);
+            object-fit: cover;
+        }
+
+        .preview-details {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .preview-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .preview-label {
+            font-weight: 600;
+        }
+
+        .preview-value {
+            color: var(--text-secondary);
+        }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .wizard-steps {
+                overflow-x: auto;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .variant-row {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-images {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span>Pixel Commerce</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Amazon</div>
+                    <a href="../platforms/amazon.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Amazon Dashboard
+                    </a>
+                    <a href="amazon-catalog.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Products
+                    </a>
+                    <a href="../orders/amazon-orders.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Orders
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="../settings/account.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">S</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Seller Name</span>
+                            <span class="user-role" id="userRole">Amazon Seller</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Add New Product</h1>
+                        <p class="page-subtitle">Add a new product to your Amazon catalog</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-secondary" onclick="window.location.href='amazon-catalog.html'">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="19" y1="12" x2="5" y2="12"/>
+                                <polyline points="12 19 5 12 12 5"/>
+                            </svg>
+                            Back to Products
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Wizard Container -->
+                <div class="wizard-container">
+                    <!-- Progress Steps -->
+                    <div class="wizard-steps">
+                        <div class="wizard-step active" data-step="1">
+                            <div class="step-circle">1</div>
+                            <div class="step-label">Product Info</div>
+                        </div>
+                        <div class="wizard-step" data-step="2">
+                            <div class="step-circle">2</div>
+                            <div class="step-label">Images</div>
+                        </div>
+                        <div class="wizard-step" data-step="3">
+                            <div class="step-circle">3</div>
+                            <div class="step-label">Variants</div>
+                        </div>
+                        <div class="wizard-step" data-step="4">
+                            <div class="step-circle">4</div>
+                            <div class="step-label">Pricing & Stock</div>
+                        </div>
+                        <div class="wizard-step" data-step="5">
+                            <div class="step-circle">5</div>
+                            <div class="step-label">Review</div>
+                        </div>
+                    </div>
+
+                    <!-- Wizard Content -->
+                    <div class="wizard-content">
+                        <!-- Step 1: Product Info -->
+                        <div class="step-content active" id="step1">
+                            <h2 class="step-title">Product Information</h2>
+                            <p class="step-description">Enter product details or lookup by ASIN from Amazon</p>
+
+                            <!-- ASIN Lookup -->
+                            <div class="asin-lookup">
+                                <input type="text" class="form-input" id="asinInput" placeholder="Enter ASIN (e.g., B0FWTBSFMK)">
+                                <button class="btn btn-primary" onclick="lookupASIN()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                    </svg>
+                                    Lookup ASIN
+                                </button>
+                            </div>
+
+                            <!-- Lookup Result -->
+                            <div class="lookup-result" id="lookupResult">
+                                <div class="result-content">
+                                    <img src="https://via.placeholder.com/120x120/f5f5f5/000?text=Robot+Toy" alt="Product" class="result-image" id="resultImage">
+                                    <div class="result-info">
+                                        <div class="result-title" id="resultTitle">ONNGEO 2 PC Action Figures Titan 13</div>
+                                        <div class="result-meta"><strong>ASIN:</strong> <span id="resultASIN">B0FWTBSFMK</span></div>
+                                        <div class="result-meta"><strong>Category:</strong> <span id="resultCategory">Toys & Games</span></div>
+                                        <div class="result-meta"><strong>Current Price:</strong> <span id="resultPrice">₹399</span></div>
+                                        <button class="btn btn-primary btn-sm use-product-btn" onclick="useASINData()">Use This Product</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Manual Entry Form -->
+                            <form id="productForm">
+                                <div class="form-group">
+                                    <label class="form-label">Product Title *</label>
+                                    <input type="text" class="form-input" id="productTitle" placeholder="ONNGEO 2 PC Action Figures Titan 13, 3D Printed Multi-Joint..." required>
+                                </div>
+
+                                <div class="two-column">
+                                    <div class="form-group">
+                                        <label class="form-label">ASIN</label>
+                                        <input type="text" class="form-input" id="productASIN" placeholder="B0FWTBSFMK" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">SKU *</label>
+                                        <input type="text" class="form-input" id="productSKU" placeholder="TITAN13-RED-001" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="form-label">Product Description *</label>
+                                    <textarea class="form-input" id="productDescription" rows="5" placeholder="3D Printed Multi-Joint Movable Robot, Desk Decoration Creative Robots..." required></textarea>
+                                </div>
+
+                                <div class="two-column">
+                                    <div class="form-group">
+                                        <label class="form-label">Category *</label>
+                                        <select class="form-input" id="productCategory" required>
+                                            <option value="">Select Category</option>
+                                            <option value="toys">Toys & Games</option>
+                                            <option value="electronics">Electronics</option>
+                                            <option value="fashion">Fashion</option>
+                                            <option value="home">Home & Kitchen</option>
+                                            <option value="sports">Sports</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Brand *</label>
+                                        <input type="text" class="form-input" id="productBrand" placeholder="ONNGEO" required>
+                                    </div>
+                                </div>
+
+                                <div class="two-column">
+                                    <div class="form-group">
+                                        <label class="form-label">Material</label>
+                                        <input type="text" class="form-input" id="productMaterial" placeholder="3D Printed Plastic">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Age Group</label>
+                                        <input type="text" class="form-input" id="productAge" placeholder="6+ years">
+                                    </div>
+                                </div>
+
+                                <div class="two-column">
+                                    <div class="form-group">
+                                        <label class="form-label">Weight (grams)</label>
+                                        <input type="number" class="form-input" id="productWeight" placeholder="150">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Dimensions (L x W x H cm)</label>
+                                        <input type="text" class="form-input" id="productDimensions" placeholder="15 x 8 x 5">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Step 2: Images -->
+                        <div class="step-content" id="step2">
+                            <h2 class="step-title">Product Images</h2>
+                            <p class="step-description">Upload high-quality images (Main image + up to 7 additional images)</p>
+
+                            <div class="image-upload-grid">
+                                <div class="image-upload-box" onclick="document.getElementById('imageInput1').click()">
+                                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                    <div class="upload-text"><strong>Main Image</strong><br>Required</div>
+                                    <input type="file" id="imageInput1" accept="image/*" style="display: none;" onchange="handleImageUpload(event, 1)">
+                                </div>
+
+                                <div class="image-upload-box" onclick="document.getElementById('imageInput2').click()">
+                                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                    <div class="upload-text">Image 2</div>
+                                    <input type="file" id="imageInput2" accept="image/*" style="display: none;" onchange="handleImageUpload(event, 2)">
+                                </div>
+
+                                <div class="image-upload-box" onclick="document.getElementById('imageInput3').click()">
+                                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                    <div class="upload-text">Image 3</div>
+                                    <input type="file" id="imageInput3" accept="image/*" style="display: none;" onchange="handleImageUpload(event, 3)">
+                                </div>
+
+                                <div class="image-upload-box" onclick="document.getElementById('imageInput4').click()">
+                                    <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                    <div class="upload-text">Image 4</div>
+                                    <input type="file" id="imageInput4" accept="image/*" style="display: none;" onchange="handleImageUpload(event, 4)">
+                                </div>
+                            </div>
+
+                            <div style="background: var(--bg-light); padding: 1rem; border-radius: var(--radius-md); font-size: 0.875rem;">
+                                <strong>Image Guidelines:</strong>
+                                <ul style="margin: 0.5rem 0 0 1.5rem; color: var(--text-secondary);">
+                                    <li>Minimum 1000 x 1000 pixels (recommended: 2000 x 2000)</li>
+                                    <li>White background for main image</li>
+                                    <li>Product should fill 85% of the image</li>
+                                    <li>Accepted formats: JPEG, PNG</li>
+                                    <li>Maximum file size: 10 MB per image</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Variants -->
+                        <div class="step-content" id="step3">
+                            <h2 class="step-title">Product Variants</h2>
+                            <p class="step-description">Add variants like different colors, sizes, or pack quantities</p>
+
+                            <div class="variants-table">
+                                <div class="variant-row">
+                                    <div>Variant Name</div>
+                                    <div>Color/Size</div>
+                                    <div>SKU</div>
+                                    <div>Price (₹)</div>
+                                    <div>Action</div>
+                                </div>
+
+                                <div class="variant-row" id="variant1">
+                                    <div><input type="text" class="form-input" placeholder="Red Titan Robot" value="Red Titan Robot"></div>
+                                    <div><input type="text" class="form-input" placeholder="Red" value="Red"></div>
+                                    <div><input type="text" class="form-input" placeholder="TITAN13-RED" value="TITAN13-RED"></div>
+                                    <div><input type="number" class="form-input" placeholder="399" value="399"></div>
+                                    <div><button class="btn btn-secondary btn-sm" onclick="removeVariant(1)">Remove</button></div>
+                                </div>
+
+                                <div class="variant-row" id="variant2">
+                                    <div><input type="text" class="form-input" placeholder="Yellow Titan Robot" value="Yellow Titan Robot"></div>
+                                    <div><input type="text" class="form-input" placeholder="Yellow" value="Yellow"></div>
+                                    <div><input type="text" class="form-input" placeholder="TITAN13-YLW" value="TITAN13-YLW"></div>
+                                    <div><input type="number" class="form-input" placeholder="399" value="399"></div>
+                                    <div><button class="btn btn-secondary btn-sm" onclick="removeVariant(2)">Remove</button></div>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-secondary add-variant-btn" onclick="addVariant()">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                    <line x1="12" y1="5" x2="12" y2="19"/>
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                </svg>
+                                Add Another Variant
+                            </button>
+                        </div>
+
+                        <!-- Step 4: Pricing & Stock -->
+                        <div class="step-content" id="step4">
+                            <h2 class="step-title">Pricing & Inventory</h2>
+                            <p class="step-description">Set your pricing strategy and stock levels</p>
+
+                            <div class="two-column">
+                                <div class="form-group">
+                                    <label class="form-label">Base Price (₹) *</label>
+                                    <input type="number" class="form-input" id="basePrice" placeholder="399" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Compare at Price (₹)</label>
+                                    <input type="number" class="form-input" id="comparePrice" placeholder="599">
+                                </div>
+                            </div>
+
+                            <div class="two-column">
+                                <div class="form-group">
+                                    <label class="form-label">Cost per Unit (₹)</label>
+                                    <input type="number" class="form-input" id="costPrice" placeholder="250">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Profit Margin</label>
+                                    <input type="text" class="form-input" id="profitMargin" placeholder="37.3%" readonly>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Fulfillment Method *</label>
+                                <select class="form-input" id="fulfillmentMethod" required>
+                                    <option value="FBA">FBA (Fulfilled by Amazon)</option>
+                                    <option value="FBM">FBM (Fulfilled by Merchant)</option>
+                                </select>
+                            </div>
+
+                            <div class="two-column">
+                                <div class="form-group">
+                                    <label class="form-label">Stock Quantity *</label>
+                                    <input type="number" class="form-input" id="stockQty" placeholder="100" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Low Stock Alert (units)</label>
+                                    <input type="number" class="form-input" id="lowStockAlert" placeholder="10">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Product Status</label>
+                                <select class="form-input" id="productStatus">
+                                    <option value="active">Active (Live on Amazon)</option>
+                                    <option value="inactive">Inactive (Not visible to buyers)</option>
+                                    <option value="draft">Draft (Save for later)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Review -->
+                        <div class="step-content" id="step5">
+                            <h2 class="step-title">Review & Submit</h2>
+                            <p class="step-description">Review all product details before publishing</p>
+
+                            <div class="product-preview">
+                                <div class="preview-images">
+                                    <div class="preview-image" style="background: url('https://via.placeholder.com/200x200/f5f5f5/000?text=Image+1') center/cover;"></div>
+                                    <div class="preview-image" style="background: url('https://via.placeholder.com/200x200/f5f5f5/000?text=Image+2') center/cover;"></div>
+                                    <div class="preview-image" style="background: url('https://via.placeholder.com/200x200/f5f5f5/000?text=Image+3') center/cover;"></div>
+                                    <div class="preview-image" style="background: url('https://via.placeholder.com/200x200/f5f5f5/000?text=Image+4') center/cover;"></div>
+                                </div>
+
+                                <div class="preview-details">
+                                    <div class="preview-row">
+                                        <span class="preview-label">Product Title:</span>
+                                        <span class="preview-value" id="previewTitle">ONNGEO 2 PC Action Figures Titan 13</span>
+                                    </div>
+                                    <div class="preview-row">
+                                        <span class="preview-label">ASIN:</span>
+                                        <span class="preview-value" id="previewASIN">B0FWTBSFMK</span>
+                                    </div>
+                                    <div class="preview-row">
+                                        <span class="preview-label">Category:</span>
+                                        <span class="preview-value" id="previewCategory">Toys & Games</span>
+                                    </div>
+                                    <div class="preview-row">
+                                        <span class="preview-label">Brand:</span>
+                                        <span class="preview-value" id="previewBrand">ONNGEO</span>
+                                    </div>
+                                    <div class="preview-row">
+                                        <span class="preview-label">Price:</span>
+                                        <span class="preview-value" id="previewPrice">₹399</span>
+                                    </div>
+                                    <div class="preview-row">
+                                        <span class="preview-label">Stock:</span>
+                                        <span class="preview-value" id="previewStock">100 units</span>
+                                    </div>
+                                    <div class="preview-row">
+                                        <span class="preview-label">Fulfillment:</span>
+                                        <span class="preview-value" id="previewFulfillment">FBA</span>
+                                    </div>
+                                    <div class="preview-row">
+                                        <span class="preview-label">Variants:</span>
+                                        <span class="preview-value" id="previewVariants">2 variants</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Navigation Buttons -->
+                        <div class="wizard-nav">
+                            <button class="btn btn-secondary" id="prevBtn" onclick="previousStep()" style="display: none;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                    <line x1="19" y1="12" x2="5" y2="12"/>
+                                    <polyline points="12 19 5 12 12 5"/>
+                                </svg>
+                                Previous
+                            </button>
+                            <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">
+                                Next
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                    <line x1="5" y1="12" x2="19" y2="12"/>
+                                    <polyline points="12 5 19 12 12 19"/>
+                                </svg>
+                            </button>
+                            <button class="btn btn-primary" id="submitBtn" onclick="submitProduct()" style="display: none;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Publish Product
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+        let variantCount = 2;
+
+        // Load user info
+        document.addEventListener('DOMContentLoaded', function() {
+            const user = JSON.parse(sessionStorage.getItem('emsUser') || '{}');
+            if (user.name) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userRole').textContent = 'Amazon Seller';
+                document.getElementById('userAvatar').textContent = user.name.charAt(0);
+            }
+        });
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // ASIN Lookup (Demo - will connect to Amazon API later)
+        function lookupASIN() {
+            const asin = document.getElementById('asinInput').value.trim();
+            if (!asin) {
+                showToast('Please enter an ASIN', 'error');
+                return;
+            }
+
+            showToast('Looking up ASIN on Amazon...', 'info');
+
+            // Simulate API call
+            setTimeout(() => {
+                document.getElementById('lookupResult').classList.add('show');
+                document.getElementById('resultASIN').textContent = asin;
+                showToast('Product found!', 'success');
+            }, 1500);
+        }
+
+        // Use ASIN Data
+        function useASINData() {
+            document.getElementById('productTitle').value = document.getElementById('resultTitle').textContent;
+            document.getElementById('productASIN').value = document.getElementById('resultASIN').textContent;
+            document.getElementById('productCategory').value = 'toys';
+            document.getElementById('productBrand').value = 'ONNGEO';
+            showToast('Product data loaded successfully!', 'success');
+        }
+
+        // Handle image upload
+        function handleImageUpload(event, imageNum) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const box = event.target.parentElement;
+                    box.innerHTML = `
+                        <img src="${e.target.result}" class="uploaded-image" alt="Product Image">
+                        <button class="remove-image" onclick="removeImage(${imageNum})">×</button>
+                    `;
+                    box.classList.add('has-image');
+                };
+                reader.readAsDataURL(file);
+                showToast(`Image ${imageNum} uploaded`, 'success');
+            }
+        }
+
+        // Remove image
+        function removeImage(imageNum) {
+            const box = document.getElementById(`imageInput${imageNum}`).parentElement;
+            box.classList.remove('has-image');
+            box.innerHTML = `
+                <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                </svg>
+                <div class="upload-text">${imageNum === 1 ? '<strong>Main Image</strong><br>Required' : 'Image ' + imageNum}</div>
+                <input type="file" id="imageInput${imageNum}" accept="image/*" style="display: none;" onchange="handleImageUpload(event, ${imageNum})">
+            `;
+            box.onclick = () => document.getElementById(`imageInput${imageNum}`).click();
+        }
+
+        // Add variant
+        function addVariant() {
+            variantCount++;
+            const variantsTable = document.querySelector('.variants-table');
+            const newVariant = document.createElement('div');
+            newVariant.className = 'variant-row';
+            newVariant.id = `variant${variantCount}`;
+            newVariant.innerHTML = `
+                <div><input type="text" class="form-input" placeholder="Variant Name"></div>
+                <div><input type="text" class="form-input" placeholder="Color/Size"></div>
+                <div><input type="text" class="form-input" placeholder="SKU"></div>
+                <div><input type="number" class="form-input" placeholder="Price"></div>
+                <div><button class="btn btn-secondary btn-sm" onclick="removeVariant(${variantCount})">Remove</button></div>
+            `;
+            variantsTable.appendChild(newVariant);
+            showToast('Variant added', 'success');
+        }
+
+        // Remove variant
+        function removeVariant(id) {
+            document.getElementById(`variant${id}`).remove();
+            showToast('Variant removed', 'info');
+        }
+
+        // Wizard Navigation
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                // Hide current step
+                document.querySelectorAll('.step-content')[currentStep - 1].classList.remove('active');
+                document.querySelectorAll('.wizard-step')[currentStep - 1].classList.remove('active');
+                document.querySelectorAll('.wizard-step')[currentStep - 1].classList.add('completed');
+
+                // Show next step
+                currentStep++;
+                document.querySelectorAll('.step-content')[currentStep - 1].classList.add('active');
+                document.querySelectorAll('.wizard-step')[currentStep - 1].classList.add('active');
+
+                updateButtons();
+            }
+        }
+
+        function previousStep() {
+            if (currentStep > 1) {
+                // Hide current step
+                document.querySelectorAll('.step-content')[currentStep - 1].classList.remove('active');
+                document.querySelectorAll('.wizard-step')[currentStep - 1].classList.remove('active');
+
+                // Show previous step
+                currentStep--;
+                document.querySelectorAll('.step-content')[currentStep - 1].classList.add('active');
+                document.querySelectorAll('.wizard-step')[currentStep - 1].classList.add('active');
+                document.querySelectorAll('.wizard-step')[currentStep - 1].classList.remove('completed');
+
+                updateButtons();
+            }
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').style.display = currentStep === 1 ? 'none' : 'flex';
+            document.getElementById('nextBtn').style.display = currentStep === totalSteps ? 'none' : 'flex';
+            document.getElementById('submitBtn').style.display = currentStep === totalSteps ? 'flex' : 'none';
+        }
+
+        // Submit Product
+        function submitProduct() {
+            showToast('Publishing product to Amazon...', 'info');
+            setTimeout(() => {
+                showToast('Product published successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'amazon-catalog.html';
+                }, 1500);
+            }, 2000);
+        }
+
+        // Toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">×</button>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Calculate profit margin
+        document.getElementById('basePrice')?.addEventListener('input', calculateMargin);
+        document.getElementById('costPrice')?.addEventListener('input', calculateMargin);
+
+        function calculateMargin() {
+            const basePrice = parseFloat(document.getElementById('basePrice')?.value || 0);
+            const costPrice = parseFloat(document.getElementById('costPrice')?.value || 0);
+            if (basePrice && costPrice) {
+                const margin = ((basePrice - costPrice) / basePrice * 100).toFixed(1);
+                document.getElementById('profitMargin').value = margin + '%';
+            }
+        }
+    </script>
+</body>
+</html>

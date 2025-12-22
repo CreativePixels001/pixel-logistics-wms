@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cost Analysis - TMS | Pixel Logistics</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tms-dashboard.css">
+  <link rel="stylesheet" href="../css/side-panel.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    .cost-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .cost-card {
+      background: var(--color-bg-primary);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+    
+    .cost-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .cost-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-text-primary);
+    }
+    
+    .cost-amount {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .cost-label {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+    
+    .cost-breakdown {
+      margin-top: 1rem;
+    }
+    
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    
+    .breakdown-item:last-child {
+      border-bottom: none;
+    }
+    
+    .breakdown-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .breakdown-value {
+      font-weight: 600;
+    }
+    
+    .color-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+    
+    .profitability-card {
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+      color: white;
+      border: none;
+    }
+    
+    .profitability-card .cost-amount,
+    .profitability-card .cost-label {
+      color: white;
+    }
+    
+    .comparison-table {
+      margin-top: 1rem;
+    }
+    
+    .trend-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+    
+    .trend-up {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    
+    .trend-down {
+      background: #dcfce7;
+      color: #16a34a;
+    }
+    
+    .savings-badge {
+      background: #dcfce7;
+      color: #15803d;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    canvas {
+      max-height: 350px;
+    }
+  </style>
+</head>
+<body>
+  
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="14" height="14" rx="2" fill="currentColor"/>
+          <rect x="4" y="20" width="14" height="14" rx="2" fill="currentColor" opacity="0.8"/>
+          <rect x="20" y="4" width="14" height="14" rx="2" fill="currentColor" opacity="0.6"/>
+          <rect x="20" y="20" width="14" height="14" rx="2" fill="currentColor" opacity="0.9"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Transportation Management System</div>
+        </div>
+      </div>
+      <div style="flex: 1;"></div>
+      
+      <button class="header-btn" onclick="openSearch()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <span>Search</span>
+        <kbd style="margin-left: 8px; padding: 2px 6px; background: rgba(0,0,0,0.1); border-radius: 4px; font-size: 11px;">⌘K</kbd>
+      </button>
+      
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <div class="app-layout">
+    <aside class="sidebar">
+      <nav class="sidebar-nav">
+        <a href="tms-dashboard.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7"></rect>
+            <rect x="14" y="3" width="7" height="7"></rect>
+            <rect x="14" y="14" width="7" height="7"></rect>
+            <rect x="3" y="14" width="7" height="7"></rect>
+          </svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="tms-shipments.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M16 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path>
+            <path d="M2 16l3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1z"></path>
+            <path d="M7 21h10"></path>
+            <path d="M12 3v18"></path>
+            <path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"></path>
+          </svg>
+          <span>Shipments</span>
+        </a>
+        <a href="tms-carriers.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+          </svg>
+          <span>Carriers</span>
+        </a>
+        <a href="tms-routes.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="6" cy="19" r="3"></circle>
+            <path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"></path>
+            <circle cx="18" cy="5" r="3"></circle>
+          </svg>
+          <span>Routes</span>
+        </a>
+        <a href="tms-fleet.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"></path>
+            <path d="M15 18H9"></path>
+            <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"></path>
+            <circle cx="17" cy="18" r="2"></circle>
+            <circle cx="7" cy="18" r="2"></circle>
+          </svg>
+          <span>Fleet</span>
+        </a>
+        <a href="tms-compliance.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="M9 12l2 2 4-4"></path>
+          </svg>
+          <span>Compliance</span>
+        </a>
+        <a href="tms-reports.html" class="sidebar-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="20" x2="18" y2="10"></line>
+            <line x1="12" y1="20" x2="12" y2="4"></line>
+            <line x1="6" y1="20" x2="6" y2="14"></line>
+          </svg>
+          <span>Reports</span>
+        </a>
+        <a href="tms-cost-analysis.html" class="sidebar-link active">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          <span>Cost Analysis</span>
+        </a>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Cost Analysis</h1>
+          <p class="page-description">Financial performance and profitability insights</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button class="btn btn-secondary" onclick="window.print()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print
+          </button>
+          <button class="btn btn-primary" onclick="exportCostData()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            Export CSV
+          </button>
+        </div>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="cost-grid">
+        <div class="cost-card profitability-card">
+          <div class="cost-label">Total Revenue (30 days)</div>
+          <div class="cost-amount">$2,437,500</div>
+          <div style="font-size: 0.875rem; margin-top: 0.5rem;">
+            <span style="opacity: 0.9;">↑ 12.3% vs last period</span>
+          </div>
+        </div>
+
+        <div class="cost-card">
+          <div class="cost-label">Total Costs (30 days)</div>
+          <div class="cost-amount" style="color: #dc2626;">$1,847,200</div>
+          <div style="font-size: 0.875rem; margin-top: 0.5rem; color: var(--color-text-secondary);">
+            <span class="trend-indicator trend-up">↑ 8.1%</span>
+          </div>
+        </div>
+
+        <div class="cost-card">
+          <div class="cost-label">Net Profit</div>
+          <div class="cost-amount" style="color: #16a34a;">$590,300</div>
+          <div style="font-size: 0.875rem; margin-top: 0.5rem;">
+            <span class="savings-badge">24.2% Margin</span>
+          </div>
+        </div>
+
+        <div class="cost-card">
+          <div class="cost-label">Cost Per Mile</div>
+          <div class="cost-amount">$1.87</div>
+          <div style="font-size: 0.875rem; margin-top: 0.5rem; color: var(--color-text-secondary);">
+            <span class="trend-indicator trend-up">↑ $0.06</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cost Breakdown -->
+      <div class="cost-grid">
+        <div class="cost-card" style="grid-column: span 2;">
+          <div class="cost-header">
+            <h3 class="cost-title">Cost Breakdown by Category</h3>
+          </div>
+          <canvas id="costBreakdownChart"></canvas>
+          <div class="cost-breakdown">
+            <div class="breakdown-item">
+              <div class="breakdown-label">
+                <div class="color-indicator" style="background: #3b82f6;"></div>
+                <span>Fuel Costs</span>
+              </div>
+              <div class="breakdown-value">$743,500 (40.3%)</div>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">
+                <div class="color-indicator" style="background: #f59e0b;"></div>
+                <span>Labor Costs</span>
+              </div>
+              <div class="breakdown-value">$554,160 (30.0%)</div>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">
+                <div class="color-indicator" style="background: #8b5cf6;"></div>
+                <span>Maintenance</span>
+              </div>
+              <div class="breakdown-value">$276,380 (15.0%)</div>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">
+                <div class="color-indicator" style="background: #10b981;"></div>
+                <span>Insurance</span>
+              </div>
+              <div class="breakdown-value">$147,720 (8.0%)</div>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">
+                <div class="color-indicator" style="background: #ef4444;"></div>
+                <span>Tolls & Fees</span>
+              </div>
+              <div class="breakdown-value">$92,360 (5.0%)</div>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">
+                <div class="color-indicator" style="background: #6366f1;"></div>
+                <span>Other</span>
+              </div>
+              <div class="breakdown-value">$33,080 (1.7%)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cost-card">
+          <div class="cost-header">
+            <h3 class="cost-title">Monthly Cost Trend</h3>
+          </div>
+          <canvas id="costTrendChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Carrier Cost Comparison -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">Carrier Cost Comparison</h3>
+        </div>
+        <div style="padding: 1.5rem;">
+          <canvas id="carrierCostChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Route Profitability -->
+      <div class="card" style="margin-top: 1.5rem;">
+        <div class="card-header">
+          <h3 class="card-title">Route Profitability Analysis</h3>
+        </div>
+        <div class="comparison-table">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Route</th>
+                <th>Shipments</th>
+                <th>Revenue</th>
+                <th>Costs</th>
+                <th>Profit</th>
+                <th>Margin</th>
+                <th>Avg Cost/Mile</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Chicago → New York</strong></td>
+                <td>187</td>
+                <td>$421,500</td>
+                <td>$298,650</td>
+                <td style="color: #16a34a;"><strong>$122,850</strong></td>
+                <td><span class="status-badge status-success">29.1%</span></td>
+                <td>$1.76</td>
+              </tr>
+              <tr>
+                <td><strong>LA → Seattle</strong></td>
+                <td>156</td>
+                <td>$367,200</td>
+                <td>$275,400</td>
+                <td style="color: #16a34a;"><strong>$91,800</strong></td>
+                <td><span class="status-badge status-success">25.0%</span></td>
+                <td>$1.89</td>
+              </tr>
+              <tr>
+                <td><strong>Houston → Miami</strong></td>
+                <td>134</td>
+                <td>$298,400</td>
+                <td>$223,800</td>
+                <td style="color: #16a34a;"><strong>$74,600</strong></td>
+                <td><span class="status-badge status-success">25.0%</span></td>
+                <td>$1.82</td>
+              </tr>
+              <tr>
+                <td><strong>Atlanta → Boston</strong></td>
+                <td>142</td>
+                <td>$312,400</td>
+                <td>$249,920</td>
+                <td style="color: #16a34a;"><strong>$62,480</strong></td>
+                <td><span class="status-badge status-warning">20.0%</span></td>
+                <td>$1.91</td>
+              </tr>
+              <tr>
+                <td><strong>Dallas → Phoenix</strong></td>
+                <td>98</td>
+                <td>$196,000</td>
+                <td>$156,800</td>
+                <td style="color: #16a34a;"><strong>$39,200</strong></td>
+                <td><span class="status-badge status-warning">20.0%</span></td>
+                <td>$1.88</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Savings Opportunities -->
+      <div class="cost-grid" style="margin-top: 2rem;">
+        <div class="cost-card">
+          <div class="cost-header">
+            <h3 class="cost-title">Potential Savings</h3>
+          </div>
+          <div class="cost-breakdown">
+            <div class="breakdown-item">
+              <div class="breakdown-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Route Optimization</span>
+              </div>
+              <div class="breakdown-value" style="color: #16a34a;">$34,200/mo</div>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Fuel Efficiency</span>
+              </div>
+              <div class="breakdown-value" style="color: #16a34a;">$28,500/mo</div>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Carrier Negotiation</span>
+              </div>
+              <div class="breakdown-value" style="color: #16a34a;">$19,800/mo</div>
+            </div>
+            <div class="breakdown-item">
+              <div class="breakdown-label">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span>Maintenance Schedule</span>
+              </div>
+              <div class="breakdown-value" style="color: #16a34a;">$15,600/mo</div>
+            </div>
+          </div>
+          <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid var(--color-border);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong>Total Potential</strong>
+              <strong style="color: #16a34a; font-size: 1.25rem;">$98,100/mo</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="cost-card">
+          <div class="cost-header">
+            <h3 class="cost-title">Cost Variance Analysis</h3>
+          </div>
+          <canvas id="costVarianceChart"></canvas>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/tms-common.js"></script>
+  <script src="../js/tms-side-panel.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeCharts();
+    });
+
+    function initializeCharts() {
+      // Cost Breakdown Chart
+      const costBreakdownCtx = document.getElementById('costBreakdownChart').getContext('2d');
+      new Chart(costBreakdownCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Fuel', 'Labor', 'Maintenance', 'Insurance', 'Tolls & Fees', 'Other'],
+          datasets: [{
+            data: [40.3, 30.0, 15.0, 8.0, 5.0, 1.7],
+            backgroundColor: ['#3b82f6', '#f59e0b', '#8b5cf6', '#10b981', '#ef4444', '#6366f1']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+
+      // Cost Trend Chart
+      const costTrendCtx = document.getElementById('costTrendChart').getContext('2d');
+      new Chart(costTrendCtx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Total Costs',
+            data: [1650000, 1720000, 1780000, 1810000, 1795000, 1847200],
+            borderColor: '#dc2626',
+            backgroundColor: 'rgba(220, 38, 38, 0.1)',
+            tension: 0.4,
+            fill: true
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          }
+        }
+      });
+
+      // Carrier Cost Comparison Chart
+      const carrierCostCtx = document.getElementById('carrierCostChart').getContext('2d');
+      new Chart(carrierCostCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Swift Transportation', 'J.B. Hunt', 'Werner Enterprises', 'Schneider National', 'Prime Inc.'],
+          datasets: [{
+            label: 'Cost per Mile ($)',
+            data: [1.82, 1.89, 1.91, 1.85, 1.94],
+            backgroundColor: '#3b82f6'
+          }, {
+            label: 'Revenue per Mile ($)',
+            data: [2.42, 2.38, 2.35, 2.45, 2.32],
+            backgroundColor: '#16a34a'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      // Cost Variance Chart
+      const costVarianceCtx = document.getElementById('costVarianceChart').getContext('2d');
+      new Chart(costVarianceCtx, {
+        type: 'bar',
+        data: {
+          labels: ['Fuel', 'Labor', 'Maintenance', 'Insurance', 'Tolls'],
+          datasets: [{
+            label: 'Budget vs Actual',
+            data: [8.2, -3.5, 12.1, 1.8, -2.3],
+            backgroundColor: function(context) {
+              const value = context.parsed.y;
+              return value > 0 ? '#dc2626' : '#16a34a';
+            }
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false
+            }
+          },
+          scales: {
+            y: {
+              ticks: {
+                callback: function(value) {
+                  return value + '%';
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function exportCostData() {
+      alert('Cost data export functionality will generate a CSV file with:\n\n• Cost breakdown by category\n• Carrier cost comparison\n• Route profitability analysis\n• Monthly trends\n\nImplementation requires a library like PapaParse or custom CSV generation.');
+    }
+  </script>
+</body>
+</html>

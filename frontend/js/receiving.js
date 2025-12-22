@@ -1,4 +1,4 @@
-// DLT WMS - Receiving Module JavaScript
+// Pixel WMS - Receiving Module JavaScript
 // Handles all receiving functionality
 
 let currentReceiptType = null;

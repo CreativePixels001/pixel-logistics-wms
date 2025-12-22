@@ -87,7 +87,7 @@
 ## 📁 File Structure
 
 ```
-DLT WMS/
+Pixel Logistics WMS/
 ├── frontend/
 │   ├── slotting.html ✨ NEW
 │   ├── labor-management.html ✨ NEW
@@ -110,7 +110,7 @@ DLT WMS/
 ### Quick Start (5 minutes)
 ```bash
 # 1. Start server
-cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS/frontend"
+cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS/frontend"
 python3 -m http.server 8080
 
 # 2. Open in browser
@@ -443,7 +443,7 @@ You now have a **fully functional Warehouse Management System** with:
 **To begin testing right now:**
 
 1. Open Terminal
-2. Run: `cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS/frontend" && python3 -m http.server 8080`
+2. Run: `cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS/frontend" && python3 -m http.server 8080`
 3. Open browser to: http://localhost:8080/slotting.html
 4. Follow QUICK_START_TESTING.md for step-by-step guide
 

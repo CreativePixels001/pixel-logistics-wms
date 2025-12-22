@@ -1,5 +1,5 @@
 /**
- * DLT WMS - Universal Filter System
+ * Pixel WMS - Universal Filter System
  * Provides collapsible filter panels for all pages
  */
 

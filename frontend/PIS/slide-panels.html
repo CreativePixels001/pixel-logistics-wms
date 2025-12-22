@@ -1,0 +1,861 @@
+<!-- Slide Panel Components for Pixel Safe Portal -->
+<!-- Include this file in all pages that need slide-in forms -->
+
+<!-- 1. NEW LEAD PANEL -->
+<div class="slide-panel-overlay" id="newLeadPanel-overlay"></div>
+<div class="slide-panel" id="newLeadPanel">
+    <div class="slide-panel-header">
+        <h2 class="slide-panel-title">Add New Lead</h2>
+        <p class="slide-panel-subtitle">Create a new lead and track through the sales pipeline</p>
+        <button class="slide-panel-close" onclick="panelManager.closePanel('newLeadPanel')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <form class="slide-panel-body" onsubmit="handleNewLeadSubmit(event)">
+        <div class="form-section">
+            <h3 class="form-section-title">Contact Information</h3>
+            <div class="form-group">
+                <label class="form-label required">Full Name</label>
+                <input type="text" class="form-input" name="fullName" placeholder="Enter full name" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Email</label>
+                    <input type="email" class="form-input" name="email" placeholder="email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Phone</label>
+                    <input type="tel" class="form-input" name="phone" placeholder="+91 00000 00000" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Company</label>
+                <input type="text" class="form-input" name="company" placeholder="Company name">
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Lead Details</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Interest Type</label>
+                    <select class="form-select" name="interestType" required>
+                        <option value="">Select type</option>
+                        <option value="health">Health Insurance</option>
+                        <option value="motor">Motor Insurance</option>
+                        <option value="life">Life Insurance</option>
+                        <option value="property">Property Insurance</option>
+                        <option value="travel">Travel Insurance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Priority</label>
+                    <select class="form-select" name="priority" required>
+                        <option value="">Select priority</option>
+                        <option value="high">High</option>
+                        <option value="medium">Medium</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Source</label>
+                    <select class="form-select" name="source" required>
+                        <option value="">Select source</option>
+                        <option value="website">Website</option>
+                        <option value="referral">Referral</option>
+                        <option value="social">Social Media</option>
+                        <option value="direct">Direct Visit</option>
+                        <option value="campaign">Marketing Campaign</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Budget (₹)</label>
+                    <input type="number" class="form-input" name="budget" placeholder="Expected budget">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Additional Information</h3>
+            <div class="form-group">
+                <label class="form-label">Notes</label>
+                <textarea class="form-textarea" name="notes" placeholder="Add any additional notes..."></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Follow-up Date</label>
+                <input type="date" class="form-input" name="followupDate">
+            </div>
+        </div>
+
+        <div class="slide-panel-footer">
+            <button type="button" class="btn btn-ghost" onclick="panelManager.closePanel('newLeadPanel')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Lead</button>
+        </div>
+    </form>
+</div>
+
+<!-- 2. ADD CLIENT PANEL -->
+<div class="slide-panel-overlay" id="addClientPanel-overlay"></div>
+<div class="slide-panel" id="addClientPanel">
+    <div class="slide-panel-header">
+        <h2 class="slide-panel-title">Add New Client</h2>
+        <p class="slide-panel-subtitle">Convert lead to client and start policy management</p>
+        <button class="slide-panel-close" onclick="panelManager.closePanel('addClientPanel')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <form class="slide-panel-body" onsubmit="handleAddClientSubmit(event)">
+        <div class="form-section">
+            <h3 class="form-section-title">Personal Information</h3>
+            <div class="form-group">
+                <label class="form-label required">Full Name</label>
+                <input type="text" class="form-input" name="fullName" placeholder="Enter full name" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Email</label>
+                    <input type="email" class="form-input" name="email" placeholder="email@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Phone</label>
+                    <input type="tel" class="form-input" name="phone" placeholder="+91 00000 00000" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Date of Birth</label>
+                    <input type="date" class="form-input" name="dob" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Gender</label>
+                    <select class="form-select" name="gender" required>
+                        <option value="">Select gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Contact Details</h3>
+            <div class="form-group">
+                <label class="form-label required">Address</label>
+                <textarea class="form-textarea" name="address" placeholder="Complete address" style="min-height: 80px;" required></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">City</label>
+                    <input type="text" class="form-input" name="city" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">State</label>
+                    <input type="text" class="form-input" name="state" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">PIN Code</label>
+                    <input type="text" class="form-input" name="pincode" pattern="[0-9]{6}" placeholder="000000" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">PAN Number</label>
+                    <input type="text" class="form-input" name="pan" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" placeholder="ABCDE1234F">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Client Segment</h3>
+            <div class="form-group">
+                <label class="form-label required">Segment Type</label>
+                <select class="form-select" name="segment" required>
+                    <option value="">Select segment</option>
+                    <option value="individual">Individual</option>
+                    <option value="family">Family</option>
+                    <option value="corporate">Corporate</option>
+                    <option value="sme">SME</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Occupation</label>
+                <input type="text" class="form-input" name="occupation" placeholder="Current occupation">
+            </div>
+        </div>
+
+        <div class="slide-panel-footer">
+            <button type="button" class="btn btn-ghost" onclick="panelManager.closePanel('addClientPanel')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Add Client</button>
+        </div>
+    </form>
+</div>
+
+<!-- 3. CREATE PROPOSAL PANEL -->
+<div class="slide-panel-overlay" id="createProposalPanel-overlay"></div>
+<div class="slide-panel" id="createProposalPanel">
+    <div class="slide-panel-header">
+        <h2 class="slide-panel-title">Create Insurance Proposal</h2>
+        <p class="slide-panel-subtitle">Generate a detailed proposal for the client</p>
+        <button class="slide-panel-close" onclick="panelManager.closePanel('createProposalPanel')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <form class="slide-panel-body" onsubmit="handleCreateProposalSubmit(event)">
+        <div class="form-section">
+            <h3 class="form-section-title">Client Selection</h3>
+            <div class="form-group">
+                <label class="form-label required">Select Client</label>
+                <select class="form-select" name="clientId" required>
+                    <option value="">Search and select client</option>
+                    <option value="1">Amit Sharma - amit.sharma@email.com</option>
+                    <option value="2">Priya Patel - priya.patel@email.com</option>
+                    <option value="3">Rajesh Kumar - rajesh.k@email.com</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Policy Details</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Insurance Type</label>
+                    <select class="form-select" name="insuranceType" required>
+                        <option value="">Select type</option>
+                        <option value="health">Health Insurance</option>
+                        <option value="motor">Motor Insurance</option>
+                        <option value="life">Life Insurance</option>
+                        <option value="property">Property Insurance</option>
+                        <option value="travel">Travel Insurance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Coverage Amount (₹)</label>
+                    <input type="number" class="form-input" name="coverageAmount" placeholder="500000" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Premium Amount (₹)</label>
+                    <input type="number" class="form-input" name="premiumAmount" placeholder="15000" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Payment Frequency</label>
+                    <select class="form-select" name="paymentFrequency" required>
+                        <option value="">Select frequency</option>
+                        <option value="annual">Annual</option>
+                        <option value="semi-annual">Semi-Annual</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Policy Term (Years)</label>
+                    <input type="number" class="form-input" name="policyTerm" placeholder="5" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Start Date</label>
+                    <input type="date" class="form-input" name="startDate" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Additional Benefits</h3>
+            <div class="form-group">
+                <div class="checkbox-group" style="flex-direction: column;">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="criticalIllness" name="benefits[]" value="critical">
+                        <label for="criticalIllness">Critical Illness Cover</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="accidentalDeath" name="benefits[]" value="accident">
+                        <label for="accidentalDeath">Accidental Death Benefit</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="waiver" name="benefits[]" value="waiver">
+                        <label for="waiver">Premium Waiver Benefit</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="maternity" name="benefits[]" value="maternity">
+                        <label for="maternity">Maternity Cover</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Proposal Notes</h3>
+            <div class="form-group">
+                <label class="form-label">Special Instructions</label>
+                <textarea class="form-textarea" name="notes" placeholder="Add any special instructions or notes for this proposal..."></textarea>
+            </div>
+        </div>
+
+        <div class="slide-panel-footer">
+            <button type="button" class="btn btn-ghost" onclick="panelManager.closePanel('createProposalPanel')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Generate Proposal</button>
+        </div>
+    </form>
+</div>
+
+<!-- 4. ISSUE POLICY PANEL -->
+<div class="slide-panel-overlay" id="issuePolicyPanel-overlay"></div>
+<div class="slide-panel" id="issuePolicyPanel">
+    <div class="slide-panel-header">
+        <h2 class="slide-panel-title">Issue New Policy</h2>
+        <p class="slide-panel-subtitle">Create and activate a new insurance policy</p>
+        <button class="slide-panel-close" onclick="panelManager.closePanel('issuePolicyPanel')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <form class="slide-panel-body" onsubmit="handleIssuePolicySubmit(event)">
+        <div class="form-section">
+            <h3 class="form-section-title">Policy Holder Information</h3>
+            <div class="form-group">
+                <label class="form-label required">Select Client</label>
+                <select class="form-select" name="clientId" required>
+                    <option value="">Search and select client</option>
+                    <option value="1">Amit Sharma - amit.sharma@email.com</option>
+                    <option value="2">Priya Patel - priya.patel@email.com</option>
+                    <option value="3">Rajesh Kumar - rajesh.k@email.com</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Link to Proposal</label>
+                <select class="form-select" name="proposalId">
+                    <option value="">Select existing proposal (optional)</option>
+                    <option value="1">PRO-2024-001 - Health Insurance</option>
+                    <option value="2">PRO-2024-002 - Motor Insurance</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Policy Configuration</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Policy Type</label>
+                    <select class="form-select" name="policyType" required>
+                        <option value="">Select type</option>
+                        <option value="health">Health Insurance</option>
+                        <option value="motor">Motor Insurance</option>
+                        <option value="life">Life Insurance</option>
+                        <option value="property">Property Insurance</option>
+                        <option value="travel">Travel Insurance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Policy Number</label>
+                    <input type="text" class="form-input" name="policyNumber" placeholder="POL-2024-XXXX" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Sum Assured (₹)</label>
+                    <input type="number" class="form-input" name="sumAssured" placeholder="500000" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Premium (₹)</label>
+                    <input type="number" class="form-input" name="premium" placeholder="15000" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Issue Date</label>
+                    <input type="date" class="form-input" name="issueDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Expiry Date</label>
+                    <input type="date" class="form-input" name="expiryDate" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Payment Mode</label>
+                    <select class="form-select" name="paymentMode" required>
+                        <option value="">Select mode</option>
+                        <option value="online">Online Payment</option>
+                        <option value="cheque">Cheque</option>
+                        <option value="cash">Cash</option>
+                        <option value="upi">UPI</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Payment Status</label>
+                    <select class="form-select" name="paymentStatus" required>
+                        <option value="">Select status</option>
+                        <option value="paid">Paid</option>
+                        <option value="pending">Pending</option>
+                        <option value="partial">Partial Payment</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Nominee Details</h3>
+            <div class="form-group">
+                <label class="form-label required">Nominee Name</label>
+                <input type="text" class="form-input" name="nomineeName" placeholder="Full name" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Relationship</label>
+                    <select class="form-select" name="nomineeRelation" required>
+                        <option value="">Select relationship</option>
+                        <option value="spouse">Spouse</option>
+                        <option value="parent">Parent</option>
+                        <option value="child">Child</option>
+                        <option value="sibling">Sibling</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Nominee DOB</label>
+                    <input type="date" class="form-input" name="nomineeDOB" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Additional Details</h3>
+            <div class="form-group">
+                <label class="form-label">Policy Notes</label>
+                <textarea class="form-textarea" name="notes" placeholder="Add any additional policy notes..."></textarea>
+            </div>
+        </div>
+
+        <div class="slide-panel-footer">
+            <button type="button" class="btn btn-ghost" onclick="panelManager.closePanel('issuePolicyPanel')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Issue Policy</button>
+        </div>
+    </form>
+</div>
+
+<!-- 5. BULK REMINDER PANEL -->
+<div class="slide-panel-overlay" id="bulkReminderPanel-overlay"></div>
+<div class="slide-panel" id="bulkReminderPanel">
+    <div class="slide-panel-header">
+        <h2 class="slide-panel-title">Send Bulk Reminders</h2>
+        <p class="slide-panel-subtitle">Schedule renewal reminders for multiple policies</p>
+        <button class="slide-panel-close" onclick="panelManager.closePanel('bulkReminderPanel')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <form class="slide-panel-body" onsubmit="handleBulkReminderSubmit(event)">
+        <div class="form-section">
+            <h3 class="form-section-title">Reminder Type</h3>
+            <div class="form-group">
+                <label class="form-label required">Select Reminder For</label>
+                <select class="form-select" name="reminderType" required>
+                    <option value="">Select type</option>
+                    <option value="renewal">Policy Renewals</option>
+                    <option value="premium">Premium Due</option>
+                    <option value="document">Document Submission</option>
+                    <option value="followup">Follow-up</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Filter Criteria</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Policy Type</label>
+                    <select class="form-select" name="policyType">
+                        <option value="">All Types</option>
+                        <option value="health">Health Insurance</option>
+                        <option value="motor">Motor Insurance</option>
+                        <option value="life">Life Insurance</option>
+                        <option value="property">Property Insurance</option>
+                        <option value="travel">Travel Insurance</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Expiry Within</label>
+                    <select class="form-select" name="expiryDays">
+                        <option value="">Select timeframe</option>
+                        <option value="7">7 Days</option>
+                        <option value="15">15 Days</option>
+                        <option value="30">30 Days</option>
+                        <option value="60">60 Days</option>
+                        <option value="90">90 Days</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Client Segment</label>
+                <div class="checkbox-group" style="flex-direction: column;">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="segmentIndividual" name="segments[]" value="individual">
+                        <label for="segmentIndividual">Individual</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="segmentFamily" name="segments[]" value="family">
+                        <label for="segmentFamily">Family</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="segmentCorporate" name="segments[]" value="corporate">
+                        <label for="segmentCorporate">Corporate</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Reminder Configuration</h3>
+            <div class="form-group">
+                <label class="form-label required">Delivery Method</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="methodEmail" name="methods[]" value="email" checked>
+                        <label for="methodEmail">Email</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="methodSMS" name="methods[]" value="sms">
+                        <label for="methodSMS">SMS</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="methodWhatsApp" name="methods[]" value="whatsapp">
+                        <label for="methodWhatsApp">WhatsApp</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Schedule Date</label>
+                    <input type="date" class="form-input" name="scheduleDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Schedule Time</label>
+                    <input type="time" class="form-input" name="scheduleTime" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Message Template</h3>
+            <div class="form-group">
+                <label class="form-label required">Subject Line</label>
+                <input type="text" class="form-input" name="subject" placeholder="Policy Renewal Reminder" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label required">Message Content</label>
+                <textarea class="form-textarea" name="message" placeholder="Dear {ClientName}, Your policy {PolicyNumber} is due for renewal on {ExpiryDate}..." required style="min-height: 120px;"></textarea>
+                <p class="form-hint">Use {ClientName}, {PolicyNumber}, {ExpiryDate} as placeholders</p>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div style="background: #f5f5f5; padding: 1rem; border-radius: 4px; border: 1px solid #e0e0e0;">
+                <p style="font-size: 0.875rem; color: #000000; margin-bottom: 0.5rem;"><strong>Preview:</strong></p>
+                <p style="font-size: 0.875rem; color: #666666;">This will send reminders to <strong>156 clients</strong> matching the criteria.</p>
+            </div>
+        </div>
+
+        <div class="slide-panel-footer">
+            <button type="button" class="btn btn-ghost" onclick="panelManager.closePanel('bulkReminderPanel')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Schedule Reminders</button>
+        </div>
+    </form>
+</div>
+
+<!-- 6. NEW CLAIM PANEL -->
+<div class="slide-panel-overlay" id="newClaimPanel-overlay"></div>
+<div class="slide-panel" id="newClaimPanel">
+    <div class="slide-panel-header">
+        <h2 class="slide-panel-title">File New Claim</h2>
+        <p class="slide-panel-subtitle">Submit a new insurance claim request</p>
+        <button class="slide-panel-close" onclick="panelManager.closePanel('newClaimPanel')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <form class="slide-panel-body" onsubmit="handleNewClaimSubmit(event)">
+        <div class="form-section">
+            <h3 class="form-section-title">Policy Information</h3>
+            <div class="form-group">
+                <label class="form-label required">Select Policy</label>
+                <select class="form-select" name="policyId" required>
+                    <option value="">Search and select policy</option>
+                    <option value="1">POL-2024-3247 - Rajesh Kumar (Health)</option>
+                    <option value="2">POL-2024-3256 - Priya Patel (Motor)</option>
+                    <option value="3">POL-2023-2842 - Amit Sharma (Health)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label required">Claim Type</label>
+                <select class="form-select" name="claimType" required>
+                    <option value="">Select type</option>
+                    <option value="medical">Medical Reimbursement</option>
+                    <option value="hospitalization">Hospitalization</option>
+                    <option value="accident">Accident</option>
+                    <option value="vehicle">Vehicle Damage</option>
+                    <option value="death">Death Claim</option>
+                    <option value="maturity">Maturity Claim</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Claim Details</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Incident Date</label>
+                    <input type="date" class="form-input" name="incidentDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Claim Amount (₹)</label>
+                    <input type="number" class="form-input" name="claimAmount" placeholder="25000" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label required">Location of Incident</label>
+                <input type="text" class="form-input" name="location" placeholder="City, State" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label required">Incident Description</label>
+                <textarea class="form-textarea" name="description" placeholder="Provide detailed description of the incident..." required style="min-height: 100px;"></textarea>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Hospital/Garage Details (if applicable)</h3>
+            <div class="form-group">
+                <label class="form-label">Hospital/Garage Name</label>
+                <input type="text" class="form-input" name="facilityName" placeholder="Name of hospital or garage">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Admission Date</label>
+                    <input type="date" class="form-input" name="admissionDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Discharge Date</label>
+                    <input type="date" class="form-input" name="dischargeDate">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Document Upload</h3>
+            <div class="form-group">
+                <div class="file-upload-area" id="claimDropZone">
+                    <div class="file-upload-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                    </div>
+                    <p class="file-upload-text">Click to upload or drag and drop</p>
+                    <p class="file-upload-hint">Medical bills, reports, photos (PDF, JPG, PNG up to 10MB each)</p>
+                    <input type="file" id="claimDocuments" name="documents[]" multiple hidden accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload(event, 'claimFileList')">
+                </div>
+                <div id="claimFileList" class="file-list"></div>
+            </div>
+            <p class="form-hint">Required documents: Medical bills, discharge summary, diagnostic reports, prescription, claim form</p>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Bank Details for Reimbursement</h3>
+            <div class="form-group">
+                <label class="form-label required">Account Holder Name</label>
+                <input type="text" class="form-input" name="accountName" placeholder="As per bank records" required>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Account Number</label>
+                    <input type="text" class="form-input" name="accountNumber" placeholder="Account number" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">IFSC Code</label>
+                    <input type="text" class="form-input" name="ifscCode" placeholder="IFSC code" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label required">Bank Name</label>
+                <input type="text" class="form-input" name="bankName" placeholder="Bank name" required>
+            </div>
+        </div>
+
+        <div class="slide-panel-footer">
+            <button type="button" class="btn btn-ghost" onclick="panelManager.closePanel('newClaimPanel')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Submit Claim</button>
+        </div>
+    </form>
+</div>
+
+<!-- 7. SCHEDULE REPORT PANEL -->
+<div class="slide-panel-overlay" id="scheduleReportPanel-overlay"></div>
+<div class="slide-panel" id="scheduleReportPanel">
+    <div class="slide-panel-header">
+        <h2 class="slide-panel-title">Schedule Report</h2>
+        <p class="slide-panel-subtitle">Set up automated report generation and delivery</p>
+        <button class="slide-panel-close" onclick="panelManager.closePanel('scheduleReportPanel')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+    <form class="slide-panel-body" onsubmit="handleScheduleReportSubmit(event)">
+        <div class="form-section">
+            <h3 class="form-section-title">Report Configuration</h3>
+            <div class="form-group">
+                <label class="form-label required">Report Type</label>
+                <select class="form-select" name="reportType" required>
+                    <option value="">Select report type</option>
+                    <option value="sales">Sales Performance Report</option>
+                    <option value="commission">Commission Report</option>
+                    <option value="renewal">Renewal Analytics</option>
+                    <option value="claims">Claims Summary</option>
+                    <option value="leads">Lead Conversion Report</option>
+                    <option value="client">Client Portfolio Report</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label required">Report Name</label>
+                <input type="text" class="form-input" name="reportName" placeholder="Monthly Sales Report - November 2024" required>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Date Range & Frequency</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label required">Period</label>
+                    <select class="form-select" name="period" required>
+                        <option value="">Select period</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="yearly">Yearly</option>
+                        <option value="custom">Custom Range</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label required">Frequency</label>
+                    <select class="form-select" name="frequency" required>
+                        <option value="">Select frequency</option>
+                        <option value="once">Once</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Start Date</label>
+                    <input type="date" class="form-input" name="startDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">End Date</label>
+                    <input type="date" class="form-input" name="endDate">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Filters & Metrics</h3>
+            <div class="form-group">
+                <label class="form-label">Include Metrics</label>
+                <div class="checkbox-group" style="flex-direction: column;">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="metricRevenue" name="metrics[]" value="revenue" checked>
+                        <label for="metricRevenue">Revenue & Commission</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="metricPolicies" name="metrics[]" value="policies" checked>
+                        <label for="metricPolicies">Policy Statistics</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="metricConversion" name="metrics[]" value="conversion">
+                        <label for="metricConversion">Conversion Rates</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="metricCharts" name="metrics[]" value="charts">
+                        <label for="metricCharts">Charts & Graphs</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Filter by Agent</label>
+                <select class="form-select" name="agentFilter">
+                    <option value="">All Agents</option>
+                    <option value="self">My Reports Only</option>
+                    <option value="team">My Team</option>
+                    <option value="custom">Select Agents</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3 class="form-section-title">Delivery Settings</h3>
+            <div class="form-group">
+                <label class="form-label required">Export Format</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="formatPDF" name="format" value="pdf" checked>
+                        <label for="formatPDF">PDF</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="formatExcel" name="format" value="excel">
+                        <label for="formatExcel">Excel</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="formatCSV" name="format" value="csv">
+                        <label for="formatCSV">CSV</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label required">Email Recipients</label>
+                <input type="text" class="form-input" name="recipients" placeholder="email1@example.com, email2@example.com" required>
+                <p class="form-hint">Separate multiple emails with commas</p>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label">Delivery Day</label>
+                    <select class="form-select" name="deliveryDay">
+                        <option value="">Select day</option>
+                        <option value="monday">Monday</option>
+                        <option value="tuesday">Tuesday</option>
+                        <option value="wednesday">Wednesday</option>
+                        <option value="thursday">Thursday</option>
+                        <option value="friday">Friday</option>
+                        <option value="1">1st of Month</option>
+                        <option value="15">15th of Month</option>
+                        <option value="last">Last Day of Month</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Delivery Time</label>
+                    <input type="time" class="form-input" name="deliveryTime" value="09:00">
+                </div>
+            </div>
+        </div>
+
+        <div class="slide-panel-footer">
+            <button type="button" class="btn btn-ghost" onclick="panelManager.closePanel('scheduleReportPanel')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Schedule Report</button>
+        </div>
+    </form>
+</div>

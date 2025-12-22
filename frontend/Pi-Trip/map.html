@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rider Amenities Map - Pi-Trip</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/map.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-content">
+                <a href="index.html" class="logo">
+                    Pi-Trip
+                </a>
+                <div class="nav-menu">
+                    <a href="index.html">Home</a>
+                    <a href="dashboard.html">Rider's Dashboard</a>
+                    <a href="map.html" class="active">Amenities Map</a>
+                    <a href="#routes">Routes</a>
+                    <a href="#community">Community</a>
+                </div>
+                <div class="nav-actions">
+                    <a href="#profile" class="nav-link">Rider's Profile</a>
+                    <button class="btn-secondary" onclick="logout()">Logout</button>
+                    <button class="btn-icon" onclick="toggleMobileMenu()">☰</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Map Container -->
+    <div class="map-container">
+        <!-- Sidebar -->
+        <aside class="map-sidebar">
+            <div class="sidebar-header">
+                <h2>Rider Amenities</h2>
+                <button class="filter-toggle-btn" onclick="toggleFilters()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="4" y1="21" x2="4" y2="14"></line>
+                        <line x1="4" y1="10" x2="4" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12" y2="3"></line>
+                        <line x1="20" y1="21" x2="20" y2="16"></line>
+                        <line x1="20" y1="12" x2="20" y2="3"></line>
+                        <line x1="1" y1="14" x2="7" y2="14"></line>
+                        <line x1="9" y1="8" x2="15" y2="8"></line>
+                        <line x1="17" y1="16" x2="23" y2="16"></line>
+                    </svg>
+                    Filters
+                </button>
+            </div>
+
+            <!-- Category Filters (Collapsible) -->
+            <div class="category-filters" id="categoryFilters" style="display: none;">
+                <div class="filter-chips">
+                    <button class="filter-chip active" data-category="all" onclick="filterByCategory('all')">
+                        All <span class="chip-count">156</span>
+                    </button>
+                    <button class="filter-chip" data-category="toilet" onclick="filterByCategory('toilet')">
+                        Toilets <span class="chip-count">42</span>
+                    </button>
+                    <button class="filter-chip" data-category="garage" onclick="filterByCategory('garage')">
+                        Garages <span class="chip-count">28</span>
+                    </button>
+                    <button class="filter-chip" data-category="safety" onclick="filterByCategory('safety')">
+                        Safety <span class="chip-count">35</span>
+                    </button>
+                    <button class="filter-chip" data-category="fuel" onclick="filterByCategory('fuel')">
+                        Fuel <span class="chip-count">24</span>
+                    </button>
+                    <button class="filter-chip" data-category="food" onclick="filterByCategory('food')">
+                        Food <span class="chip-count">18</span>
+                    </button>
+                    <button class="filter-chip" data-category="hospital" onclick="filterByCategory('hospital')">
+                        Medical <span class="chip-count">9</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add Amenity Section -->
+            <div class="add-amenity-section">
+                <button class="btn-add-amenity" onclick="openAddAmenity()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                    Add New Amenity
+                </button>
+            </div>
+
+            <!-- Search Box -->
+            <div class="search-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input type="text" id="searchLocation" placeholder="Search amenities..." oninput="searchLocation(this.value)">
+            </div>
+
+            <!-- Amenity List -->
+            <div class="amenity-list" id="amenityList">
+            <!-- Amenity List -->
+            <div class="amenity-list" id="amenityList">
+                <!-- Amenities will be populated by JavaScript with icons based on category -->
+            </div>
+        </aside>
+
+        <!-- Map View -->
+        <div class="map-view" id="mapView">
+            <!-- Map Area -->
+            <div class="demo-map">
+                <div class="map-placeholder">
+                    <h3>Select an amenity to view on map</h3>
+                    <p>Click on any amenity from the list to see its location</p>
+                </div>
+
+                <!-- Map markers will be added dynamically -->
+                <div id="mapMarkers"></div>
+
+                <!-- Current Location -->
+                <div class="current-location-marker" style="top: 50%; left: 50%; display: none;" id="currentLocation">
+                    <div class="location-pulse"></div>
+                    <span class="location-dot"></span>
+                </div>
+            </div>
+
+            <!-- Map Controls -->
+            <div class="map-controls">
+                <button class="map-control-btn" onclick="centerMap()" title="Center Map">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <circle cx="12" cy="12" r="10"></circle>
+                    </svg>
+                </button>
+                <button class="map-control-btn" onclick="getCurrentLocation()" title="My Location">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Selected Amenity Details Card -->
+            <div class="amenity-details-card" id="amenityDetailsCard" style="display: none;">
+                <button class="close-details" onclick="closeAmenityDetails()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+                
+                <div id="amenityDetailsContent">
+                    <!-- Content populated by JavaScript -->
+                </div>
+
+                <div class="amenity-actions">
+                    <button class="btn-action btn-primary" onclick="bookRide()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                        Book Ride
+                    </button>
+                    <button class="btn-action btn-secondary" onclick="shareWithFriend()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="18" cy="5" r="3"></circle>
+                            <circle cx="6" cy="12" r="3"></circle>
+                            <circle cx="18" cy="19" r="3"></circle>
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                        </svg>
+                        Share with Friend
+                    </button>
+                    <button class="btn-action btn-tertiary" onclick="saveForLater()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        Save for Later
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Amenity Modal -->
+    <div class="modal" id="addAmenityModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Amenity</h2>
+                <p>Help fellow riders! Share amenities you've discovered</p>
+                <button class="modal-close" onclick="closeAddAmenity()">×</button>
+            </div>
+
+            <form class="amenity-form" onsubmit="submitAmenity(event)">
+                <div class="form-group">
+                    <label>Category *</label>
+                    <select id="amenityCategory" required>
+                        <option value="">Select category</option>
+                        <option value="toilet">Clean Toilet</option>
+                        <option value="garage">Garage/Mechanic</option>
+                        <option value="safety">Safety Checkpoint</option>
+                        <option value="fuel">Fuel Station</option>
+                        <option value="food">Restaurant/Dhaba</option>
+                        <option value="hospital">Hospital/Clinic</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Name *</label>
+                    <input type="text" id="amenityName" placeholder="e.g., Highway King Dhaba" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Location *</label>
+                    <input type="text" id="amenityLocation" placeholder="e.g., NH-8, Neemrana, Rajasthan" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Rating *</label>
+                        <select id="amenityRating" required>
+                            <option value="5">5 - Excellent</option>
+                            <option value="4">4 - Good</option>
+                            <option value="3">3 - Average</option>
+                            <option value="2">2 - Poor</option>
+                            <option value="1">1 - Very Poor</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Open 24/7?</label>
+                        <select id="amenity24x7">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Description/Tips</label>
+                    <textarea id="amenityNote" rows="3" placeholder="Share your experience... cleanliness, pricing, special features"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Photos (Optional)</label>
+                    <input type="file" id="amenityPhotos" multiple accept="image/*">
+                    <small>Help others by sharing photos!</small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeAddAmenity()">Cancel</button>
+                    <button type="submit" class="btn-primary">
+                        Submit Amenity
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"></polyline>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/map.js"></script>
+</body>
+</html>

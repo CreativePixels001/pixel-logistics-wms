@@ -1,4 +1,4 @@
-// DLT WMS - Put-away Module JavaScript
+// Pixel WMS - Put-away Module JavaScript
 // Handles all put-away functionality
 
 let currentPutawayMethod = null;

@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelNotes Dashboard - Organize Your Smart Notes</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Manage and organize your smart notes with PixelNotes Dashboard. Search, filter, and access all your voice notes, meeting records, and AI-enhanced documents in one place.">
+    <meta name="keywords" content="notes dashboard, note management, search notes, organize notes, meeting notes, productivity dashboard">
+    <meta name="author" content="Creative Pixels">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#000000">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://creativepixels.in/Projects/Notes/dashboard.html">
+    <meta property="og:title" content="PixelNotes Dashboard - Organize Your Smart Notes">
+    <meta property="og:description" content="Manage all your notes in one place. Search, filter, and organize voice notes, meeting records, and AI-enhanced documents with powerful dashboard features.">
+    <meta property="og:image" content="https://creativepixels.in/Projects/Notes/og-image.svg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="PixelNotes">
+    <meta property="og:locale" content="en_US">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://creativepixels.in/Projects/Notes/dashboard.html">
+    <meta name="twitter:title" content="PixelNotes Dashboard - Organize Your Smart Notes">
+    <meta name="twitter:description" content="Manage all your notes in one place. Search, filter, and organize with powerful dashboard features.">
+    <meta name="twitter:image" content="https://creativepixels.in/Projects/Notes/og-image.svg">
+    <meta name="twitter:creator" content="@CreativePixels">
+    
+    <!-- Apple Touch Icon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' fill='%23000'/><text x='90' y='130' font-family='Arial' font-size='120' font-weight='bold' fill='%23fff' text-anchor='middle'>P</text></svg>">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23000'/><text x='50' y='70' font-family='Arial' font-size='60' font-weight='bold' fill='%23fff' text-anchor='middle'>P</text></svg>">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f5f5f5;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: #000000;
+            border-bottom: 3px solid #000000;
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 900;
+            font-size: 1.5rem;
+            letter-spacing: -0.5px;
+            color: #ffffff !important;
+        }
+
+        .user-info {
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: #ffffff;
+            color: #000000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .btn-logout {
+            background: transparent;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            padding: 0.5rem 1.5rem;
+        }
+
+        .btn-logout:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        /* Dashboard Container */
+        .dashboard-container {
+            padding: 2rem 0;
+        }
+
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-header p {
+            color: #666666;
+            font-size: 1.125rem;
+        }
+
+        /* Stats Cards */
+        .stats-row {
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            border: 3px solid #000000;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-card .icon {
+            width: 50px;
+            height: 50px;
+            background: #000000;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: #666666;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            background: #ffffff;
+            border: 3px solid #000000;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #000000;
+            display: block;
+        }
+
+        .action-btn:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: translateY(-5px);
+        }
+
+        .action-btn .icon {
+            width: 60px;
+            height: 60px;
+            background: #000000;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover .icon {
+            background: #ffffff;
+        }
+
+        .action-btn:hover .icon svg {
+            stroke: #000000;
+        }
+
+        .action-btn h4 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-btn p {
+            color: #666666;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover p {
+            color: #ffffff;
+        }
+
+        /* Recent Notes */
+        .recent-notes {
+            margin-bottom: 2rem;
+        }
+
+        .note-item {
+            background: #ffffff;
+            border: 2px solid #000000;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #000000;
+            display: block;
+        }
+
+        .note-item:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: translateX(10px);
+        }
+
+        .note-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .note-title {
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+        .note-date {
+            color: #666666;
+            font-size: 0.875rem;
+        }
+
+        .note-item:hover .note-date {
+            color: #cccccc;
+        }
+
+        .note-preview {
+            color: #666666;
+            line-height: 1.5;
+        }
+
+        .note-item:hover .note-preview {
+            color: #e5e5e5;
+        }
+
+        .note-category {
+            display: inline-block;
+            background: #000000;
+            color: #ffffff;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .note-item:hover .note-category {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .note-actions {
+            display: none;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            gap: 0.5rem;
+        }
+
+        .note-item {
+            position: relative;
+        }
+
+        .note-item:hover .note-actions {
+            display: flex;
+        }
+
+        .btn-delete {
+            background: #ff4444;
+            color: #ffffff;
+            border: 2px solid #ff4444;
+            padding: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-delete:hover {
+            background: #cc0000;
+            border-color: #cc0000;
+            transform: scale(1.1);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666666;
+        }
+
+        .empty-state svg {
+            margin-bottom: 1rem;
+        }
+
+        /* Search Modal */
+        .search-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 10vh;
+        }
+
+        .search-modal.active {
+            display: flex;
+        }
+
+        .search-modal-content {
+            background: #ffffff;
+            border: 3px solid #000000;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            font-size: 1.25rem;
+            padding: 0.5rem;
+            outline: none;
+        }
+
+        .search-filters {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #e5e5e5;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .search-results {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .search-result-item {
+            padding: 1rem;
+            border: 2px solid #e5e5e5;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .search-result-item:hover {
+            border-color: #000000;
+            background: #f5f5f5;
+        }
+
+        .search-result-item:hover .note-actions {
+            display: flex;
+        }
+
+        .search-result-title {
+            font-weight: 700;
+            font-size: 1.125rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .search-result-preview {
+            color: #666666;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .search-result-meta {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: #999999;
+        }
+
+        .search-highlight {
+            background: #ffeb3b;
+            font-weight: 600;
+            padding: 0 0.25rem;
+        }
+
+        .search-empty {
+            text-align: center;
+            padding: 3rem;
+            color: #666666;
+        }
+
+        .search-shortcut {
+            display: inline-block;
+            background: #f5f5f5;
+            border: 2px solid #e5e5e5;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 4px;
+        }
+
+        .btn-search {
+            background: #ffffff;
+            color: #000000;
+            border: 2px solid #000000;
+            padding: 0.5rem 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-search:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="dashboard.html">PIXEL NOTES</a>
+            <div class="user-info">
+                <button class="btn-search" onclick="openSearchModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    Search
+                    <span class="search-shortcut" style="margin-left: 0.5rem;">⌘K</span>
+                </button>
+                <span id="userEmail">user@example.com</span>
+                <div class="user-avatar" id="userAvatar">U</div>
+                <button class="btn btn-logout" onclick="logout()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Modal -->
+    <div class="search-modal" id="searchModal" onclick="closeSearchModal(event)">
+        <div class="search-modal-content" onclick="event.stopPropagation()">
+            <!-- Search Input -->
+            <div class="search-header">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="searchInput" 
+                    placeholder="Search notes by title, content, or category..."
+                    oninput="performSearch()"
+                    autofocus
+                >
+                <button style="border: none; background: none; cursor: pointer;" onclick="closeSearchModal()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Search Filters -->
+            <div class="search-filters">
+                <button class="filter-btn active" data-filter="all" onclick="filterSearch('all')">
+                    All Notes
+                </button>
+                <button class="filter-btn" data-filter="Personal" onclick="filterSearch('Personal')">
+                    Personal
+                </button>
+                <button class="filter-btn" data-filter="Work" onclick="filterSearch('Work')">
+                    Work
+                </button>
+                <button class="filter-btn" data-filter="Ideas" onclick="filterSearch('Ideas')">
+                    Ideas
+                </button>
+                <button class="filter-btn" data-filter="Meeting" onclick="filterSearch('Meeting')">
+                    Meeting
+                </button>
+                <button class="filter-btn" data-filter="today" onclick="filterSearch('today')">
+                    Today
+                </button>
+                <button class="filter-btn" data-filter="week" onclick="filterSearch('week')">
+                    This Week
+                </button>
+            </div>
+
+            <!-- Search Results -->
+            <div class="search-results" id="searchResults">
+                <div class="search-empty">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cccccc" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <p>Start typing to search your notes...</p>
+                    <p style="font-size: 0.9rem; margin-top: 1rem;">
+                        Use filters to narrow down results or press <kbd>Esc</kbd> to close
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <div class="container">
+            <!-- Header -->
+            <div class="dashboard-header">
+                <h1>Welcome Back!</h1>
+                <p>Your thoughts are waiting. Let's build something great today.</p>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-row">
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                            </div>
+                            <h3 id="totalNotes">0</h3>
+                            <p>Total Notes</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="9" y1="3" x2="9" y2="21"></line>
+                                </svg>
+                            </div>
+                            <h3 id="totalCategories">0</h3>
+                            <p>Categories</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <h3 id="todayNotes">0</h3>
+                            <p>Today's Notes</p>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                    <path d="M12 20h9"></path>
+                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                                </svg>
+                            </div>
+                            <h3 id="wordCount">0</h3>
+                            <p>Total Words</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <h2 class="section-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 16 16 12 12 8"></polyline>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                    Quick Actions
+                </h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <a href="editor.html?new=true" class="action-btn">
+                            <div class="icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                                </svg>
+                            </div>
+                            <h4>New Note</h4>
+                            <p>Start writing a new note</p>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="editor.html" class="action-btn">
+                            <div class="icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                            </div>
+                            <h4>All Notes</h4>
+                            <p>View and manage all notes</p>
+                        </a>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="#" class="action-btn" onclick="event.preventDefault(); alert('PI Chat coming soon!')">
+                            <div class="icon">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                                </svg>
+                            </div>
+                            <h4>PI Chat</h4>
+                            <p>Talk to your Pixel Intelligence</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Notes -->
+            <div class="recent-notes">
+                <h2 class="section-title">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                        <polyline points="17 6 23 6 23 12"></polyline>
+                    </svg>
+                    Recent Notes
+                </h2>
+                <div id="recentNotesList">
+                    <!-- Notes will be loaded here -->
+                    <div class="empty-state">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cccccc" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <h4>No notes yet</h4>
+                        <p>Click "New Note" to get started</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Get current user and setup storage keys
+        const currentUser = JSON.parse(localStorage.getItem('pixelNotesUser'));
+        const currentUserId = localStorage.getItem('pixelNotesCurrentUserId');
+
+        // User-specific storage keys
+        const STORAGE_KEYS = {
+            notes: currentUserId ? `pixelNotes_${currentUserId}` : 'pixelNotes',
+            pi: currentUserId ? `pixelNotesPI_${currentUserId}` : 'pixelNotesPI'
+        };
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
+            loadStats();
+            loadRecentNotes();
+        });
+
+        // Load user info
+        function loadUserInfo() {
+            const userDataStr = localStorage.getItem('pixelNotesUser');
+            
+            if (!userDataStr) {
+                document.getElementById('userEmail').textContent = 'Guest';
+                document.getElementById('userAvatar').textContent = 'G';
+                return;
+            }
+
+            // Parse user data (could be JSON object or plain string)
+            let userData;
+            try {
+                userData = JSON.parse(userDataStr);
+            } catch (e) {
+                // Fallback for old format (plain string email)
+                userData = { email: userDataStr, name: userDataStr };
+            }
+
+            // Display user info
+            const displayName = userData.name || userData.email || 'Guest';
+            const displayEmail = userData.email || 'Guest';
+            
+            document.getElementById('userEmail').textContent = displayName;
+            
+            // Set avatar initial
+            const initial = displayName.charAt(0).toUpperCase();
+            document.getElementById('userAvatar').textContent = initial;
+
+            // Show sync status if Google user
+            if (userData.provider === 'google' && userData.driveEnabled) {
+                const syncBadge = document.createElement('span');
+                syncBadge.style.cssText = 'font-size: 0.75rem; color: #4CAF50; margin-left: 0.5rem;';
+                syncBadge.innerHTML = '☁️ Synced';
+                document.getElementById('userEmail').appendChild(syncBadge);
+            }
+        }
+
+        // Load statistics
+        function loadStats() {
+            const notes = JSON.parse(localStorage.getItem(STORAGE_KEYS.notes)) || [];
+            
+            // Total notes
+            document.getElementById('totalNotes').textContent = notes.length;
+            
+            // Categories
+            const categories = new Set(notes.map(note => note.category || 'Uncategorized'));
+            document.getElementById('totalCategories').textContent = categories.size;
+            
+            // Today's notes
+            const today = new Date().toDateString();
+            const todayNotes = notes.filter(note => {
+                const noteDate = new Date(note.created).toDateString();
+                return noteDate === today;
+            });
+            document.getElementById('todayNotes').textContent = todayNotes.length;
+            
+            // Word count
+            const totalWords = notes.reduce((sum, note) => {
+                const words = (note.content || '').split(/\s+/).filter(w => w.length > 0).length;
+                return sum + words;
+            }, 0);
+            document.getElementById('wordCount').textContent = totalWords.toLocaleString();
+        }
+
+        // Load recent notes
+        function loadRecentNotes() {
+            const notes = JSON.parse(localStorage.getItem(STORAGE_KEYS.notes)) || [];
+            const recentNotes = notes.slice(0, 5); // Show last 5 notes
+            
+            const container = document.getElementById('recentNotesList');
+            
+            if (recentNotes.length === 0) {
+                return; // Keep empty state
+            }
+            
+            container.innerHTML = recentNotes.map(note => {
+                const date = new Date(note.created).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                
+                const preview = (note.content || 'No content').substring(0, 120) + '...';
+                const category = note.category || 'Uncategorized';
+                
+                return `
+                    <div class="note-item" style="cursor: pointer;">
+                        <div onclick="window.location.href='editor.html?id=${note.id}'">
+                            <div class="note-header">
+                                <div class="note-title">${note.title || 'Untitled'}</div>
+                                <div class="note-date">${date}</div>
+                            </div>
+                            <div class="note-preview">${preview}</div>
+                            <span class="note-category">${category}</span>
+                        </div>
+                        <div class="note-actions">
+                            <button class="btn-delete" onclick="deleteNote('${note.id}', event)" title="Delete note">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Delete note function
+        function deleteNote(noteId, event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            
+            if (!confirm('Are you sure you want to delete this note? This action cannot be undone.')) {
+                return;
+            }
+
+            // Get notes from localStorage
+            let notes = JSON.parse(localStorage.getItem(STORAGE_KEYS.notes)) || [];
+            
+            // Filter out the note to delete
+            notes = notes.filter(note => note.id !== noteId);
+            
+            // Save back to localStorage
+            localStorage.setItem(STORAGE_KEYS.notes, JSON.stringify(notes));
+            
+            // Reload dashboard
+            loadStats();
+            loadRecentNotes();
+            
+            // Reload search if modal is open
+            if (document.getElementById('searchModal').classList.contains('active')) {
+                loadAllNotes();
+                performSearch();
+            }
+            
+            // Show success message
+            showDeleteSuccess();
+        }
+
+        // Show delete success message
+        function showDeleteSuccess() {
+            const message = document.createElement('div');
+            message.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: #000000;
+                color: #ffffff;
+                padding: 1rem 1.5rem;
+                border: 3px solid #000000;
+                z-index: 10000;
+                animation: slideIn 0.3s ease-out;
+            `;
+            message.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <span>Note deleted successfully</span>
+                </div>
+            `;
+            
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => message.remove(), 300);
+            }, 2000);
+        }
+
+        // Logout function
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Clear all auth-related data
+                localStorage.removeItem('pixelNotesUser');
+                localStorage.removeItem('pixelNotesAuthProvider');
+                localStorage.removeItem('pixelNotesSyncSettings');
+                
+                // Redirect to landing page
+                window.location.href = 'landing.html';
+            }
+        }
+
+        // ===== SEARCH FUNCTIONALITY =====
+        
+        let currentFilter = 'all';
+        let allNotes = [];
+
+        // Open search modal
+        function openSearchModal() {
+            document.getElementById('searchModal').classList.add('active');
+            document.getElementById('searchInput').focus();
+            loadAllNotes();
+        }
+
+        // Close search modal
+        function closeSearchModal(event) {
+            if (event && event.target.id !== 'searchModal') return;
+            document.getElementById('searchModal').classList.remove('active');
+            document.getElementById('searchInput').value = '';
+            currentFilter = 'all';
+            
+            // Reset filters
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.filter === 'all') {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Cmd/Ctrl + K to open search
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                openSearchModal();
+            }
+            
+            // Escape to close search
+            if (e.key === 'Escape') {
+                closeSearchModal({ target: { id: 'searchModal' }});
+            }
+        });
+
+        // Load all notes for search
+        function loadAllNotes() {
+            allNotes = JSON.parse(localStorage.getItem(STORAGE_KEYS.notes)) || [];
+        }
+
+        // Filter search results
+        function filterSearch(filter) {
+            currentFilter = filter;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.filter === filter) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // Re-run search with current query
+            performSearch();
+        }
+
+        // Perform search
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const resultsContainer = document.getElementById('searchResults');
+            
+            if (query.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="search-empty">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cccccc" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <p>Start typing to search your notes...</p>
+                        <p style="font-size: 0.9rem; margin-top: 1rem;">
+                            Use filters to narrow down results or press <kbd>Esc</kbd> to close
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Filter notes based on search query and current filter
+            let filteredNotes = allNotes.filter(note => {
+                const matchesQuery = 
+                    note.title.toLowerCase().includes(query) ||
+                    note.content.toLowerCase().includes(query) ||
+                    note.category.toLowerCase().includes(query);
+                
+                if (!matchesQuery) return false;
+                
+                // Apply category/time filter
+                if (currentFilter === 'all') return true;
+                
+                if (currentFilter === 'today') {
+                    const today = new Date().toDateString();
+                    const noteDate = new Date(note.created).toDateString();
+                    return today === noteDate;
+                }
+                
+                if (currentFilter === 'week') {
+                    const weekAgo = new Date();
+                    weekAgo.setDate(weekAgo.getDate() - 7);
+                    return new Date(note.created) >= weekAgo;
+                }
+                
+                // Category filter
+                return note.category === currentFilter;
+            });
+
+            // Sort by relevance (title matches first, then by date)
+            filteredNotes.sort((a, b) => {
+                const aTitleMatch = a.title.toLowerCase().includes(query);
+                const bTitleMatch = b.title.toLowerCase().includes(query);
+                
+                if (aTitleMatch && !bTitleMatch) return -1;
+                if (!aTitleMatch && bTitleMatch) return 1;
+                
+                return new Date(b.updated) - new Date(a.updated);
+            });
+
+            // Display results
+            if (filteredNotes.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="search-empty">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cccccc" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <p>No notes found matching "${query}"</p>
+                        <p style="font-size: 0.9rem; margin-top: 1rem;">
+                            Try different keywords or adjust filters
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+
+            resultsContainer.innerHTML = filteredNotes.map(note => {
+                const title = highlightText(note.title, query);
+                const preview = highlightText(truncateText(note.content, 150), query);
+                const date = new Date(note.updated).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+                
+                return `
+                    <div class="search-result-item">
+                        <div onclick="openNote('${note.id}')">
+                            <div class="search-result-title">${title}</div>
+                            <div class="search-result-preview">${preview}</div>
+                            <div class="search-result-meta">
+                                <span>📁 ${note.category}</span>
+                                <span>📅 ${date}</span>
+                                <span>📝 ${note.content.split(/\s+/).length} words</span>
+                            </div>
+                        </div>
+                        <div class="note-actions">
+                            <button class="btn-delete" onclick="deleteNote('${note.id}', event)" title="Delete note">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    <line x1="10" y1="11" x2="10" y2="17"></line>
+                                    <line x1="14" y1="11" x2="14" y2="17"></line>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Highlight search query in text
+        function highlightText(text, query) {
+            if (!query) return text;
+            
+            const regex = new RegExp(`(${query})`, 'gi');
+            return text.replace(regex, '<span class="search-highlight">$1</span>');
+        }
+
+        // Truncate text
+        function truncateText(text, maxLength) {
+            if (text.length <= maxLength) return text;
+            return text.substring(0, maxLength) + '...';
+        }
+
+        // Open note from search results
+        function openNote(noteId) {
+            window.location.href = `editor.html?id=${noteId}`;
+        }
+    </script>
+</body>
+</html>

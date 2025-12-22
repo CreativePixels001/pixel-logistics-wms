@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Attendance - Pixel Resource</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <style>
+        /* Today's Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .summary-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .summary-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .summary-icon.present {
+            background: var(--success-light);
+        }
+
+        .summary-icon.absent {
+            background: var(--error-light);
+        }
+
+        .summary-icon.late {
+            background: var(--warning-light);
+        }
+
+        .summary-icon.leave {
+            background: #E3F2FD;
+        }
+
+        .summary-content {
+            flex: 1;
+        }
+
+        .summary-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-value {
+            font-size: 2rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .summary-value.present {
+            color: var(--success-color);
+        }
+
+        .summary-value.absent {
+            color: var(--error-color);
+        }
+
+        .summary-value.late {
+            color: var(--warning-color);
+        }
+
+        .summary-value.leave {
+            color: #2196F3;
+        }
+
+        /* Mark Attendance Section */
+        .mark-attendance {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .attendance-mode-toggle {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .mode-btn {
+            flex: 1;
+            padding: 1rem;
+            background: var(--bg-light);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .mode-btn.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--bg-white);
+        }
+
+        .mode-btn:hover:not(.active) {
+            border-color: var(--primary-color);
+        }
+
+        .biometric-scanner {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--bg-light);
+            border: 2px dashed var(--border-color);
+            border-radius: var(--radius-lg);
+            margin-bottom: 2rem;
+        }
+
+        .scanner-animation {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 1.5rem;
+            background: var(--bg-white);
+            border: 3px solid var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
+            }
+        }
+
+        .scanner-status {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .scanner-instruction {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Manual Entry Form */
+        .manual-entry {
+            display: none;
+        }
+
+        .manual-entry.active {
+            display: block;
+        }
+
+        /* Attendance Table */
+        .attendance-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .attendance-table {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-indicator.present {
+            background: var(--success-light);
+            color: var(--success-color);
+        }
+
+        .status-indicator.absent {
+            background: var(--error-light);
+            color: var(--error-color);
+        }
+
+        .status-indicator.late {
+            background: var(--warning-light);
+            color: var(--warning-color);
+        }
+
+        .status-indicator.on-leave {
+            background: #E3F2FD;
+            color: #2196F3;
+        }
+
+        .status-indicator .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        /* Clock Widget */
+        .clock-widget {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            color: var(--bg-white);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .current-time {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .current-date {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+        }
+
+        .quick-action-btn {
+            padding: 0.875rem;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius-md);
+            color: var(--bg-white);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .quick-action-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .attendance-mode-toggle {
+                flex-direction: column;
+            }
+
+            .attendance-filters {
+                flex-direction: column;
+            }
+
+            .current-time {
+                font-size: 2rem;
+            }
+
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>Pixel Resource</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Attendance</div>
+                    <a href="daily.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                            <path d="M8 14h.01"/>
+                            <path d="M12 14h.01"/>
+                            <path d="M16 14h.01"/>
+                            <path d="M8 18h.01"/>
+                            <path d="M12 18h.01"/>
+                            <path d="M16 18h.01"/>
+                        </svg>
+                        Daily Attendance
+                    </a>
+                    <a href="duty-roster.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Duty Roster
+                    </a>
+                    <a href="shifts.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Shift Management
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Employee Management</div>
+                    <a href="../employees/directory.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Employees
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="../settings/configuration.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search employees...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Admin</span>
+                            <span class="user-role" id="userRole">Administrator</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Daily Attendance</h1>
+                        <p class="page-subtitle">Mark and track employee attendance for today</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-secondary" onclick="exportAttendance()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Export Report
+                        </button>
+                        <button class="btn btn-primary" onclick="bulkMarkAttendance()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Bulk Mark Present
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="summary-icon present">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--success-color)" stroke-width="2" width="28" height="28">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-label">Present Today</div>
+                            <div class="summary-value present">256</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-icon absent">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--error-color)" stroke-width="2" width="28" height="28">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-label">Absent Today</div>
+                            <div class="summary-value absent">12</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-icon late">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--warning-color)" stroke-width="2" width="28" height="28">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-label">Late Arrivals</div>
+                            <div class="summary-value late">18</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-card">
+                        <div class="summary-icon leave">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#2196F3" stroke-width="2" width="28" height="28">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-label">On Leave</div>
+                            <div class="summary-value leave">43</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 320px; gap: 1.5rem;">
+                    <!-- Left Column -->
+                    <div>
+                        <!-- Mark Attendance -->
+                        <div class="mark-attendance">
+                            <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem;">Mark Attendance</h2>
+                            
+                            <!-- Mode Toggle -->
+                            <div class="attendance-mode-toggle">
+                                <button class="mode-btn active" onclick="switchMode('biometric')" id="biometricBtn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                        <path d="M12 2a5 5 0 0 1 5 5c0 2.8-2.2 5-5 5s-5-2.2-5-5a5 5 0 0 1 5-5z"/>
+                                        <path d="M12 14c-5 0-8 3-8 6v2h16v-2c0-3-3-6-8-6z"/>
+                                    </svg>
+                                    Biometric / Face Recognition
+                                </button>
+                                <button class="mode-btn" onclick="switchMode('manual')" id="manualBtn">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                    Manual Entry
+                                </button>
+                            </div>
+
+                            <!-- Biometric Scanner -->
+                            <div class="biometric-scanner" id="biometricScanner">
+                                <div class="scanner-animation">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary-color)" stroke-width="2" width="48" height="48">
+                                        <path d="M12 2a5 5 0 0 1 5 5c0 2.8-2.2 5-5 5s-5-2.2-5-5a5 5 0 0 1 5-5z"/>
+                                        <path d="M12 14c-5 0-8 3-8 6v2h16v-2c0-3-3-6-8-6z"/>
+                                    </svg>
+                                </div>
+                                <div class="scanner-status">Ready to Scan</div>
+                                <div class="scanner-instruction">Place your finger on the scanner or look at the camera</div>
+                                <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="simulateScan()">Simulate Scan</button>
+                            </div>
+
+                            <!-- Manual Entry Form -->
+                            <div class="manual-entry" id="manualEntry">
+                                <form id="manualAttendanceForm">
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Employee</label>
+                                            <select class="form-select" id="employeeSelect" required>
+                                                <option value="">Select Employee</option>
+                                                <option value="EMP001">Rajesh Sharma (EMP001)</option>
+                                                <option value="EMP002">Priya Kumar (EMP002)</option>
+                                                <option value="EMP003">Amit Mehta (EMP003)</option>
+                                                <option value="EMP004">Sneha Patel (EMP004)</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label required">Status</label>
+                                            <select class="form-select" id="statusSelect" required>
+                                                <option value="present">Present</option>
+                                                <option value="absent">Absent</option>
+                                                <option value="late">Late</option>
+                                                <option value="half-day">Half Day</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label required">Check-in Time</label>
+                                            <input type="time" class="form-input" id="checkInTime" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Check-out Time</label>
+                                            <input type="time" class="form-input" id="checkOutTime">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Remarks</label>
+                                        <textarea class="form-textarea" id="remarks" rows="2" placeholder="Add any notes..."></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                            <polyline points="20 6 9 17 4 12"/>
+                                        </svg>
+                                        Mark Attendance
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Today's Attendance Table -->
+                        <div class="attendance-table">
+                            <div class="table-header">
+                                <h3 style="font-size: 1.125rem; font-weight: 700;">Today's Attendance Log</h3>
+                                <div class="attendance-filters">
+                                    <select class="form-select" style="width: 150px;">
+                                        <option value="all">All Status</option>
+                                        <option value="present">Present</option>
+                                        <option value="absent">Absent</option>
+                                        <option value="late">Late</option>
+                                    </select>
+                                    <select class="form-select" style="width: 180px;">
+                                        <option value="all">All Departments</option>
+                                        <option value="IT">IT & Technology</option>
+                                        <option value="OPS">Operations</option>
+                                        <option value="FIN">Finance</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Department</th>
+                                        <th>Shift</th>
+                                        <th>Check-in</th>
+                                        <th>Check-out</th>
+                                        <th>Hours</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="attendanceTableBody">
+                                    <!-- Sample Data -->
+                                    <tr>
+                                        <td>
+                                            <div style="font-weight: 600;">Rajesh Sharma</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-secondary);">EMP001</div>
+                                        </td>
+                                        <td>IT & Technology</td>
+                                        <td>General (9-6)</td>
+                                        <td>08:55 AM</td>
+                                        <td>06:10 PM</td>
+                                        <td>9h 15m</td>
+                                        <td><span class="status-indicator present"><span class="dot"></span>Present</span></td>
+                                        <td>
+                                            <button class="action-btn" title="View Details">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                    <circle cx="12" cy="12" r="3"/>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="font-weight: 600;">Priya Kumar</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-secondary);">EMP002</div>
+                                        </td>
+                                        <td>Operations</td>
+                                        <td>Morning (6-2)</td>
+                                        <td>05:50 AM</td>
+                                        <td>02:05 PM</td>
+                                        <td>8h 15m</td>
+                                        <td><span class="status-indicator present"><span class="dot"></span>Present</span></td>
+                                        <td>
+                                            <button class="action-btn" title="View Details">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                    <circle cx="12" cy="12" r="3"/>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="font-weight: 600;">Amit Mehta</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-secondary);">EMP003</div>
+                                        </td>
+                                        <td>Finance</td>
+                                        <td>General (9-6)</td>
+                                        <td>09:25 AM</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td><span class="status-indicator late"><span class="dot"></span>Late (25 min)</span></td>
+                                        <td>
+                                            <button class="action-btn" title="View Details">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                    <circle cx="12" cy="12" r="3"/>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="font-weight: 600;">Sneha Patel</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-secondary);">EMP004</div>
+                                        </td>
+                                        <td>Sales</td>
+                                        <td>General (9-6)</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td><span class="status-indicator on-leave"><span class="dot"></span>On Leave</span></td>
+                                        <td>
+                                            <button class="action-btn" title="View Details">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                                    <circle cx="12" cy="12" r="3"/>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div style="font-weight: 600;">Rahul Verma</div>
+                                            <div style="font-size: 0.75rem; color: var(--text-secondary);">EMP005</div>
+                                        </td>
+                                        <td>IT & Technology</td>
+                                        <td>Night (10-6)</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td><span class="status-indicator absent"><span class="dot"></span>Absent</span></td>
+                                        <td>
+                                            <button class="action-btn" title="Mark Present" onclick="markPresent('EMP005')">
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="20 6 9 17 4 12"/>
+                                                </svg>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Clock & Quick Actions -->
+                    <div>
+                        <div class="clock-widget">
+                            <div class="current-time" id="currentTime">09:45 AM</div>
+                            <div class="current-date" id="currentDate">Friday, 29 Nov 2025</div>
+                            <div class="quick-actions">
+                                <button class="quick-action-btn" onclick="refreshAttendance()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                        <polyline points="23 4 23 10 17 10"/>
+                                        <polyline points="1 20 1 14 7 14"/>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                    </svg>
+                                    Refresh
+                                </button>
+                                <button class="quick-action-btn" onclick="viewHistory()">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                    History
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="card" style="padding: 1.5rem;">
+                            <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 1rem;">Attendance Rate</h3>
+                            <div style="margin-bottom: 1.5rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-size: 0.875rem; color: var(--text-secondary);">Today</span>
+                                    <span style="font-weight: 700;">95.5%</span>
+                                </div>
+                                <div style="height: 8px; background: var(--bg-light); border-radius: 4px; overflow: hidden;">
+                                    <div style="height: 100%; width: 95.5%; background: var(--success-color);"></div>
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 1.5rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-size: 0.875rem; color: var(--text-secondary);">This Week</span>
+                                    <span style="font-weight: 700;">92.3%</span>
+                                </div>
+                                <div style="height: 8px; background: var(--bg-light); border-radius: 4px; overflow: hidden;">
+                                    <div style="height: 100%; width: 92.3%; background: var(--success-color);"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <span style="font-size: 0.875rem; color: var(--text-secondary);">This Month</span>
+                                    <span style="font-weight: 700;">89.8%</span>
+                                </div>
+                                <div style="height: 8px; background: var(--bg-light); border-radius: 4px; overflow: hidden;">
+                                    <div style="height: 100%; width: 89.8%; background: var(--warning-color);"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            // Set current time in manual entry
+            const now = new Date();
+            document.getElementById('checkInTime').value = now.toTimeString().slice(0, 5);
+        });
+
+        // Load user info
+        function loadUserInfo() {
+            const user = JSON.parse(sessionStorage.getItem('hrmsUser') || '{}');
+            if (user.name) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userRole').textContent = user.role;
+                document.getElementById('userAvatar').textContent = user.name.charAt(0);
+            }
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Update clock
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            const dateString = now.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
+            
+            document.getElementById('currentTime').textContent = timeString;
+            document.getElementById('currentDate').textContent = dateString;
+        }
+
+        // Switch mode
+        function switchMode(mode) {
+            const biometricBtn = document.getElementById('biometricBtn');
+            const manualBtn = document.getElementById('manualBtn');
+            const biometricScanner = document.getElementById('biometricScanner');
+            const manualEntry = document.getElementById('manualEntry');
+
+            if (mode === 'biometric') {
+                biometricBtn.classList.add('active');
+                manualBtn.classList.remove('active');
+                biometricScanner.style.display = 'block';
+                manualEntry.classList.remove('active');
+            } else {
+                biometricBtn.classList.remove('active');
+                manualBtn.classList.add('active');
+                biometricScanner.style.display = 'none';
+                manualEntry.classList.add('active');
+            }
+        }
+
+        // Simulate scan
+        function simulateScan() {
+            showToast('Scanning... Employee recognized: Rajesh Sharma (EMP001)', 'success');
+            setTimeout(() => {
+                showToast('Attendance marked successfully!', 'success');
+            }, 1500);
+        }
+
+        // Manual form submission
+        document.getElementById('manualAttendanceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('Attendance marked successfully!', 'success');
+            this.reset();
+        });
+
+        // Mark present
+        function markPresent(empId) {
+            if (confirm('Mark this employee as present?')) {
+                showToast('Employee marked as present', 'success');
+            }
+        }
+
+        // Bulk mark attendance
+        function bulkMarkAttendance() {
+            if (confirm('Mark all absent employees as present?')) {
+                showToast('Bulk attendance marked successfully!', 'success');
+            }
+        }
+
+        // Export attendance
+        function exportAttendance() {
+            showToast('Exporting attendance report...', 'info');
+        }
+
+        // Refresh attendance
+        function refreshAttendance() {
+            showToast('Refreshing attendance data...', 'info');
+        }
+
+        // View history
+        function viewHistory() {
+            window.location.href = 'history.html';
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">×</button>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

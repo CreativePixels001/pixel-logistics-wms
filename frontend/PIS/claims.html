@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claims Management - Pixel Safe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="common-styles.css">
+    <style>
+        .content { padding: 2rem; }
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: #ffffff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e8e8e8; }
+        .stat-label { font-size: 0.75rem; font-weight: 600; color: #666666; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; }
+        .stat-value { font-size: 2rem; font-weight: 700; margin-bottom: 0.25rem; }
+        .stat-change { font-size: 0.75rem; font-weight: 600; color: #000000; }
+        .filters-bar { background: #ffffff; padding: 1.5rem; border-radius: 8px; border: 1px solid #e8e8e8; margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
+        .filter-group { display: flex; gap: 0.5rem; align-items: center; }
+        .filter-label { font-size: 0.875rem; font-weight: 600; color: #666666; }
+        .filter-select { padding: 0.5rem 0.75rem; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 0.875rem; background: #ffffff; cursor: pointer; }
+        .search-input { flex: 1; padding: 0.5rem 1rem; border: 1px solid #e0e0e0; border-radius: 4px; font-size: 0.875rem; }
+        .claims-card { background: #ffffff; border-radius: 8px; border: 1px solid #e8e8e8; overflow: hidden; }
+        .table-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
+        .table-title { font-size: 0.9375rem; font-weight: 700; }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: #fafafa; }
+        th { padding: 0.875rem 1.5rem; text-align: left; font-weight: 600; font-size: 0.75rem; color: #666666; text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid #e8e8e8; }
+        td { padding: 1rem 1.5rem; border-bottom: 1px solid #f5f5f5; font-size: 0.875rem; }
+        tbody tr:hover { background: #fafafa; }
+        .status-badge { padding: 0.25rem 0.625rem; border-radius: 4px; font-size: 0.6875rem; font-weight: 600; display: inline-block; text-transform: uppercase; letter-spacing: 0.05em; }
+        .status-pending { background: #e8e8e8; color: #333333; }
+        .status-approved { background: #000000; color: #ffffff; }
+        .status-rejected { background: #b8b8b8; color: #000000; }
+        .status-investigating { background: #d1d1d1; color: #000000; }
+        .priority-high { color: #000000; font-weight: 700; }
+        .priority-medium { color: #333333; font-weight: 600; }
+        .priority-low { color: #666666; }
+        .action-btn { padding: 0.375rem 0.75rem; border: 1px solid #e0e0e0; background: #ffffff; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 500; margin-right: 0.5rem; }
+        .action-btn:hover { background: #000000; color: #ffffff; border-color: #000000; }
+        @media (max-width: 1024px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <header class="top-header">
+            <div class="header-left">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                    <span>Pixel Safe</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="search-bar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="globalSearch" placeholder="Search by claim ID, policy number, client name...">
+                    <kbd>⌘K</kbd>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-icon-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="badge">3</span>
+                </button>
+                <button class="header-icon-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span class="badge">5</span>
+                </button>
+                <div class="user-menu">
+                    <div class="user-avatar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <span class="user-name" id="headerAgentName">Agent</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </div>
+            </div>
+        </header>
+
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <a href="dashboard.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Sales</div>
+                    <a href="leads.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                        </svg>
+                        <span>Leads</span><span class="nav-badge">24</span>
+                    </a>
+                    <a href="clients.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/>
+                        </svg>
+                        <span>Clients</span>
+                    </a>
+                    <a href="deals.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        <span>Deals</span><span class="nav-badge">8</span>
+                    </a>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <a href="policies.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        <span>Policies</span>
+                    </a>
+                    <a href="renewals.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span>Renewals</span>
+                    </a>
+                    <a href="claims.html" class="nav-link active">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <span>Claims</span><span class="nav-badge">42</span>
+                    </a>
+                    <a href="agents.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Agents</span>
+                    </a>
+                    <a href="reports.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        <span>Reports</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <div class="page-header-left">
+                    <h1>Claims Management</h1>
+                    <p>Track and process insurance claim requests</p>
+                </div>
+                <div class="page-header-right">
+                    <button class="btn-secondary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+                        </svg>
+                        Export
+                    </button>
+                    <button class="btn-primary" onclick="openNewClaimPanel()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        New Claim
+                    </button>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="stats-row">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Claims</div>
+                        <div class="stat-value">42</div>
+                        <div class="stat-change">18 pending review</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Approved</div>
+                        <div class="stat-value">28</div>
+                        <div class="stat-change">₹1.2Cr paid out</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Avg Processing Time</div>
+                        <div class="stat-value">5 days</div>
+                        <div class="stat-change">-1 day improvement</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Approval Rate</div>
+                        <div class="stat-value">85%</div>
+                        <div class="stat-change">+3.2% this quarter</div>
+                    </div>
+                </div>
+
+                <div class="filters-bar">
+                    <div class="filter-group">
+                        <span class="filter-label">Status:</span>
+                        <select class="filter-select">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="investigating">Investigating</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Type:</span>
+                        <select class="filter-select">
+                            <option value="">All Types</option>
+                            <option value="health">Health</option>
+                            <option value="motor">Motor</option>
+                            <option value="property">Property</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <span class="filter-label">Priority:</span>
+                        <select class="filter-select">
+                            <option value="">All Priorities</option>
+                            <option value="high">High</option>
+                            <option value="medium">Medium</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <input type="text" class="search-input" placeholder="Search by claim ID, policy number, client name...">
+                </div>
+
+                <div class="claims-card">
+                    <div class="table-header">
+                        <div class="table-title">All Claims (42)</div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Claim ID</th>
+                                <th>Policy No.</th>
+                                <th>Client Name</th>
+                                <th>Type</th>
+                                <th>Claim Amount</th>
+                                <th>Filed Date</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 600;">#CLM-0042</td>
+                                <td>#POL-2024-3247</td>
+                                <td>Rajesh Kumar</td>
+                                <td>Health</td>
+                                <td style="font-weight: 600;">₹2.5L</td>
+                                <td>20 Nov 2024</td>
+                                <td class="priority-high">High</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td>
+                                    <button class="action-btn">Review</button>
+                                    <button class="action-btn">Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">#CLM-0041</td>
+                                <td>#POL-2024-3246</td>
+                                <td>Priya Sharma</td>
+                                <td>Motor</td>
+                                <td style="font-weight: 600;">₹85,000</td>
+                                <td>18 Nov 2024</td>
+                                <td class="priority-medium">Medium</td>
+                                <td><span class="status-badge status-investigating">Investigating</span></td>
+                                <td>
+                                    <button class="action-btn">Review</button>
+                                    <button class="action-btn">Details</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">#CLM-0040</td>
+                                <td>#POL-2024-3244</td>
+                                <td>Sunita Reddy</td>
+                                <td>Property</td>
+                                <td style="font-weight: 600;">₹15L</td>
+                                <td>15 Nov 2024</td>
+                                <td class="priority-high">High</td>
+                                <td><span class="status-badge status-approved">Approved</span></td>
+                                <td>
+                                    <button class="action-btn">View</button>
+                                    <button class="action-btn">Process</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">#CLM-0039</td>
+                                <td>#POL-2024-3243</td>
+                                <td>Vikram Singh</td>
+                                <td>Health</td>
+                                <td style="font-weight: 600;">₹1.2L</td>
+                                <td>12 Nov 2024</td>
+                                <td class="priority-medium">Medium</td>
+                                <td><span class="status-badge status-approved">Approved</span></td>
+                                <td>
+                                    <button class="action-btn">View</button>
+                                    <button class="action-btn">Process</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">#CLM-0038</td>
+                                <td>#POL-2023-2842</td>
+                                <td>Neha Gupta</td>
+                                <td>Motor</td>
+                                <td style="font-weight: 600;">₹42,000</td>
+                                <td>10 Nov 2024</td>
+                                <td class="priority-low">Low</td>
+                                <td><span class="status-badge status-rejected">Rejected</span></td>
+                                <td>
+                                    <button class="action-btn">View</button>
+                                    <button class="action-btn">Appeal</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">#CLM-0037</td>
+                                <td>#POL-2024-3240</td>
+                                <td>Rohan Desai</td>
+                                <td>Health</td>
+                                <td style="font-weight: 600;">₹3.8L</td>
+                                <td>08 Nov 2024</td>
+                                <td class="priority-high">High</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                                <td>
+                                    <button class="action-btn">Review</button>
+                                    <button class="action-btn">Details</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const agent = sessionStorage.getItem('pisAgent');
+        if (!agent) {
+            window.location.href = 'login.html';
+        } else {
+            const agentData = JSON.parse(agent);
+            document.getElementById('headerAgentName').textContent = agentData.name;
+        }
+
+        // Global Search Keyboard Shortcut (Cmd+K / Ctrl+K)
+        document.addEventListener('keydown', function(e) {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('globalSearch').focus();
+            }
+        });
+    </script>
+
+    <!-- Claims Dashboard Logic -->
+    <script src="claims.js"></script>
+    
+    <!-- Slide Panels -->
+    <script src="slide-panels.js"></script>
+    <script>
+        fetch('slide-panels.html')
+            .then(response => response.text())
+            .then(html => {
+                const div = document.createElement('div');
+                div.innerHTML = html;
+                document.body.appendChild(div);
+            });
+    </script>
+</body>
+</html>

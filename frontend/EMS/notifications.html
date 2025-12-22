@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifications - Pixel Commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common-styles.css">
+    <style>
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .notification-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .notification-tab {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .notification-tab.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .notification-tab:hover:not(.active) {
+            background: #f5f5f5;
+        }
+
+        .notification-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .notification-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: #fff;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .notification-item:hover {
+            background: #f9f9f9;
+            transform: translateX(4px);
+        }
+
+        .notification-item.unread {
+            background: #f5f5f5;
+            border-left: 3px solid #000;
+        }
+
+        .notification-icon {
+            width: 40px;
+            height: 40px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .notification-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .notification-icon.order { background: #000; color: #fff; }
+        .notification-icon.stock { background: #333; color: #fff; }
+        .notification-icon.price { background: #666; color: #fff; }
+        .notification-icon.sync { background: #999; color: #fff; }
+        .notification-icon.alert { background: #f5f5f5; color: #000; }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #000;
+        }
+
+        .notification-message {
+            font-size: 0.875rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .notification-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        .notification-platform {
+            padding: 0.125rem 0.5rem;
+            background: #000;
+            color: #fff;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .notification-time {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .notification-action-btn {
+            padding: 0.25rem 0.5rem;
+            background: transparent;
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .notification-action-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .notification-action-btn.primary {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .notification-action-btn.primary:hover {
+            background: #333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .filter-bar {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            padding: 0.375rem 0.75rem;
+            background: #fff;
+            border: 1px solid #E0E0E0;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-chip.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .filter-chip:hover:not(.active) {
+            background: #f5f5f5;
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-box {
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .live-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: #f5f5f5;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #000;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .notification-new {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span>Pixel Commerce</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                    <a href="notifications.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        Notifications
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Platforms</div>
+                    <a href="platforms/amazon.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        Amazon
+                    </a>
+                    <a href="platforms/flipkart.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                        </svg>
+                        Flipkart
+                    </a>
+                    <a href="platforms/meesho.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Meesho
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge" id="headerBadge">12</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar">S</div>
+                        <div class="user-info">
+                            <span class="user-name">Seller Name</span>
+                            <span class="user-role">Multi-Platform Seller</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="notification-header">
+                    <div>
+                        <h1 class="page-title">Notifications</h1>
+                        <p class="page-subtitle">Stay updated with real-time alerts across all platforms</p>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div class="live-indicator">
+                            <span class="live-dot"></span>
+                            Live Updates
+                        </div>
+                        <button class="btn btn-secondary" onclick="markAllRead()">Mark All as Read</button>
+                        <button class="btn btn-secondary" onclick="clearAll()">Clear All</button>
+                    </div>
+                </div>
+
+                <!-- Stats Bar -->
+                <div class="stats-bar">
+                    <div class="stat-box">
+                        <div class="stat-value" id="totalCount">12</div>
+                        <div class="stat-label">Total Notifications</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="unreadCount">8</div>
+                        <div class="stat-label">Unread</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="todayCount">5</div>
+                        <div class="stat-label">Today</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="criticalCount">3</div>
+                        <div class="stat-label">Critical Alerts</div>
+                    </div>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="notification-tabs">
+                    <button class="notification-tab active" onclick="filterNotifications('all')">
+                        All (12)
+                    </button>
+                    <button class="notification-tab" onclick="filterNotifications('unread')">
+                        Unread (8)
+                    </button>
+                    <button class="notification-tab" onclick="filterNotifications('orders')">
+                        Orders (5)
+                    </button>
+                    <button class="notification-tab" onclick="filterNotifications('stock')">
+                        Stock Alerts (3)
+                    </button>
+                    <button class="notification-tab" onclick="filterNotifications('price')">
+                        Price Changes (2)
+                    </button>
+                    <button class="notification-tab" onclick="filterNotifications('sync')">
+                        Platform Sync (2)
+                    </button>
+                </div>
+
+                <!-- Platform Filter -->
+                <div class="filter-bar">
+                    <div class="filter-chip active" onclick="filterPlatform('all')">All Platforms</div>
+                    <div class="filter-chip" onclick="filterPlatform('amazon')">Amazon</div>
+                    <div class="filter-chip" onclick="filterPlatform('flipkart')">Flipkart</div>
+                    <div class="filter-chip" onclick="filterPlatform('meesho')">Meesho</div>
+                </div>
+
+                <!-- Notification List -->
+                <div class="notification-list" id="notificationList">
+                    <!-- Notifications will be rendered here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sample notification data
+        const notifications = [
+            {
+                id: 1,
+                type: 'order',
+                platform: 'amazon',
+                title: 'New Order Received',
+                message: 'Order #AMZ-2025-8945 for Wireless Earbuds (₹1,299) has been placed.',
+                time: '2 minutes ago',
+                timestamp: Date.now() - 2 * 60 * 1000,
+                unread: true,
+                priority: 'high',
+                action: 'View Order',
+                actionLink: 'orders/amazon-orders.html'
+            },
+            {
+                id: 2,
+                type: 'stock',
+                platform: 'flipkart',
+                title: 'Low Stock Alert',
+                message: 'Smart Watch inventory is running low (3 units remaining). Consider reordering.',
+                time: '15 minutes ago',
+                timestamp: Date.now() - 15 * 60 * 1000,
+                unread: true,
+                priority: 'critical',
+                action: 'Reorder',
+                actionLink: 'inventory/flipkart-stock.html'
+            },
+            {
+                id: 3,
+                type: 'order',
+                platform: 'meesho',
+                title: 'Order Shipped',
+                message: 'Order #MSH-2025-1156 for Cotton T-Shirt has been shipped successfully.',
+                time: '32 minutes ago',
+                timestamp: Date.now() - 32 * 60 * 1000,
+                unread: true,
+                priority: 'normal',
+                action: 'Track',
+                actionLink: 'tracking/meesho-track-order.html'
+            },
+            {
+                id: 4,
+                type: 'price',
+                platform: 'amazon',
+                title: 'Competitor Price Drop',
+                message: 'Competitor reduced price for Phone Case to ₹149 (you: ₹199).',
+                time: '1 hour ago',
+                timestamp: Date.now() - 60 * 60 * 1000,
+                unread: true,
+                priority: 'high',
+                action: 'Adjust Price',
+                actionLink: 'products/amazon-catalog.html'
+            },
+            {
+                id: 5,
+                type: 'sync',
+                platform: 'flipkart',
+                title: 'Platform Sync Complete',
+                message: 'Successfully synchronized 342 products with Flipkart. All listings updated.',
+                time: '1 hour ago',
+                timestamp: Date.now() - 65 * 60 * 1000,
+                unread: false,
+                priority: 'normal',
+                action: 'View Report',
+                actionLink: 'reports/flipkart-reports.html'
+            },
+            {
+                id: 6,
+                type: 'order',
+                platform: 'amazon',
+                title: 'Order Delivered',
+                message: 'Order #AMZ-2025-3421 for Wireless Headphones delivered successfully.',
+                time: '2 hours ago',
+                timestamp: Date.now() - 2 * 60 * 60 * 1000,
+                unread: true,
+                priority: 'normal',
+                action: 'View Details',
+                actionLink: 'orders/amazon-orders.html'
+            },
+            {
+                id: 7,
+                type: 'stock',
+                platform: 'meesho',
+                title: 'Stock Replenished',
+                message: 'Yoga Mat inventory updated. 50 new units added to stock.',
+                time: '3 hours ago',
+                timestamp: Date.now() - 3 * 60 * 60 * 1000,
+                unread: true,
+                priority: 'normal',
+                action: 'View Inventory',
+                actionLink: 'inventory/meesho-stock.html'
+            },
+            {
+                id: 8,
+                type: 'order',
+                platform: 'flipkart',
+                title: 'Return Request',
+                message: 'Customer initiated return for Order #FLK-2025-8892 (Smart Watch).',
+                time: '4 hours ago',
+                timestamp: Date.now() - 4 * 60 * 60 * 1000,
+                unread: true,
+                priority: 'high',
+                action: 'Process Return',
+                actionLink: 'orders/flipkart-orders.html'
+            },
+            {
+                id: 9,
+                type: 'price',
+                platform: 'amazon',
+                title: 'Price Update Applied',
+                message: 'Successfully updated prices for 12 products on Amazon.',
+                time: '5 hours ago',
+                timestamp: Date.now() - 5 * 60 * 60 * 1000,
+                unread: false,
+                priority: 'normal',
+                action: 'View Products',
+                actionLink: 'products/amazon-catalog.html'
+            },
+            {
+                id: 10,
+                type: 'sync',
+                platform: 'meesho',
+                title: 'Sync Started',
+                message: 'Platform synchronization initiated for Meesho. Estimated time: 5 minutes.',
+                time: '6 hours ago',
+                timestamp: Date.now() - 6 * 60 * 60 * 1000,
+                unread: false,
+                priority: 'normal',
+                action: 'View Status',
+                actionLink: 'platforms/meesho.html'
+            },
+            {
+                id: 11,
+                type: 'stock',
+                platform: 'flipkart',
+                title: 'Critical Stock Alert',
+                message: 'Wireless Earbuds out of stock! Immediate action required.',
+                time: 'Yesterday',
+                timestamp: Date.now() - 24 * 60 * 60 * 1000,
+                unread: true,
+                priority: 'critical',
+                action: 'Urgent Reorder',
+                actionLink: 'alerts/flipkart-stock-alerts.html'
+            },
+            {
+                id: 12,
+                type: 'order',
+                platform: 'amazon',
+                title: 'Bulk Order Alert',
+                message: '5 new orders received in the last hour. Total value: ₹8,495.',
+                time: 'Yesterday',
+                timestamp: Date.now() - 25 * 60 * 60 * 1000,
+                unread: false,
+                priority: 'normal',
+                action: 'View All',
+                actionLink: 'orders/amazon-orders.html'
+            }
+        ];
+
+        let currentFilter = 'all';
+        let currentPlatform = 'all';
+
+        // Render notifications
+        function renderNotifications() {
+            const container = document.getElementById('notificationList');
+            let filtered = notifications;
+
+            // Filter by type
+            if (currentFilter !== 'all') {
+                if (currentFilter === 'unread') {
+                    filtered = filtered.filter(n => n.unread);
+                } else if (currentFilter === 'orders') {
+                    filtered = filtered.filter(n => n.type === 'order');
+                } else if (currentFilter === 'stock') {
+                    filtered = filtered.filter(n => n.type === 'stock');
+                } else if (currentFilter === 'price') {
+                    filtered = filtered.filter(n => n.type === 'price');
+                } else if (currentFilter === 'sync') {
+                    filtered = filtered.filter(n => n.type === 'sync');
+                }
+            }
+
+            // Filter by platform
+            if (currentPlatform !== 'all') {
+                filtered = filtered.filter(n => n.platform === currentPlatform);
+            }
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <h3>No notifications</h3>
+                        <p>You're all caught up!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(notif => `
+                <div class="notification-item ${notif.unread ? 'unread' : ''}" 
+                     data-id="${notif.id}"
+                     onclick="openNotification(${notif.id})">
+                    <div class="notification-icon ${notif.type}">
+                        ${getIcon(notif.type)}
+                    </div>
+                    <div class="notification-content">
+                        <div class="notification-title">${notif.title}</div>
+                        <div class="notification-message">${notif.message}</div>
+                        <div class="notification-meta">
+                            <span class="notification-platform">${notif.platform.toUpperCase()}</span>
+                            <span class="notification-time">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                ${notif.time}
+                            </span>
+                            ${notif.priority === 'critical' ? '<span style="color: #000; font-weight: 600;">⚠ CRITICAL</span>' : ''}
+                            ${notif.priority === 'high' ? '<span style="color: #666; font-weight: 600;">! HIGH</span>' : ''}
+                        </div>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="notification-action-btn primary" onclick="handleAction(event, '${notif.actionLink}')">
+                            ${notif.action}
+                        </button>
+                        <button class="notification-action-btn" onclick="dismissNotification(event, ${notif.id})">
+                            Dismiss
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getIcon(type) {
+            const icons = {
+                order: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+                stock: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>',
+                price: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+                sync: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',
+                alert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+            };
+            return icons[type] || icons.alert;
+        }
+
+        function filterNotifications(type) {
+            currentFilter = type;
+            document.querySelectorAll('.notification-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            renderNotifications();
+        }
+
+        function filterPlatform(platform) {
+            currentPlatform = platform;
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            renderNotifications();
+        }
+
+        function openNotification(id) {
+            const notif = notifications.find(n => n.id === id);
+            if (notif && notif.unread) {
+                notif.unread = false;
+                updateStats();
+                renderNotifications();
+            }
+        }
+
+        function handleAction(event, link) {
+            event.stopPropagation();
+            window.location.href = link;
+        }
+
+        function dismissNotification(event, id) {
+            event.stopPropagation();
+            const index = notifications.findIndex(n => n.id === id);
+            if (index > -1) {
+                notifications.splice(index, 1);
+                updateStats();
+                renderNotifications();
+            }
+        }
+
+        function markAllRead() {
+            notifications.forEach(n => n.unread = false);
+            updateStats();
+            renderNotifications();
+        }
+
+        function clearAll() {
+            if (confirm('Are you sure you want to clear all notifications?')) {
+                notifications.length = 0;
+                updateStats();
+                renderNotifications();
+            }
+        }
+
+        function updateStats() {
+            const total = notifications.length;
+            const unread = notifications.filter(n => n.unread).length;
+            const today = notifications.filter(n => {
+                const diff = Date.now() - n.timestamp;
+                return diff < 24 * 60 * 60 * 1000;
+            }).length;
+            const critical = notifications.filter(n => n.priority === 'critical').length;
+
+            document.getElementById('totalCount').textContent = total;
+            document.getElementById('unreadCount').textContent = unread;
+            document.getElementById('todayCount').textContent = today;
+            document.getElementById('criticalCount').textContent = critical;
+            document.getElementById('headerBadge').textContent = unread;
+        }
+
+        // Simulate real-time notifications
+        function simulateRealTimeNotification() {
+            const types = ['order', 'stock', 'price', 'sync'];
+            const platforms = ['amazon', 'flipkart', 'meesho'];
+            const messages = {
+                order: ['New order received', 'Order shipped', 'Order delivered', 'Return request'],
+                stock: ['Low stock alert', 'Stock replenished', 'Critical stock alert', 'Inventory updated'],
+                price: ['Competitor price drop', 'Price update applied', 'Price alert', 'Dynamic pricing triggered'],
+                sync: ['Platform sync complete', 'Sync started', 'Sync failed', 'Data synchronized']
+            };
+
+            const type = types[Math.floor(Math.random() * types.length)];
+            const platform = platforms[Math.floor(Math.random() * platforms.length)];
+            const messageList = messages[type];
+            const message = messageList[Math.floor(Math.random() * messageList.length)];
+
+            const newNotif = {
+                id: Date.now(),
+                type: type,
+                platform: platform,
+                title: message.charAt(0).toUpperCase() + message.slice(1),
+                message: `${message} for ${platform}. Check the details now.`,
+                time: 'Just now',
+                timestamp: Date.now(),
+                unread: true,
+                priority: Math.random() > 0.7 ? 'high' : 'normal',
+                action: 'View',
+                actionLink: `platforms/${platform}.html`
+            };
+
+            notifications.unshift(newNotif);
+            updateStats();
+            renderNotifications();
+
+            // Add animation
+            setTimeout(() => {
+                const items = document.querySelectorAll('.notification-item');
+                if (items[0]) {
+                    items[0].classList.add('notification-new');
+                }
+            }, 100);
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderNotifications();
+            updateStats();
+
+            // Simulate new notifications every 30 seconds
+            setInterval(simulateRealTimeNotification, 30000);
+        });
+    </script>
+</body>
+</html>

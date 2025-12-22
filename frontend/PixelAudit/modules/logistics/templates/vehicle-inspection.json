@@ -1,0 +1,313 @@
+{
+  "id": "vehicle-inspection",
+  "name": "Vehicle Inspection Audit",
+  "category": "Logistics - Vehicle",
+  "description": "Comprehensive vehicle condition and maintenance inspection for commercial vehicles",
+  "version": "1.0",
+  "items": [
+    {
+      "id": "vi-01",
+      "question": "Is vehicle registration current and displayed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "vi-02",
+      "question": "Is insurance certificate valid and up to date?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "vi-03",
+      "question": "Is pollution certificate (PUC) valid?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "vi-04",
+      "question": "Is fitness certificate current (for commercial vehicles)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "vi-05",
+      "question": "Are vehicle identification numbers visible and match documents?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-06",
+      "question": "Are headlights functioning properly (low and high beam)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-07",
+      "question": "Are tail lights and brake lights operational?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-08",
+      "question": "Are turn signals working on all sides?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-09",
+      "question": "Are hazard lights functional?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-10",
+      "question": "Are reflectors clean and visible?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-11",
+      "question": "Are all tires inflated to proper pressure?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-12",
+      "question": "Is tire tread depth above minimum safe level (1.6mm)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "vi-13",
+      "question": "Are tires free from cuts, bulges, or damage?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "vi-14",
+      "question": "Is spare tire in good condition and accessible?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-15",
+      "question": "Are wheel nuts tight and secure?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-16",
+      "question": "Do brakes respond promptly and evenly?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-17",
+      "question": "Is brake fluid at proper level?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-18",
+      "question": "Is parking brake functional?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-19",
+      "question": "Are there no unusual noises during braking?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-20",
+      "question": "Is engine oil at proper level?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-21",
+      "question": "Is coolant/antifreeze at proper level?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-22",
+      "question": "Is windshield washer fluid filled?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-23",
+      "question": "Are there no visible fluid leaks under vehicle?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "vi-24",
+      "question": "Is battery secure and terminals clean?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-25",
+      "question": "Are windshield and windows clean without cracks?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "vi-26",
+      "question": "Are windshield wipers in good condition?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-27",
+      "question": "Are all mirrors intact and properly adjusted?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-28",
+      "question": "Is horn functional and audible?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-29",
+      "question": "Are all seatbelts present and functional?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-30",
+      "question": "Are airbags functional (no warning lights)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-31",
+      "question": "Is fire extinguisher present and within expiry date?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "vi-32",
+      "question": "Is first aid kit available and stocked?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "vi-33",
+      "question": "Are warning triangles/reflective markers on board?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-34",
+      "question": "Are basic tools and jack available?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-35",
+      "question": "Is vehicle interior clean and well-maintained?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "vi-36",
+      "question": "Is vehicle exterior clean and presentable?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "vi-37",
+      "question": "Is regular maintenance schedule being followed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "vi-38",
+      "question": "Overall vehicle condition safe for operation?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    }
+  ]
+}

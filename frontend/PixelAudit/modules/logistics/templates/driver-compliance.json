@@ -1,0 +1,329 @@
+{
+  "id": "driver-compliance",
+  "name": "Driver Compliance Audit",
+  "category": "Logistics - Driver",
+  "description": "Comprehensive compliance audit for driver documentation, licensing, and regulatory requirements",
+  "version": "1.0",
+  "items": [
+    {
+      "id": "dc-01",
+      "question": "Does driver possess a valid driving license for vehicle category?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "dc-02",
+      "question": "Is driver's license expiry date more than 30 days away?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-03",
+      "question": "Are there any endorsements or restrictions on license?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-04",
+      "question": "Is badge/ID card displayed and current?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "dc-05",
+      "question": "Does driver have clean driving record (no recent violations)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-06",
+      "question": "Is medical fitness certificate valid and up to date?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "dc-07",
+      "question": "Are vision and hearing tests completed as required?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-08",
+      "question": "Is driver free from medical conditions affecting safe driving?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-09",
+      "question": "Has driver completed drug and alcohol screening?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-10",
+      "question": "Is driver enrolled in random testing program?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-11",
+      "question": "Has driver completed safety orientation training?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-12",
+      "question": "Is driver trained on defensive driving techniques?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-13",
+      "question": "Has driver received training on vehicle-specific operations?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-14",
+      "question": "Is driver trained on hazardous materials handling (if applicable)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-15",
+      "question": "Are refresher training sessions completed annually?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-16",
+      "question": "Are Hours of Service (HOS) regulations followed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-17",
+      "question": "Is Electronic Logging Device (ELD) used and functional?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-18",
+      "question": "Are daily logs accurate and up to date?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-19",
+      "question": "Is mandatory rest period between shifts observed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-20",
+      "question": "Are weekly driving hour limits not exceeded?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-21",
+      "question": "Does driver carry all required documents in vehicle?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-22",
+      "question": "Are vehicle registration and insurance documents current?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "dc-23",
+      "question": "Are trip manifests and delivery documents complete?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-24",
+      "question": "Are emergency contact details accessible?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-25",
+      "question": "Are bill of lading and shipping papers properly maintained?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-26",
+      "question": "Is driver aware of company policies and procedures?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-27",
+      "question": "Does driver follow proper route and schedule?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-28",
+      "question": "Is driver equipped with communication device (phone/radio)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-29",
+      "question": "Does driver report vehicle defects promptly?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-30",
+      "question": "Is driver courteous and professional with customers?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-31",
+      "question": "Does driver maintain vehicle cleanliness?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-32",
+      "question": "Is driver familiar with emergency procedures?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-33",
+      "question": "Are customer feedback and delivery ratings satisfactory?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-34",
+      "question": "Is driver's attendance and punctuality record acceptable?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-35",
+      "question": "Has driver had any recent accidents or incidents?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-36",
+      "question": "Is driver enrolled in continuous improvement program?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-37",
+      "question": "Does driver participate in safety meetings?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-38",
+      "question": "Are driver incentives and recognition programs in place?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-39",
+      "question": "Is driver satisfied with working conditions and support?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "dc-40",
+      "question": "Overall driver compliance and performance satisfactory?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    }
+  ]
+}

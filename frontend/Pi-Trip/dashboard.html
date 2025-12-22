@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rider's Dashboard - Pi-Trip</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
+                </svg>
+                <span>Pi-Trip</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="dashboard.html" class="active">Rider's Dashboard</a></li>
+                <li><a href="map.html">Amenities Map</a></li>
+                <li><a href="#routes">Routes</a></li>
+                <li><a href="#community">Community</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="#profile" class="nav-link">Rider's Profile</a>
+                <button class="btn-primary" onclick="window.location.href='trip-wizard.html'">New Trip</button>
+                <button class="btn-secondary" onclick="logout()">Logout</button>
+            </div>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Dashboard Container -->
+    <main class="dashboard-container">
+        <div class="container">
+            <!-- Welcome Section -->
+            <div class="dashboard-header">
+                <div class="welcome-section">
+                    <h1>Rider's Dashboard</h1>
+                    <p>Welcome, <span id="userName">Ashish Kumar</span></p>
+                </div>
+                <div class="quick-stats">
+                    <div class="stat-card">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Active Trips</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">2,450</div>
+                        <div class="stat-label">Pixel Coins</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">15,240</div>
+                        <div class="stat-label">KMs Travelled</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trip Filters -->
+            <div class="trip-filters">
+                <button class="filter-btn active" onclick="filterTrips('all')">All Trips</button>
+                <button class="filter-btn" onclick="filterTrips('upcoming')">Upcoming</button>
+                <button class="filter-btn" onclick="filterTrips('ongoing')">Ongoing</button>
+                <button class="filter-btn" onclick="filterTrips('completed')">Completed</button>
+            </div>
+
+            <!-- Trips Grid -->
+            <div class="trips-grid" id="tripsGrid">
+                <!-- Ongoing Trip Card -->
+                <div class="trip-card ongoing" data-status="ongoing">
+                    <div class="trip-card-header">
+                        <div class="trip-status-badge ongoing">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            Live Now
+                        </div>
+                        <div class="trip-menu">
+                            <button onclick="showTripMenu(event, 'trip-1')">⋮</button>
+                        </div>
+                    </div>
+
+                    <div class="trip-card-content">
+                        <h3>Leh-Ladakh Adventure 2025</h3>
+                        <div class="trip-meta">
+                            <span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                                Day 3 of 10
+                            </span>
+                            <span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                5 Riders
+                            </span>
+                        </div>
+
+                        <div class="trip-progress">
+                            <div class="progress-info">
+                                <span>142 km / 475 km</span>
+                                <span>30% Complete</span>
+                            </div>
+                            <div class="progress-bar-trip">
+                                <div class="progress-fill-trip" style="width: 30%"></div>
+                            </div>
+                        </div>
+
+                        <div class="trip-location">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            <span>Currently at: Manali</span>
+                        </div>
+                    </div>
+
+                    <div class="trip-card-actions">
+                        <button class="btn-action btn-primary" onclick="openLiveTracking('trip-1')">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+                            </svg>
+                            Live Tracking
+                        </button>
+                        <button class="btn-action btn-secondary" onclick="openTripDetails('trip-1')">View Details</button>
+                    </div>
+                </div>
+
+                <!-- Upcoming Trip Card -->
+                <div class="trip-card upcoming" data-status="upcoming">
+                    <div class="trip-card-header">
+                        <div class="trip-status-badge upcoming">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            Starts in 5 days
+                        </div>
+                        <div class="trip-menu">
+                            <button onclick="showTripMenu(event, 'trip-2')">⋮</button>
+                        </div>
+                    </div>
+
+                    <div class="trip-card-content">
+                        <h3>Mumbai to Goa Coastal</h3>
+                        <div class="trip-meta">
+                            <span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                Dec 10 - Dec 13, 2025
+                            </span>
+                            <span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                Solo Trip
+                            </span>
+                        </div>
+
+                        <div class="trip-checklist">
+                            <div class="checklist-item done">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Route planned
+                            </div>
+                            <div class="checklist-item done">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                                Vehicle ready
+                            </div>
+                            <div class="checklist-item">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                </svg>
+                                Hotel booking pending
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="trip-card-actions">
+                        <button class="btn-action btn-primary" onclick="openTripDetails('trip-2')">Complete Planning</button>
+                        <button class="btn-action btn-secondary" onclick="inviteFriends('trip-2')">Invite Friends</button>
+                    </div>
+                </div>
+
+                <!-- Completed Trip Card -->
+                <div class="trip-card completed" data-status="completed">
+                    <div class="trip-card-header">
+                        <div class="trip-status-badge completed">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Completed
+                        </div>
+                        <div class="trip-menu">
+                            <button onclick="showTripMenu(event, 'trip-3')">⋮</button>
+                        </div>
+                    </div>
+
+                    <div class="trip-card-content">
+                        <h3>Rajasthan Desert Circuit</h3>
+                        <div class="trip-meta">
+                            <span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                Nov 15 - Nov 23, 2025
+                            </span>
+                            <span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                4 Riders
+                            </span>
+                        </div>
+
+                        <div class="trip-stats-mini">
+                            <div class="stat-mini">
+                                <strong>850 km</strong>
+                                <span>Distance</span>
+                            </div>
+                            <div class="stat-mini">
+                                <strong>8 days</strong>
+                                <span>Duration</span>
+                            </div>
+                            <div class="stat-mini">
+                                <strong>4.8★</strong>
+                                <span>Rating</span>
+                            </div>
+                        </div>
+
+                        <div class="trip-photos">
+                            <div class="photo-placeholder"></div>
+                            <div class="photo-placeholder"></div>
+                            <div class="photo-placeholder"></div>
+                            <div class="photo-count">+24</div>
+                        </div>
+                    </div>
+
+                    <div class="trip-card-actions">
+                        <button class="btn-action btn-secondary" onclick="viewTripMemories('trip-3')">View Memories</button>
+                        <button class="btn-action btn-secondary" onclick="shareTrip('trip-3')">Share</button>
+                    </div>
+                </div>
+
+                <!-- Planning Trip Card -->
+                <div class="trip-card planning" data-status="upcoming">
+                    <div class="trip-card-header">
+                        <div class="trip-status-badge planning">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="12" cy="12" r="10"/>
+                            </svg>
+                            Planning
+                        </div>
+                        <div class="trip-menu">
+                            <button onclick="showTripMenu(event, 'trip-4')">⋮</button>
+                        </div>
+                    </div>
+
+                    <div class="trip-card-content">
+                        <h3>Northeast Grand Loop</h3>
+                        <div class="trip-meta">
+                            <span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                Dates not finalized
+                            </span>
+                            <span>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                6 Riders
+                            </span>
+                        </div>
+
+                        <div class="trip-completion">
+                            <span class="completion-text">35% Planning Complete</span>
+                            <div class="progress-bar-trip">
+                                <div class="progress-fill-trip" style="width: 35%"></div>
+                            </div>
+                        </div>
+
+                        <div class="pending-actions">
+                            <div class="pending-item">📅 Set travel dates</div>
+                            <div class="pending-item">🏍️ Choose vehicles</div>
+                            <div class="pending-item">💰 Finalize budget</div>
+                        </div>
+                    </div>
+
+                    <div class="trip-card-actions">
+                        <button class="btn-action btn-primary" onclick="continuePlanning('trip-4')">Continue Planning</button>
+                        <button class="btn-action btn-secondary" onclick="inviteFriends('trip-4')">Invite Friends</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State (Hidden when there are trips) -->
+            <div class="empty-state" style="display: none;">
+                <div class="empty-icon">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                </div>
+                <h2>No trips yet!</h2>
+                <p>Apni pehli adventure plan karo aur road pe nikal pado 🏍️</p>
+                <a href="trip-wizard.html" class="btn-primary btn-lg">Plan Your First Trip</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 Pi-Trip. Part of Pixel Ecosystem. Made with ❤️ for riders.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

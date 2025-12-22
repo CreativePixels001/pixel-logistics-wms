@@ -1,4 +1,4 @@
-// DLT WMS - Returns Processing Module JavaScript
+// Pixel WMS - Returns Processing Module JavaScript
 // Handles RMA, return-to-supplier, and LPN-based returns
 
 let currentReturnType = null;

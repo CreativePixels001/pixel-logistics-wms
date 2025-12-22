@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VK Kalazar Weekly - Pixel Fact Edition</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* Navigation matching PixelFact */
+        .main-nav {
+            background: #ffffff;
+            border-bottom: 2px solid #000;
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .logo-pixel {
+            color: #000;
+        }
+
+        .logo-fact {
+            color: #666;
+        }
+
+        .nav-back {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .nav-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Header Section */
+        .newspaper-header {
+            background: #ffffff;
+            color: #000;
+            padding: 60px 40px;
+            border-bottom: 4px solid #000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .newspaper-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -2px;
+        }
+
+        .newspaper-subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .edition-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .edition-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        .btn-outline {
+            background: #fff;
+            color: #000;
+        }
+
+        .btn-outline:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: #ffffff;
+            border: 2px solid #000;
+            position: sticky;
+            top: 120px;
+        }
+
+        .sidebar-header {
+            background: #000;
+            color: #fff;
+            padding: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-content {
+            padding: 20px;
+        }
+
+        .page-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .page-thumb {
+            border: 2px solid #e0e0e0;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: #fff;
+        }
+
+        .page-thumb:hover {
+            border-color: #000;
+            background: #f5f5f5;
+        }
+
+        .page-thumb.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        .page-thumb img {
+            width: 100%;
+            display: block;
+            margin-bottom: 8px;
+            border: 1px solid #e0e0e0;
+        }
+
+        /* Newspaper Viewer */
+        .newspaper-viewer {
+            background: #ffffff;
+            border: 3px solid #000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .viewer-header {
+            background: #000;
+            color: #fff;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #000;
+        }
+
+        .page-indicator {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .page-nav {
+            display: flex;
+            gap: 10px;
+        }
+
+        .page-nav-btn {
+            padding: 8px 16px;
+            background: #fff;
+            color: #000;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .page-nav-btn:hover:not(:disabled) {
+            background: #f0f0f0;
+        }
+
+        .page-nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .viewer-content {
+            padding: 40px;
+            background: #fafafa;
+        }
+
+        .page-image-container {
+            background: #fff;
+            border: 2px solid #000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .page-image {
+            width: 100%;
+            display: block;
+            image-rendering: crisp-edges;
+        }
+
+        .zoom-controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .zoom-btn {
+            padding: 10px 20px;
+            background: #000;
+            color: #fff;
+            border: 2px solid #000;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .zoom-btn:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* Footer */
+        .newspaper-footer {
+            background: #fff;
+            border-top: 3px solid #000;
+            padding: 40px;
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .footer-link {
+            color: #000;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        .copyright {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .newspaper-title {
+                font-size: 2.5rem;
+            }
+
+            .page-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #e0e0e0;
+            border-top: 4px solid #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <span class="logo-pixel">PIXEL</span>
+                <span class="logo-fact">FACT</span>
+            </a>
+            <div class="nav-back">
+                <button class="nav-btn" onclick="downloadPDF()">⬇ Download PDF</button>
+                <a href="../index.html" class="nav-btn">← Back to Home</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="newspaper-header">
+        <div class="header-content">
+            <h1 class="newspaper-title">VK Kalazar Weekly</h1>
+            <p class="newspaper-subtitle">Digital Edition • Mumbai Weekly Newspaper</p>
+            
+            <div class="edition-info">
+                <div class="edition-item">
+                    <span>📅</span>
+                    <span>December 2024</span>
+                </div>
+                <div class="edition-item">
+                    <span>📰</span>
+                    <span>Issue #4</span>
+                </div>
+                <div class="edition-item">
+                    <span>📄</span>
+                    <span>8 Pages</span>
+                </div>
+                <div class="edition-item">
+                    <span>🇮🇳</span>
+                    <span>Hindi Edition</span>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn" onclick="showPage(1)">Start Reading →</button>
+                <button class="btn btn-outline" onclick="downloadPDF()">Download PDF</button>
+                <button class="btn btn-outline" onclick="printNewspaper()">Print</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                📑 ALL PAGES
+            </div>
+            <div class="sidebar-content">
+                <div class="page-grid" id="pageGrid">
+                    <!-- Pages will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Viewer -->
+        <div class="newspaper-viewer">
+            <div class="viewer-header">
+                <div class="page-indicator" id="pageIndicator">Page 1 of 8</div>
+                <div class="page-nav">
+                    <button class="page-nav-btn" onclick="previousPage()" id="prevBtn">◀ Previous</button>
+                    <button class="page-nav-btn" onclick="nextPage()" id="nextBtn">Next ▶</button>
+                </div>
+            </div>
+
+            <div class="viewer-content">
+                <div class="page-image-container" id="imageContainer">
+                    <img src="" alt="Newspaper Page" class="page-image" id="pageImage">
+                </div>
+                
+                <div class="zoom-controls">
+                    <button class="zoom-btn" onclick="zoomOut()">🔍 Zoom Out</button>
+                    <button class="zoom-btn" onclick="resetZoom()">Reset</button>
+                    <button class="zoom-btn" onclick="zoomIn()">🔍 Zoom In</button>
+                    <button class="zoom-btn" onclick="toggleFullscreen()">⛶ Fullscreen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="newspaper-footer">
+        <div class="footer-links">
+            <a href="../index.html" class="footer-link">Home</a>
+            <a href="#" class="footer-link">About VK Kalazar</a>
+            <a href="#" class="footer-link">Subscribe</a>
+            <a href="#" class="footer-link">Contact</a>
+        </div>
+        <p class="copyright">
+            &copy; 2024 VK Kalazar Weekly. Presented by Pixel Fact.
+        </p>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 8;
+        let zoomLevel = 1;
+
+        // Initialize
+        function init() {
+            loadPageThumbnails();
+            showPage(1);
+        }
+
+        // Load page thumbnails in sidebar
+        function loadPageThumbnails() {
+            const pageGrid = document.getElementById('pageGrid');
+            pageGrid.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageNum = String(i).padStart(4, '0');
+                const imgSrc = `vkkalazar-4_page-${pageNum}.jpg`;
+
+                const pageThumb = document.createElement('div');
+                pageThumb.className = 'page-thumb' + (i === 1 ? ' active' : '');
+                pageThumb.id = `thumb-${i}`;
+                pageThumb.onclick = () => showPage(i);
+                
+                pageThumb.innerHTML = `
+                    <img src="${imgSrc}" alt="Page ${i}">
+                    <div>Page ${i}</div>
+                `;
+                
+                pageGrid.appendChild(pageThumb);
+            }
+        }
+
+        // Show specific page
+        function showPage(pageNum) {
+            if (pageNum < 1 || pageNum > totalPages) return;
+
+            currentPage = pageNum;
+            const pageNumPadded = String(pageNum).padStart(4, '0');
+            const imgSrc = `vkkalazar-4_page-${pageNumPadded}.jpg`;
+
+            // Update image
+            const pageImage = document.getElementById('pageImage');
+            pageImage.src = imgSrc;
+            pageImage.alt = `Page ${pageNum}`;
+
+            // Update indicator
+            document.getElementById('pageIndicator').textContent = `Page ${pageNum} of ${totalPages}`;
+
+            // Update thumbnails
+            document.querySelectorAll('.page-thumb').forEach((thumb, index) => {
+                thumb.classList.toggle('active', index + 1 === pageNum);
+            });
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = pageNum === 1;
+            document.getElementById('nextBtn').disabled = pageNum === totalPages;
+
+            // Reset zoom
+            resetZoom();
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Navigation
+        function nextPage() {
+            if (currentPage < totalPages) {
+                showPage(currentPage + 1);
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                showPage(currentPage - 1);
+            }
+        }
+
+        // Zoom controls
+        function zoomIn() {
+            zoomLevel = Math.min(zoomLevel + 0.2, 3);
+            applyZoom();
+        }
+
+        function zoomOut() {
+            zoomLevel = Math.max(zoomLevel - 0.2, 0.5);
+            applyZoom();
+        }
+
+        function resetZoom() {
+            zoomLevel = 1;
+            applyZoom();
+        }
+
+        function applyZoom() {
+            const img = document.getElementById('pageImage');
+            img.style.transform = `scale(${zoomLevel})`;
+            img.style.transformOrigin = 'top center';
+            img.style.transition = 'transform 0.3s ease';
+        }
+
+        // Fullscreen
+        function toggleFullscreen() {
+            const container = document.getElementById('imageContainer');
+            if (!document.fullscreenElement) {
+                container.requestFullscreen();
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Download PDF
+        function downloadPDF() {
+            const link = document.createElement('a');
+            link.href = 'vkkalazar-4.pdf';
+            link.download = 'VK-Kalazar-Weekly-Issue-4.pdf';
+            link.click();
+        }
+
+        // Print
+        function printNewspaper() {
+            window.print();
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') previousPage();
+            if (e.key === 'ArrowRight') nextPage();
+            if (e.key === '+' || e.key === '=') zoomIn();
+            if (e.key === '-') zoomOut();
+            if (e.key === '0') resetZoom();
+            if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

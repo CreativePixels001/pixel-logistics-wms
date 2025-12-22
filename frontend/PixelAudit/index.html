@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PixelAudit - Audit Anything, Anywhere, Anytime. Mobile-first audit management platform for businesses.">
+    <title>PixelAudit - Smart Audit Management Platform</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="assets/css/global.css">
+    <link rel="stylesheet" href="assets/css/landing.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="index.html" class="navbar-brand">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"></path>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                    </svg>
+                    <div class="brand-text">
+                        <span class="brand-name">PixelAudit</span>
+                        <span class="brand-tagline">Smart and Pixel Perfect</span>
+                    </div>
+                </a>
+                
+                <div class="navbar-links">
+                    <a href="#features">Features</a>
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#pricing">Pricing</a>
+                    <a href="#testimonials">Testimonials</a>
+                    <a href="login.html" class="btn btn-primary">Start Free Trial</a>
+                </div>
+                
+                <button class="navbar-toggle" id="navToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <p class="hero-tagline">Smart and Pixel Perfect</p>
+                    <h1 class="hero-title">
+                        Audit Anything,<br>
+                        Anywhere,<br>
+                        <span class="highlight">Anytime</span>
+                    </h1>
+                    <p class="hero-description">
+                        Mobile-first audit management platform that helps audit firms assign audits via WhatsApp, 
+                        complete checklists on mobile, and generate professional PDF reports instantly.
+                    </p>
+                    <div class="hero-cta">
+                        <a href="login.html" class="btn btn-primary btn-lg">
+                            Start Free Trial
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                                <polyline points="12 5 19 12 12 19"></polyline>
+                            </svg>
+                        </a>
+                        <a href="#how-it-works" class="btn btn-secondary btn-lg">See How It Works</a>
+                    </div>
+                    <p class="hero-trial-info">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        1-hour free trial • No credit card required • ₹1 for lifetime access
+                    </p>
+                </div>
+                
+                <div class="hero-visual">
+                    <div class="hero-card hero-card-1">
+                        <div class="card-header-small">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
+                            <span>Assign Audit</span>
+                        </div>
+                        <p class="text-muted">Mumbai Warehouse - Safety Audit</p>
+                        <div class="badge badge-dark">Assigned to Rajesh</div>
+                    </div>
+                    
+                    <div class="hero-card hero-card-2">
+                        <div class="card-header-small">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            <span>Checklist Progress</span>
+                        </div>
+                        <div class="progress-info">
+                            <span>45/50 items</span>
+                            <span class="text-success fw-semibold">90%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-success" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-card hero-card-3">
+                        <div class="card-header-small">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="9 11 12 14 22 4"></polyline>
+                                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                            </svg>
+                            <span>Audit Approved</span>
+                        </div>
+                        <p class="text-muted">PDF report generated</p>
+                        <div class="badge badge-success">Sent to Client</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3 class="stat-value">50+</h3>
+                    <p class="stat-label">Pre-built Templates</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="stat-value">10hrs</h3>
+                    <p class="stat-label">Saved Per Week</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="stat-value">5sec</h3>
+                    <p class="stat-label">WhatsApp Assignment</p>
+                </div>
+                <div class="stat-item">
+                    <h3 class="stat-value">100%</h3>
+                    <p class="stat-label">Mobile Optimized</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Everything You Need to Audit Smarter</h2>
+                <p class="section-description">Built for audit firms who want to save time and deliver professional results</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Mobile-First Design</h3>
+                    <p class="feature-description">
+                        Auditors complete checklists on their phones with large touch targets, 
+                        photo uploads, and offline support. No app download required.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">WhatsApp Integration</h3>
+                    <p class="feature-description">
+                        Assign audits instantly via WhatsApp. Auditors receive a direct link 
+                        to start working immediately. No complicated onboarding.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">50+ Pre-built Templates</h3>
+                    <p class="feature-description">
+                        Restaurant safety, warehouse compliance, retail audits, and more. 
+                        Start auditing in seconds with industry-standard checklists.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6"></path>
+                            <path d="m4.22 4.22 4.24 4.24m5.08 5.08 4.24 4.24"></path>
+                            <path d="M1 12h6m6 0h6"></path>
+                            <path d="m4.22 19.78 4.24-4.24m5.08-5.08 4.24-4.24"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Photo Documentation</h3>
+                    <p class="feature-description">
+                        Capture issues with photos directly from mobile. Photos are compressed, 
+                        stored securely, and embedded in final PDF reports.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Professional PDF Reports</h3>
+                    <p class="feature-description">
+                        Auto-generated reports with your branding, executive summary, 
+                        detailed findings, and photos. Impress your clients instantly.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Smart Pricing</h3>
+                    <p class="feature-description">
+                        Start with ₹1 for lifetime access. Pay as you grow. No monthly fees. 
+                        Unlimited audits for ₹1,000 - cheaper than hiring one person.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-description">From assignment to approval in 3 simple steps</p>
+            </div>
+            
+            <div class="steps-scroll-wrapper">
+                <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Assign Audit via WhatsApp</h3>
+                        <p class="step-description">
+                            Choose from 50+ templates (Restaurant, Warehouse, Retail). 
+                            Select client, location, and auditor. Click assign - 
+                            WhatsApp message sent with direct link in 5 seconds.
+                        </p>
+                        <div class="step-visual">
+                            <div class="step-card">
+                                <div class="step-card-header">
+                                    <span class="fw-semibold">New Assignment</span>
+                                    <span class="badge badge-dark">WhatsApp Sent</span>
+                                </div>
+                                <div class="step-card-body">
+                                    <p class="text-muted mb-2">Client: Mahindra Logistics</p>
+                                    <p class="text-muted mb-2">Type: Warehouse Safety</p>
+                                    <p class="text-muted">Assigned to: Rajesh Kumar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Complete on Mobile</h3>
+                        <p class="step-description">
+                            Auditor clicks WhatsApp link, opens mobile browser (no app needed). 
+                            Sees checklist with Yes/No/N/A buttons. Takes photos, adds notes. 
+                            Progress auto-saves. Submits when done.
+                        </p>
+                        <div class="step-visual">
+                            <div class="step-card">
+                                <div class="step-card-header">
+                                    <span class="fw-semibold">Audit Progress</span>
+                                    <span class="text-success fw-semibold">45/50</span>
+                                </div>
+                                <div class="step-card-body">
+                                    <div class="checklist-preview">
+                                        <div class="checklist-item">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            <span>Fire extinguishers present?</span>
+                                        </div>
+                                        <div class="checklist-item">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            <span>Emergency exits marked?</span>
+                                        </div>
+                                        <div class="checklist-item">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <polyline points="20 6 9 17 4 12"></polyline>
+                                            </svg>
+                                            <span>First aid kit accessible?</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Review & Send Report</h3>
+                        <p class="step-description">
+                            Admin receives notification. Reviews checklist and photos. 
+                            Adds comments if needed. Clicks approve - PDF report auto-generated 
+                            with branding and emailed to client instantly.
+                        </p>
+                        <div class="step-visual">
+                            <div class="step-card">
+                                <div class="step-card-header">
+                                    <span class="fw-semibold">Audit Complete</span>
+                                    <span class="badge badge-success">Approved</span>
+                                </div>
+                                <div class="step-card-body">
+                                    <p class="text-muted mb-2">Pass Rate: 90% (45/50)</p>
+                                    <p class="text-muted mb-2">PDF Generated ✓</p>
+                                    <p class="text-success fw-semibold">Sent to client ✓</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Simple, Transparent Pricing</h2>
+                <p class="section-description">Pay as you grow. No hidden fees. No monthly subscriptions.</p>
+            </div>
+            
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="pricing-tier">Lifetime Access</h3>
+                        <div class="pricing-price">
+                            <span class="currency">₹</span>
+                            <span class="amount">1</span>
+                        </div>
+                        <p class="pricing-description">Perfect for trying out</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            9 audit limit
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            All templates
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            WhatsApp assignments
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            PDF reports
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Photo uploads
+                        </li>
+                    </ul>
+                    <a href="login.html" class="btn btn-outline btn-block">Start Free Trial</a>
+                </div>
+                
+                <div class="pricing-card pricing-card-featured">
+                    <div class="pricing-badge">POPULAR</div>
+                    <div class="pricing-header">
+                        <h3 class="pricing-tier">Professional</h3>
+                        <div class="pricing-price">
+                            <span class="currency">₹</span>
+                            <span class="amount">100</span>
+                        </div>
+                        <p class="pricing-description">For small audit firms</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            100 audits
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Everything in Lifetime
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Priority support
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Analytics dashboard
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Client management
+                        </li>
+                    </ul>
+                    <a href="login.html" class="btn btn-primary btn-block">Start Free Trial</a>
+                </div>
+                
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3 class="pricing-tier">Enterprise</h3>
+                        <div class="pricing-price">
+                            <span class="currency">₹</span>
+                            <span class="amount">1,000</span>
+                        </div>
+                        <p class="pricing-description">Unlimited everything</p>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <strong>Unlimited audits</strong>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            Everything in Professional
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <strong>Custom templates</strong>
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            White-label reports
+                        </li>
+                        <li>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            API access
+                        </li>
+                    </ul>
+                    <a href="login.html" class="btn btn-outline btn-block">Start Free Trial</a>
+                </div>
+            </div>
+            
+            <p class="pricing-note">
+                All plans include 1-hour free trial. No credit card required. Upgrade anytime.
+            </p>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Loved by Audit Professionals</h2>
+                <p class="section-description">See what our users have to say</p>
+            </div>
+            
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <p class="testimonial-text">
+                        "PixelAudit saved me 10 hours per week. I used to spend hours on Excel sheets 
+                        and WhatsApp chaos. Now everything is automated. My clients love the professional PDF reports!"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">V</div>
+                        <div class="author-info">
+                            <p class="author-name">Vishal Sharma</p>
+                            <p class="author-role">Audit Firm Owner, Mumbai</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <p class="testimonial-text">
+                        "As a field auditor, I love how easy it is to use on my phone. 
+                        Large buttons, photo upload works perfectly, and I can work offline. Best audit tool I've used!"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">R</div>
+                        <div class="author-info">
+                            <p class="author-name">Rajesh Kumar</p>
+                            <p class="author-role">Field Auditor, Delhi</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-rating">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                    </div>
+                    <p class="testimonial-text">
+                        "We audit 50+ stores monthly. PixelAudit reduced our audit time by 40%. 
+                        The pricing is unbeatable - ₹1,000 for unlimited audits? That's cheaper than one employee!"
+                    </p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">P</div>
+                        <div class="author-info">
+                            <p class="author-name">Priya Mehta</p>
+                            <p class="author-role">Operations Manager, Retail Chain</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Transform Your Audit Process?</h2>
+                <p class="cta-description">
+                    Join audit firms who are saving 10+ hours per week with PixelAudit
+                </p>
+                <a href="login.html" class="btn btn-primary btn-lg">
+                    Start Free Trial
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                <p class="cta-note">1-hour free trial • No credit card required • ₹1 for lifetime access</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="index.html" class="footer-logo">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"></path>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                        <div>
+                            <span class="footer-name">PixelAudit</span>
+                            <p class="footer-subtitle">Smart and Pixel Perfect</p>
+                        </div>
+                    </a>
+                    <p class="footer-tagline">Audit Anything, Anywhere, Anytime</p>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Product</h4>
+                        <ul>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#pricing">Pricing</a></li>
+                            <li><a href="#how-it-works">How It Works</a></li>
+                            <li><a href="login.html">Dashboard Demo</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Company</h4>
+                        <ul>
+                            <li><a href="about.html">About Us</a></li>
+                            <li><a href="blog.html">Blog</a></li>
+                            <li><a href="careers.html">Careers</a></li>
+                            <li><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Resources</h4>
+                        <ul>
+                            <li><a href="help.html">Help Center</a></li>
+                            <li><a href="docs.html">Documentation</a></li>
+                            <li><a href="templates.html">Templates</a></li>
+                            <li><a href="api.html">API</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4 class="footer-heading">Legal</h4>
+                        <ul>
+                            <li><a href="privacy.html">Privacy Policy</a></li>
+                            <li><a href="terms.html">Terms of Service</a></li>
+                            <li><a href="security.html">Security</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 PixelAudit. Part of Pixel Ecosystem. All rights reserved.</p>
+                <div class="footer-social">
+                    <a href="#twitter" aria-label="Twitter">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z"/>
+                        </svg>
+                    </a>
+                    <a href="#linkedin" aria-label="LinkedIn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/>
+                            <circle cx="4" cy="4" r="2"/>
+                        </svg>
+                    </a>
+                    <a href="#github" aria-label="GitHub">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/landing.js"></script>
+</body>
+</html>

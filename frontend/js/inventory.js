@@ -1,4 +1,4 @@
-// DLT WMS - Inventory Visibility Module JavaScript
+// Pixel WMS - Inventory Visibility Module JavaScript
 // Handles inventory search, filtering, and display
 
 // Search inventory

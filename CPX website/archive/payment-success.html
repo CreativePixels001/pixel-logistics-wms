@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html class="no-js ss-preload" lang="en">
+<head>
+
+    <!--- basic page needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <title>Payment Successful - Creative Pixels</title>
+    <meta name="description" content="Your payment has been processed successfully">
+    <meta name="author" content="Creative Pixels">
+
+    <!-- mobile specific metas
+    ================================================== -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS
+    ================================================== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/vendor.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/custom-enhancements.css">
+
+    <!-- favicons
+    ================================================== -->
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+
+    <style>
+        .success-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            padding: 2rem;
+        }
+
+        .success-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 3rem;
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        .success-icon svg {
+            width: 48px;
+            height: 48px;
+            stroke: white;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 0 0 1rem 0;
+        }
+
+        .success-message {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.125rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin: 0 0 2rem 0;
+            line-height: 1.6;
+        }
+
+        .order-details {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .order-details h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin: 0 0 1.5rem 0;
+            text-align: center;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .detail-value {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .detail-row.total {
+            padding-top: 1rem;
+            margin-top: 0.5rem;
+            border-top: 2px solid rgba(255, 255, 255, 0.2);
+            font-size: 1.25rem;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .email-notice {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid rgba(33, 150, 243, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .email-notice svg {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            stroke: #2196F3;
+        }
+
+        @media (max-width: 640px) {
+            .success-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .success-title {
+                font-size: 2rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                min-width: auto;
+            }
+        }
+    </style>
+
+</head>
+
+<body id="top">
+
+    <!-- # page wrap
+    ================================================== -->
+    <div class="s-pagewrap">
+
+        <div class="success-container">
+            <div class="success-card">
+                
+                <!-- Success Icon -->
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+
+                <!-- Success Message -->
+                <h1 class="success-title">Payment Successful!</h1>
+                <p class="success-message">
+                    Thank you for your purchase. Your payment has been processed successfully.
+                </p>
+
+                <!-- Order Details -->
+                <div class="order-details">
+                    <h3>Order Details</h3>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Order ID:</span>
+                        <span class="detail-value" id="orderId">Loading...</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Product:</span>
+                        <span class="detail-value" id="productName">Loading...</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Plan:</span>
+                        <span class="detail-value" id="planType">Loading...</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Date:</span>
+                        <span class="detail-value" id="orderDate">Loading...</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value" id="customerEmail">Loading...</span>
+                    </div>
+                    
+                    <div class="detail-row total">
+                        <span class="detail-label">Total Paid:</span>
+                        <span class="detail-value" id="totalAmount">Loading...</span>
+                    </div>
+                </div>
+
+                <!-- Email Notice -->
+                <div class="email-notice">
+                    <svg viewBox="0 0 24 24" fill="none">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <p style="margin: 0;">
+                        A confirmation email with your order details and download instructions has been sent to your email address.
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <a href="index.html" class="btn btn-primary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        </svg>
+                        Return to Home
+                    </a>
+                    <button onclick="window.print()" class="btn btn-secondary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                            <rect x="6" y="14" width="12" height="8"></rect>
+                        </svg>
+                        Print Receipt
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+    </div> <!-- end s-pagewrap -->
+
+
+    <!-- Java Script
+    ================================================== -->
+    <script src="js/plugins.js" defer></script>
+    <script>
+        /**
+         * Load and display order details
+         */
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get order data from session storage
+            const orderDataStr = sessionStorage.getItem('lastOrder');
+            
+            if (orderDataStr) {
+                try {
+                    const orderData = JSON.parse(orderDataStr);
+                    
+                    // Populate order details
+                    document.getElementById('orderId').textContent = orderData.orderId || 'N/A';
+                    document.getElementById('productName').textContent = orderData.product || 'N/A';
+                    
+                    // Format plan type
+                    let planDisplay = orderData.plan || 'one-time';
+                    planDisplay = planDisplay.charAt(0).toUpperCase() + planDisplay.slice(1);
+                    if (planDisplay === 'One-time') planDisplay = 'One-Time Purchase';
+                    if (planDisplay === 'Monthly') planDisplay = 'Monthly Subscription';
+                    if (planDisplay === 'Annual') planDisplay = 'Annual Subscription';
+                    document.getElementById('planType').textContent = planDisplay;
+                    
+                    // Format date
+                    const date = new Date(orderData.timestamp || Date.now());
+                    const dateStr = date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    document.getElementById('orderDate').textContent = dateStr;
+                    
+                    document.getElementById('customerEmail').textContent = orderData.customerEmail || 'N/A';
+                    
+                    // Format amount
+                    const amount = orderData.amount || 0;
+                    const currency = orderData.currency || 'USD';
+                    document.getElementById('totalAmount').textContent = `${currency} $${amount.toLocaleString('en-US', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    })}`;
+                    
+                    // Clear session storage after displaying
+                    // sessionStorage.removeItem('lastOrder'); // Keep it for now in case user refreshes
+                    
+                } catch (error) {
+                    console.error('Error parsing order data:', error);
+                    showErrorState();
+                }
+            } else {
+                // No order data found
+                showErrorState();
+            }
+        });
+
+        /**
+         * Show error state if no order data
+         */
+        function showErrorState() {
+            document.getElementById('orderId').textContent = 'Order data not found';
+            document.getElementById('productName').textContent = 'N/A';
+            document.getElementById('planType').textContent = 'N/A';
+            document.getElementById('orderDate').textContent = 'N/A';
+            document.getElementById('customerEmail').textContent = 'N/A';
+            document.getElementById('totalAmount').textContent = '$0.00';
+        }
+
+        /**
+         * Print functionality with clean layout
+         */
+        window.onbeforeprint = function() {
+            document.body.style.background = 'white';
+        };
+
+        window.onafterprint = function() {
+            document.body.style.background = '';
+        };
+    </script>
+
+</body>
+</html>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+
+        <!-- ## site header 
+        ================================================== -->
+        <header class="s-header">
+
+            <div class="header-mobile">
+                <span class="mobile-home-link"><a href="index.html">CreativePixel's.</a></span>
+                <a class="mobile-menu-toggle" href="#0"><span>Menu</span></a>
+            </div>
+
+            <div class="row wide main-nav-wrap">
+                <div class="nav-logo">
+                    <a href="index.html">
+                        <span class="logo-text">CreativePixel's</span>
+                    </a>
+                </div>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="Low/UX Study /motherboard.html">Pixel Connect</a></li>
+                        <li><a href="ecosystem.html">Pixel Eco System</a></li>
+                        <li><a href="studio.html">Pixel Studio</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+        </header> <!-- end s-header -->
+
+
+        <!-- ## main content
+        ==================================================- -->
+        <main class="s-content">
+
+
+            <!-- ### success section
+            ================================================== -->
+            <section id="success" class="s-success">
+                <div class="row">
+                    <div class="column lg-12">
+                        
+                        <div class="success-container">
+                            
+                            <!-- Success Icon -->
+                            <div class="success-icon">
+                                <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+                                    <circle cx="60" cy="60" r="58" stroke="#10b981" stroke-width="4"/>
+                                    <path d="M35 62L52 79L85 41" stroke="#10b981" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+
+                            <!-- Success Message -->
+                            <h1 class="success-title">Payment Successful!</h1>
+                            <p class="success-subtitle">Thank you for your purchase</p>
+
+                            <!-- Order Details -->
+                            <div class="order-details">
+                                <h2>Order Details</h2>
+                                <div class="detail-row">
+                                    <span class="detail-label">Order ID:</span>
+                                    <span class="detail-value" id="orderId">Loading...</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Product:</span>
+                                    <span class="detail-value" id="productName">Loading...</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">License Key:</span>
+                                    <span class="detail-value license-key" id="licenseKey">
+                                        <code>XXXX-XXXX-XXXX-XXXX</code>
+                                        <button class="copy-btn" onclick="copyLicenseKey()">Copy</button>
+                                    </span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">Amount Paid:</span>
+                                    <span class="detail-value" id="amountPaid">$0.00</span>
+                                </div>
+                            </div>
+
+                            <!-- Download Section -->
+                            <div class="download-section">
+                                <h2>Download Your Product</h2>
+                                <p class="download-note">
+                                    Your download link has been sent to your email. 
+                                    The link will expire in 24 hours.
+                                </p>
+                                
+                                <button class="btn btn--primary btn-download" id="downloadBtn" onclick="downloadProduct()">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                        <path d="M12 3v13m0 0l-4-4m4 4l4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <span>Download Now</span>
+                                </button>
+
+                                <div class="download-info">
+                                    <div class="info-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0 1 12 2.944a11.955 11.955 0 0 1-8.618 3.04A12.02 12.02 0 0 0 3 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke="currentColor" stroke-width="2"/>
+                                        </svg>
+                                        <span>Secure Download</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                            <path d="M4 16l4.586-4.586a2 2 0 0 1 2.828 0L16 16m-2-2l1.586-1.586a2 2 0 0 1 2.828 0L20 14m-6-6h.01M6 20h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z" stroke="currentColor" stroke-width="2"/>
+                                        </svg>
+                                        <span>Full Source Code</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                            <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke="currentColor" stroke-width="2"/>
+                                        </svg>
+                                        <span>Documentation Included</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Next Steps -->
+                            <div class="next-steps">
+                                <h2>What's Next?</h2>
+                                <div class="steps-grid">
+                                    <div class="step-card">
+                                        <div class="step-number">1</div>
+                                        <h3>Download & Extract</h3>
+                                        <p>Download the ZIP file and extract it to your desired location</p>
+                                    </div>
+                                    <div class="step-card">
+                                        <div class="step-number">2</div>
+                                        <h3>Install Dependencies</h3>
+                                        <p>Follow the README file to install required dependencies</p>
+                                    </div>
+                                    <div class="step-card">
+                                        <div class="step-number">3</div>
+                                        <h3>Configure & Deploy</h3>
+                                        <p>Set up your environment variables and deploy to your server</p>
+                                    </div>
+                                    <div class="step-card">
+                                        <div class="step-number">4</div>
+                                        <h3>Get Support</h3>
+                                        <p>Join our support channel for help and updates</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Support Section -->
+                            <div class="support-section">
+                                <h3>Need Help?</h3>
+                                <p>Our support team is here to assist you</p>
+                                <div class="support-actions">
+                                    <a href="mailto:support@creativepixels.in" class="btn btn--stroke">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke="currentColor" stroke-width="2"/>
+                                        </svg>
+                                        Email Support
+                                    </a>
+                                    <a href="#" class="btn btn--stroke">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke="currentColor" stroke-width="2"/>
+                                        </svg>
+                                        Live Chat
+                                    </a>
+                                    <a href="studio.html" class="btn btn--stroke">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                                            <path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" stroke="currentColor" stroke-width="2"/>
+                                        </svg>
+                                        Browse More Products
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div> <!-- end success-container -->
+
+                    </div>
+                </div>
+            </section> <!-- end s-success -->
+
+
+        </main> <!-- end s-content -->
+
+
+        <!-- ## footer
+        ================================================== -->
+        <footer class="s-footer">
+
+            <div class="row">
+                <div class="column ss-copyright">
+                    <span>© Copyright CreativePixel's 2025</span> 
+                    <span>Design by <a href="#">CPX Ing.</a> </span>
+                </div>
+
+                <div class="ss-go-top">
+                    <a class="smoothscroll" title="Back to Top" href="#top">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill-rule="evenodd" clip-rule="evenodd"><path d="M11 2.206l-6.235 7.528-.765-.645 7.521-9 7.479 9-.764.646-6.236-7.53v21.884h-1v-21.883z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+        </footer> <!-- end s-footer -->
+
+    </div> <!-- end -s-pagewrap -->
+
+
+    <!-- Java Script
+    ================================================== -->
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/success.js"></script>
+
+</body>
+</html>

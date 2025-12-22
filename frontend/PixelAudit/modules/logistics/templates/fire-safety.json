@@ -1,0 +1,249 @@
+{
+  "id": "fire-safety",
+  "name": "Fire Safety Audit",
+  "category": "Logistics - Warehouse",
+  "description": "Dedicated fire safety inspection covering prevention, detection, and suppression systems",
+  "version": "1.0",
+  "items": [
+    {
+      "id": "fs-01",
+      "question": "Are fire extinguishers inspected monthly and tagged?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "fs-02",
+      "question": "Is there adequate number of fire extinguishers per square footage?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-03",
+      "question": "Are fire extinguishers mounted at proper height (3.5-5 feet)?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "fs-04",
+      "question": "Are correct types of extinguishers available for hazards present?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-05",
+      "question": "Are fire extinguisher locations clearly marked with signage?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "fs-06",
+      "question": "Is automatic sprinkler system installed and operational?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-07",
+      "question": "Are sprinkler heads unobstructed (18-inch clearance)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "fs-08",
+      "question": "Is sprinkler system tested quarterly?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-09",
+      "question": "Are sprinkler control valves accessible and labeled?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "fs-10",
+      "question": "Is water supply to sprinklers adequate and verified?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-11",
+      "question": "Are smoke detectors installed in all required areas?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-12",
+      "question": "Are smoke detectors tested monthly?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-13",
+      "question": "Is fire alarm system connected to monitoring service?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-14",
+      "question": "Are fire alarm pull stations clearly marked and accessible?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "fs-15",
+      "question": "Do alarm sounds meet required decibel levels?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-16",
+      "question": "Are all exit doors unlocked from inside during operations?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-17",
+      "question": "Are exit routes clearly marked with illuminated signs?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "fs-18",
+      "question": "Are exit pathways at least 28 inches wide and unobstructed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "fs-19",
+      "question": "Is emergency lighting functional and tested monthly?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-20",
+      "question": "Are exit doors equipped with panic hardware?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-21",
+      "question": "Are combustible materials stored away from ignition sources?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "fs-22",
+      "question": "Is housekeeping maintained to prevent combustible dust accumulation?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-23",
+      "question": "Are flammable liquids stored in approved containers?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "fs-24",
+      "question": "Is smoking prohibited in designated areas and enforced?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-25",
+      "question": "Are hot work permits required and followed for welding/cutting?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-26",
+      "question": "Are fire drills conducted at least twice yearly?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-27",
+      "question": "Do employees know evacuation procedures?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-28",
+      "question": "Are fire wardens/marshals designated and trained?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "fs-29",
+      "question": "Is there a designated assembly point outside the building?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "fs-30",
+      "question": "Overall fire safety measures adequate and compliant?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    }
+  ]
+}

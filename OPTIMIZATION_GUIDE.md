@@ -26,7 +26,7 @@
 
 ```bash
 # Navigate to project directory
-cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./DLT WMS"
+cd "/Users/ashishkumar2/Documents/Deloitte/DEV Project./Pixel Logistics WMS"
 
 # Install dependencies (first time only)
 npm install

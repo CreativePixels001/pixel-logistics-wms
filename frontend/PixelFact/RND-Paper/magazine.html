@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelFact - Digital Magazine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Noto+Serif+Devanagari:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/feather-icons"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0A0A0A;
+            --white: #FFFFFF;
+            --cream: #FFFEF9;
+            --gray-50: #FAFAFA;
+            --gray-100: #F5F5F5;
+            --gray-200: #E8E8E8;
+            --gray-300: #D1D1D1;
+            --gray-400: #9E9E9E;
+            --gray-500: #737373;
+            --gray-600: #525252;
+            --gray-700: #404040;
+            --gray-800: #262626;
+            --gray-900: #171717;
+            --red-accent: #E63946;
+            --gold-accent: #F4A261;
+            --blue-accent: #457B9D;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--cream);
+            color: var(--black);
+            line-height: 1.6;
+            font-size: 17px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        p {
+            margin: 0 0 1.5em 0;
+            line-height: 1.75;
+        }
+
+        /* Navigation */
+        .nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            color: var(--black);
+            padding: 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--gray-200);
+            box-shadow: 0 1px 0 0 rgba(0,0,0,0.05);
+        }
+
+        .nav-container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            position: relative;
+            padding-bottom: 0;
+            text-transform: uppercase;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--red-accent);
+            transition: width 0.3s ease;
+        }
+
+        .logo:hover::after {
+            width: 100%;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: var(--black);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.3s;
+            padding-bottom: 2px;
+            border-bottom: 2px solid transparent;
+        }
+
+        .nav-menu a:hover {
+            border-bottom-color: var(--red-accent);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--white);
+            color: var(--black);
+            padding: 120px 60px 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(230, 57, 70, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(69, 123, 157, 0.03) 0%, transparent 50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 5.5rem;
+            font-weight: 700;
+            margin-bottom: 35px;
+            line-height: 1.1;
+            letter-spacing: -3px;
+            text-transform: none;
+            color: var(--black);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: var(--gray-600);
+            max-width: 700px;
+            margin: 0 auto 40px;
+            letter-spacing: 0.3px;
+            line-height: 1.7;
+        }
+
+        .hero-meta {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 600;
+        }
+
+        .hero-accent {
+            width: 60px;
+            height: 3px;
+            background: var(--red-accent);
+            margin: 30px auto;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 100px 60px;
+            background: var(--cream);
+        }
+
+        /* Article Grid - Magazine Layout */
+        .article-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        /* Featured Article (First Article - Full Width) */
+        .article-card:nth-child(1) {
+            grid-column: span 12;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0;
+            background: var(--white);
+            border: none;
+            border-bottom: 1px solid var(--gray-200);
+            padding: 0 0 80px 0;
+            margin-bottom: 40px;
+        }
+
+        .article-card:nth-child(1) .article-image {
+            height: 550px;
+            border: none;
+            box-shadow: none;
+            margin-bottom: 40px;
+        }
+
+        .article-card:nth-child(1) .article-content {
+            padding: 0 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .article-card:nth-child(1) .article-headline {
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            line-height: 1.1;
+            letter-spacing: -2px;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .article-card:nth-child(1) .article-headline[lang="hi"] {
+            font-size: 4rem;
+            line-height: 1.35;
+            letter-spacing: -1px;
+        }
+
+        .article-card:nth-child(1) .article-preview {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            -webkit-line-clamp: 4;
+            color: var(--gray-700);
+            font-weight: 400;
+            text-align: center;
+        }
+
+        .article-card:nth-child(1) .article-preview[lang="hi"] {
+            font-size: 1.2rem;
+            line-height: 1.9;
+        }
+
+        .article-card:nth-child(1) .article-meta {
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        /* Two Column Articles */
+        .article-card:nth-child(2),
+        .article-card:nth-child(3) {
+            grid-column: span 6;
+        }
+
+        /* Three Column Articles */
+        .article-card:nth-child(n+4) {
+            grid-column: span 4;
+        }
+
+        .article-card {
+            background: var(--white);
+            border: none;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        .article-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 
+                0 30px 60px rgba(0,0,0,0.12),
+                0 0 0 1px var(--gray-200);
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--red-accent), var(--gold-accent));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+
+        .article-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .article-image {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            border-bottom: 1px solid var(--gray-100);
+            filter: grayscale(100%) contrast(1.05);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .article-card:hover .article-image {
+            filter: grayscale(0%) contrast(1);
+            transform: scale(1.05);
+        }
+
+        .article-content {
+            padding: 30px;
+        }
+
+        .article-meta {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            font-weight: 800;
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+        }
+
+        .article-category {
+            background: transparent;
+            color: var(--red-accent);
+            padding: 0;
+            letter-spacing: 1.8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            border-left: 3px solid var(--red-accent);
+            padding-left: 10px;
+        }
+
+        .article-page {
+            color: var(--gray-500);
+            padding: 6px 0;
+        }
+
+        .article-headline {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.85rem;
+            font-weight: 900;
+            margin-bottom: 15px;
+            line-height: 1.25;
+            color: var(--black);
+            letter-spacing: -0.8px;
+            text-transform: none;
+        }
+
+        .article-headline[lang="hi"] {
+            font-family: 'Noto Serif Devanagari', serif;
+            font-size: 2rem;
+            line-height: 1.45;
+            letter-spacing: 0;
+            font-weight: 800;
+        }
+
+        .article-preview {
+            font-size: 0.98rem;
+            color: var(--gray-600);
+            line-height: 1.7;
+            margin-bottom: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-weight: 400;
+        }
+
+        .article-preview[lang="hi"] {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            font-weight: 400;
+        }
+
+        .article-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .read-more {
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.8px;
+            color: var(--red-accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+        }
+
+        .read-more::after {
+            content: '→';
+            transition: transform 0.3s;
+            font-size: 1.2em;
+        }
+
+        .article-card:hover .read-more::after {
+            transform: translateX(5px);
+        }
+
+        .word-count {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+        }
+
+        /* Language Badge */
+        .lang-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            color: var(--black);
+            padding: 8px 18px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            border: 1px solid rgba(0,0,0,0.1);
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 2px;
+            z-index: 5;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 10, 0.97);
+            z-index: 2000;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+        }
+
+        .modal.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            max-width: 1200px;
+            margin: 60px auto;
+            background: var(--white);
+            position: relative;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+            animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-controls {
+            position: fixed;
+            top: 40px;
+            right: 40px;
+            z-index: 10;
+            display: flex;
+            gap: 12px;
+        }
+
+        .modal-btn {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            color: var(--black);
+            border: 1px solid rgba(0,0,0,0.1);
+            width: 54px;
+            height: 54px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+
+        .modal-btn:hover {
+            background: var(--red-accent);
+            color: var(--white);
+            transform: scale(1.08);
+            box-shadow: 0 12px 32px rgba(230, 57, 70, 0.4);
+        }
+
+        .modal-btn.playing {
+            background: var(--red-accent);
+            color: var(--white);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 8px 24px rgba(230, 57, 70, 0.3); }
+            50% { box-shadow: 0 12px 40px rgba(230, 57, 70, 0.6); }
+        }
+
+        .modal-close:hover {
+            transform: rotate(90deg) scale(1.08);
+        }
+
+        .modal-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .modal-article {
+            padding: 80px;
+        }
+
+        .modal-header {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 2px solid var(--gray-200);
+        }
+
+        .modal-category {
+            display: inline-block;
+            background: transparent;
+            color: var(--red-accent);
+            padding: 0;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--red-accent);
+            padding-left: 16px;
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+        }
+
+        .modal-headline {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 30px;
+            color: var(--black);
+            letter-spacing: -3px;
+            text-transform: none;
+        }
+
+        .modal-headline[lang="hi"] {
+            font-family: 'Noto Serif Devanagari', serif;
+            font-size: 5rem;
+            line-height: 1.35;
+            letter-spacing: -1px;
+            font-weight: 900;
+        }
+
+        .modal-meta-bar {
+            display: flex;
+            gap: 25px;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            line-height: 1.5;
+        }
+
+        .modal-header p {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.4rem;
+            line-height: 1.6;
+            color: var(--gray-700);
+            font-weight: 500;
+            font-style: italic;
+            margin-top: 20px;
+        }
+
+        .modal-header p[lang="hi"] {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            font-size: 1.5rem;
+            line-height: 1.75;
+        }
+
+        .modal-body {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--gray-800);
+            white-space: pre-wrap;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 50px;
+        }
+
+        .modal-body[lang="hi"] {
+            font-family: 'Noto Serif Devanagari', serif;
+            font-size: 1.2rem;
+            line-height: 2.1;
+            font-weight: 400;
+        }
+
+        .modal-body-content {
+            columns: 2;
+            column-gap: 60px;
+            text-align: justify;
+            text-justify: inter-word;
+            hyphens: auto;
+            -webkit-hyphens: auto;
+            -moz-hyphens: auto;
+            word-spacing: 0.05em;
+        }
+
+        .modal-body-content p {
+            margin: 0 0 1.2em 0;
+            line-height: inherit;
+            text-indent: 0;
+        }
+
+        .modal-body-content p:first-of-type {
+            margin-top: 0;
+        }
+
+        .modal-body-content p:not(:first-of-type) {
+            text-indent: 2em;
+        }
+
+        .modal-body-content::first-letter {
+            font-size: 6.5rem;
+            font-weight: 900;
+            float: left;
+            line-height: 0.75;
+            margin: 8px 18px 0 0;
+            font-family: 'Playfair Display', serif;
+            color: var(--black);
+            background: linear-gradient(135deg, var(--red-accent) 0%, var(--black) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .inline-image-container {
+            break-inside: avoid;
+            margin: 30px 0;
+            padding: 0;
+            background: transparent;
+            border: none;
+        }
+
+        .inline-image-container.portrait {
+            float: right;
+            width: 45%;
+            margin-left: 30px;
+        }
+
+        .inline-image-container.landscape {
+            column-span: all;
+            width: 100%;
+            margin: 40px 0;
+        }
+
+        .inline-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        .inline-image-caption {
+            font-size: 0.85rem;
+            color: var(--gray-600);
+            font-style: italic;
+            margin-top: 12px;
+            text-align: left;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .modal-image-section {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid var(--gray-200);
+            transition: all 0.4s ease;
+        }
+
+        .modal-image-section.hidden {
+            display: none;
+        }
+
+        .modal-image-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-image-title {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gray-500);
+        }
+
+        .modal-image {
+            width: 100%;
+            border: none;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            transition: transform 0.4s ease;
+        }
+
+        .modal-image:hover {
+            transform: scale(1.01);
+        }
+
+        /* Filter Bar */
+        .filter-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 60px;
+            padding: 25px 35px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--gray-200);
+            flex-wrap: wrap;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            border-radius: 4px;
+        }
+
+        .filter-btn {
+            padding: 12px 28px;
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 2px;
+        }
+
+        .filter-btn svg {
+            width: 15px;
+            height: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--black), var(--gray-800));
+            transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: -1;
+        }
+
+        .filter-btn:hover::before,
+        .filter-btn.active::before {
+            left: 0;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            color: var(--white);
+            border-color: var(--black);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .filter-btn:hover svg,
+        .filter-btn.active svg {
+            transform: scale(1.1);
+        }
+
+        .filter-btn.active {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        @media (max-width: 1200px) {
+            .article-card:nth-child(1) {
+                grid-template-columns: 1fr;
+            }
+
+            .article-card:nth-child(2),
+            .article-card:nth-child(3) {
+                grid-column: span 12;
+            }
+
+            .article-card:nth-child(n+4) {
+                grid-column: span 6;
+            }
+
+            .modal-body {
+                columns: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .article-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .article-card:nth-child(n) {
+                grid-column: span 1 !important;
+            }
+
+            .article-card:nth-child(1) .article-headline {
+                font-size: 2rem;
+            }
+
+            .modal-article {
+                padding: 40px 25px;
+            }
+
+            .modal-headline {
+                font-size: 2.2rem;
+            }
+
+            .modal-body {
+                font-size: 1.05rem;
+            }
+
+            .nav-container {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+            }
+
+            .nav-menu {
+                gap: 20px;
+            }
+
+            .nav-menu a {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="logo">PIXELFACT</div>
+            <ul class="nav-menu">
+                <li><a href="#all">All</a></li>
+                <li><a href="#hindi">Hindi</a></li>
+                <li><a href="#english">English</a></li>
+                <li><a href="index.html">Image View</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Stories of truth, impact and accountability</h1>
+            <div class="hero-accent"></div>
+            <p class="hero-subtitle">Uncovering the stories that shape Mumbai — from investigative journalism to community voices</p>
+            <div class="hero-meta">Issue 4 • December 2024 • 8 Articles</div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Filters -->
+        <div class="filter-bar">
+            <button class="filter-btn active" onclick="filterArticles('all')"><i data-feather="grid"></i> All Articles</button>
+            <button class="filter-btn" onclick="filterArticles('hindi')"><i data-feather="globe"></i> Hindi</button>
+            <button class="filter-btn" onclick="filterArticles('english')"><i data-feather="globe"></i> English</button>
+            <button class="filter-btn" onclick="filterArticles('news')"><i data-feather="file-text"></i> News</button>
+            <button class="filter-btn" onclick="filterArticles('analysis')"><i data-feather="bar-chart-2"></i> Analysis</button>
+        </div>
+
+        <!-- Article Grid -->
+        <div class="article-grid" id="articleGrid">
+            <!-- Articles will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="articleModal">
+        <div class="modal-controls">
+            <button class="modal-btn" id="playBtn" onclick="toggleAudio()" title="Play/Pause Audio">
+                <i data-feather="volume-2" id="playIcon"></i>
+            </button>
+            <button class="modal-btn" id="imageToggleBtn" onclick="toggleImage()" title="Show/Hide Image">
+                <i data-feather="image" id="imageIcon"></i>
+            </button>
+            <button class="modal-btn" onclick="closeModal()" title="Close">
+                <i data-feather="x"></i>
+            </button>
+        </div>
+        <div class="modal-content">
+            <div class="modal-article" id="modalContent">
+                <!-- Article content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let magazineData = null;
+        let currentFilter = 'all';
+        let currentArticle = null;
+        let speechSynthesis = window.speechSynthesis;
+        let currentUtterance = null;
+        let isPlaying = false;
+
+        // Load magazine data
+        async function loadMagazine() {
+            try {
+                const response = await fetch('magazine_articles.json');
+                magazineData = await response.json();
+                renderArticles();
+            } catch (error) {
+                console.error('Error loading magazine:', error);
+                document.getElementById('articleGrid').innerHTML = 
+                    '<p style="grid-column: 1/-1; text-align:center; padding:60px;">Error loading articles. Please refresh.</p>';
+            }
+        }
+
+        // Render articles
+        function renderArticles() {
+            if (!magazineData) return;
+
+            const grid = document.getElementById('articleGrid');
+            grid.innerHTML = '';
+
+            const filteredArticles = magazineData.articles.filter(article => {
+                if (currentFilter === 'all') return true;
+                if (currentFilter === 'hindi') return article.language === 'Hindi';
+                if (currentFilter === 'english') return article.language === 'English';
+                if (currentFilter === 'news') return article.category === 'News';
+                if (currentFilter === 'analysis') return article.category === 'Analysis';
+                return true;
+            });
+
+            filteredArticles.forEach(article => {
+                const card = document.createElement('div');
+                card.className = 'article-card';
+                card.onclick = () => openArticle(article.id);
+
+                // Use inline image if available, otherwise use card image
+                const cardImage = article.inline_images && article.inline_images.length > 0 
+                    ? article.inline_images[0].path 
+                    : article.image;
+
+                card.innerHTML = `
+                    <img src="${cardImage}" alt="Page ${article.page}" class="article-image">
+                    <div class="lang-badge">${article.language === 'Hindi' ? 'हिंदी' : 'English'}</div>
+                    <div class="article-content">
+                        <div class="article-meta">
+                            <span class="article-category">${article.category}</span>
+                            <span class="article-page">Page ${article.page}</span>
+                        </div>
+                        <h2 class="article-headline" ${article.language === 'Hindi' ? 'lang="hi"' : ''}>${article.headline}</h2>
+                        <p class="article-preview" ${article.language === 'Hindi' ? 'lang="hi"' : ''}>${article.preview}</p>
+                        <div class="article-footer">
+                            <span class="read-more">Read Article →</span>
+                            <span class="word-count">${article.word_count} words</span>
+                        </div>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter articles
+        function filterArticles(filter) {
+            currentFilter = filter;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('button').classList.add('active');
+
+            renderArticles();
+        }
+
+        // Open article in modal
+        function openArticle(articleId) {
+            const article = magazineData.articles.find(a => a.id === articleId);
+            if (!article) return;
+
+            currentArticle = article;
+            const modal = document.getElementById('articleModal');
+            const content = document.getElementById('modalContent');
+
+            // Build inline images HTML
+            let inlineImagesHTML = '';
+            if (article.inline_images && article.inline_images.length > 0) {
+                inlineImagesHTML = article.inline_images.map((img, idx) => `
+                    <div class="inline-image-container ${img.type}">
+                        <img src="${img.path}" alt="Image ${idx + 1}" class="inline-image">
+                        <div class="inline-image-caption">Figure ${idx + 1}</div>
+                    </div>
+                `).join('');
+            }
+
+            content.innerHTML = `
+                <div class="modal-header">
+                    <span class="modal-category">${article.category} • Page ${article.page}</span>
+                    <h1 class="modal-headline" ${article.language === 'Hindi' ? 'lang="hi"' : ''}>${article.headline}</h1>
+                    ${article.subheadline ? `<p style="font-size:1.3rem; color:#666;" ${article.language === 'Hindi' ? 'lang="hi"' : ''}>${article.subheadline}</p>` : ''}
+                    <div class="modal-meta-bar">
+                        <span>${article.language}</span>
+                        <span>•</span>
+                        <span>${article.word_count} words</span>
+                        <span>•</span>
+                        <span>Issue 4, December 2024</span>
+                        ${article.inline_images && article.inline_images.length > 0 ? `<span>•</span><span>${article.inline_images.length} Images</span>` : ''}
+                    </div>
+                </div>
+                <div class="modal-body" ${article.language === 'Hindi' ? 'lang="hi"' : ''}>
+                    ${inlineImagesHTML}
+                    <div class="modal-body-content" id="articleContent">${article.content.replace(/\n\n/g, '</p><p>').replace(/^/, '<p>').replace(/$/, '</p>')}</div>
+                </div>
+                <div class="modal-image-section" id="imageSection">
+                    <div class="modal-image-header">
+                        <span class="modal-image-title">Original Newspaper Page</span>
+                    </div>
+                    <img src="${article.full_image || article.image}" alt="Original page" class="modal-image">
+                </div>
+            `;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // Reinitialize feather icons for modal buttons
+            feather.replace();
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('articleModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+            stopAudio();
+        }
+
+        // Toggle image visibility
+        function toggleImage() {
+            const imageSection = document.getElementById('imageSection');
+            const imageToggleBtn = document.getElementById('imageToggleBtn');
+            const imageIcon = document.getElementById('imageIcon');
+            
+            if (imageSection) {
+                imageSection.classList.toggle('hidden');
+                const isHidden = imageSection.classList.contains('hidden');
+                
+                // Update button icon
+                imageIcon.setAttribute('data-feather', isHidden ? 'eye-off' : 'image');
+                imageToggleBtn.title = isHidden ? 'Show Image' : 'Hide Image';
+                feather.replace();
+            }
+        }
+
+        // Toggle audio playback
+        function toggleAudio() {
+            if (isPlaying) {
+                pauseAudio();
+            } else {
+                playAudio();
+            }
+        }
+
+        // Play audio
+        function playAudio() {
+            if (!currentArticle) return;
+
+            const playBtn = document.getElementById('playBtn');
+            const playIcon = document.getElementById('playIcon');
+
+            // Stop any existing speech
+            speechSynthesis.cancel();
+
+            // Create new utterance
+            currentUtterance = new SpeechSynthesisUtterance(currentArticle.content);
+            
+            // Configure voice based on language
+            const voices = speechSynthesis.getVoices();
+            if (currentArticle.language === 'Hindi') {
+                const hindiVoice = voices.find(v => v.lang.includes('hi'));
+                if (hindiVoice) currentUtterance.voice = hindiVoice;
+            } else {
+                const englishVoice = voices.find(v => v.lang.includes('en'));
+                if (englishVoice) currentUtterance.voice = englishVoice;
+            }
+
+            // Set speech parameters
+            currentUtterance.rate = 0.9;
+            currentUtterance.pitch = 1.0;
+            currentUtterance.volume = 1.0;
+
+            // Event handlers
+            currentUtterance.onend = () => {
+                isPlaying = false;
+                playBtn.classList.remove('playing');
+                playIcon.setAttribute('data-feather', 'volume-2');
+                feather.replace();
+            };
+
+            currentUtterance.onerror = () => {
+                isPlaying = false;
+                playBtn.classList.remove('playing');
+                playIcon.setAttribute('data-feather', 'volume-2');
+                feather.replace();
+            };
+
+            // Start speaking
+            speechSynthesis.speak(currentUtterance);
+            isPlaying = true;
+            playBtn.classList.add('playing');
+            playIcon.setAttribute('data-feather', 'pause');
+            feather.replace();
+        }
+
+        // Pause audio
+        function pauseAudio() {
+            if (speechSynthesis.speaking) {
+                speechSynthesis.pause();
+                isPlaying = false;
+                const playBtn = document.getElementById('playBtn');
+                const playIcon = document.getElementById('playIcon');
+                playBtn.classList.remove('playing');
+                playIcon.setAttribute('data-feather', 'volume-2');
+                feather.replace();
+            }
+        }
+
+        // Stop audio
+        function stopAudio() {
+            speechSynthesis.cancel();
+            isPlaying = false;
+            const playBtn = document.getElementById('playBtn');
+            if (playBtn) {
+                playBtn.classList.remove('playing');
+                const playIcon = document.getElementById('playIcon');
+                if (playIcon) {
+                    playIcon.setAttribute('data-feather', 'volume-2');
+                    feather.replace();
+                }
+            }
+        }
+
+        // Close modal on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+            // Space to play/pause
+            if (e.key === ' ' && currentArticle) {
+                e.preventDefault();
+                toggleAudio();
+            }
+        });
+
+        // Load voices when available
+        if (speechSynthesis.onvoiceschanged !== undefined) {
+            speechSynthesis.onvoiceschanged = () => {
+                speechSynthesis.getVoices();
+            };
+        }
+
+        // Load magazine on page load
+        loadMagazine();
+
+        // Initialize Feather icons
+        feather.replace();
+    </script>
+</body>
+</html>

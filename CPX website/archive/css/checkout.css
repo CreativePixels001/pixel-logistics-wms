@@ -1,0 +1,456 @@
+/* ===================================================================
+ * Checkout Page Styles
+ *
+ * ------------------------------------------------------------------- */
+
+/* Checkout Section
+ * ------------------------------------------------------------------- */
+.s-checkout {
+    padding: 10rem 0 8rem;
+    background-color: var(--color-body);
+}
+
+.checkout-header {
+    text-align: center;
+    margin-bottom: 6rem;
+}
+
+.checkout-header h1 {
+    font-size: 4.8rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 1rem;
+}
+
+.checkout-header p {
+    font-size: 1.8rem;
+    color: var(--color-text-light);
+}
+
+.checkout-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+
+/* Summary Card
+ * ------------------------------------------------------------------- */
+.summary-card {
+    background: var(--color-bg);
+    border-radius: 1.2rem;
+    padding: 3rem;
+    position: sticky;
+    top: 10rem;
+}
+
+@media screen and (max-width: 900px) {
+    .summary-card {
+        position: relative;
+        top: 0;
+        margin-bottom: 4rem;
+    }
+}
+
+.summary-card h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 2.5rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.product-details h3 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 0.8rem;
+}
+
+.product-details p {
+    font-size: 1.5rem;
+    color: var(--color-text-light);
+    margin-bottom: 3rem;
+}
+
+
+/* Pricing Options
+ * ------------------------------------------------------------------- */
+.pricing-options {
+    margin-bottom: 3rem;
+}
+
+.pricing-options h4 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 1.5rem;
+}
+
+.pricing-option {
+    display: block;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+}
+
+.pricing-option input[type="radio"] {
+    display: none;
+}
+
+.option-content {
+    padding: 2rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.pricing-option:hover .option-content {
+    border-color: rgba(102, 126, 234, 0.3);
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.pricing-option input[type="radio"]:checked + .option-content {
+    border-color: var(--color-1);
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.option-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.plan-name {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.plan-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-1);
+}
+
+.plan-description {
+    font-size: 1.4rem;
+    color: var(--color-text-light);
+    margin: 0;
+}
+
+.save-badge {
+    display: inline-block;
+    background: #10b981;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 0.4rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-right: 0.8rem;
+}
+
+
+/* Order Total
+ * ------------------------------------------------------------------- */
+.order-total {
+    padding: 2rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 2rem;
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    font-size: 1.5rem;
+}
+
+.total-row span:first-child {
+    color: var(--color-text-light);
+}
+
+.total-row span:last-child {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.grand-total {
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: 1rem;
+    margin-bottom: 0;
+}
+
+.grand-total span {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.grand-total span:last-child {
+    color: var(--color-1);
+}
+
+
+/* Secure Badge
+ * ------------------------------------------------------------------- */
+.secure-badge {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 0.6rem;
+    margin-top: 2rem;
+}
+
+.secure-badge svg {
+    color: #10b981;
+    flex-shrink: 0;
+}
+
+.secure-badge span {
+    font-size: 1.3rem;
+    color: var(--color-text-light);
+}
+
+
+/* Form Card
+ * ------------------------------------------------------------------- */
+.form-card {
+    background: var(--color-bg);
+    border-radius: 1.2rem;
+    padding: 4rem;
+}
+
+@media screen and (max-width: 600px) {
+    .form-card {
+        padding: 3rem 2rem;
+    }
+}
+
+.form-card h2 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--color-text);
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-section {
+    margin-bottom: 3.5rem;
+}
+
+.form-section h3 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 2rem;
+}
+
+
+/* Form Elements
+ * ------------------------------------------------------------------- */
+.form-group {
+    margin-bottom: 2rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+}
+
+@media screen and (max-width: 600px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-group label {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 0.8rem;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 1.4rem 1.6rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.6rem;
+    font-size: 1.5rem;
+    font-family: 'Inter', sans-serif;
+    color: var(--color-text);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-group input:hover:not(:focus) {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.07);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--color-1);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.12);
+    transform: translateY(-1px);
+}
+
+.form-group input::placeholder {
+    color: var(--color-text-light);
+    opacity: 0.5;
+}
+
+
+/* Stripe Element
+ * ------------------------------------------------------------------- */
+.stripe-element {
+    padding: 1.4rem 1.6rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.6rem;
+    transition: all 0.3s ease;
+}
+
+.stripe-element.StripeElement--focus {
+    border-color: var(--color-1);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+#card-errors {
+    color: #ef4444;
+    font-size: 1.3rem;
+    margin-top: 0.8rem;
+}
+
+
+/* Checkbox
+ * ------------------------------------------------------------------- */
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.2rem;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: auto;
+    margin-top: 0.3rem;
+    flex-shrink: 0;
+}
+
+.checkbox-label span {
+    font-size: 1.4rem;
+    color: var(--color-text-light);
+}
+
+.checkbox-label a {
+    color: var(--color-1);
+    text-decoration: underline;
+}
+
+
+/* Submit Button
+ * ------------------------------------------------------------------- */
+.btn-submit {
+    width: 100%;
+    padding: 1.8rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: linear-gradient(135deg, var(--color-1) 0%, #5a73d1 100%);
+    border: none;
+    border-radius: 0.8rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    letter-spacing: 0.02em;
+}
+
+.btn-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn-submit:hover::before {
+    opacity: 1;
+}
+
+.btn-submit:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.35);
+}
+
+.btn-submit:active {
+    transform: translateY(-1px);
+}
+
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-loader svg {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+
+/* Payment Methods
+ * ------------------------------------------------------------------- */
+.payment-methods {
+    text-align: center;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.payment-methods p {
+    font-size: 1.3rem;
+    color: var(--color-text-light);
+    margin-bottom: 1rem;
+}
+
+.method-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.method-icons span {
+    padding: 0.6rem 1.2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 0.4rem;
+    font-size: 1.2rem;
+    color: var(--color-text-light);
+    font-weight: 600;
+}

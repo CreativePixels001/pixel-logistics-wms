@@ -1,0 +1,493 @@
+{
+  "id": "warehouse-compliance",
+  "name": "Warehouse Compliance Audit",
+  "description": "Complete warehouse safety and compliance audit covering safety equipment, storage organization, documentation, staff compliance, and security protocols.",
+  "category": "Logistics",
+  "icon": "📦",
+  "estimatedTime": "60 minutes",
+  "totalItems": 50,
+  "categories": [
+    {
+      "id": "safety-equipment",
+      "name": "Safety Equipment",
+      "itemCount": 10
+    },
+    {
+      "id": "storage-organization",
+      "name": "Storage Organization",
+      "itemCount": 12
+    },
+    {
+      "id": "documentation",
+      "name": "Documentation",
+      "itemCount": 8
+    },
+    {
+      "id": "staff-compliance",
+      "name": "Staff Compliance",
+      "itemCount": 8
+    },
+    {
+      "id": "equipment-maintenance",
+      "name": "Equipment Maintenance",
+      "itemCount": 7
+    },
+    {
+      "id": "security",
+      "name": "Security",
+      "itemCount": 5
+    }
+  ],
+  "checklist": [
+    {
+      "id": 1,
+      "question": "Are emergency exits clearly marked with illuminated signage?",
+      "category": "safety-equipment",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 2,
+      "question": "Are fire extinguishers located within 25 meters of any point in the warehouse?",
+      "category": "safety-equipment",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 3,
+      "question": "Have all fire extinguishers been inspected in the last 12 months?",
+      "category": "safety-equipment",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 4,
+      "question": "Is a first aid kit readily available and fully stocked?",
+      "category": "safety-equipment",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 5,
+      "question": "Are spill kits available for hazardous material handling?",
+      "category": "safety-equipment",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 6,
+      "question": "Is emergency lighting functional and tested regularly?",
+      "category": "safety-equipment",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 7,
+      "question": "Are fire alarm systems installed and operational?",
+      "category": "safety-equipment",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 8,
+      "question": "Are safety barriers or guardrails installed at elevated areas?",
+      "category": "safety-equipment",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 9,
+      "question": "Is personal protective equipment (PPE) readily available for all staff?",
+      "category": "safety-equipment",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 10,
+      "question": "Are eyewash stations and safety showers installed where required?",
+      "category": "safety-equipment",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 11,
+      "question": "Are aisles clear and wide enough for safe forklift operation (minimum 3 meters)?",
+      "category": "storage-organization",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 12,
+      "question": "Are storage racks properly anchored and in good structural condition?",
+      "category": "storage-organization",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 13,
+      "question": "Are load capacity limits clearly displayed on all racks?",
+      "category": "storage-organization",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 14,
+      "question": "Are pallets stacked safely and not exceeding safe height limits?",
+      "category": "storage-organization",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 15,
+      "question": "Are heavy items stored at lower levels to prevent tipping?",
+      "category": "storage-organization",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 16,
+      "question": "Is there a designated area for damaged or recalled goods?",
+      "category": "storage-organization",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 17,
+      "question": "Are floor markings clear for pedestrian walkways and vehicle routes?",
+      "category": "storage-organization",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 18,
+      "question": "Is inventory organized with clear labeling and location codes?",
+      "category": "storage-organization",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 19,
+      "question": "Are hazardous materials stored in designated, segregated areas?",
+      "category": "storage-organization",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 20,
+      "question": "Is the warehouse floor clean and free from obstacles?",
+      "category": "storage-organization",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 21,
+      "question": "Is there adequate lighting throughout the warehouse?",
+      "category": "storage-organization",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 22,
+      "question": "Are goods protected from weather, moisture, and temperature fluctuations?",
+      "category": "storage-organization",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 23,
+      "question": "Is an inventory register maintained and updated daily?",
+      "category": "documentation",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 24,
+      "question": "Are goods receipt notes (GRN) properly documented for all incoming stock?",
+      "category": "documentation",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 25,
+      "question": "Are delivery chalans/invoices filed and easily retrievable?",
+      "category": "documentation",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 26,
+      "question": "Is a maintenance log kept for all equipment and machinery?",
+      "category": "documentation",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 27,
+      "question": "Are safety inspection reports documented and up-to-date?",
+      "category": "documentation",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 28,
+      "question": "Is staff training documentation maintained with completion dates?",
+      "category": "documentation",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 29,
+      "question": "Are incident and accident reports filed properly?",
+      "category": "documentation",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 30,
+      "question": "Is there a documented emergency response plan accessible to all staff?",
+      "category": "documentation",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 31,
+      "question": "Are all warehouse staff wearing safety shoes and helmets?",
+      "category": "staff-compliance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 32,
+      "question": "Are high-visibility vests worn by all personnel in the warehouse?",
+      "category": "staff-compliance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 33,
+      "question": "Have all forklift operators received certified training?",
+      "category": "staff-compliance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 34,
+      "question": "Are staff aware of emergency evacuation procedures?",
+      "category": "staff-compliance",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 35,
+      "question": "Is there a designated safety officer on each shift?",
+      "category": "staff-compliance",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 36,
+      "question": "Have all staff completed workplace safety training in the last 12 months?",
+      "category": "staff-compliance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 37,
+      "question": "Are staff following proper manual handling techniques?",
+      "category": "staff-compliance",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 38,
+      "question": "Is smoking prohibited and enforced in the warehouse?",
+      "category": "staff-compliance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 39,
+      "question": "Are all forklifts in good working condition with current inspection tags?",
+      "category": "equipment-maintenance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 40,
+      "question": "Are conveyor belts and automated systems functioning properly?",
+      "category": "equipment-maintenance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 41,
+      "question": "Are pallet jacks and hand trucks in safe working order?",
+      "category": "equipment-maintenance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 42,
+      "question": "Is a preventive maintenance schedule followed for all equipment?",
+      "category": "equipment-maintenance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 43,
+      "question": "Are battery charging stations properly ventilated and maintained?",
+      "category": "equipment-maintenance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 44,
+      "question": "Is electrical equipment regularly tested and tagged?",
+      "category": "equipment-maintenance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 45,
+      "question": "Are defective equipment and tools removed from service immediately?",
+      "category": "equipment-maintenance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 46,
+      "question": "Are CCTV cameras installed and functioning properly?",
+      "category": "security",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 47,
+      "question": "Is there a secure access control system (gates, locks, guards)?",
+      "category": "security",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 48,
+      "question": "Are visitor and vehicle entry logs maintained?",
+      "category": "security",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 49,
+      "question": "Is the perimeter fence/wall secure with no breaches?",
+      "category": "security",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 50,
+      "question": "Are high-value items stored in a secure, locked area?",
+      "category": "security",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    }
+  ]
+}

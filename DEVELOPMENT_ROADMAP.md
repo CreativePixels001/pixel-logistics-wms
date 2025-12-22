@@ -1,20 +1,20 @@
 # Pixel Logistics WMS - Development Roadmap & Status
-**Project Name:** Pixel Logistics (formerly DLT WMS)  
-**Last Updated:** November 16, 2025  
-**Current Phase:** Phase 12C - System Optimization & Polish  
-**Overall Completion:** 85% ✅
+**Project Name:** Pixel Logistics (formerly Pixel Logistics WMS)  
+**Last Updated:** December 1, 2025  
+**Current Phase:** Phase 13 - Backend Integration + CTO Command Center  
+**Overall Completion:** 87% ✅
 
 ---
 
 ## 📊 Executive Summary
 
-### Overall Progress: 85% Complete
+### Overall Progress: 87% Complete
 
 ```
-████████████████████████░░░░░ 85%
+█████████████████████████░░░ 87%
 ```
 
-### Timeline to Production: 3-5 weeks
+### Timeline to Production: 2-4 weeks
 
 ---
 
@@ -163,7 +163,7 @@
   - Responsive design (mobile/tablet/desktop)
 
 **Branding:**
-- [x] Rebranded from "DLT WMS" to "Pixel Logistics"
+- [x] Rebranded from "Pixel Logistics WMS" to "Pixel Logistics"
 - [x] Custom SVG pixel logo design
 - [x] Professional black & white color scheme
 - [x] Monochrome shipment tracking visualization
@@ -175,7 +175,7 @@
 ### Status: COMPLETE - 100% ✅
 
 #### Completed (Nov 16, 2025):
-- [x] Global branding update (DLT WMS → Pixel Logistics)
+- [x] Global branding update (Pixel Logistics WMS → Pixel Logistics)
 - [x] Standardized header button heights (36px standard, 44px large, 28px small)
 - [x] Header consistency across all 43 pages
 - [x] Logo integration with theme-aware colors
@@ -488,7 +488,7 @@
 ## 📊 Current Sprint Tasks (Week of Nov 16-23)
 
 ### High Priority
-1. ✅ Global rebranding (DLT WMS → Pixel Logistics)
+1. ✅ Global rebranding (Pixel Logistics WMS → Pixel Logistics)
 2. ✅ Standardize button heights
 3. ⏳ Code minification and bundling
 4. ⏳ Performance optimization (target: <2s load time)
@@ -571,10 +571,133 @@
 
 ---
 
+## 🆕 Phase 13: CTO System - Pi Command Center (NEW - Dec 1, 2025)
+
+### ✅ Module 1: Backend Integration (COMPLETE - 70%)
+
+**Achievement:** Real server control system with actual process management
+
+#### Features Delivered
+1. **Backend API Server** (`CTO System/backend/server.js`)
+   - Express.js server on port 4000
+   - Real process spawning via `child_process.spawn()`
+   - Port health checking with TCP sockets
+   - Live stdout/stderr log capture
+   - PID tracking and process monitoring
+   - Graceful shutdown with SIGTERM/SIGKILL
+
+2. **API Endpoints Created**
+   ```
+   POST /api/start-server       - Spawn real server process
+   POST /api/stop-server         - Kill running server  
+   GET  /api/server-status/:sys  - PID, uptime, logs
+   GET  /api/servers-status      - All systems status
+   GET  /api/db-metrics/:sys     - Database metrics
+   GET  /api/health              - API health check
+   ```
+
+3. **Frontend Integration**
+   - Updated `Pi-map-grid.html` with real API calls
+   - Replaced simulated setTimeout with fetch()
+   - Live console showing actual process logs
+   - Dynamic status (Offline → Online when verified)
+   - Error handling for API unavailability
+
+4. **System Management**
+   - Controls: WMS (3001), TMS (3002), EMS (3003), CPX (3004), Pi (3005)
+   - Quick start script: `./start.sh`
+   - Process verification: `lsof -ti:3001`
+   - Real server access: `http://localhost:3001`
+
+#### Files Created (6)
+- `CTO System/backend/server.js` (365 lines)
+- `CTO System/backend/package.json`
+- `CTO System/backend/README.md` (API docs)
+- `CTO System/start.sh` (launcher script)
+- `CTO System/README.md` (setup guide)
+- `CTO System/BACKEND_INTEGRATION_COMPLETE.md`
+
+#### Quick Start
+```bash
+cd "CTO System"
+./start.sh
+```
+
+### 🚧 Module 2: Database Metrics Integration (NEXT - 0%)
+
+**Goal:** Replace simulated stats with real data from MongoDB
+
+#### Planned Tasks
+- [ ] Connect backend to MongoDB (config exists)
+- [ ] Query actual collections:
+  - WMS: `SalesOrder.count()`, `Product.count()`, `Warehouse.count()`
+  - TMS: `Shipment.count()`, `Vehicle.count()`
+  - EMS: `Product.count()`, `Order.count()`
+- [ ] Update `/api/db-metrics/:system` with real queries
+- [ ] Frontend fetches from API instead of hardcoded values
+- [ ] Show live numbers: orders, products, revenue
+
+#### Estimated Time: 1-2 days
+
+### 📋 Module 3: Enhanced Monitoring (PLANNED)
+
+**Features:**
+- [ ] WebSocket for live log streaming
+- [ ] CPU/Memory usage tracking (os module)
+- [ ] Request rate monitoring
+- [ ] Alert system for errors/thresholds
+- [ ] Performance graphs with Chart.js
+- [ ] Email/SMS notifications
+
+#### Estimated Time: 3-4 days
+
+### 📋 Module 4: Advanced Features (FUTURE)
+
+**Server Management:**
+- [ ] Server restart functionality
+- [ ] Scheduled startup/shutdown
+- [ ] Auto-restart on crash
+- [ ] Health check pings
+
+**Database Operations:**
+- [ ] Backup/restore buttons
+- [ ] Cache clearing
+- [ ] Maintenance tasks
+- [ ] Migration runner
+
+**Developer Tools:**
+- [ ] Log file viewer
+- [ ] Configuration editor
+- [ ] Environment switcher
+- [ ] Database query interface
+
+#### Estimated Time: 1 week
+
+### 🎯 CTO System Roadmap
+
+| Module | Feature | Status | Priority | Time |
+|--------|---------|--------|----------|------|
+| 1 | Backend Integration | ✅ 70% | Critical | ✅ Done |
+| 2 | Database Metrics | 🚧 0% | High | 1-2 days |
+| 3 | Enhanced Monitoring | 📋 Planned | Medium | 3-4 days |
+| 4 | Alert System | 📋 Planned | Medium | 2-3 days |
+| 5 | Analytics Dashboard | 📋 Planned | Low | 3-4 days |
+| 6 | Advanced Features | 📋 Planned | Low | 1 week |
+
+**Total Time Remaining:** 2-3 weeks for full completion
+
+---
+
 ## 📝 Notes & Decisions
 
+### Recent Decisions (Dec 1, 2025)
+1. **CTO System:** Built real backend integration - actual process spawning vs simulation
+2. **Architecture:** Node.js + Express for API, child_process for server management
+3. **Verification:** Port health checks ensure servers actually running, not just UI updates
+4. **Next Priority:** Database metrics integration to show real order/product counts
+
 ### Recent Decisions (Nov 16, 2025)
-1. **Branding Change:** Renamed from "DLT WMS" to "Pixel Logistics" for modern appeal
+1. **Branding Change:** Renamed from "Pixel Logistics WMS" to "Pixel Logistics" for modern appeal
 2. **Color Scheme:** Committed to monochrome (black/white) for professional B2B aesthetic
 3. **Button Heights:** Standardized to 28px (small), 36px (default), 44px (large)
 4. **Parallax:** Removed content parallax to prevent hiding, kept banner parallax only
@@ -597,7 +720,7 @@
 
 ## 🏆 Project Achievements
 
-✅ **43 fully functional pages delivered**  
+✅ **56 fully functional pages delivered**  
 ✅ **100% Oracle WMS R12.1 feature parity + extras**  
 ✅ **Modern, responsive, accessible design**  
 ✅ **Professional black & white aesthetic**  
@@ -607,13 +730,14 @@
 ✅ **37-60% cost savings vs Oracle**  
 ✅ **Zero framework dependencies (lightweight)**  
 ✅ **Mobile-first responsive design**  
+✅ **Backend API with auth & inventory** (Phase 13)  
+✅ **CTO Command Center with real server control** (Dec 1, 2025)
 
 ---
 
-**Next Review Date:** November 23, 2025  
-**Project Manager:** [Your Name]  
-**Development Team:** [Team Names]  
-**Stakeholders:** [Stakeholder Names]
+**Next Review Date:** December 8, 2025  
+**Last Major Update:** CTO System Backend Integration (Dec 1, 2025)  
+**Current Sprint:** Database Metrics Integration
 
 ---
 

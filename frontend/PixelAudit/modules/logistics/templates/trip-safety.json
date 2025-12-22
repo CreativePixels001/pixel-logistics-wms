@@ -1,0 +1,209 @@
+{
+  "id": "trip-safety",
+  "name": "Trip Safety Audit",
+  "category": "Logistics - Trip",
+  "description": "Safety evaluation for active trips including route planning, driver behavior, and load security",
+  "version": "1.0",
+  "items": [
+    {
+      "id": "ts-01",
+      "question": "Was pre-trip vehicle inspection completed and documented?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-02",
+      "question": "Is route planned and communicated to driver?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-03",
+      "question": "Are alternate routes identified for emergencies?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-04",
+      "question": "Has weather forecast been checked for route?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-05",
+      "question": "Are rest stops planned per HOS regulations?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-06",
+      "question": "Is cargo properly secured with straps/chains?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ts-07",
+      "question": "Is load weight within vehicle capacity?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-08",
+      "question": "Is weight distributed evenly for balance?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-09",
+      "question": "Are fragile items marked and positioned safely?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ts-10",
+      "question": "Are all doors and cargo compartments securely closed?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ts-11",
+      "question": "Is driver wearing seatbelt?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-12",
+      "question": "Is driver alert and fit for duty (not fatigued)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-13",
+      "question": "Is driver following speed limits?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-14",
+      "question": "Is driver maintaining safe following distance?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-15",
+      "question": "Is driver avoiding mobile phone use while driving?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-16",
+      "question": "Are all required documents on board (registration, insurance, manifest)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-17",
+      "question": "Is shipping manifest accurate and complete?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-18",
+      "question": "Are delivery addresses and contact details verified?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-19",
+      "question": "Is driver equipped with communication device?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-20",
+      "question": "Is GPS tracking active and functional?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-21",
+      "question": "Are emergency supplies on board (first aid, fire extinguisher, triangles)?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": true,
+      "notes": true
+    },
+    {
+      "id": "ts-22",
+      "question": "Does driver know emergency contact numbers?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-23",
+      "question": "Is driver trained on breakdown and accident procedures?",
+      "type": "yes_no_na",
+      "critical": true,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-24",
+      "question": "Are customers notified of estimated arrival times?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    },
+    {
+      "id": "ts-25",
+      "question": "Overall trip safety measures adequate and followed?",
+      "type": "yes_no_na",
+      "critical": false,
+      "photo_required": false,
+      "notes": true
+    }
+  ]
+}

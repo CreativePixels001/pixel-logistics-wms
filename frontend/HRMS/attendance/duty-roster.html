@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duty Roster - Pixel Resource</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <style>
+        /* Roster Calendar */
+        .roster-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .week-navigator {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .week-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            min-width: 280px;
+            text-align: center;
+        }
+
+        .nav-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .nav-btn:hover {
+            border-color: var(--primary-color);
+            background: var(--bg-light);
+        }
+
+        .roster-filters {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        /* Roster Grid */
+        .roster-grid {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .roster-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+        }
+
+        .roster-table th {
+            background: var(--bg-light);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .roster-table th:first-child {
+            width: 200px;
+            position: sticky;
+            left: 0;
+            z-index: 11;
+            background: var(--bg-light);
+        }
+
+        .roster-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            min-height: 80px;
+            vertical-align: top;
+        }
+
+        .roster-table td:first-child {
+            position: sticky;
+            left: 0;
+            background: var(--bg-white);
+            font-weight: 600;
+            border-right: 2px solid var(--border-color);
+        }
+
+        .roster-table tbody tr:hover td {
+            background: var(--bg-light);
+        }
+
+        .day-header {
+            text-align: center;
+            min-width: 140px;
+        }
+
+        .day-name {
+            display: block;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .day-date {
+            display: block;
+            font-size: 1.125rem;
+            font-weight: 800;
+        }
+
+        .day-header.today {
+            color: var(--primary-color);
+        }
+
+        .day-header.weekend {
+            color: var(--error-color);
+        }
+
+        /* Employee Row */
+        .employee-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .employee-avatar-small {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background: var(--primary-color);
+            color: var(--bg-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .employee-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .employee-name {
+            font-weight: 600;
+            font-size: 0.9375rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .employee-role {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Shift Badge */
+        .shift-badge {
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 0.25rem;
+            transition: all var(--transition-normal);
+        }
+
+        .shift-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .shift-badge.morning {
+            background: #FFF3E0;
+            color: #F57C00;
+            border: 1px solid #FFB74D;
+        }
+
+        .shift-badge.afternoon {
+            background: #E3F2FD;
+            color: #1976D2;
+            border: 1px solid #64B5F6;
+        }
+
+        .shift-badge.night {
+            background: #EDE7F6;
+            color: #5E35B1;
+            border: 1px solid #9575CD;
+        }
+
+        .shift-badge.general {
+            background: #E8F5E9;
+            color: #388E3C;
+            border: 1px solid #81C784;
+        }
+
+        .shift-badge.off {
+            background: #FAFAFA;
+            color: var(--text-secondary);
+            border: 1px dashed var(--border-color);
+        }
+
+        .shift-time {
+            display: block;
+            font-size: 0.7rem;
+            opacity: 0.8;
+            margin-top: 0.125rem;
+        }
+
+        /* Empty Cell */
+        .empty-cell {
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .empty-cell:hover {
+            background: var(--bg-light);
+        }
+
+        /* Statistics */
+        .roster-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .stat-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 800;
+        }
+
+        /* Shift Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            padding: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .shift-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .shift-option {
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            text-align: center;
+            transition: all var(--transition-normal);
+        }
+
+        .shift-option:hover {
+            border-color: var(--primary-color);
+        }
+
+        .shift-option.selected {
+            border-color: var(--primary-color);
+            background: var(--bg-light);
+        }
+
+        .shift-option-name {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .shift-option-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Conflict Warning */
+        .conflict-warning {
+            background: var(--warning-light);
+            border: 1px solid var(--warning-color);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .conflict-icon {
+            color: var(--warning-color);
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .roster-table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .roster-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .shift-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>Pixel Resource</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Attendance</div>
+                    <a href="daily.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Daily Attendance
+                    </a>
+                    <a href="duty-roster.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Duty Roster
+                    </a>
+                    <a href="shifts.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Shift Management
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="../settings/configuration.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search employees...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Admin</span>
+                            <span class="user-role" id="userRole">Administrator</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Weekly Duty Roster</h1>
+                        <p class="page-subtitle">Plan and manage employee shifts for the week</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-secondary" onclick="copyPreviousWeek()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                            Copy Previous Week
+                        </button>
+                        <button class="btn btn-secondary" onclick="exportRoster()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Export
+                        </button>
+                        <button class="btn btn-primary" onclick="publishRoster()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                            Publish Roster
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="roster-stats">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-label">Total Shifts</div>
+                            <div class="stat-icon" style="background: #E3F2FD;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#1976D2" stroke-width="2" width="16" height="16">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value" style="color: #1976D2;">168</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-label">Assigned</div>
+                            <div class="stat-icon" style="background: #E8F5E9;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#388E3C" stroke-width="2" width="16" height="16">
+                                    <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value" style="color: #388E3C;">142</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-label">Unassigned</div>
+                            <div class="stat-icon" style="background: #FFF3E0;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#F57C00" stroke-width="2" width="16" height="16">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" y1="8" x2="12" y2="12"/>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value" style="color: #F57C00;">26</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-label">Conflicts</div>
+                            <div class="stat-icon" style="background: #FFEBEE;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#D32F2F" stroke-width="2" width="16" height="16">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                    <line x1="12" y1="9" x2="12" y2="13"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value" style="color: #D32F2F;">3</div>
+                    </div>
+                </div>
+
+                <!-- Roster Header -->
+                <div class="roster-header">
+                    <div class="week-navigator">
+                        <button class="nav-btn" onclick="previousWeek()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <polyline points="15 18 9 12 15 6"/>
+                            </svg>
+                        </button>
+                        <div class="week-title" id="weekTitle">Week: 25 Nov - 01 Dec 2025</div>
+                        <button class="nav-btn" onclick="nextWeek()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <polyline points="9 18 15 12 9 6"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="roster-filters">
+                        <select class="form-select" style="width: 180px;">
+                            <option value="all">All Departments</option>
+                            <option value="IT">IT & Technology</option>
+                            <option value="OPS">Operations</option>
+                            <option value="FIN">Finance</option>
+                        </select>
+                        <select class="form-select" style="width: 150px;">
+                            <option value="all">All Shifts</option>
+                            <option value="morning">Morning</option>
+                            <option value="afternoon">Afternoon</option>
+                            <option value="night">Night</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Roster Grid -->
+                <div class="roster-grid">
+                    <table class="roster-table">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th class="day-header today">
+                                    <span class="day-name">Mon</span>
+                                    <span class="day-date">25</span>
+                                </th>
+                                <th class="day-header">
+                                    <span class="day-name">Tue</span>
+                                    <span class="day-date">26</span>
+                                </th>
+                                <th class="day-header">
+                                    <span class="day-name">Wed</span>
+                                    <span class="day-date">27</span>
+                                </th>
+                                <th class="day-header">
+                                    <span class="day-name">Thu</span>
+                                    <span class="day-date">28</span>
+                                </th>
+                                <th class="day-header">
+                                    <span class="day-name">Fri</span>
+                                    <span class="day-date">29</span>
+                                </th>
+                                <th class="day-header weekend">
+                                    <span class="day-name">Sat</span>
+                                    <span class="day-date">30</span>
+                                </th>
+                                <th class="day-header weekend">
+                                    <span class="day-name">Sun</span>
+                                    <span class="day-date">01</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="rosterBody">
+                            <!-- Sample Data -->
+                            <tr>
+                                <td>
+                                    <div class="employee-info">
+                                        <div class="employee-avatar-small">RS</div>
+                                        <div class="employee-details">
+                                            <div class="employee-name">Rajesh Sharma</div>
+                                            <div class="employee-role">IT Manager</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP001', '2025-11-25')">
+                                    <div class="shift-badge general">
+                                        General<span class="shift-time">9 AM - 6 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP001', '2025-11-26')">
+                                    <div class="shift-badge general">
+                                        General<span class="shift-time">9 AM - 6 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP001', '2025-11-27')">
+                                    <div class="shift-badge general">
+                                        General<span class="shift-time">9 AM - 6 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP001', '2025-11-28')">
+                                    <div class="shift-badge general">
+                                        General<span class="shift-time">9 AM - 6 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP001', '2025-11-29')">
+                                    <div class="shift-badge general">
+                                        General<span class="shift-time">9 AM - 6 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP001', '2025-11-30')">
+                                    <div class="shift-badge off">OFF</div>
+                                </td>
+                                <td onclick="assignShift('EMP001', '2025-12-01')">
+                                    <div class="shift-badge off">OFF</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="employee-info">
+                                        <div class="employee-avatar-small">PK</div>
+                                        <div class="employee-details">
+                                            <div class="employee-name">Priya Kumar</div>
+                                            <div class="employee-role">Operations Head</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP002', '2025-11-25')">
+                                    <div class="shift-badge morning">
+                                        Morning<span class="shift-time">6 AM - 2 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP002', '2025-11-26')">
+                                    <div class="shift-badge morning">
+                                        Morning<span class="shift-time">6 AM - 2 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP002', '2025-11-27')">
+                                    <div class="shift-badge morning">
+                                        Morning<span class="shift-time">6 AM - 2 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP002', '2025-11-28')">
+                                    <div class="shift-badge morning">
+                                        Morning<span class="shift-time">6 AM - 2 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP002', '2025-11-29')">
+                                    <div class="shift-badge morning">
+                                        Morning<span class="shift-time">6 AM - 2 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP002', '2025-11-30')">
+                                    <div class="shift-badge morning">
+                                        Morning<span class="shift-time">6 AM - 2 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP002', '2025-12-01')">
+                                    <div class="shift-badge off">OFF</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="employee-info">
+                                        <div class="employee-avatar-small">AM</div>
+                                        <div class="employee-details">
+                                            <div class="employee-name">Amit Mehta</div>
+                                            <div class="employee-role">Finance Officer</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP003', '2025-11-25')">
+                                    <div class="shift-badge afternoon">
+                                        Afternoon<span class="shift-time">2 PM - 10 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP003', '2025-11-26')">
+                                    <div class="shift-badge afternoon">
+                                        Afternoon<span class="shift-time">2 PM - 10 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP003', '2025-11-27')">
+                                    <div class="empty-cell">+ Assign Shift</div>
+                                </td>
+                                <td onclick="assignShift('EMP003', '2025-11-28')">
+                                    <div class="shift-badge afternoon">
+                                        Afternoon<span class="shift-time">2 PM - 10 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP003', '2025-11-29')">
+                                    <div class="shift-badge afternoon">
+                                        Afternoon<span class="shift-time">2 PM - 10 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP003', '2025-11-30')">
+                                    <div class="shift-badge off">OFF</div>
+                                </td>
+                                <td onclick="assignShift('EMP003', '2025-12-01')">
+                                    <div class="shift-badge off">OFF</div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="employee-info">
+                                        <div class="employee-avatar-small">SP</div>
+                                        <div class="employee-details">
+                                            <div class="employee-name">Sneha Patel</div>
+                                            <div class="employee-role">Security Guard</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP004', '2025-11-25')">
+                                    <div class="shift-badge night">
+                                        Night<span class="shift-time">10 PM - 6 AM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP004', '2025-11-26')">
+                                    <div class="shift-badge night">
+                                        Night<span class="shift-time">10 PM - 6 AM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP004', '2025-11-27')">
+                                    <div class="shift-badge night">
+                                        Night<span class="shift-time">10 PM - 6 AM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP004', '2025-11-28')">
+                                    <div class="shift-badge night">
+                                        Night<span class="shift-time">10 PM - 6 AM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP004', '2025-11-29')">
+                                    <div class="shift-badge off">OFF</div>
+                                </td>
+                                <td onclick="assignShift('EMP004', '2025-11-30')">
+                                    <div class="shift-badge night">
+                                        Night<span class="shift-time">10 PM - 6 AM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP004', '2025-12-01')">
+                                    <div class="shift-badge night">
+                                        Night<span class="shift-time">10 PM - 6 AM</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="employee-info">
+                                        <div class="employee-avatar-small">RV</div>
+                                        <div class="employee-details">
+                                            <div class="employee-name">Rahul Verma</div>
+                                            <div class="employee-role">Support Staff</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP005', '2025-11-25')">
+                                    <div class="empty-cell">+ Assign Shift</div>
+                                </td>
+                                <td onclick="assignShift('EMP005', '2025-11-26')">
+                                    <div class="shift-badge general">
+                                        General<span class="shift-time">9 AM - 6 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP005', '2025-11-27')">
+                                    <div class="shift-badge general">
+                                        General<span class="shift-time">9 AM - 6 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP005', '2025-11-28')">
+                                    <div class="empty-cell">+ Assign Shift</div>
+                                </td>
+                                <td onclick="assignShift('EMP005', '2025-11-29')">
+                                    <div class="shift-badge general">
+                                        General<span class="shift-time">9 AM - 6 PM</span>
+                                    </div>
+                                </td>
+                                <td onclick="assignShift('EMP005', '2025-11-30')">
+                                    <div class="shift-badge off">OFF</div>
+                                </td>
+                                <td onclick="assignShift('EMP005', '2025-12-01')">
+                                    <div class="shift-badge off">OFF</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Assign Shift Modal -->
+    <div class="modal-overlay" id="shiftModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Assign Shift</h3>
+                <button class="icon-btn" onclick="closeShiftModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="font-weight: 600; margin-bottom: 0.25rem;">Employee: <span id="modalEmployeeName">-</span></div>
+                    <div style="font-size: 0.875rem; color: var(--text-secondary);">Date: <span id="modalDate">-</span></div>
+                </div>
+
+                <div class="shift-options">
+                    <div class="shift-option" onclick="selectShift('morning')">
+                        <div class="shift-option-name" style="color: #F57C00;">Morning</div>
+                        <div class="shift-option-time">6 AM - 2 PM</div>
+                    </div>
+                    <div class="shift-option" onclick="selectShift('afternoon')">
+                        <div class="shift-option-name" style="color: #1976D2;">Afternoon</div>
+                        <div class="shift-option-time">2 PM - 10 PM</div>
+                    </div>
+                    <div class="shift-option" onclick="selectShift('night')">
+                        <div class="shift-option-name" style="color: #5E35B1;">Night</div>
+                        <div class="shift-option-time">10 PM - 6 AM</div>
+                    </div>
+                    <div class="shift-option" onclick="selectShift('general')">
+                        <div class="shift-option-name" style="color: #388E3C;">General</div>
+                        <div class="shift-option-time">9 AM - 6 PM</div>
+                    </div>
+                    <div class="shift-option" onclick="selectShift('off')">
+                        <div class="shift-option-name">Day Off</div>
+                        <div class="shift-option-time">-</div>
+                    </div>
+                    <div class="shift-option" onclick="selectShift('remove')">
+                        <div class="shift-option-name" style="color: var(--error-color);">Remove Shift</div>
+                        <div class="shift-option-time">Unassign</div>
+                    </div>
+                </div>
+
+                <div id="conflictWarning" style="display: none;">
+                    <div class="conflict-warning">
+                        <div class="conflict-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                                <line x1="12" y1="9" x2="12" y2="13"/>
+                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <strong>Shift Conflict Detected</strong><br>
+                            <span style="font-size: 0.875rem;">This employee has a leave request for this date.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeShiftModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveShift()">Assign Shift</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedShift = null;
+        let currentEmployee = null;
+        let currentDate = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
+        });
+
+        // Load user info
+        function loadUserInfo() {
+            const user = JSON.parse(sessionStorage.getItem('hrmsUser') || '{}');
+            if (user.name) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userRole').textContent = user.role;
+                document.getElementById('userAvatar').textContent = user.name.charAt(0);
+            }
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Week navigation
+        function previousWeek() {
+            showToast('Loading previous week...', 'info');
+        }
+
+        function nextWeek() {
+            showToast('Loading next week...', 'info');
+        }
+
+        // Assign shift
+        function assignShift(empId, date) {
+            currentEmployee = empId;
+            currentDate = date;
+            
+            document.getElementById('modalEmployeeName').textContent = empId;
+            document.getElementById('modalDate').textContent = new Date(date).toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
+            document.getElementById('shiftModal').classList.add('active');
+        }
+
+        // Close modal
+        function closeShiftModal() {
+            document.getElementById('shiftModal').classList.remove('active');
+            selectedShift = null;
+            
+            // Deselect all shift options
+            document.querySelectorAll('.shift-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+        }
+
+        // Select shift
+        function selectShift(shift) {
+            selectedShift = shift;
+            
+            // Update selection UI
+            document.querySelectorAll('.shift-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            event.target.closest('.shift-option').classList.add('selected');
+        }
+
+        // Save shift
+        function saveShift() {
+            if (!selectedShift) {
+                showToast('Please select a shift', 'error');
+                return;
+            }
+            
+            showToast('Shift assigned successfully!', 'success');
+            closeShiftModal();
+        }
+
+        // Copy previous week
+        function copyPreviousWeek() {
+            if (confirm('Copy shifts from previous week?')) {
+                showToast('Roster copied from previous week', 'success');
+            }
+        }
+
+        // Publish roster
+        function publishRoster() {
+            if (confirm('Publish this roster to all employees?')) {
+                showToast('Roster published successfully!', 'success');
+            }
+        }
+
+        // Export roster
+        function exportRoster() {
+            showToast('Exporting roster...', 'info');
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">×</button>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Close modal on outside click
+        document.getElementById('shiftModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeShiftModal();
+            }
+        });
+    </script>
+</body>
+</html>

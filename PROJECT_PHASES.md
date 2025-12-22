@@ -1,4 +1,4 @@
-# DLT WMS Project Development Phases
+# Pixel Logistics WMS Project Development Phases
 
 ## Overview
 This document outlines the phased approach for developing the Deloitte WMS (Warehouse Management System) based on Oracle WMS R12.1 standards. The project follows a modular, sequential implementation strategy to build a complete, enterprise-grade warehouse management solution.

@@ -1,4 +1,4 @@
-// DLT WMS - Cycle Count Module JavaScript
+// Pixel WMS - Cycle Count Module JavaScript
 // Handles cycle count execution, variance analysis, and accuracy tracking
 
 let currentCountType = null;

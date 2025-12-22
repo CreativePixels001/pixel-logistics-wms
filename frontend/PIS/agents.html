@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Safe - Agents Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="common-styles.css">
+    <link rel="stylesheet" href="toast.css">
+    <style>
+        /* Main Content Area */
+        .main-content {
+            grid-area: main;
+            background: #fafafa;
+            overflow-y: auto;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        /* Performance Metrics at Top */
+        .performance-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: white;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .metric-card:hover {
+            border-color: #000;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            transform: translateY(-2px);
+        }
+
+        .metric-icon {
+            width: 40px;
+            height: 40px;
+            background: #fafafa;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .metric-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .metric-number {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Agents specific styles */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .agent-card {
+            background: white;
+            border: 1px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .agent-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .agent-info {
+            flex: 1;
+        }
+
+        .agent-name {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .agent-id {
+            color: #666;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .agent-role-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .role-admin { background: #000; color: white; }
+        .role-manager { background: #333; color: white; }
+        .role-senior-agent { background: #666; color: white; }
+        .role-agent { background: #e8e8e8; color: #000; }
+
+        .agent-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-box {
+            text-align: center;
+            padding: 1rem;
+            background: #fafafa;
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #000;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .agent-performance {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .performance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .performance-label {
+            font-size: 0.875rem;
+            color: #666;
+        }
+
+        .performance-bar {
+            flex: 1;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            margin: 0 1rem;
+            overflow: hidden;
+        }
+
+        .performance-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #000 0%, #333 100%);
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .performance-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .agent-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: #e0e0e0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-active { background: #e8ffe8; color: #006600; }
+        .status-inactive { background: #ffe8e8; color: #660000; }
+        .status-on-leave { background: #fff8e8; color: #664400; }
+
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 0.75rem;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                        <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    <span>Pixel Safe</span>
+                </div>
+            </div>
+            <div class="header-center">
+                <div class="search-bar">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="globalSearch" placeholder="Search agents, leads, clients...">
+                    <kbd style="position: absolute; right: 12px; font-size: 0.75rem; padding: 0.25rem 0.5rem; background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 4px; font-family: inherit;">⌘K</kbd>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-icon-btn" title="Notifications">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                    </svg>
+                    <span class="badge">3</span>
+                </button>
+                <button class="header-icon-btn" title="Messages">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span class="badge">5</span>
+                </button>
+                <div class="user-menu">
+                    <div class="user-avatar">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <span class="user-name" id="headerAgentName">Agent</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"/>
+                    </svg>
+                </div>
+            </div>
+        </header>
+
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <nav class="nav-menu">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <a href="dashboard.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="analytics.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        <span>Analytics</span>
+                    </a>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-section-title">Sales</div>
+                    <a href="leads.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <line x1="20" y1="8" x2="20" y2="14"/>
+                            <line x1="23" y1="11" x2="17" y2="11"/>
+                        </svg>
+                        <span>Leads</span>
+                    </a>
+                    <a href="clients.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Clients</span>
+                    </a>
+                    <a href="deals.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                        </svg>
+                        <span>Deals</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Operations</div>
+                    <a href="policies.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                        <span>Policies</span>
+                    </a>
+                    <a href="claims.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <span>Claims</span>
+                    </a>
+                    <a href="renewals.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 4 23 10 17 10"/>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                        </svg>
+                        <span>Renewals</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <a href="agents.html" class="nav-link active">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <span>Agents</span>
+                    </a>
+                    <a href="reports.html" class="nav-link">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        <span>Reports</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Agents Management</h1>
+                        <p class="page-subtitle">Manage insurance agents and their performance</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="showAddAgentModal()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Add Agent
+                    </button>
+                </div>
+
+                <!-- Performance Metrics -->
+                <div class="performance-metrics">
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <div class="metric-number" id="totalAgents">0</div>
+                        <div class="metric-label">Total Agents</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                        </div>
+                        <div class="metric-number" id="activeAgents">0</div>
+                        <div class="metric-label">Active Agents</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                            </svg>
+                        </div>
+                        <div class="metric-number" id="totalPolicies">0</div>
+                        <div class="metric-label">Total Policies</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                        </div>
+                        <div class="metric-number" id="totalPremium">₹0</div>
+                        <div class="metric-label">Total Premium</div>
+                    </div>
+                </div>
+
+                <!-- Filters and Actions -->
+                <div class="filter-bar">
+                    <select id="roleFilter" class="filter-select" onchange="filterAgents()">
+                        <option value="">All Roles</option>
+                        <option value="admin">Admin</option>
+                        <option value="manager">Manager</option>
+                        <option value="senior-agent">Senior Agent</option>
+                        <option value="agent">Agent</option>
+                    </select>
+                    <select id="statusFilter" class="filter-select" onchange="filterAgents()">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="on-leave">On Leave</option>
+                        <option value="suspended">Suspended</option>
+                    </select>
+                    <select id="departmentFilter" class="filter-select" onchange="filterAgents()">
+                        <option value="">All Departments</option>
+                        <option value="sales">Sales</option>
+                        <option value="claims">Claims</option>
+                        <option value="renewals">Renewals</option>
+                        <option value="operations">Operations</option>
+                    </select>
+                    <input type="search" id="searchAgent" class="filter-select" placeholder="Search agents..." onkeyup="searchAgents()" style="flex: 1;">
+                </div>
+
+                <!-- Agents Grid -->
+                <div class="agents-grid" id="agentsGrid">
+                    <!-- Agent cards will be inserted here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Agent Modal -->
+    <div class="modal" id="agentModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Add New Agent</h2>
+            <form id="agentForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">First Name *</label>
+                        <input type="text" name="firstName" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Last Name *</label>
+                        <input type="text" name="lastName" class="form-input" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label class="form-label">Email *</label>
+                        <input type="email" name="email" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone *</label>
+                        <input type="tel" name="phone" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">License Number *</label>
+                        <input type="text" name="licenseNumber" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Role *</label>
+                        <select name="role" class="form-input" required>
+                            <option value="agent">Agent</option>
+                            <option value="senior-agent">Senior Agent</option>
+                            <option value="manager">Manager</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Department *</label>
+                        <select name="department" class="form-input" required>
+                            <option value="sales">Sales</option>
+                            <option value="claims">Claims</option>
+                            <option value="renewals">Renewals</option>
+                            <option value="operations">Operations</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width" id="passwordGroup">
+                        <label class="form-label">Password *</label>
+                        <input type="password" name="password" class="form-input" minlength="6">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save Agent</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeAgentModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toastContainer"></div>
+
+    <script src="toast.js"></script>
+    <script>
+        const API_BASE = 'http://localhost:5001/api/v1/pis';
+        let allAgents = [];
+        let editingAgentId = null;
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAgents();
+            loadStats();
+        });
+
+        // Load agents
+        async function loadAgents() {
+            try {
+                const response = await fetch(`${API_BASE}/agents`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    allAgents = result.data;
+                    renderAgents(allAgents);
+                }
+            } catch (error) {
+                showToast('Failed to load agents', 'error');
+                console.error(error);
+            }
+        }
+
+        // Load stats
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/agents/stats`);
+                const result = await response.json();
+                
+                if (result.success && result.data.performance[0]) {
+                    const stats = result.data.performance[0];
+                    document.getElementById('totalAgents').textContent = stats.totalAgents || 0;
+                    document.getElementById('activeAgents').textContent = stats.activeAgents || 0;
+                    document.getElementById('totalPolicies').textContent = stats.totalPolicies || 0;
+                    document.getElementById('totalPremium').textContent = `₹${(stats.totalPremium || 0).toLocaleString('en-IN')}`;
+                }
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+            }
+        }
+
+        // Render agents
+        function renderAgents(agents) {
+            const grid = document.getElementById('agentsGrid');
+            
+            if (agents.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: #666; padding: 3rem;">No agents found</p>';
+                return;
+            }
+
+            grid.innerHTML = agents.map(agent => `
+                <div class="agent-card">
+                    <div class="agent-header">
+                        <div class="agent-avatar">${agent.firstName.charAt(0)}${agent.lastName.charAt(0)}</div>
+                        <div class="agent-info">
+                            <div class="agent-name">${agent.firstName} ${agent.lastName}</div>
+                            <div class="agent-id">${agent.agentId}</div>
+                            <span class="agent-role-badge role-${agent.role}">${agent.role.replace('-', ' ').toUpperCase()}</span>
+                            <span class="status-badge status-${agent.status}">${agent.status.toUpperCase()}</span>
+                        </div>
+                    </div>
+
+                    <div class="agent-stats">
+                        <div class="stat-box">
+                            <div class="stat-value">${agent.performance?.totalPoliciesIssued || 0}</div>
+                            <div class="stat-label">Policies</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${agent.performance?.totalClients || 0}</div>
+                            <div class="stat-label">Clients</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">₹${((agent.performance?.totalPremiumCollected || 0)/1000).toFixed(0)}K</div>
+                            <div class="stat-label">Premium</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-value">${agent.performance?.conversionRate || 0}%</div>
+                            <div class="stat-label">Conversion</div>
+                        </div>
+                    </div>
+
+                    <div class="agent-performance">
+                        <div class="performance-item">
+                            <span class="performance-label">Leads</span>
+                            <div class="performance-bar">
+                                <div class="performance-fill" style="width: ${Math.min((agent.performance?.totalLeads / agent.monthlyTargets?.leads * 100) || 0, 100)}%"></div>
+                            </div>
+                            <span class="performance-value">${agent.performance?.totalLeads || 0}/${agent.monthlyTargets?.leads || 0}</span>
+                        </div>
+                        <div class="performance-item">
+                            <span class="performance-label">Policies</span>
+                            <div class="performance-bar">
+                                <div class="performance-fill" style="width: ${Math.min((agent.performance?.totalPoliciesIssued / agent.monthlyTargets?.policies * 100) || 0, 100)}%"></div>
+                            </div>
+                            <span class="performance-value">${agent.performance?.totalPoliciesIssued || 0}/${agent.monthlyTargets?.policies || 0}</span>
+                        </div>
+                    </div>
+
+                    <div class="agent-actions">
+                        <button class="btn-icon" onclick="viewAgent('${agent._id}')" title="View Details">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                        <button class="btn-icon" onclick="editAgent('${agent._id}')" title="Edit">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                        </button>
+                        <button class="btn-icon" onclick="deleteAgent('${agent._id}')" title="Delete">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Show add agent modal
+        function showAddAgentModal() {
+            editingAgentId = null;
+            document.getElementById('modalTitle').textContent = 'Add New Agent';
+            document.getElementById('agentForm').reset();
+            document.getElementById('passwordGroup').style.display = 'block';
+            document.getElementById('agentModal').style.display = 'flex';
+        }
+
+        // Close modal
+        function closeAgentModal() {
+            document.getElementById('agentModal').style.display = 'none';
+        }
+
+        // Submit form
+        document.getElementById('agentForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+
+            try {
+                const url = editingAgentId 
+                    ? `${API_BASE}/agents/${editingAgentId}`
+                    : `${API_BASE}/agents`;
+                
+                const method = editingAgentId ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast(result.message, 'success');
+                    closeAgentModal();
+                    loadAgents();
+                    loadStats();
+                } else {
+                    showToast(result.message || 'Operation failed', 'error');
+                }
+            } catch (error) {
+                showToast('Failed to save agent', 'error');
+                console.error(error);
+            }
+        });
+
+        // Edit agent
+        async function editAgent(id) {
+            try {
+                const response = await fetch(`${API_BASE}/agents/${id}`);
+                const result = await response.json();
+
+                if (result.success) {
+                    const agent = result.data;
+                    editingAgentId = id;
+                    
+                    document.getElementById('modalTitle').textContent = 'Edit Agent';
+                    document.getElementById('passwordGroup').style.display = 'none';
+                    
+                    // Fill form
+                    const form = document.getElementById('agentForm');
+                    form.elements.firstName.value = agent.firstName;
+                    form.elements.lastName.value = agent.lastName;
+                    form.elements.email.value = agent.email;
+                    form.elements.phone.value = agent.phone;
+                    form.elements.licenseNumber.value = agent.licenseNumber;
+                    form.elements.role.value = agent.role;
+                    form.elements.department.value = agent.department;
+                    
+                    document.getElementById('agentModal').style.display = 'flex';
+                }
+            } catch (error) {
+                showToast('Failed to load agent data', 'error');
+            }
+        }
+
+        // Delete agent
+        async function deleteAgent(id) {
+            if (!confirm('Are you sure you want to deactivate this agent?')) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/agents/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showToast('Agent deactivated successfully', 'success');
+                    loadAgents();
+                    loadStats();
+                } else {
+                    showToast(result.message || 'Failed to delete agent', 'error');
+                }
+            } catch (error) {
+                showToast('Failed to delete agent', 'error');
+            }
+        }
+
+        // View agent (redirect to dashboard)
+        function viewAgent(id) {
+            window.location.href = `dashboard.html?agentId=${id}`;
+        }
+
+        // Filter agents
+        function filterAgents() {
+            const roleFilter = document.getElementById('roleFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            const departmentFilter = document.getElementById('departmentFilter').value;
+
+            let filtered = allAgents;
+
+            if (roleFilter) {
+                filtered = filtered.filter(a => a.role === roleFilter);
+            }
+            if (statusFilter) {
+                filtered = filtered.filter(a => a.status === statusFilter);
+            }
+            if (departmentFilter) {
+                filtered = filtered.filter(a => a.department === departmentFilter);
+            }
+
+            renderAgents(filtered);
+        }
+
+        // Search agents
+        function searchAgents() {
+            const search = document.getElementById('searchAgent').value.toLowerCase();
+            
+            const filtered = allAgents.filter(agent => 
+                agent.firstName.toLowerCase().includes(search) ||
+                agent.lastName.toLowerCase().includes(search) ||
+                agent.email.toLowerCase().includes(search) ||
+                agent.agentId.toLowerCase().includes(search) ||
+                agent.phone.includes(search)
+            );
+
+            renderAgents(filtered);
+        }
+    </script>
+</body>
+</html>

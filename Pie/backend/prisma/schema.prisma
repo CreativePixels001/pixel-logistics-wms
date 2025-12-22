@@ -1,0 +1,158 @@
+// Prisma Schema for Indian Government Q&A System
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model
+model User {
+  id            String         @id @default(uuid())
+  email         String?        @unique
+  phone         String?        @unique
+  name          String?
+  passwordHash  String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  isActive      Boolean        @default(true)
+  metadata      Json?
+  
+  conversations Conversation[]
+  feedbacks     UserFeedback[]
+
+  @@index([email])
+  @@index([phone])
+  @@map("users")
+}
+
+// Conversation model
+model Conversation {
+  id        String    @id @default(uuid())
+  userId    String
+  title     String?   @db.VarChar(500)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  Message[]
+
+  @@index([userId])
+  @@map("conversations")
+}
+
+// Message model
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  role           MessageRole
+  content        String       @db.Text
+  metadata       Json?        // Stores intent, API sources, confidence score
+  createdAt      DateTime     @default(now())
+  
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  apiLogs        ApiLog[]
+  feedbacks      UserFeedback[]
+
+  @@index([conversationId])
+  @@map("messages")
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+// API Log model - Track all Government API calls
+model ApiLog {
+  id           String   @id @default(uuid())
+  messageId    String?
+  apiName      String   @db.VarChar(255)
+  endpoint     String   @db.VarChar(500)
+  requestData  Json?
+  responseData Json?
+  statusCode   Int
+  latencyMs    Int
+  error        String?  @db.Text
+  createdAt    DateTime @default(now())
+  
+  message      Message? @relation(fields: [messageId], references: [id], onDelete: SetNull)
+
+  @@index([messageId])
+  @@index([apiName])
+  @@index([createdAt])
+  @@map("api_logs")
+}
+
+// API Cache model - Cache Government API responses
+model ApiCache {
+  id           String   @id @default(uuid())
+  cacheKey     String   @unique @db.VarChar(500)
+  apiName      String   @db.VarChar(255)
+  responseData Json
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+  hitCount     Int      @default(0)
+  
+  @@index([cacheKey])
+  @@index([expiresAt])
+  @@index([apiName])
+  @@map("api_cache")
+}
+
+// User Feedback model
+model UserFeedback {
+  id        String   @id @default(uuid())
+  messageId String
+  userId    String?
+  rating    Int      // 1-5 stars
+  comment   String?  @db.Text
+  createdAt DateTime @default(now())
+  
+  message   Message  @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([messageId])
+  @@index([userId])
+  @@map("user_feedback")
+}
+
+// Analytics model - Track query patterns
+model QueryAnalytics {
+  id             String   @id @default(uuid())
+  query          String   @db.Text
+  intent         String?  @db.VarChar(255)
+  category       String?  @db.VarChar(255)
+  responseTime   Int      // milliseconds
+  apisUsed       String[] // Array of API names
+  successful     Boolean
+  userId         String?
+  createdAt      DateTime @default(now())
+  
+  @@index([intent])
+  @@index([category])
+  @@index([createdAt])
+  @@map("query_analytics")
+}
+
+// Government Data Source registry
+model GovDataSource {
+  id          String   @id @default(uuid())
+  name        String   @unique @db.VarChar(255)
+  baseUrl     String   @db.VarChar(500)
+  authType    String   @db.VarChar(50) // API_KEY, OAUTH2, NONE
+  category    String   @db.VarChar(100)
+  isActive    Boolean  @default(true)
+  rateLimit   Int?     // requests per minute
+  metadata    Json?    // Additional config
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([category])
+  @@index([isActive])
+  @@map("gov_data_sources")
+}

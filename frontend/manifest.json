@@ -1,6 +1,6 @@
 {
-  "name": "DLT Warehouse Management System",
-  "short_name": "DLT WMS",
+  "name": "Pixel Logistics WMS",
+  "short_name": "Pixel WMS",
   "description": "Professional warehouse management system for inbound and outbound logistics operations",
   "start_url": "/index.html",
   "display": "standalone",

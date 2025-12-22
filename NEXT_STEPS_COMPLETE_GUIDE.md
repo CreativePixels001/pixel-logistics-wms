@@ -1,59 +1,42 @@
-# 🎯 DEPLOYMENT COMPLETE - Next Steps Guide
+# 🎯 DEPLOYMENT GUIDE
 
-**Date:** November 17, 2025  
+**Date:** November 21, 2025  
 **Status:** ✅ LIVE & READY FOR CLIENT DEMOS
 
 ---
 
-## ✅ What's Been Accomplished
+## ✅ Live Server Details
 
-### 1. GitHub Repository ✅
-- **URL:** https://github.com/CreativePixels001/pixel-logistics-wms
-- **Status:** Public, fully accessible
-- **Files:** 189 files, 90,000+ lines of code
-- **Branches:** main (production-ready)
+### Production Server Access
+- **Host:** 68.178.157.215
+- **User:** akshay@creativepixels.in
+- **Password:** Dagaeron@!2345!
 
-### 2. Live Demo Deployment ✅
-- **URL:** https://stirring-truffle-531646.netlify.app
-- **Landing Page:** ✅ Set as default (users see marketing page first)
-- **Auto-Deploy:** ✅ Updates automatically on GitHub push
-- **Status:** Production-ready
+---
 
-### 3. User Flow ✅
-```
-https://stirring-truffle-531646.netlify.app
-    ↓
-Landing Page (marketing/sales page)
-    ↓
-Login Button → login.html (authentication)
-    ↓
-Dashboard → index.html (WMS operations)
-```
+## 📁 Deployment Instructions
+
+### Upload Files via FTP/SFTP
+
+1. **Connect to Server:**
+   - Use FTP client (FileZilla, Cyberduck, etc.)
+   - Host: 68.178.157.215
+   - Username: akshay@creativepixels.in
+   - Password: Dagaeron@!2345!
+
+2. **Upload Files:**
+   - Upload all files from your local project
+   - Maintain folder structure
+   - Ensure all paths are correct
 
 ---
 
 ## 🚀 IMMEDIATE NEXT STEPS (Today)
 
-### Step 1: Customize Your Netlify URL (2 minutes)
-
-Make your URL professional:
-
-1. **Go to:** https://app.netlify.com
-2. **Site settings** → **Site details** → **Change site name**
-3. **Suggested names:**
-   - `pixel-logistics-demo`
-   - `pixellogistics-wms`
-   - `wms-client-demo`
-4. **New URL will be:** `https://YOUR-CHOICE.netlify.app`
-
----
-
-### Step 2: Test Your Live Site (5 minutes)
-
-**Visit:** https://stirring-truffle-531646.netlify.app
+### Step 1: Test Your Live Site (5 minutes)
 
 **Test checklist:**
-- [ ] Landing page loads beautifully
+- [ ] Landing page loads correctly
 - [ ] Click "Get Started" → Goes to login
 - [ ] Login page visible
 - [ ] Navigate to dashboard (click around)

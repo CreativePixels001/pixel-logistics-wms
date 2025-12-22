@@ -1,4 +1,4 @@
-// DLT WMS - Replenishment Module JavaScript
+// Pixel WMS - Replenishment Module JavaScript
 // Handles min/max replenishment, pick face optimization, and demand-based replenishment
 
 let currentReplenType = null;

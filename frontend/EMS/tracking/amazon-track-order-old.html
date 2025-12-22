@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Order - Amazon - Pixel Commerce</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <style>
+        /* Tracking Page Specific Styles */
+        .tracking-hero {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1a1a1a 100%);
+            color: var(--text-white);
+            padding: 3rem 1.5rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: var(--radius-lg);
+        }
+
+        .tracking-hero h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .tracking-hero p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        /* Search Box */
+        .track-search-box {
+            max-width: 600px;
+            margin: -2rem auto 2rem;
+            background: var(--bg-white);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .track-search-input {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .track-search-input input {
+            flex: 1;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .track-search-input input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .track-search-input button {
+            padding: 0.875rem 2rem;
+            font-weight: 700;
+        }
+
+        .search-examples {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .search-examples span {
+            color: var(--primary-color);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .search-examples span:hover {
+            text-decoration: underline;
+        }
+
+        /* Tracking Result Container */
+        .tracking-result {
+            display: none;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .tracking-result.show {
+            display: block;
+        }
+
+        /* Order Header Card */
+        .order-header-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .order-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .order-id-section h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+        }
+
+        .order-date {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .order-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--bg-light);
+            border: 2px solid var(--primary-color);
+            border-radius: var(--radius-lg);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .status-dot-large {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            animation: pulse 2s infinite;
+        }
+
+        .order-header-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .detail-item h4 {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .detail-item p {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .tracking-number {
+            font-family: 'Courier New', monospace;
+            background: var(--bg-light);
+            padding: 0.5rem 0.75rem;
+            border-radius: var(--radius-sm);
+            display: inline-block;
+        }
+
+        /* Timeline Container */
+        .tracking-timeline-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .timeline-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .timeline-header h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .expected-delivery {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .expected-delivery strong {
+            color: var(--primary-color);
+            font-weight: 800;
+        }
+
+        /* Progress Bar */
+        .progress-bar-container {
+            margin-bottom: 3rem;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--border-color);
+            z-index: 0;
+        }
+
+        .progress-line-fill {
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.5s ease;
+        }
+
+        .progress-step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-white);
+            border: 4px solid var(--border-color);
+            margin: 0 auto 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .progress-step.completed .step-circle {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .progress-step.active .step-circle {
+            background: var(--bg-white);
+            border-color: var(--primary-color);
+            border-width: 4px;
+            animation: pulse 2s infinite;
+        }
+
+        .step-circle svg {
+            width: 18px;
+            height: 18px;
+            color: var(--text-white);
+        }
+
+        .step-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .progress-step.completed .step-label,
+        .progress-step.active .step-label {
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+
+        /* Timeline Events */
+        .timeline-events {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .timeline-event {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .timeline-event:last-child {
+            margin-bottom: 0;
+        }
+
+        .timeline-event::before {
+            content: '';
+            position: absolute;
+            left: 19px;
+            top: 40px;
+            bottom: -20px;
+            width: 2px;
+            background: var(--border-color);
+        }
+
+        .timeline-event:last-child::before {
+            display: none;
+        }
+
+        .event-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .timeline-event.pending .event-icon {
+            background: var(--bg-light);
+            border: 2px solid var(--border-color);
+        }
+
+        .event-icon svg {
+            width: 20px;
+            height: 20px;
+            color: var(--text-white);
+        }
+
+        .timeline-event.pending .event-icon svg {
+            color: var(--text-secondary);
+        }
+
+        .event-details {
+            flex: 1;
+            padding-top: 0.25rem;
+        }
+
+        .event-title {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-event.pending .event-title {
+            color: var(--text-secondary);
+        }
+
+        .event-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .event-timestamp {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .timeline-event.active .event-timestamp {
+            color: var(--primary-color);
+        }
+
+        .event-location {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.375rem;
+        }
+
+        .event-location svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Shipment Details */
+        .shipment-details-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .shipment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .shipment-section h4 {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .address-block {
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .address-block strong {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .courier-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+        }
+
+        .courier-logo {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-white);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.75rem;
+        }
+
+        .courier-details h5 {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .courier-details p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        /* Product List */
+        .product-list {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+        }
+
+        .product-list h3 {
+            font-size: 1.125rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            background: var(--bg-light);
+            border-radius: var(--radius-md);
+            margin-bottom: 1rem;
+        }
+
+        .product-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .product-image {
+            width: 60px;
+            height: 60px;
+            background: var(--bg-white);
+            border-radius: var(--radius-md);
+            object-fit: cover;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-name {
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .product-meta {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .product-price {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        /* Action Buttons */
+        .tracking-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            display: none;
+        }
+
+        .no-results.show {
+            display: block;
+        }
+
+        .no-results-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            background: var(--bg-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .no-results-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--text-secondary);
+        }
+
+        .no-results h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .no-results p {
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/>
+                        <circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span>Pixel Commerce</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Amazon</div>
+                    <a href="../platforms/amazon.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Amazon Dashboard
+                    </a>
+                    <a href="../products/amazon-catalog.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        Products
+                    </a>
+                    <a href="../orders/amazon-orders.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Orders
+                    </a>
+                    <a href="amazon-track-order.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                            <circle cx="12" cy="10" r="3"/>
+                        </svg>
+                        Track Orders
+                    </a>
+                    <a href="../inventory/amazon-stock.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/>
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            <line x1="12" y1="22.08" x2="12" y2="12"/>
+                        </svg>
+                        Inventory
+                    </a>
+                    <a href="../analytics/amazon-analytics.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        Analytics
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="../settings/account.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="platform-switcher" onclick="showPlatformMenu()">
+                        <svg class="platform-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="9" cy="21" r="1"/>
+                            <circle cx="20" cy="21" r="1"/>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                        </svg>
+                        <span id="currentPlatform">Amazon</span>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 16px; height: 16px;">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">AU</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Admin User</span>
+                            <span class="user-role" id="userRole">ONNGEO</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Tracking Hero Section -->
+                <div class="tracking-hero">
+                    <h1>Track Your Amazon Order</h1>
+                    <p>Enter your Order ID or AWB/Tracking Number to get real-time updates</p>
+                </div>
+
+                <!-- Search Box -->
+                <div class="track-search-box">
+                    <div class="track-search-input">
+                        <input type="text" id="trackingInput" placeholder="Enter Order ID (e.g., AMZ-2024-1122) or AWB Number">
+                        <button class="btn btn-primary" onclick="trackOrder()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+                                <circle cx="11" cy="11" r="8"/>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                            Track
+                        </button>
+                    </div>
+                    <div class="search-examples">
+                        Try: <span onclick="quickTrack('AMZ-2024-1122')">AMZ-2024-1122</span> or <span onclick="quickTrack('DELV2024112230001')">DELV2024112230001</span>
+                    </div>
+                </div>
+
+                <!-- No Results Message (Hidden by default) -->
+                <div class="no-results" id="noResults">
+                    <div class="no-results-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                    </div>
+                    <h3>No Results Found</h3>
+                    <p>We couldn't find any order with this tracking number. Please check and try again.</p>
+                </div>
+
+                <!-- Tracking Result (Hidden by default) -->
+                <div class="tracking-result" id="trackingResult">
+                    <!-- Order Header -->
+                    <div class="order-header-card">
+                        <div class="order-header-top">
+                            <div class="order-id-section">
+                                <h2 id="displayOrderId">AMZ-2024-1122</h2>
+                                <p class="order-date" id="displayOrderDate">Placed on 28 Nov 2025, 02:15 PM</p>
+                            </div>
+                            <div class="order-status-badge" id="displayStatus">
+                                <span class="status-dot-large"></span>
+                                Out for Delivery
+                            </div>
+                        </div>
+                        <div class="order-header-details">
+                            <div class="detail-item">
+                                <h4>Tracking Number</h4>
+                                <p class="tracking-number" id="displayTracking">DELV2024112230001</p>
+                            </div>
+                            <div class="detail-item">
+                                <h4>Courier Partner</h4>
+                                <p id="displayCourier">Delhivery</p>
+                            </div>
+                            <div class="detail-item">
+                                <h4>Order Total</h4>
+                                <p id="displayAmount">₹399</p>
+                            </div>
+                            <div class="detail-item">
+                                <h4>Payment Method</h4>
+                                <p id="displayPayment">UPI</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar -->
+                    <div class="tracking-timeline-card">
+                        <div class="timeline-header">
+                            <h3>Shipment Progress</h3>
+                            <p class="expected-delivery">Expected Delivery: <strong id="displayExpectedDate">30 Nov 2025</strong></p>
+                        </div>
+
+                        <div class="progress-bar-container">
+                            <div class="progress-steps">
+                                <div class="progress-line">
+                                    <div class="progress-line-fill" id="progressFill" style="width: 75%;"></div>
+                                </div>
+                                <div class="progress-step completed">
+                                    <div class="step-circle">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                            <polyline points="20 6 9 17 4 12"/>
+                                        </svg>
+                                    </div>
+                                    <div class="step-label">Ordered</div>
+                                </div>
+                                <div class="progress-step completed">
+                                    <div class="step-circle">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                            <polyline points="20 6 9 17 4 12"/>
+                                        </svg>
+                                    </div>
+                                    <div class="step-label">Packed</div>
+                                </div>
+                                <div class="progress-step completed">
+                                    <div class="step-circle">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                            <polyline points="20 6 9 17 4 12"/>
+                                        </svg>
+                                    </div>
+                                    <div class="step-label">Shipped</div>
+                                </div>
+                                <div class="progress-step active">
+                                    <div class="step-circle">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M5 12h14"/>
+                                            <path d="m12 5 7 7-7 7"/>
+                                        </svg>
+                                    </div>
+                                    <div class="step-label">Out for Delivery</div>
+                                </div>
+                                <div class="progress-step">
+                                    <div class="step-circle">
+                                        <span style="font-size: 14px; color: var(--text-secondary);">5</span>
+                                    </div>
+                                    <div class="step-label">Delivered</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Timeline Events -->
+                        <div class="timeline-events" id="timelineEvents">
+                            <div class="timeline-event active">
+                                <div class="event-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M5 12h14"/>
+                                        <path d="m12 5 7 7-7 7"/>
+                                    </svg>
+                                </div>
+                                <div class="event-details">
+                                    <div class="event-title">Out for Delivery</div>
+                                    <div class="event-description">Package is out for delivery and will arrive by end of day</div>
+                                    <div class="event-timestamp">Today, 08:45 AM</div>
+                                    <div class="event-location">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                            <circle cx="12" cy="10" r="3"/>
+                                        </svg>
+                                        Mumbai Delivery Hub
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-event">
+                                <div class="event-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <div class="event-details">
+                                    <div class="event-title">Arrived at Destination City</div>
+                                    <div class="event-description">Shipment arrived at local delivery center</div>
+                                    <div class="event-timestamp">29 Nov 2025, 11:20 PM</div>
+                                    <div class="event-location">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                            <circle cx="12" cy="10" r="3"/>
+                                        </svg>
+                                        Mumbai Sorting Center
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-event">
+                                <div class="event-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <div class="event-details">
+                                    <div class="event-title">In Transit</div>
+                                    <div class="event-description">Package is on the way to destination city</div>
+                                    <div class="event-timestamp">29 Nov 2025, 06:30 AM</div>
+                                    <div class="event-location">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                            <circle cx="12" cy="10" r="3"/>
+                                        </svg>
+                                        Pune Hub
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-event">
+                                <div class="event-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <div class="event-details">
+                                    <div class="event-title">Picked Up</div>
+                                    <div class="event-description">Package picked up from seller warehouse</div>
+                                    <div class="event-timestamp">28 Nov 2025, 04:30 PM</div>
+                                    <div class="event-location">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                            <circle cx="12" cy="10" r="3"/>
+                                        </svg>
+                                        Bangalore Warehouse
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="timeline-event">
+                                <div class="event-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <div class="event-details">
+                                    <div class="event-title">Order Confirmed</div>
+                                    <div class="event-description">Order has been confirmed and processing started</div>
+                                    <div class="event-timestamp">28 Nov 2025, 02:15 PM</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shipment Details -->
+                    <div class="shipment-details-card">
+                        <div class="shipment-grid">
+                            <div class="shipment-section">
+                                <h4>Shipping Address</h4>
+                                <div class="address-block">
+                                    <strong>Rajesh Kumar</strong>
+                                    A-401, Sunrise Apartments<br>
+                                    Andheri West<br>
+                                    Mumbai, Maharashtra 400058<br>
+                                    Phone: +91 98765 43210
+                                </div>
+                            </div>
+
+                            <div class="shipment-section">
+                                <h4>Courier Details</h4>
+                                <div class="courier-info">
+                                    <div class="courier-logo">DEL</div>
+                                    <div class="courier-details">
+                                        <h5>Delhivery</h5>
+                                        <p>AWB: DELV2024112230001</p>
+                                        <p>Support: 1800-123-4567</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Products List -->
+                    <div class="product-list">
+                        <h3>Order Items</h3>
+                        <div class="product-item">
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Crect fill='%23ff0000' width='60' height='60'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial' font-size='12' fill='%23fff' font-weight='bold'%3EROBOT%3C/text%3E%3C/svg%3E" alt="Product" class="product-image">
+                            <div class="product-info">
+                                <div class="product-name">ONNGEO Red Titan Robot Action Figure</div>
+                                <div class="product-meta">SKU: B0FWTBSFMK-RED | Qty: 1</div>
+                            </div>
+                            <div class="product-price">₹399</div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="tracking-actions">
+                        <button class="btn btn-secondary" onclick="window.print()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+                                <polyline points="6 9 6 2 18 2 18 9"/>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                                <rect x="6" y="14" width="12" height="8"/>
+                            </svg>
+                            Print Tracking
+                        </button>
+                        <button class="btn btn-secondary" onclick="shareTracking()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+                                <circle cx="18" cy="5" r="3"/>
+                                <circle cx="6" cy="12" r="3"/>
+                                <circle cx="18" cy="19" r="3"/>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+                            </svg>
+                            Share Tracking
+                        </button>
+                        <button class="btn btn-primary" onclick="window.location.href='../orders/amazon-orders.html'">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 18px; height: 18px;">
+                                <polyline points="15 18 9 12 15 6"/>
+                            </svg>
+                            Back to Orders
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Sample tracking data
+        const trackingData = {
+            'AMZ-2024-1122': {
+                orderId: 'AMZ-2024-1122',
+                orderDate: '28 Nov 2025, 02:15 PM',
+                status: 'Out for Delivery',
+                tracking: 'DELV2024112230001',
+                courier: 'Delhivery',
+                amount: '₹399',
+                payment: 'UPI',
+                expectedDate: '30 Nov 2025',
+                progress: 75,
+                customer: 'Rajesh Kumar',
+                address: 'A-401, Sunrise Apartments, Andheri West, Mumbai, Maharashtra 400058',
+                phone: '+91 98765 43210',
+                items: [
+                    { name: 'ONNGEO Red Titan Robot Action Figure', sku: 'B0FWTBSFMK-RED', qty: 1, price: '₹399' }
+                ]
+            },
+            'AMZ-2024-1125': {
+                orderId: 'AMZ-2024-1125',
+                orderDate: '30 Nov 2025, 10:24 AM',
+                status: 'Pending',
+                tracking: 'Not Yet Assigned',
+                courier: 'Awaiting Pickup',
+                amount: '₹798',
+                payment: 'COD',
+                expectedDate: '5 Dec 2025',
+                progress: 0,
+                customer: 'Rajesh Kumar',
+                address: 'A-401, Sunrise Apartments, Andheri West, Mumbai, Maharashtra 400058',
+                phone: '+91 98765 43210',
+                items: [
+                    { name: 'ONNGEO Red Titan Robot Action Figure', sku: 'B0FWTBSFMK-RED', qty: 2, price: '₹798' }
+                ]
+            },
+            'DELV2024112230001': {
+                orderId: 'AMZ-2024-1122',
+                orderDate: '28 Nov 2025, 02:15 PM',
+                status: 'Out for Delivery',
+                tracking: 'DELV2024112230001',
+                courier: 'Delhivery',
+                amount: '₹399',
+                payment: 'UPI',
+                expectedDate: '30 Nov 2025',
+                progress: 75,
+                customer: 'Rajesh Kumar',
+                address: 'A-401, Sunrise Apartments, Andheri West, Mumbai, Maharashtra 400058',
+                phone: '+91 98765 43210',
+                items: [
+                    { name: 'ONNGEO Red Titan Robot Action Figure', sku: 'B0FWTBSFMK-RED', qty: 1, price: '₹399' }
+                ]
+            }
+        };
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Track order
+        function trackOrder() {
+            const input = document.getElementById('trackingInput').value.trim().toUpperCase();
+            
+            if (!input) {
+                alert('Please enter an Order ID or Tracking Number');
+                return;
+            }
+
+            const data = trackingData[input];
+            
+            if (data) {
+                displayTrackingResult(data);
+            } else {
+                showNoResults();
+            }
+        }
+
+        // Auto-load order from URL parameter
+        window.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('order');
+            
+            if (orderId) {
+                document.getElementById('trackingInput').value = orderId;
+                trackOrder();
+            }
+        });
+
+        // Quick track (from examples)
+        function quickTrack(id) {
+            document.getElementById('trackingInput').value = id;
+            trackOrder();
+        }
+
+        // Display tracking result
+        function displayTrackingResult(data) {
+            // Hide no results
+            document.getElementById('noResults').classList.remove('show');
+            
+            // Show tracking result
+            document.getElementById('trackingResult').classList.add('show');
+            
+            // Update order header
+            document.getElementById('displayOrderId').textContent = data.orderId;
+            document.getElementById('displayOrderDate').textContent = 'Placed on ' + data.orderDate;
+            document.getElementById('displayStatus').innerHTML = `
+                <span class="status-dot-large"></span>
+                ${data.status}
+            `;
+            document.getElementById('displayTracking').textContent = data.tracking;
+            document.getElementById('displayCourier').textContent = data.courier;
+            document.getElementById('displayAmount').textContent = data.amount;
+            document.getElementById('displayPayment').textContent = data.payment;
+            document.getElementById('displayExpectedDate').textContent = data.expectedDate;
+            
+            // Update progress bar
+            document.getElementById('progressFill').style.width = data.progress + '%';
+            
+            // Scroll to result
+            setTimeout(() => {
+                document.getElementById('trackingResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // Show no results
+        function showNoResults() {
+            document.getElementById('trackingResult').classList.remove('show');
+            document.getElementById('noResults').classList.add('show');
+            
+            setTimeout(() => {
+                document.getElementById('noResults').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        // Share tracking
+        function shareTracking() {
+            const trackingUrl = window.location.href;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Track Order',
+                    text: 'Track your Amazon order',
+                    url: trackingUrl
+                });
+            } else {
+                // Copy to clipboard
+                navigator.clipboard.writeText(trackingUrl);
+                alert('Tracking link copied to clipboard!');
+            }
+        }
+
+        // Platform menu
+        function showPlatformMenu() {
+            alert('Platform switcher - Coming soon!');
+        }
+
+        // Allow Enter key to track
+        document.getElementById('trackingInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                trackOrder();
+            }
+        });
+    </script>
+</body>
+</html>

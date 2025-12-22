@@ -1,5 +1,5 @@
 {
-  "name": "dlt-wms-portal",
+  "name": "pixel-ecosystem",
   "version": "2.0.0",
   "description": "Warehouse Management System - Optimized Frontend",
   "scripts": {
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-org/dlt-wms.git"
+    "url": "git+https://github.com/CreativePixels001/pixel-logistics-wms.git"
   },
   "keywords": [
     "warehouse",
@@ -27,7 +27,7 @@
     "inventory",
     "dashboard"
   ],
-  "author": "DLT Team",
+  "author": "Pixel Team",
   "license": "MIT",
   "engines": {
     "node": ">=16.0.0",

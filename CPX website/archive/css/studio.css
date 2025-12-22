@@ -1,0 +1,995 @@
+/* ===================================================================
+ * Modern Contact Page - Studio.html
+ * Professional Business Approach with Easy UX
+ * ================================================================== */
+
+/* ------------------------------------------------------------------- 
+ * Contact Hero Section
+ * ------------------------------------------------------------------- */
+.contact-hero {
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: left;
+    padding: 14rem 2rem 10rem;
+    background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 20% 50%, rgba(0, 200, 150, 0.03) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.contact-hero-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.text-pretitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.875;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 3rem;
+}
+
+.text-pretitle.with-line {
+    position: relative;
+    padding-left: 4rem;
+}
+
+.text-pretitle.with-line::before {
+    content: '';
+    display: block;
+    width: 3rem;
+    height: 2px;
+    background-color: #00C896;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+.text-huge-title {
+    font-size: clamp(3.5rem, 12vw, 9rem);
+    font-weight: 700;
+    line-height: 1.1;
+    color: #ffffff;
+    margin: 0 0 2.5rem 0;
+    letter-spacing: -0.035em;
+}
+
+.hero-description {
+    font-size: 1.375rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.75);
+    max-width: 750px;
+    margin: 0;
+    font-weight: 400;
+}
+
+/* ------------------------------------------------------------------- 
+ * Scrolling Questions Section
+ * ------------------------------------------------------------------- */
+.questions-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ffffff;
+    padding: 8rem 2rem;
+    position: relative;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.3s ease;
+}
+
+.questions-section:nth-child(even) {
+    background: #0a0a0a;
+    border-bottom-color: #1a1a1a;
+}
+
+.questions-section:nth-child(even) .question-number,
+.questions-section:nth-child(even) .question-title,
+.questions-section:nth-child(even) .question-subtitle {
+    color: #ffffff;
+}
+
+.questions-section:nth-child(even) .question-description {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.questions-container {
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 4rem;
+    margin: 0 auto;
+}
+
+.question-card {
+    opacity: 0;
+    transform: translateY(80px);
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.questions-section.visible .question-card {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.question-number {
+    font-size: clamp(6rem, 15vw, 8rem);
+    font-weight: 800;
+    color: #000000;
+    line-height: 0.9;
+    margin-bottom: 2.5rem;
+    opacity: 0.06;
+    letter-spacing: -0.03em;
+    font-family: var(--font-heading);
+}
+
+.question-title {
+    font-size: clamp(1.75rem, 4.5vw, 3.25rem);
+    font-weight: 700;
+    color: #000000;
+    line-height: 1.25;
+    margin: 0 0 1.75rem 0;
+    letter-spacing: -0.025em;
+}
+
+.question-subtitle {
+    font-size: clamp(2.25rem, 5.5vw, 3.75rem);
+    font-weight: 600;
+    color: #000000;
+    line-height: 1.3;
+    margin: 0 0 3.5rem 0;
+    letter-spacing: -0.02em;
+    padding-bottom: 2.25rem;
+    border-bottom: 3px solid #000000;
+    display: inline-block;
+    max-width: 100%;
+}
+
+.questions-section:nth-child(even) .question-subtitle {
+    border-bottom-color: rgba(255, 255, 255, 0.9);
+}
+
+.question-description {
+    font-size: 1.1875rem;
+    font-weight: 400;
+    color: #444444;
+    line-height: 1.95;
+    max-width: 850px;
+    margin: 0;
+    letter-spacing: -0.005em;
+}
+
+/* ------------------------------------------------------------------- 
+ * Connect Section
+ * ------------------------------------------------------------------- */
+.connect-section {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000000;
+    padding: 8rem 2rem;
+}
+
+.connect-container {
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.connect-container .text-pretitle {
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 2rem;
+}
+
+.connect-container .text-pretitle.with-line::before {
+    background-color: #ffffff;
+}
+
+.connect-title {
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 2rem 0;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.connect-description {
+    font-size: 1.375rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 800px;
+    margin: 0 0 5rem 0;
+}
+
+.connect-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+}
+
+.connect-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 3rem 2.5rem;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+    transition: all 0.4s ease;
+    min-height: 320px;
+}
+
+.connect-btn:hover {
+    background: #ffffff;
+    border-color: #ffffff;
+    transform: translateY(-8px);
+    box-shadow: 0 20px 60px rgba(255, 255, 255, 0.1);
+}
+
+.btn-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.4s ease;
+}
+
+.connect-btn:hover .btn-icon {
+    background: #000000;
+    border-color: #000000;
+    transform: scale(1.1);
+}
+
+.btn-icon svg {
+    stroke: #ffffff;
+    transition: all 0.4s ease;
+}
+
+.connect-btn--whatsapp .btn-icon svg {
+    fill: #ffffff;
+}
+
+.connect-btn:hover .btn-icon svg {
+    stroke: #ffffff;
+}
+
+.connect-btn:hover.connect-btn--whatsapp .btn-icon svg {
+    fill: #ffffff;
+}
+
+.btn-label {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+    transition: all 0.4s ease;
+}
+
+.connect-btn:hover .btn-label {
+    color: #000000;
+}
+
+/* ------------------------------------------------------------------- 
+ * Contact Main Section
+ * ------------------------------------------------------------------- */
+.contact-main {
+    padding: 6rem 2rem;
+    background: #ffffff;
+}
+
+.contact-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 6rem;
+}
+
+/* ------------------------------------------------------------------- 
+ * Contact Form
+ * ------------------------------------------------------------------- */
+.contact-form-section {
+    background: #ffffff;
+}
+
+.form-header {
+    margin-bottom: 3rem;
+}
+
+.form-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 1rem 0;
+    letter-spacing: -0.02em;
+}
+
+.form-header p {
+    font-size: 1.0625rem;
+    color: #666666;
+    margin: 0;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.form-group label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #000000;
+    letter-spacing: -0.01em;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    color: #000000;
+    background: #f8f8f8;
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    background: #ffffff;
+    border-color: #000000;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+.btn-submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1.25rem 3rem;
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+}
+
+.btn-submit:hover {
+    background: #1a1a1a;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+}
+
+.btn-submit:hover svg {
+    transform: translateX(4px);
+}
+
+.btn-submit svg {
+    transition: transform 0.3s ease;
+}
+
+.btn-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* ------------------------------------------------------------------- 
+ * Contact Info Section
+ * ------------------------------------------------------------------- */
+.contact-info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.info-card {
+    padding: 2rem;
+    background: #f8f8f8;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    background: #ffffff;
+    border-color: #000000;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.info-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000000;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+}
+
+.info-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 0.5rem 0;
+}
+
+.info-card p {
+    font-size: 0.9375rem;
+    color: #666666;
+    margin: 0 0 1rem 0;
+}
+
+.info-card a {
+    display: inline-block;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: #000000;
+    text-decoration: none;
+    border-bottom: 2px solid #000000;
+    transition: all 0.3s ease;
+}
+
+.info-card a:hover {
+    color: #666666;
+    border-color: #666666;
+}
+
+.info-card address {
+    font-size: 0.9375rem;
+    color: #000000;
+    line-height: 1.7;
+    font-style: normal;
+}
+
+/* ------------------------------------------------------------------- 
+ * Stats Card
+ * ------------------------------------------------------------------- */
+.stats-card {
+    padding: 2.5rem 2rem;
+    background: #000000;
+    color: #ffffff;
+}
+
+.stats-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 2rem 0;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.stat-item {
+    text-align: left;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+/* ------------------------------------------------------------------- 
+ * Process Section
+ * ------------------------------------------------------------------- */
+.process-section {
+    padding: 6rem 2rem;
+    background: #f8f8f8;
+}
+
+.process-container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.process-section h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #000000;
+    text-align: center;
+    margin: 0 0 4rem 0;
+    letter-spacing: -0.02em;
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+}
+
+.process-step {
+    padding: 2.5rem 2rem;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.process-step:hover {
+    border-color: #000000;
+    transform: translateY(-8px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+.step-number {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #000000;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    opacity: 0.15;
+    letter-spacing: -0.02em;
+}
+
+.process-step h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #000000;
+    margin: 0 0 1rem 0;
+    line-height: 1.3;
+}
+
+.process-step p {
+    font-size: 0.9375rem;
+    color: #666666;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* ------------------------------------------------------------------- 
+ * Footer
+ * ------------------------------------------------------------------- */
+.s-footer {
+    background: #000000;
+    color: #ffffff;
+    padding: 3rem 2rem;
+}
+
+.s-footer .row {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ss-copyright {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.ss-copyright a {
+    color: #ffffff;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.ss-go-top a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.ss-go-top a:hover {
+    background: #ffffff;
+}
+
+.ss-go-top svg {
+    width: 20px;
+    height: 20px;
+    fill: #ffffff;
+}
+
+.ss-go-top a:hover svg {
+    fill: #000000;
+}
+
+/* ------------------------------------------------------------------- 
+ * Responsive Design
+ * ------------------------------------------------------------------- */
+@media screen and (max-width: 1200px) {
+    .contact-container {
+        grid-template-columns: 1fr;
+        gap: 4rem;
+    }
+
+    .process-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .connect-buttons {
+        gap: 1.5rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .contact-hero {
+        padding: 10rem 1.5rem 6rem;
+        text-align: center;
+    }
+
+    .contact-hero-content {
+        max-width: 100%;
+    }
+
+    .text-pretitle.with-line {
+        padding-left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .text-pretitle.with-line::before {
+        position: static;
+        transform: none;
+    }
+
+    .text-huge-title {
+        font-size: 3rem;
+    }
+
+    .hero-description {
+        font-size: 1.125rem;
+        margin: 0 auto;
+    }
+
+    .questions-section {
+        padding: 4rem 2rem;
+    }
+
+    .questions-container {
+        padding: 0 1rem;
+    }
+
+    .question-number {
+        font-size: 5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .question-title {
+        font-size: 1.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .question-subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .question-description {
+        font-size: 1.125rem;
+    }
+
+    .connect-section {
+        padding: 6rem 1.5rem;
+        text-align: center;
+    }
+
+    .connect-title {
+        font-size: 2.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .connect-description {
+        font-size: 1.125rem;
+        margin: 0 auto 3rem;
+    }
+
+    .connect-buttons {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .connect-btn {
+        padding: 3rem 2rem;
+        min-height: 280px;
+        align-items: center;
+        text-align: center;
+    }
+
+    .contact-main {
+        padding: 4rem 1.5rem;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .form-header h2 {
+        font-size: 2rem;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .process-section {
+        padding: 4rem 1.5rem;
+    }
+
+    .process-section h2 {
+        font-size: 2rem;
+    }
+
+    .process-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .btn-submit {
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .text-pretitle {
+        font-size: 0.875rem;
+        letter-spacing: 0.2em;
+    }
+
+    .text-huge-title {
+        font-size: 2.5rem;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+    }
+
+    .questions-section {
+        padding: 3rem 1.5rem;
+    }
+
+    .questions-container {
+        padding: 0;
+    }
+
+    .question-number {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    .question-title {
+        font-size: 1.5rem;
+    }
+
+    .question-subtitle {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+    }
+
+    .question-description {
+        font-size: 1rem;
+    }
+
+    .connect-title {
+        font-size: 2rem;
+    }
+
+    .connect-description {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .btn-icon {
+        width: 56px;
+        height: 56px;
+    }
+
+    .btn-icon svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    .btn-label {
+        font-size: 1.5rem;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        padding: 0.875rem 1rem;
+    }
+
+    .info-card {
+        padding: 1.5rem;
+    }
+
+    .stats-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .process-step {
+        padding: 2rem 1.5rem;
+    }
+}
+
+/* ------------------------------------------------------------------- 
+ * Additional Mobile Improvements
+ * ------------------------------------------------------------------- */
+@media screen and (max-width: 600px) {
+    .contact-hero {
+        padding: 8rem 1.5rem 5rem;
+    }
+
+    .text-pretitle.with-line {
+        padding-left: 2.75rem;
+    }
+
+    .text-pretitle.with-line::before {
+        width: 1.75rem;
+    }
+
+    .questions-section {
+        padding: 4.5rem 1.5rem;
+    }
+
+    .question-number {
+        font-size: clamp(3.5rem, 15vw, 5rem);
+    }
+
+    .question-subtitle {
+        border-bottom-width: 2px;
+    }
+
+    .connect-section {
+        padding: 5rem 1.5rem;
+    }
+
+    .connect-btn {
+        min-height: 260px;
+        padding: 2.5rem 2rem;
+    }
+}
+
+@media screen and (max-width: 420px) {
+    .contact-hero {
+        padding: 7rem 1.25rem 4rem;
+    }
+
+    .text-huge-title {
+        font-size: clamp(2.25rem, 10vw, 3.5rem);
+    }
+
+    .questions-section {
+        padding: 3.5rem 1.25rem;
+    }
+
+    .questions-container {
+        padding: 0 0.5rem;
+    }
+
+    .question-number {
+        font-size: clamp(3rem, 16vw, 4.5rem);
+        opacity: 0.05;
+    }
+
+    .question-title {
+        font-size: clamp(1.25rem, 5vw, 1.625rem);
+    }
+
+    .question-subtitle {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+        margin-bottom: 1.75rem;
+        padding-bottom: 1.25rem;
+    }
+
+    .question-description {
+        font-size: 0.9375rem;
+        line-height: 1.75;
+    }
+
+    .connect-title {
+        font-size: clamp(1.875rem, 8vw, 2.5rem);
+    }
+
+    .connect-btn {
+        padding: 2.25rem 1.75rem;
+        min-height: 240px;
+    }
+
+    .btn-icon {
+        width: 52px;
+        height: 52px;
+    }
+
+    .btn-label {
+        font-size: 1.375rem;
+    }
+}
+
+/* ------------------------------------------------------------------- 
+ * Landscape Mobile Optimization
+ * ------------------------------------------------------------------- */
+@media screen and (max-height: 600px) and (orientation: landscape) {
+    .contact-hero {
+        min-height: auto;
+        padding: 6rem 2rem 4rem;
+    }
+
+    .questions-section {
+        min-height: auto;
+        padding: 5rem 2rem;
+    }
+
+    .connect-section {
+        min-height: auto;
+        padding: 5rem 2rem;
+    }
+}
+

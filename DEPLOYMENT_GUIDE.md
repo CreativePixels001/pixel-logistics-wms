@@ -90,7 +90,7 @@
 
 **Step 1: Prepare the codebase**
 ```bash
-cd "/path/to/DLT WMS/frontend"
+cd "/path/to/Pixel Logistics WMS/frontend"
 
 # Create netlify.toml configuration
 cat > netlify.toml << 'EOF'
@@ -163,7 +163,7 @@ aws s3 website s3://pixellogistics-wms/ \
 
 **Step 2: Upload Files**
 ```bash
-cd "/path/to/DLT WMS/frontend"
+cd "/path/to/Pixel Logistics WMS/frontend"
 
 # Sync files to S3
 aws s3 sync . s3://pixellogistics-wms/ \
@@ -241,7 +241,7 @@ vercel login
 
 **Step 2: Deploy**
 ```bash
-cd "/path/to/DLT WMS/frontend"
+cd "/path/to/Pixel Logistics WMS/frontend"
 
 # Create vercel.json
 cat > vercel.json << 'EOF'

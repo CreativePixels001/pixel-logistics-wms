@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Tracking - TMS | Pixel Logistics</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tms-dashboard.css">
+  <style>
+    /* Black and White Theme */
+    body {
+      background: #000000;
+      color: #ffffff;
+    }
+
+    /* Full-screen map layout */
+    .map-layout {
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      background: #000000;
+    }
+
+    /* Sidebar for active shipments */
+    .shipments-sidebar {
+      width: 320px;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(10px);
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .sidebar-header {
+      padding: 1.25rem 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    .sidebar-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .sidebar-badge {
+      background: #000000;
+      color: white;
+      padding: 0.25rem 0.625rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid white;
+    }
+
+    /* Shipment cards */
+    .shipment-card {
+      background: rgba(20, 20, 20, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .shipment-card:hover {
+      background: rgba(40, 40, 40, 0.95);
+      border-color: white;
+      transform: translateX(4px);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    }
+
+    .shipment-card.active {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: white;
+      border-width: 2px;
+    }
+
+    .shipment-id {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    .shipment-company {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .shipment-driver {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .shipment-vehicle {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    .shipment-status {
+      display: inline-block;
+      padding: 0.25rem 0.625rem;
+      border-radius: 12px;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-in-transit {
+      background: #000000;
+      color: white;
+      border: 1px solid white;
+    }
+
+    .shipment-eta {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+    }
+
+    /* Map container */
+    .map-container {
+      flex: 1;
+      position: relative;
+      background: #000000;
+      overflow: hidden;
+    }
+
+    #map {
+      width: 100%;
+      height: 100%;
+    }
+
+    .map-background {
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      position: relative;
+    }
+
+    /* Map controls */
+    .map-controls {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      z-index: 1000;
+    }
+
+    .map-control-btn {
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: white;
+    }
+
+    .map-control-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: white;
+    }
+
+    /* Back button */
+    .back-button {
+      position: absolute;
+      top: 20px;
+      right: 80px;
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      padding: 0.625rem 1.25rem;
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      z-index: 1000;
+      text-decoration: none;
+    }
+
+    .back-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: white;
+      transform: translateX(2px);
+    }
+
+    /* Search box on map */
+    .map-search {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 380px;
+      max-width: 400px;
+      z-index: 1000;
+    }
+
+    .map-search-input {
+      width: 100%;
+      padding: 0.75rem 1rem 0.75rem 2.5rem;
+      background: rgba(0, 0, 0, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      color: white;
+      font-size: 0.875rem;
+    }
+
+    .map-search-input:focus {
+      border-color: white;
+      outline: none;
+    }
+
+    .map-search-icon {
+      position: absolute;
+      left: 0.875rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Location markers */
+    .location-marker {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      transition: all 0.2s;
+      animation: markerPulse 2s infinite;
+    }
+
+    .location-marker:hover {
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    @keyframes markerPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .marker-icon {
+      width: 32px;
+      height: 32px;
+      background: #ffffff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid #000000;
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+    }
+
+    .marker-pulse {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(2.5);
+        opacity: 0;
+      }
+    }
+
+    /* Shipment route lines */
+    .route-line {
+      stroke: #ffffff;
+      stroke-width: 2;
+      stroke-dasharray: 5, 5;
+      fill: none;
+      opacity: 0.6;
+    }
+
+    /* Info popup */
+    .shipment-popup {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.98);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      padding: 1rem;
+      min-width: 280px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      color: white;
+      display: none;
+    }
+
+    .shipment-popup.show {
+      display: block;
+    }
+
+    .popup-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 0.75rem;
+    }
+
+    .popup-id {
+      font-size: 0.9375rem;
+      font-weight: 700;
+    }
+
+    .popup-close {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.6);
+      cursor: pointer;
+      padding: 0;
+      font-size: 1.25rem;
+    }
+
+    .popup-close:hover {
+      color: white;
+    }
+
+    .popup-info {
+      font-size: 0.8125rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .popup-info strong {
+      color: white;
+    }
+
+    /* Custom scrollbar for sidebar */
+    .shipments-sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .shipments-sidebar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.3);
+    }
+
+    .shipments-sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 3px;
+    }
+
+    .shipments-sidebar::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    /* Truck marker styles */
+    .truck-marker,
+    .custom-truck-marker {
+      transition: transform 0.3s ease;
+    }
+
+    .truck-marker:hover,
+    .custom-truck-marker:hover {
+      transform: scale(1.1);
+      z-index: 1000 !important;
+    }
+
+    /* Shipment Detail Side Panel */
+    .shipment-detail-panel {
+      position: fixed;
+      top: 64px;
+      right: -450px;
+      width: 450px;
+      height: calc(100vh - 64px);
+      background: rgba(0, 0, 0, 0.98);
+      border-left: 1px solid rgba(255, 255, 255, 0.2);
+      transition: right 0.3s ease;
+      z-index: 2000;
+      overflow-y: auto;
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .shipment-detail-panel.open {
+      right: 0;
+    }
+
+    .detail-panel-header {
+      padding: 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(0, 0, 0, 0.5);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .detail-panel-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: white;
+    }
+
+    .detail-panel-close {
+      background: none;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .detail-panel-close:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: white;
+    }
+
+    .detail-panel-content {
+      padding: 1.5rem;
+    }
+
+    .detail-section {
+      margin-bottom: 2rem;
+    }
+
+    .detail-section-title {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .detail-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .detail-info-item {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 0.875rem;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .detail-info-label {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 0.25rem;
+    }
+
+    .detail-info-value {
+      font-size: 0.9375rem;
+      color: white;
+      font-weight: 600;
+    }
+
+    .detail-status-badge {
+      display: inline-block;
+      padding: 0.375rem 0.875rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid white;
+      background: transparent;
+      color: white;
+    }
+
+    .detail-progress-bar {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+
+    .detail-progress-fill {
+      height: 100%;
+      background: white;
+      transition: width 0.3s ease;
+    }
+
+    .detail-timeline {
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 1.5rem;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -1.5rem;
+      top: 0.25rem;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid white;
+      background: black;
+    }
+
+    .timeline-dot.completed {
+      background: white;
+    }
+
+    .timeline-line {
+      position: absolute;
+      left: -1.125rem;
+      top: 1rem;
+      width: 2px;
+      height: calc(100% - 1rem);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .timeline-item:last-child .timeline-line {
+      display: none;
+    }
+
+    .timeline-time {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 0.25rem;
+    }
+
+    .timeline-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 0.125rem;
+    }
+
+    .timeline-location {
+      font-size: 0.8125rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .detail-items-list {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .item-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .item-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 0.5rem;
+    }
+
+    .item-name {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: white;
+    }
+
+    .item-qty {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.25rem 0.625rem;
+      border-radius: 12px;
+    }
+
+    .item-details {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.6);
+      display: flex;
+      gap: 1rem;
+    }
+
+    .route-map-mini {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .route-point {
+      text-align: center;
+      flex: 1;
+    }
+
+    .route-point-name {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 0.25rem;
+    }
+
+    .route-point-address {
+      font-size: 0.6875rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .route-arrow {
+      color: rgba(255, 255, 255, 0.4);
+    }
+  </style>
+</head>
+<body>
+  
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="14" height="14" rx="2" fill="currentColor"/>
+          <rect x="4" y="20" width="14" height="14" rx="2" fill="currentColor" opacity="0.8"/>
+          <rect x="20" y="4" width="14" height="14" rx="2" fill="currentColor" opacity="0.6"/>
+          <rect x="20" y="20" width="14" height="14" rx="2" fill="currentColor" opacity="0.9"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Transportation Management System</div>
+        </div>
+      </div>
+      <div style="flex: 1;"></div>
+      
+      <button class="header-btn" onclick="openSearch()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <span>Search</span>
+        <kbd style="margin-left: 8px; padding: 2px 6px; background: rgba(0,0,0,0.1); border-radius: 4px; font-size: 11px;">⌘K</kbd>
+      </button>
+      
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <div id="searchModal" class="search-modal" style="display: none;" onclick="if(event.target === this) closeSearch()">
+        <div class="search-content">
+          <div class="search-input-wrapper">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Search shipments, carriers, routes..." />
+            <button onclick="closeSearch()" style="background: none; border: none; cursor: pointer; padding: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div id="searchSuggestions" class="search-suggestions"></div>
+        </div>
+      </div>
+      
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">Transport Manager</div>
+          <div class="user-role">Fleet Operations</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">TM</div>
+        <div class="user-dropdown" id="userDropdown">
+          <a href="#" class="dropdown-item" onclick="viewProfile(); return false;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </a>
+          <a href="#" class="dropdown-item" onclick="changePassword(); return false;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Change Password
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="landing.html" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Map Layout -->
+  <div class="map-layout">
+    
+    <!-- Shipments Sidebar -->
+    <div class="shipments-sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-title">
+          <span>Active Shipments</span>
+          <span class="sidebar-badge">8</span>
+        </div>
+      </div>
+
+      <!-- Shipment Card 1 -->
+      <div class="shipment-card active" onclick="selectShipment(1)">
+        <div class="shipment-id">OBD-2024-001</div>
+        <div class="shipment-company">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Tech Solutions Inc.
+        </div>
+        <div class="shipment-driver">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="7" r="4"></circle>
+            <path d="M5.5 21v-1.5a7.5 7.5 0 0 1 15 0V21"></path>
+          </svg>
+          Driver: Rajesh Kumar
+        </div>
+        <div class="shipment-vehicle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"/>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+          MH-01-AB-1234 • 3,250 kg
+        </div>
+        <span class="shipment-status status-in-transit">IN TRANSIT</span>
+        <div class="shipment-eta">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ETA: 6:30 PM
+        </div>
+      </div>
+
+      <!-- Shipment Card 2 -->
+      <div class="shipment-card" onclick="selectShipment(2)">
+        <div class="shipment-id">OBD-2024-002</div>
+        <div class="shipment-company">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          E-Commerce Global
+        </div>
+        <div class="shipment-driver">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="7" r="4"></circle>
+            <path d="M5.5 21v-1.5a7.5 7.5 0 0 1 15 0V21"></path>
+          </svg>
+          Driver: Amit Singh
+        </div>
+        <div class="shipment-vehicle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"/>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+          KA-03-CD-5678 • 2,890 kg
+        </div>
+        <span class="shipment-status status-in-transit">IN TRANSIT</span>
+        <div class="shipment-eta">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ETA: 3:45 PM
+        </div>
+      </div>
+
+      <!-- Shipment Card 3 -->
+      <div class="shipment-card" onclick="selectShipment(3)">
+        <div class="shipment-id">OBD-2024-003</div>
+        <div class="shipment-company">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Pharma Logistics Ltd.
+        </div>
+        <div class="shipment-driver">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="7" r="4"></circle>
+            <path d="M5.5 21v-1.5a7.5 7.5 0 0 1 15 0V21"></path>
+          </svg>
+          Driver: Priya Sharma
+        </div>
+        <div class="shipment-vehicle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"/>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+          TN-09-EF-9012 • 1,650 kg
+        </div>
+        <span class="shipment-status status-in-transit">IN TRANSIT</span>
+        <div class="shipment-eta">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ETA: 2:15 PM
+        </div>
+      </div>
+
+      <!-- Shipment Card 4 -->
+      <div class="shipment-card" onclick="selectShipment(4)">
+        <div class="shipment-id">OBD-2024-004</div>
+        <div class="shipment-company">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Manufacturing India
+        </div>
+        <div class="shipment-driver">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="7" r="4"></circle>
+            <path d="M5.5 21v-1.5a7.5 7.5 0 0 1 15 0V21"></path>
+          </svg>
+          Driver: Suresh Patel
+        </div>
+        <div class="shipment-vehicle">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="1" y="3" width="15" height="13"/>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+            <circle cx="5.5" cy="18.5" r="2.5"/>
+            <circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+          GJ-05-GH-3456 • 4,120 kg
+        </div>
+        <span class="shipment-status status-in-transit">IN TRANSIT</span>
+        <div class="shipment-eta">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+          ETA: 5:20 PM
+        </div>
+      </div>
+    </div>
+
+    <!-- Map Container -->
+    <div class="map-container">
+      <div id="map" class="map-background"></div>
+
+      <!-- Back Button -->
+      <a href="tms-dashboard.html" class="back-button">
+        Back to Dashboard
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+
+      <!-- Map Search -->
+      <div class="map-search">
+        <div style="position: relative;">
+          <svg class="map-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input type="text" class="map-search-input" placeholder="Search location, city, or landmark..." />
+          <kbd style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); padding: 4px 8px; background: rgba(255,255,255,0.1); border-radius: 4px; font-size: 11px; color: rgba(255,255,255,0.6);">⌘K</kbd>
+        </div>
+      </div>
+
+      <!-- Map Controls -->
+      <div class="map-controls">
+        <button class="map-control-btn" onclick="zoomIn()" title="Zoom In">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <button class="map-control-btn" onclick="zoomOut()" title="Zoom Out">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+        </button>
+        <button class="map-control-btn" onclick="recenterMap()" title="Recenter Map">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+          </svg>
+        </button>
+        <button class="map-control-btn" onclick="toggleFullScreen()" title="Full Screen">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+          </svg>
+        </button>
+        <button class="map-control-btn" title="History">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Shipment Detail Side Panel -->
+  <div class="shipment-detail-panel" id="shipmentDetailPanel">
+    <div class="detail-panel-header">
+      <div class="detail-panel-title">Shipment Details</div>
+      <button class="detail-panel-close" onclick="closeDetailPanel()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="detail-panel-content" id="detailPanelContent">
+      <!-- Content will be dynamically inserted -->
+    </div>
+  </div>
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="../js/tms-common.js"></script>
+  <script>
+    // TMS Live Tracking using Leaflet.js (No API key required)
+    let map;
+    let markers = {};
+    let polylines = {};
+
+    // Shipment data with real coordinates
+    const shipments = [
+      {
+        id: 1,
+        orderId: 'OBD-2024-001',
+        company: 'Tech Solutions Inc.',
+        driver: 'Rajesh Kumar',
+        driverPhone: '+91 98765 43210',
+        vehicle: 'MH-01-AB-1234',
+        vehicleType: 'Container Truck',
+        weight: '3,250 kg',
+        volume: '45 m³',
+        eta: '6:30 PM',
+        distance: '1,420 km',
+        progress: 48,
+        status: 'IN TRANSIT',
+        priority: 'High',
+        origin: { 
+          lat: 19.0760, 
+          lng: 72.8777, 
+          name: 'Mumbai Hub',
+          address: 'Warehouse 12, JNPT Port, Navi Mumbai, Maharashtra 400707'
+        },
+        destination: { 
+          lat: 28.7041, 
+          lng: 77.1025, 
+          name: 'Delhi Distribution Center',
+          address: 'Plot 45, Sector 18, Okhla Industrial Area, New Delhi 110020'
+        },
+        currentLocation: { 
+          lat: 23.2599, 
+          lng: 77.4126,
+          name: 'Bhopal Checkpoint',
+          address: 'NH 46, Near Bhopal Bypass, Madhya Pradesh'
+        },
+        timeline: [
+          { 
+            title: 'Shipment Created', 
+            time: '5:30 AM', 
+            date: '20 Nov 2025',
+            location: 'Mumbai Hub', 
+            completed: true,
+            description: 'Order received and processed'
+          },
+          { 
+            title: 'Loaded & Departed', 
+            time: '6:00 AM',
+            date: '20 Nov 2025',
+            location: 'Mumbai Hub', 
+            completed: true,
+            description: 'Cargo loaded and truck departed'
+          },
+          { 
+            title: 'En Route', 
+            time: '2:45 PM',
+            date: '20 Nov 2025',
+            location: 'Bhopal Checkpoint', 
+            completed: true,
+            description: 'Currently in transit - 48% complete'
+          },
+          { 
+            title: 'Rest Stop', 
+            time: '5:00 PM',
+            date: '20 Nov 2025',
+            location: 'Gwalior Rest Area', 
+            completed: false,
+            description: 'Scheduled driver break'
+          },
+          { 
+            title: 'Out for Delivery', 
+            time: '5:30 PM',
+            date: '20 Nov 2025',
+            location: 'Delhi Entry Point', 
+            completed: false,
+            description: 'Final leg to destination'
+          },
+          { 
+            title: 'Delivered', 
+            time: '6:30 PM',
+            date: '20 Nov 2025',
+            location: 'Delhi Distribution Center', 
+            completed: false,
+            description: 'Expected delivery'
+          }
+        ],
+        items: [
+          { 
+            name: 'Dell Latitude Laptops', 
+            quantity: 150, 
+            weight: '450 kg',
+            value: '₹67,50,000',
+            sku: 'DELL-LAT-5420',
+            category: 'Electronics'
+          },
+          { 
+            name: 'HP LaserJet Printers', 
+            quantity: 50, 
+            weight: '850 kg',
+            value: '₹22,50,000',
+            sku: 'HP-LJ-M404',
+            category: 'Electronics'
+          },
+          { 
+            name: 'Office Chairs', 
+            quantity: 200, 
+            weight: '1,600 kg',
+            value: '₹18,00,000',
+            sku: 'OFF-CHR-ERG',
+            category: 'Furniture'
+          },
+          { 
+            name: 'Monitor Stands', 
+            quantity: 150, 
+            weight: '350 kg',
+            value: '₹3,75,000',
+            sku: 'MON-STD-ADJ',
+            category: 'Accessories'
+          }
+        ],
+        temperatureControl: 'No',
+        insurance: 'Yes - ₹1.12 Cr',
+        customsClearance: 'Not Required',
+        fuelConsumed: '285 L',
+        co2Emissions: '742 kg'
+      },
+      {
+        id: 2,
+        orderId: 'OBD-2024-002',
+        company: 'E-Commerce Global',
+        driver: 'Amit Singh',
+        driverPhone: '+91 98234 56789',
+        vehicle: 'KA-03-CD-5678',
+        vehicleType: 'Box Truck',
+        weight: '2,890 kg',
+        volume: '38 m³',
+        eta: '3:45 PM',
+        distance: '356 km',
+        progress: 68,
+        status: 'IN TRANSIT',
+        priority: 'Medium',
+        origin: { 
+          lat: 12.9716, 
+          lng: 77.5946, 
+          name: 'Bangalore Warehouse',
+          address: 'Electronic City Phase 1, Bangalore, Karnataka 560100'
+        },
+        destination: { 
+          lat: 13.0827, 
+          lng: 80.2707, 
+          name: 'Chennai Depot',
+          address: 'Ambattur Industrial Estate, Chennai, Tamil Nadu 600058'
+        },
+        currentLocation: { 
+          lat: 12.9165, 
+          lng: 79.1325,
+          name: 'Vellore Checkpoint'
+        },
+        timeline: [
+          { title: 'Shipment Created', time: '7:00 AM', location: 'Bangalore Warehouse', completed: true },
+          { title: 'Loaded & Departed', time: '7:30 AM', location: 'Bangalore Warehouse', completed: true },
+          { title: 'En Route', time: '1:15 PM', location: 'Vellore Checkpoint', completed: true },
+          { title: 'Out for Delivery', time: '3:00 PM', location: 'Chennai Entry', completed: false },
+          { title: 'Delivered', time: '3:45 PM', location: 'Chennai Depot', completed: false }
+        ],
+        items: [
+          { name: 'Fashion Apparel', quantity: 500, weight: '1,200 kg', value: '₹15,00,000', sku: 'FASH-MIX-001' },
+          { name: 'Footwear', quantity: 300, weight: '900 kg', value: '₹9,00,000', sku: 'FOOT-MIX-002' },
+          { name: 'Accessories', quantity: 200, weight: '400 kg', value: '₹3,00,000', sku: 'ACCS-MIX-003' },
+          { name: 'Bags & Luggage', quantity: 150, weight: '390 kg', value: '₹4,50,000', sku: 'BAG-MIX-004' }
+        ],
+        temperatureControl: 'No',
+        insurance: 'Yes - ₹31.5 L'
+      },
+      {
+        id: 3,
+        orderId: 'OBD-2024-003',
+        company: 'Pharma Logistics Ltd.',
+        driver: 'Priya Sharma',
+        driverPhone: '+91 99876 54321',
+        vehicle: 'TN-09-EF-9012',
+        vehicleType: 'Refrigerated Truck',
+        weight: '1,650 kg',
+        volume: '22 m³',
+        eta: '2:15 PM',
+        distance: '245 km',
+        progress: 75,
+        status: 'IN TRANSIT',
+        priority: 'Critical',
+        origin: { 
+          lat: 17.3850, 
+          lng: 78.4867, 
+          name: 'Hyderabad Pharma Hub',
+          address: 'IDA Jeedimetla, Hyderabad, Telangana 500055'
+        },
+        destination: { 
+          lat: 11.0168, 
+          lng: 76.9558, 
+          name: 'Coimbatore Hospital',
+          address: 'Medical College Road, Coimbatore, Tamil Nadu 641018'
+        },
+        currentLocation: { 
+          lat: 12.9141, 
+          lng: 74.8560,
+          name: 'Mangalore Route'
+        },
+        timeline: [
+          { title: 'Shipment Created', time: '8:00 AM', location: 'Hyderabad Pharma Hub', completed: true },
+          { title: 'Cold Chain Loaded', time: '8:30 AM', location: 'Hyderabad Pharma Hub', completed: true },
+          { title: 'En Route', time: '12:45 PM', location: 'Mangalore Route', completed: true },
+          { title: 'Delivered', time: '2:15 PM', location: 'Coimbatore Hospital', completed: false }
+        ],
+        items: [
+          { name: 'COVID-19 Vaccines', quantity: 5000, weight: '250 kg', value: '₹12,50,000', sku: 'VAC-COV-001', temp: '-70°C' },
+          { name: 'Insulin Vials', quantity: 1000, weight: '150 kg', value: '₹8,00,000', sku: 'MED-INS-002', temp: '2-8°C' },
+          { name: 'Blood Samples', quantity: 200, weight: '50 kg', value: 'N/A', sku: 'BLD-SMP-003', temp: '2-8°C' },
+          { name: 'Surgical Equipment', quantity: 50, weight: '1,200 kg', value: '₹25,00,000', sku: 'SRG-EQP-004' }
+        ],
+        temperatureControl: 'Yes - Refrigerated 2-8°C',
+        currentTemp: '4.2°C',
+        insurance: 'Yes - ₹45.5 L'
+      },
+      {
+        id: 4,
+        orderId: 'OBD-2024-004',
+        company: 'Manufacturing India',
+        driver: 'Suresh Patel',
+        driverPhone: '+91 97654 32109',
+        vehicle: 'GJ-05-GH-3456',
+        vehicleType: 'Flatbed Truck',
+        weight: '4,120 kg',
+        volume: '52 m³',
+        eta: '5:20 PM',
+        distance: '668 km',
+        progress: 52,
+        status: 'IN TRANSIT',
+        priority: 'High',
+        origin: { 
+          lat: 23.0225, 
+          lng: 72.5714, 
+          name: 'Ahmedabad Factory',
+          address: 'Sanand Industrial Park, Ahmedabad, Gujarat 382110'
+        },
+        destination: { 
+          lat: 26.9124, 
+          lng: 75.7873, 
+          name: 'Jaipur Assembly Plant',
+          address: 'RIICO Industrial Area, Jaipur, Rajasthan 302013'
+        },
+        currentLocation: { 
+          lat: 24.5854, 
+          lng: 73.7125,
+          name: 'Udaipur Bypass'
+        },
+        timeline: [
+          { title: 'Shipment Created', time: '9:00 AM', location: 'Ahmedabad Factory', completed: true },
+          { title: 'Loaded & Secured', time: '9:45 AM', location: 'Ahmedabad Factory', completed: true },
+          { title: 'En Route', time: '2:30 PM', location: 'Udaipur Bypass', completed: true },
+          { title: 'Out for Delivery', time: '4:45 PM', location: 'Jaipur Entry', completed: false },
+          { title: 'Delivered', time: '5:20 PM', location: 'Jaipur Assembly Plant', completed: false }
+        ],
+        items: [
+          { name: 'CNC Machine Parts', quantity: 25, weight: '2,500 kg', value: '₹1,25,00,000', sku: 'CNC-PRT-001' },
+          { name: 'Industrial Motors', quantity: 15, weight: '1,200 kg', value: '₹45,00,000', sku: 'MTR-IND-002' },
+          { name: 'Steel Frames', quantity: 50, weight: '400 kg', value: '₹12,00,000', sku: 'STL-FRM-003' },
+          { name: 'Control Panels', quantity: 10, weight: '20 kg', value: '₹8,00,000', sku: 'CTL-PNL-004' }
+        ],
+        temperatureControl: 'No',
+        insurance: 'Yes - ₹1.9 Cr'
+      }
+    ];
+
+    // Black and white tile layer filter
+    const bwFilter = [
+      'grayscale:100%',
+      'invert:100%',
+      'brightness:110%',
+      'contrast:90%'
+    ].join(' ');
+
+    function initMap() {
+      // Initialize map centered on India
+      map = L.map('map', {
+        center: [20.5937, 78.9629],
+        zoom: 5,
+        zoomControl: false,
+        attributionControl: false
+      });
+
+      // Add black and white tile layer
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 18,
+        className: 'map-tiles-bw'
+      }).addTo(map);
+
+      // Add CSS for black and white filter
+      const style = document.createElement('style');
+      style.textContent = `
+        .map-tiles-bw {
+          filter: grayscale(100%) invert(100%) brightness(110%) contrast(90%);
+        }
+        .leaflet-popup-content-wrapper,
+        .leaflet-popup-tip {
+          background: rgba(0, 0, 0, 0.95);
+          color: white;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .leaflet-popup-content {
+          margin: 12px;
+          font-family: system-ui;
+        }
+        .leaflet-popup-close-button {
+          color: white !important;
+        }
+      `;
+      document.head.appendChild(style);
+
+      // Add shipments to map
+      shipments.forEach(shipment => {
+        addShipmentToMap(shipment);
+      });
+
+      // Start animation
+      animateShipments();
+    }
+
+    function addShipmentToMap(shipment) {
+      // Create custom truck marker icon using PNG
+      const truckIcon = L.icon({
+        iconUrl: 'images/tt222.png',
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
+        popupAnchor: [0, -20],
+        className: 'truck-marker-icon'
+      });
+
+      // Add marker
+      const marker = L.marker([shipment.currentLocation.lat, shipment.currentLocation.lng], {
+        icon: truckIcon,
+        rotationAngle: 0
+      }).addTo(map);
+
+      // Add click event to show detail panel
+      marker.on('click', function() {
+        showShipmentDetail(shipment);
+      });
+
+      // Add route line
+      const polyline = L.polyline([
+        [shipment.origin.lat, shipment.origin.lng],
+        [shipment.currentLocation.lat, shipment.currentLocation.lng],
+        [shipment.destination.lat, shipment.destination.lng]
+      ], {
+        color: 'white',
+        weight: 2,
+        opacity: 0.6,
+        dashArray: '5, 5'
+      }).addTo(map);
+
+      markers[shipment.id] = marker;
+      polylines[shipment.id] = polyline;
+    }
+
+    function animateShipments() {
+      setInterval(() => {
+        shipments.forEach(shipment => {
+          const marker = markers[shipment.id];
+          const polyline = polylines[shipment.id];
+          
+          if (!marker || !polyline) return;
+
+          // Move marker towards destination
+          const currentLat = shipment.currentLocation.lat;
+          const currentLng = shipment.currentLocation.lng;
+          const destLat = shipment.destination.lat;
+          const destLng = shipment.destination.lng;
+
+          shipment.currentLocation.lat += (destLat - currentLat) * 0.01;
+          shipment.currentLocation.lng += (destLng - currentLng) * 0.01;
+
+          // Update marker position
+          marker.setLatLng([shipment.currentLocation.lat, shipment.currentLocation.lng]);
+
+          // Update route line
+          polyline.setLatLngs([
+            [shipment.origin.lat, shipment.origin.lng],
+            [shipment.currentLocation.lat, shipment.currentLocation.lng],
+            [shipment.destination.lat, shipment.destination.lng]
+          ]);
+        });
+      }, 2000);
+    }
+
+    function selectShipment(id) {
+      // Remove active class from all cards
+      document.querySelectorAll('.shipment-card').forEach(card => {
+        card.classList.remove('active');
+      });
+      
+      // Add active class to selected card
+      const cards = document.querySelectorAll('.shipment-card');
+      if (cards[id - 1]) {
+        cards[id - 1].classList.add('active');
+      }
+      
+      // Focus on marker
+      const shipment = shipments.find(s => s.id === id);
+      if (shipment && markers[id]) {
+        map.setView([shipment.currentLocation.lat, shipment.currentLocation.lng], 8);
+        markers[id].openPopup();
+      }
+    }
+
+    function zoomIn() {
+      map.zoomIn();
+    }
+
+    function zoomOut() {
+      map.zoomOut();
+    }
+
+    function recenterMap() {
+      map.setView([20.5937, 78.9629], 5);
+    }
+
+    function toggleFullScreen() {
+      const mapLayout = document.querySelector('.map-layout');
+      if (!document.fullscreenElement) {
+        mapLayout.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // Add pulse animation
+    const pulseStyle = document.createElement('style');
+    pulseStyle.textContent = `
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+          opacity: 0.6;
+        }
+        100% {
+          transform: scale(2.5);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(pulseStyle);
+
+    // Show shipment detail panel
+    function showShipmentDetail(shipment) {
+      const panel = document.getElementById('shipmentDetailPanel');
+      const content = document.getElementById('detailPanelContent');
+      
+      content.innerHTML = `
+        <!-- Order Information -->
+        <div class="detail-section">
+          <div class="detail-section-title">Order Information</div>
+          <div class="detail-info-grid">
+            <div class="detail-info-item">
+              <div class="detail-info-label">Order ID</div>
+              <div class="detail-info-value">${shipment.orderId}</div>
+            </div>
+            <div class="detail-info-item">
+              <div class="detail-info-label">Customer</div>
+              <div class="detail-info-value">${shipment.company}</div>
+            </div>
+            <div class="detail-info-item">
+              <div class="detail-info-label">Status</div>
+              <div class="detail-info-value">
+                <span class="detail-status-badge">${shipment.status}</span>
+              </div>
+            </div>
+            <div class="detail-info-item">
+              <div class="detail-info-label">Priority</div>
+              <div class="detail-info-value">${shipment.priority}</div>
+            </div>
+            <div class="detail-info-item">
+              <div class="detail-info-label">Distance</div>
+              <div class="detail-info-value">${shipment.distance}</div>
+            </div>
+            <div class="detail-info-item">
+              <div class="detail-info-label">ETA</div>
+              <div class="detail-info-value">${shipment.eta}</div>
+            </div>
+          </div>
+          <div class="detail-info-item" style="margin-top: 1rem;">
+            <div class="detail-info-label">Progress</div>
+            <div class="detail-info-value">${shipment.progress}%</div>
+            <div class="detail-progress-bar">
+              <div class="detail-progress-fill" style="width: ${shipment.progress}%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Route Information -->
+        <div class="detail-section">
+          <div class="detail-section-title">Route Information</div>
+          <div class="route-map-mini">
+            <div class="route-point">
+              <div class="route-point-name">${shipment.origin.name}</div>
+              <div class="route-point-address">${shipment.origin.address}</div>
+            </div>
+            <div class="route-arrow">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </div>
+            <div class="route-point">
+              <div class="route-point-name">${shipment.destination.name}</div>
+              <div class="route-point-address">${shipment.destination.address}</div>
+            </div>
+          </div>
+          <div class="detail-info-item" style="margin-top: 1rem;">
+            <div class="detail-info-label">Current Location</div>
+            <div class="detail-info-value">${shipment.currentLocation.name || 'En Route'}</div>
+            ${shipment.currentLocation.address ? `<div class="route-point-address">${shipment.currentLocation.address}</div>` : ''}
+          </div>
+        </div>
+
+        <!-- Vehicle & Driver -->
+        <div class="detail-section">
+          <div class="detail-section-title">Vehicle & Driver</div>
+          <div class="detail-info-grid">
+            <div class="detail-info-item">
+              <div class="detail-info-label">Driver Name</div>
+              <div class="detail-info-value">${shipment.driver}</div>
+            </div>
+            <div class="detail-info-item">
+              <div class="detail-info-label">Contact</div>
+              <div class="detail-info-value">${shipment.driverPhone}</div>
+            </div>
+            <div class="detail-info-item">
+              <div class="detail-info-label">Vehicle Number</div>
+              <div class="detail-info-value">${shipment.vehicle}</div>
+            </div>
+            <div class="detail-info-item">
+              <div class="detail-info-label">Vehicle Type</div>
+              <div class="detail-info-value">${shipment.vehicleType}</div>
+            </div>
+            <div class="detail-info-item">
+              <div class="detail-info-label">Weight</div>
+              <div class="detail-info-value">${shipment.weight}</div>
+            </div>
+            <div class="detail-info-item">
+              <div class="detail-info-label">Volume</div>
+              <div class="detail-info-value">${shipment.volume}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipment Items -->
+        <div class="detail-section">
+          <div class="detail-section-title">Shipment Items (${shipment.items.length})</div>
+          <div class="detail-items-list">
+            ${shipment.items.map(item => `
+              <div class="item-card">
+                <div class="item-header">
+                  <div class="item-name">${item.name}</div>
+                  <div class="item-qty">Qty: ${item.quantity}</div>
+                </div>
+                <div class="item-details">
+                  <span>SKU: ${item.sku}</span>
+                  <span>Weight: ${item.weight}</span>
+                  <span>Value: ${item.value}</span>
+                  ${item.temp ? `<span>Temp: ${item.temp}</span>` : ''}
+                  ${item.category ? `<span>Category: ${item.category}</span>` : ''}
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Tracking Timeline -->
+        <div class="detail-section">
+          <div class="detail-section-title">Tracking Timeline</div>
+          <div class="detail-timeline">
+            ${shipment.timeline.map((event, index) => `
+              <div class="timeline-item">
+                <div class="timeline-dot ${event.completed ? 'completed' : ''}"></div>
+                ${index < shipment.timeline.length - 1 ? '<div class="timeline-line"></div>' : ''}
+                <div class="timeline-time">${event.time}${event.date ? ' • ' + event.date : ''}</div>
+                <div class="timeline-title">${event.title}</div>
+                <div class="timeline-location">${event.location}</div>
+                ${event.description ? `<div class="timeline-location" style="margin-top: 0.25rem; font-size: 0.75rem; opacity: 0.8;">${event.description}</div>` : ''}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="detail-section">
+          <div class="detail-section-title">Additional Information</div>
+          <div class="detail-info-grid">
+            <div class="detail-info-item">
+              <div class="detail-info-label">Temperature Control</div>
+              <div class="detail-info-value">${shipment.temperatureControl}</div>
+              ${shipment.currentTemp ? `<div class="route-point-address">Current: ${shipment.currentTemp}</div>` : ''}
+            </div>
+            <div class="detail-info-item">
+              <div class="detail-info-label">Insurance</div>
+              <div class="detail-info-value">${shipment.insurance}</div>
+            </div>
+            ${shipment.fuelConsumed ? `
+              <div class="detail-info-item">
+                <div class="detail-info-label">Fuel Consumed</div>
+                <div class="detail-info-value">${shipment.fuelConsumed}</div>
+              </div>
+            ` : ''}
+            ${shipment.co2Emissions ? `
+              <div class="detail-info-item">
+                <div class="detail-info-label">CO₂ Emissions</div>
+                <div class="detail-info-value">${shipment.co2Emissions}</div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+      
+      panel.classList.add('open');
+    }
+
+    // Close shipment detail panel
+    function closeDetailPanel() {
+      const panel = document.getElementById('shipmentDetailPanel');
+      panel.classList.remove('open');
+    }
+
+    // Initialize map when page loads
+    window.addEventListener('load', () => {
+      initMap();
+    });
+  </script>
+</body>
+</html>

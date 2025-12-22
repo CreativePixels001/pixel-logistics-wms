@@ -1,0 +1,89 @@
+body {
+    background: #e5e5e5;
+    font-family: 'Montserrat', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.ui-panel-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 32px;
+    padding: 40px 0;
+}
+
+.ui-panel {
+    background: #18191b;
+    width: 340px;
+    min-height: 600px;
+    border-radius: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 36px 24px 24px 24px;
+    box-sizing: border-box;
+    gap: 28px;
+}
+
+.ui-panel-title, .ui-panel-label {
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    margin-bottom: 18px;
+    text-align: left;
+    align-self: flex-start;
+}
+
+.ui-panel-dropzone {
+    width: 90%;
+    height: 320px;
+    background: #393a3c;
+    margin-bottom: 32px;
+    border-radius: 0;
+}
+
+.ui-panel-btn {
+    width: 100%;
+    background: #e5e5e5;
+    color: #18191b;
+    border: none;
+    padding: 22px 0;
+    margin: 0 0 18px 0;
+    font-size: 1.2rem;
+    font-family: 'Montserrat', Arial, sans-serif;
+    font-weight: 400;
+    border-radius: 0;
+    cursor: pointer;
+    transition: background 0.2s;
+    letter-spacing: 0.01em;
+}
+
+.ui-panel-btn:last-child {
+    margin-bottom: 0;
+}
+
+.ui-panel-btn.bold {
+    font-weight: 700;
+}
+
+.ui-panel-color {
+    width: 100%;
+    height: 56px;
+    background: #393a3c;
+    margin-bottom: 18px;
+    border-radius: 0;
+}
+
+@media (max-width: 1100px) {
+    .ui-panel-container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .ui-panel {
+        width: 90vw;
+        min-width: 260px;
+        max-width: 400px;
+    }

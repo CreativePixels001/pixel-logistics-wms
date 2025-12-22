@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Directory - Pixel Resource</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/common-styles.css">
+    <style>
+        /* Employee Directory Specific Styles */
+        .filters-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1.25rem 1.5rem;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .search-input-large {
+            flex: 1;
+            min-width: 280px;
+            position: relative;
+        }
+
+        .search-input-large svg {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: var(--text-light);
+        }
+
+        .search-input-large input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-family: inherit;
+        }
+
+        .search-input-large input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .view-toggle {
+            display: flex;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .view-toggle button {
+            padding: 0.625rem 1rem;
+            background: var(--bg-white);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-normal);
+        }
+
+        .view-toggle button:not(:last-child) {
+            border-right: 1px solid var(--border-color);
+        }
+
+        .view-toggle button.active {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        .view-toggle button svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Employee Table */
+        .employee-table {
+            width: 100%;
+        }
+
+        .employee-row {
+            display: grid;
+            grid-template-columns: 3fr 2fr 1.5fr 1.5fr 1.5fr 1fr;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #f5f5f5;
+            transition: background var(--transition-normal);
+        }
+
+        .employee-row:hover {
+            background: var(--bg-light);
+        }
+
+        .employee-row.header {
+            background: var(--bg-light);
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .employee-row.header:hover {
+            background: var(--bg-light);
+        }
+
+        .employee-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .employee-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .employee-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .employee-details {
+            min-width: 0;
+        }
+
+        .employee-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.125rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .employee-name a {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .employee-name a:hover {
+            text-decoration: underline;
+        }
+
+        .employee-id {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .employee-cell {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .employee-cell.secondary {
+            color: var(--text-secondary);
+        }
+
+        .employee-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-white);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+        }
+
+        .action-btn:hover {
+            background: var(--bg-light);
+            border-color: var(--primary-color);
+        }
+
+        .action-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Grid View */
+        .employee-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            padding: 1.5rem;
+        }
+
+        .employee-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            text-align: center;
+            transition: all var(--transition-normal);
+        }
+
+        .employee-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .employee-card .employee-avatar {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
+            font-size: 1.25rem;
+        }
+
+        .employee-card .employee-name {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .employee-card .employee-role {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .employee-card .employee-dept {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            padding: 0.25rem 0.75rem;
+            background: var(--bg-light);
+            border-radius: var(--radius-sm);
+            display: inline-block;
+        }
+
+        .employee-card .card-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Pagination */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .pagination-info {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pagination-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-white);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--bg-light);
+            border-color: var(--primary-color);
+        }
+
+        .pagination-btn.active {
+            background: var(--primary-color);
+            color: var(--secondary-color);
+            border-color: var(--primary-color);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .pagination-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Summary Cards */
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .summary-card {
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .summary-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .summary-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .summary-content {
+            flex: 1;
+        }
+
+        .summary-value {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .summary-label {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Hide sections based on view */
+        .table-view .employee-grid-container {
+            display: none;
+        }
+
+        .grid-view .employee-table-container {
+            display: none;
+        }
+
+        @media (max-width: 1200px) {
+            .employee-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .summary-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .employee-row {
+                grid-template-columns: 2fr 1.5fr 1fr 1fr;
+            }
+            .employee-row .employee-cell:nth-child(4),
+            .employee-row .employee-cell:nth-child(5) {
+                display: none;
+            }
+            .employee-row.header > div:nth-child(4),
+            .employee-row.header > div:nth-child(5) {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .filters-bar {
+                flex-direction: column;
+            }
+            .search-input-large {
+                width: 100%;
+            }
+            .employee-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .employee-row {
+                grid-template-columns: 1fr auto;
+            }
+            .employee-row .employee-cell:not(:first-child):not(:last-child) {
+                display: none;
+            }
+            .employee-row.header > div:not(:first-child):not(:last-child) {
+                display: none;
+            }
+            .summary-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .employee-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout table-view" id="mainLayout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>Pixel Resource</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="../dashboard.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Employee Management</div>
+                    <a href="directory.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Employee Directory
+                    </a>
+                    <a href="add.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <line x1="20" y1="8" x2="20" y2="14"/>
+                            <line x1="23" y1="11" x2="17" y2="11"/>
+                        </svg>
+                        Add Employee
+                    </a>
+                    <a href="documents.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Documents
+                    </a>
+                    <a href="../departments.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                            <line x1="8" y1="21" x2="16" y2="21"/>
+                            <line x1="12" y1="17" x2="12" y2="21"/>
+                        </svg>
+                        Departments
+                    </a>
+                    <a href="../exit-clearance.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                            <polyline points="16 17 21 12 16 7"/>
+                            <line x1="21" y1="12" x2="9" y2="12"/>
+                        </svg>
+                        Exit Clearance
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Attendance & Shifts</div>
+                    <a href="../attendance/daily.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Daily Attendance
+                    </a>
+                    <a href="../attendance/duty-roster.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Duty Roster
+                    </a>
+                    <a href="../attendance/shifts.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                        Shift Management
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Leave Management</div>
+                    <a href="../leave/applications.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                        Leave Applications
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Payroll</div>
+                    <a href="../payroll/process.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        Process Payroll
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="../settings/configuration.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search employees, departments...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Admin</span>
+                            <span class="user-role" id="userRole">Administrator</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Employee Directory</h1>
+                        <p class="page-subtitle">Manage and view all employees across departments</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-secondary" onclick="exportEmployees()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="7 10 12 15 17 10"/>
+                                <line x1="12" y1="15" x2="12" y2="3"/>
+                            </svg>
+                            Export
+                        </button>
+                        <button class="btn btn-primary" onclick="window.location.href='add.html'">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Add Employee
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Summary Cards -->
+                <div class="summary-cards">
+                    <div class="summary-card">
+                        <div class="summary-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-value">248</div>
+                            <div class="summary-label">Total Employees</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon" style="background: #e6f7e6;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#28a745" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-value">236</div>
+                            <div class="summary-label">Active</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon" style="background: #fff8e6;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#d4a000" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" y1="8" x2="12" y2="12"/>
+                                <line x1="12" y1="16" x2="12.01" y2="16"/>
+                            </svg>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-value">8</div>
+                            <div class="summary-label">On Probation</div>
+                        </div>
+                    </div>
+                    <div class="summary-card">
+                        <div class="summary-icon" style="background: #f5f5f5;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                                <polyline points="16 17 21 12 16 7"/>
+                                <line x1="21" y1="12" x2="9" y2="12"/>
+                            </svg>
+                        </div>
+                        <div class="summary-content">
+                            <div class="summary-value">4</div>
+                            <div class="summary-label">Notice Period</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="filters-bar">
+                    <div class="search-input-large">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" id="searchInput" placeholder="Search by name, ID, email, phone..." oninput="filterEmployees()">
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Department:</label>
+                        <select class="filter-select" id="deptFilter" onchange="filterEmployees()">
+                            <option value="">All Departments</option>
+                            <option value="IT & Technology">IT & Technology</option>
+                            <option value="Operations">Operations</option>
+                            <option value="Finance">Finance</option>
+                            <option value="Sales & Marketing">Sales & Marketing</option>
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Security">Security</option>
+                            <option value="Support">Support</option>
+                            <option value="HR & Admin">HR & Admin</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Status:</label>
+                        <select class="filter-select" id="statusFilter" onchange="filterEmployees()">
+                            <option value="">All Status</option>
+                            <option value="Active">Active</option>
+                            <option value="On Leave">On Leave</option>
+                            <option value="Probation">Probation</option>
+                            <option value="Notice Period">Notice Period</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label class="filter-label">Shift:</label>
+                        <select class="filter-select" id="shiftFilter" onchange="filterEmployees()">
+                            <option value="">All Shifts</option>
+                            <option value="Morning">Morning</option>
+                            <option value="Afternoon">Afternoon</option>
+                            <option value="Night">Night</option>
+                            <option value="General">General</option>
+                        </select>
+                    </div>
+                    <div class="view-toggle">
+                        <button class="active" id="tableViewBtn" onclick="switchView('table')" title="Table View">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="3" y1="6" x2="21" y2="6"/>
+                                <line x1="3" y1="12" x2="21" y2="12"/>
+                                <line x1="3" y1="18" x2="21" y2="18"/>
+                            </svg>
+                        </button>
+                        <button id="gridViewBtn" onclick="switchView('grid')" title="Grid View">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"/>
+                                <rect x="14" y="3" width="7" height="7"/>
+                                <rect x="14" y="14" width="7" height="7"/>
+                                <rect x="3" y="14" width="7" height="7"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Employee List - Card Container -->
+                <div class="card">
+                    <!-- Table View -->
+                    <div class="employee-table-container">
+                        <div class="employee-table">
+                            <div class="employee-row header">
+                                <div>Employee</div>
+                                <div>Department</div>
+                                <div>Shift</div>
+                                <div>Contact</div>
+                                <div>Status</div>
+                                <div>Actions</div>
+                            </div>
+                            <div id="employeeTableBody">
+                                <!-- Employee rows will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Grid View -->
+                    <div class="employee-grid-container">
+                        <div class="employee-grid" id="employeeGrid">
+                            <!-- Employee cards will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <div class="pagination-info">
+                            Showing <strong id="showingStart">1</strong>-<strong id="showingEnd">10</strong> of <strong id="totalCount">248</strong> employees
+                        </div>
+                        <div class="pagination-controls">
+                            <button class="pagination-btn" onclick="changePage('prev')" id="prevBtn" disabled>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="15 18 9 12 15 6"/>
+                                </svg>
+                            </button>
+                            <button class="pagination-btn active">1</button>
+                            <button class="pagination-btn">2</button>
+                            <button class="pagination-btn">3</button>
+                            <span style="padding: 0 0.5rem; color: var(--text-light);">...</span>
+                            <button class="pagination-btn">25</button>
+                            <button class="pagination-btn" onclick="changePage('next')" id="nextBtn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Employee Quick View Panel -->
+    <div class="slide-panel-overlay" id="panelOverlay" onclick="closeQuickView()"></div>
+    <div class="slide-panel" id="quickViewPanel">
+        <button class="slide-panel-close" onclick="closeQuickView()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <div class="slide-panel-header">
+            <h2 class="slide-panel-title" id="quickViewName">Employee Name</h2>
+            <p class="slide-panel-subtitle" id="quickViewRole">Role • Department</p>
+        </div>
+        <div class="slide-panel-body">
+            <div id="quickViewContent">
+                <!-- Quick view content will be populated by JavaScript -->
+            </div>
+        </div>
+        <div class="slide-panel-footer">
+            <button class="btn btn-secondary" onclick="closeQuickView()">Close</button>
+            <button class="btn btn-primary" onclick="viewFullProfile()">View Full Profile</button>
+        </div>
+    </div>
+
+    <script>
+        // Sample employee data
+        const employees = [
+            { id: 'EMP001', name: 'Rahul Sharma', role: 'Senior Developer', dept: 'IT & Technology', shift: 'General', email: 'rahul.sharma@company.com', phone: '+91 98765 43210', status: 'Active', joinDate: '2022-03-15' },
+            { id: 'EMP002', name: 'Priya Kumar', role: 'Operations Manager', dept: 'Operations', shift: 'Morning', email: 'priya.kumar@company.com', phone: '+91 98765 43211', status: 'Active', joinDate: '2021-06-20' },
+            { id: 'EMP003', name: 'Amit Mehta', role: 'Financial Analyst', dept: 'Finance', shift: 'General', email: 'amit.mehta@company.com', phone: '+91 98765 43212', status: 'Active', joinDate: '2020-11-10' },
+            { id: 'EMP004', name: 'Sneha Gupta', role: 'Sales Executive', dept: 'Sales & Marketing', shift: 'General', email: 'sneha.gupta@company.com', phone: '+91 98765 43213', status: 'On Leave', joinDate: '2023-01-05' },
+            { id: 'EMP005', name: 'Vijay Reddy', role: 'Support Engineer', dept: 'Support', shift: 'Afternoon', email: 'vijay.reddy@company.com', phone: '+91 98765 43214', status: 'Active', joinDate: '2022-08-22' },
+            { id: 'EMP006', name: 'Kavita Singh', role: 'HR Coordinator', dept: 'HR & Admin', shift: 'General', email: 'kavita.singh@company.com', phone: '+91 98765 43215', status: 'Probation', joinDate: '2024-10-01' },
+            { id: 'EMP007', name: 'Arjun Patel', role: 'Security Officer', dept: 'Security', shift: 'Night', email: 'arjun.patel@company.com', phone: '+91 98765 43216', status: 'Active', joinDate: '2019-04-18' },
+            { id: 'EMP008', name: 'Neha Joshi', role: 'Technical Lead', dept: 'IT & Technology', shift: 'General', email: 'neha.joshi@company.com', phone: '+91 98765 43217', status: 'Active', joinDate: '2018-09-12' },
+            { id: 'EMP009', name: 'Manoj Kumar', role: 'Maintenance Supervisor', dept: 'Maintenance', shift: 'Morning', email: 'manoj.kumar@company.com', phone: '+91 98765 43218', status: 'Notice Period', joinDate: '2017-02-28' },
+            { id: 'EMP010', name: 'Ritu Verma', role: 'Marketing Manager', dept: 'Sales & Marketing', shift: 'General', email: 'ritu.verma@company.com', phone: '+91 98765 43219', status: 'Active', joinDate: '2020-07-15' },
+            { id: 'EMP011', name: 'Deepak Nair', role: 'Operations Executive', dept: 'Operations', shift: 'Afternoon', email: 'deepak.nair@company.com', phone: '+91 98765 43220', status: 'Active', joinDate: '2021-11-30' },
+            { id: 'EMP012', name: 'Ananya Rao', role: 'Junior Developer', dept: 'IT & Technology', shift: 'General', email: 'ananya.rao@company.com', phone: '+91 98765 43221', status: 'Probation', joinDate: '2024-09-15' },
+        ];
+
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let filteredEmployees = [...employees];
+        let selectedEmployee = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
+            renderEmployees();
+        });
+
+        // Load user info
+        function loadUserInfo() {
+            const user = JSON.parse(sessionStorage.getItem('hrmsUser') || '{}');
+            if (user.name) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userRole').textContent = user.role;
+                document.getElementById('userAvatar').textContent = user.name.charAt(0);
+            }
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Get initials from name
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').toUpperCase();
+        }
+
+        // Get status badge class
+        function getStatusClass(status) {
+            const classes = {
+                'Active': 'active',
+                'On Leave': 'on-leave',
+                'Probation': 'pending',
+                'Notice Period': 'inactive'
+            };
+            return classes[status] || 'pending';
+        }
+
+        // Render employees in table view
+        function renderEmployees() {
+            const tableBody = document.getElementById('employeeTableBody');
+            const grid = document.getElementById('employeeGrid');
+            
+            // Render table rows
+            tableBody.innerHTML = filteredEmployees.map(emp => `
+                <div class="employee-row" onclick="openQuickView('${emp.id}')">
+                    <div class="employee-info">
+                        <div class="employee-avatar">${getInitials(emp.name)}</div>
+                        <div class="employee-details">
+                            <div class="employee-name"><a href="profile.html?id=${emp.id}">${emp.name}</a></div>
+                            <div class="employee-id">${emp.id} • ${emp.role}</div>
+                        </div>
+                    </div>
+                    <div class="employee-cell">${emp.dept}</div>
+                    <div class="employee-cell secondary">${emp.shift}</div>
+                    <div class="employee-cell secondary">${emp.phone}</div>
+                    <div class="employee-cell">
+                        <span class="status-badge ${getStatusClass(emp.status)}">${emp.status}</span>
+                    </div>
+                    <div class="employee-actions" onclick="event.stopPropagation()">
+                        <button class="action-btn" onclick="openQuickView('${emp.id}')" title="Quick View">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn" onclick="editEmployee('${emp.id}')" title="Edit">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn" onclick="showMoreOptions('${emp.id}')" title="More">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="1"/>
+                                <circle cx="19" cy="12" r="1"/>
+                                <circle cx="5" cy="12" r="1"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render grid cards
+            grid.innerHTML = filteredEmployees.map(emp => `
+                <div class="employee-card" onclick="openQuickView('${emp.id}')">
+                    <div class="employee-avatar">${getInitials(emp.name)}</div>
+                    <div class="employee-name">${emp.name}</div>
+                    <div class="employee-role">${emp.role}</div>
+                    <div class="employee-dept">${emp.dept}</div>
+                    <div class="card-actions" onclick="event.stopPropagation()">
+                        <button class="action-btn" onclick="openQuickView('${emp.id}')" title="Quick View">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn" onclick="window.location.href='profile.html?id=${emp.id}'" title="View Profile">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn" onclick="editEmployee('${emp.id}')" title="Edit">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update pagination info
+            updatePaginationInfo();
+        }
+
+        // Filter employees
+        function filterEmployees() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const dept = document.getElementById('deptFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            const shift = document.getElementById('shiftFilter').value;
+
+            filteredEmployees = employees.filter(emp => {
+                const matchesSearch = !search || 
+                    emp.name.toLowerCase().includes(search) ||
+                    emp.id.toLowerCase().includes(search) ||
+                    emp.email.toLowerCase().includes(search) ||
+                    emp.phone.includes(search);
+                const matchesDept = !dept || emp.dept === dept;
+                const matchesStatus = !status || emp.status === status;
+                const matchesShift = !shift || emp.shift === shift;
+                
+                return matchesSearch && matchesDept && matchesStatus && matchesShift;
+            });
+
+            renderEmployees();
+        }
+
+        // Switch view
+        function switchView(view) {
+            const layout = document.getElementById('mainLayout');
+            const tableBtn = document.getElementById('tableViewBtn');
+            const gridBtn = document.getElementById('gridViewBtn');
+
+            if (view === 'table') {
+                layout.classList.remove('grid-view');
+                layout.classList.add('table-view');
+                tableBtn.classList.add('active');
+                gridBtn.classList.remove('active');
+            } else {
+                layout.classList.remove('table-view');
+                layout.classList.add('grid-view');
+                gridBtn.classList.add('active');
+                tableBtn.classList.remove('active');
+            }
+        }
+
+        // Update pagination info
+        function updatePaginationInfo() {
+            const start = (currentPage - 1) * itemsPerPage + 1;
+            const end = Math.min(currentPage * itemsPerPage, filteredEmployees.length);
+            
+            document.getElementById('showingStart').textContent = start;
+            document.getElementById('showingEnd').textContent = end;
+            document.getElementById('totalCount').textContent = filteredEmployees.length;
+        }
+
+        // Change page
+        function changePage(direction) {
+            if (direction === 'prev' && currentPage > 1) {
+                currentPage--;
+            } else if (direction === 'next') {
+                currentPage++;
+            }
+            renderEmployees();
+        }
+
+        // Open quick view panel
+        function openQuickView(empId) {
+            selectedEmployee = employees.find(e => e.id === empId);
+            if (!selectedEmployee) return;
+
+            document.getElementById('quickViewName').textContent = selectedEmployee.name;
+            document.getElementById('quickViewRole').textContent = `${selectedEmployee.role} • ${selectedEmployee.dept}`;
+            
+            document.getElementById('quickViewContent').innerHTML = `
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div class="avatar avatar-xl" style="margin: 0 auto 1rem; width: 80px; height: 80px; font-size: 1.5rem;">
+                        ${getInitials(selectedEmployee.name)}
+                    </div>
+                    <span class="status-badge ${getStatusClass(selectedEmployee.status)}" style="margin-top: 0.5rem;">${selectedEmployee.status}</span>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Basic Information</div>
+                    <div class="form-row" style="margin-bottom: 1rem;">
+                        <div>
+                            <div class="form-label" style="margin-bottom: 0.25rem;">Employee ID</div>
+                            <div style="font-weight: 600;">${selectedEmployee.id}</div>
+                        </div>
+                        <div>
+                            <div class="form-label" style="margin-bottom: 0.25rem;">Join Date</div>
+                            <div style="font-weight: 600;">${new Date(selectedEmployee.joinDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div>
+                            <div class="form-label" style="margin-bottom: 0.25rem;">Department</div>
+                            <div style="font-weight: 600;">${selectedEmployee.dept}</div>
+                        </div>
+                        <div>
+                            <div class="form-label" style="margin-bottom: 0.25rem;">Shift</div>
+                            <div style="font-weight: 600;">${selectedEmployee.shift}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Contact Information</div>
+                    <div style="margin-bottom: 1rem;">
+                        <div class="form-label" style="margin-bottom: 0.25rem;">Email</div>
+                        <div style="font-weight: 600;"><a href="mailto:${selectedEmployee.email}" style="color: var(--text-primary);">${selectedEmployee.email}</a></div>
+                    </div>
+                    <div>
+                        <div class="form-label" style="margin-bottom: 0.25rem;">Phone</div>
+                        <div style="font-weight: 600;"><a href="tel:${selectedEmployee.phone}" style="color: var(--text-primary);">${selectedEmployee.phone}</a></div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-title">Quick Actions</div>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+                        <button class="btn btn-secondary btn-sm" onclick="alert('Mark attendance coming soon')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Mark Attendance
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="alert('Apply leave coming soon')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            </svg>
+                            Apply Leave
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="alert('View payslip coming soon')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            </svg>
+                            View Payslip
+                        </button>
+                        <button class="btn btn-secondary btn-sm" onclick="alert('Documents coming soon')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                            </svg>
+                            Documents
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('panelOverlay').classList.add('active');
+            document.getElementById('quickViewPanel').classList.add('active');
+        }
+
+        // Close quick view
+        function closeQuickView() {
+            document.getElementById('panelOverlay').classList.remove('active');
+            document.getElementById('quickViewPanel').classList.remove('active');
+            selectedEmployee = null;
+        }
+
+        // View full profile
+        function viewFullProfile() {
+            if (selectedEmployee) {
+                window.location.href = `profile.html?id=${selectedEmployee.id}`;
+            }
+        }
+
+        // Edit employee
+        function editEmployee(empId) {
+            window.location.href = `edit.html?id=${empId}`;
+        }
+
+        // Show more options
+        function showMoreOptions(empId) {
+            alert('More options menu coming soon');
+        }
+
+        // Export employees
+        function exportEmployees() {
+            alert('Export functionality coming soon. Will support CSV & Excel formats.');
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">×</button>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

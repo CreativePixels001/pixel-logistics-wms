@@ -1,0 +1,281 @@
+{
+  "id": "retail-store-audit",
+  "name": "Retail Store Audit",
+  "description": "Comprehensive retail store audit covering staff performance, inventory management, customer service, store appearance, and POS operations",
+  "category": "retail",
+  "version": "1.0",
+  "totalItems": 35,
+  "estimatedTime": "30-45 minutes",
+  "categories": [
+    {
+      "name": "Staff Performance",
+      "items": [
+        {
+          "id": "S001",
+          "question": "Are staff greeting customers within 30 seconds of entry?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "S002",
+          "question": "Are staff wearing proper uniforms with name tags?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "S003",
+          "question": "Are staff knowledgeable about products and pricing?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "S004",
+          "question": "Are staff maintaining professional appearance and hygiene?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "S005",
+          "question": "Is adequate staff present during peak hours?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "S006",
+          "question": "Are staff following company policies and procedures?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "S007",
+          "question": "Is staff attendance register maintained properly?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "S008",
+          "question": "Are staff break schedules being followed?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        }
+      ]
+    },
+    {
+      "name": "Inventory Management",
+      "items": [
+        {
+          "id": "S009",
+          "question": "Are price tags visible and accurate on all products?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "S010",
+          "question": "Are out-of-stock items marked or removed from display?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "S011",
+          "question": "Is inventory organized by category and properly labeled?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "S012",
+          "question": "Are expiry dates checked and expired products removed?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "S013",
+          "question": "Is stock rotation (FIFO) being followed?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "S014",
+          "question": "Is back-room storage organized and accessible?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "S015",
+          "question": "Are daily inventory counts being conducted?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        }
+      ]
+    },
+    {
+      "name": "Customer Service",
+      "items": [
+        {
+          "id": "S016",
+          "question": "Is complaint/feedback register maintained?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "S017",
+          "question": "Are customer service standards clearly displayed?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "S018",
+          "question": "Is return/exchange policy visible to customers?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "S019",
+          "question": "Are trial rooms clean and well-maintained?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "S020",
+          "question": "Is customer waiting time at checkout acceptable (<5 minutes)?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "S021",
+          "question": "Are loyalty program benefits communicated to customers?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "S022",
+          "question": "Is Wi-Fi (if offered) working properly for customers?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "S023",
+          "question": "Are shopping baskets/carts clean and available?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        }
+      ]
+    },
+    {
+      "name": "Store Appearance",
+      "items": [
+        {
+          "id": "S024",
+          "question": "Are store floors clean and mopped regularly?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "S025",
+          "question": "Is store entrance clean and welcoming?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "S026",
+          "question": "Are display windows attractive and updated?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "S027",
+          "question": "Is signage clear and properly positioned?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": false
+        },
+        {
+          "id": "S028",
+          "question": "Is lighting adequate throughout the store?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "S029",
+          "question": "Are washrooms clean with soap and sanitizer?",
+          "type": "yes-no-na",
+          "photoRequired": true,
+          "critical": true
+        },
+        {
+          "id": "S030",
+          "question": "Is store free from unpleasant odors?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        }
+      ]
+    },
+    {
+      "name": "POS & Billing",
+      "items": [
+        {
+          "id": "S031",
+          "question": "Is POS system working properly without errors?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": true
+        },
+        {
+          "id": "S032",
+          "question": "Are all payment methods (cash, card, UPI) functional?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": true
+        },
+        {
+          "id": "S033",
+          "question": "Are receipts being issued for all transactions?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": true
+        },
+        {
+          "id": "S034",
+          "question": "Is cash drawer balanced and reconciled daily?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        },
+        {
+          "id": "S035",
+          "question": "Are promotional discounts applied correctly at checkout?",
+          "type": "yes-no-na",
+          "photoRequired": false,
+          "critical": false
+        }
+      ]
+    }
+  ]
+}

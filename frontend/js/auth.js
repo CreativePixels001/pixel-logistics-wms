@@ -104,28 +104,70 @@ async function handleLogin(e) {
   btnText.style.display = 'none';
   btnLoader.style.display = 'block';
   
-  // Simulate API call delay
-  await new Promise(resolve => setTimeout(resolve, 800));
-  
-  // Find user in demo database
-  const user = DEMO_USERS.find(u => 
-    (u.username === username || u.email === username) && u.password === password
-  );
-  
-  if (user) {
-    // Create session (remove password from stored data)
-    const { password, ...userSession } = user;
-    setCurrentUser(userSession);
+  try {
+    // Try backend API first
+    if (window.API && !window.USE_MOCK_DATA) {
+      try {
+        const response = await window.API.AUTH.login({
+          username: username,
+          password: password
+        });
+        
+        if (response.success && response.data) {
+          // Store token and user data
+          if (response.data.token) {
+            window.setAuthToken(response.data.token);
+          }
+          
+          // Store user session
+          const userSession = response.data.user || response.data;
+          setCurrentUser(userSession);
+          
+          // Show success and redirect
+          showNotification('Login successful! Redirecting...', 'success');
+          
+          setTimeout(() => {
+            window.location.href = 'index.html';
+          }, 1000);
+          return;
+        }
+      } catch (apiError) {
+        console.warn('Backend API failed, falling back to mock data:', apiError.message);
+        // Fall through to mock data
+      }
+    }
     
-    // Show success and redirect
-    showNotification('Login successful! Redirecting...', 'success');
+    // Fallback to mock data (demo mode)
+    await new Promise(resolve => setTimeout(resolve, 800));
     
-    setTimeout(() => {
-      window.location.href = 'index.html';
-    }, 1000);
-  } else {
-    // Show error
-    showError('Invalid username/email or password. Please try again.');
+    // Find user in demo database
+    const user = DEMO_USERS.find(u => 
+      (u.username === username || u.email === username) && u.password === password
+    );
+    
+    if (user) {
+      // Create session (remove password from stored data)
+      const { password, ...userSession } = user;
+      setCurrentUser(userSession);
+      
+      // Show success and redirect
+      showNotification('Login successful! (Demo Mode) Redirecting...', 'success');
+      
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 1000);
+    } else {
+      // Show error
+      showError('Invalid username/email or password. Please try again.');
+      
+      // Reset button
+      btn.disabled = false;
+      btnText.style.display = 'block';
+      btnLoader.style.display = 'none';
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    showError(error.message || 'Login failed. Please try again.');
     
     // Reset button
     btn.disabled = false;

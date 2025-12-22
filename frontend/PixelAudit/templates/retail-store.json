@@ -1,0 +1,353 @@
+{
+  "id": "retail-store",
+  "name": "Retail Store Audit",
+  "description": "Comprehensive retail store operations audit covering staff performance, inventory management, customer service, store appearance, and POS systems.",
+  "category": "Retail",
+  "icon": "🛒",
+  "estimatedTime": "40 minutes",
+  "totalItems": 35,
+  "categories": [
+    {
+      "id": "staff-performance",
+      "name": "Staff Performance",
+      "itemCount": 8
+    },
+    {
+      "id": "inventory-management",
+      "name": "Inventory Management",
+      "itemCount": 7
+    },
+    {
+      "id": "customer-service",
+      "name": "Customer Service",
+      "itemCount": 8
+    },
+    {
+      "id": "store-appearance",
+      "name": "Store Appearance",
+      "itemCount": 7
+    },
+    {
+      "id": "pos-billing",
+      "name": "POS & Billing",
+      "itemCount": 5
+    }
+  ],
+  "checklist": [
+    {
+      "id": 1,
+      "question": "Are staff greeting customers within 30 seconds of entry?",
+      "category": "staff-performance",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 2,
+      "question": "Are all staff members wearing proper uniforms with name tags?",
+      "category": "staff-performance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 3,
+      "question": "Is staff demonstrating product knowledge when asked?",
+      "category": "staff-performance",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 4,
+      "question": "Are staff members maintaining professional appearance (groomed, clean)?",
+      "category": "staff-performance",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 5,
+      "question": "Is the store adequately staffed for current customer traffic?",
+      "category": "staff-performance",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 6,
+      "question": "Are staff actively engaging with customers (not using phones)?",
+      "category": "staff-performance",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 7,
+      "question": "Is there a supervisor or manager present on the floor?",
+      "category": "staff-performance",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 8,
+      "question": "Are staff following upselling and cross-selling techniques?",
+      "category": "staff-performance",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 9,
+      "question": "Are price tags visible and accurate on all displayed products?",
+      "category": "inventory-management",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 10,
+      "question": "Are out-of-stock items clearly marked or removed from display?",
+      "category": "inventory-management",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 11,
+      "question": "Are promotional items properly displayed with correct signage?",
+      "category": "inventory-management",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 12,
+      "question": "Is inventory rotated properly (FIFO - First In, First Out)?",
+      "category": "inventory-management",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 13,
+      "question": "Are products arranged neatly on shelves (no gaps or overhangs)?",
+      "category": "inventory-management",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 14,
+      "question": "Are expiry dates checked on perishable/dated products?",
+      "category": "inventory-management",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 15,
+      "question": "Is there a system in place for tracking inventory levels?",
+      "category": "inventory-management",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 16,
+      "question": "Are customers acknowledged immediately upon approaching staff?",
+      "category": "customer-service",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 17,
+      "question": "Are fitting rooms (if applicable) clean and well-maintained?",
+      "category": "customer-service",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 18,
+      "question": "Is there a clear returns and exchange policy displayed?",
+      "category": "customer-service",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 19,
+      "question": "Are shopping baskets/carts available and in good condition?",
+      "category": "customer-service",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 20,
+      "question": "Is background music at appropriate volume (not too loud)?",
+      "category": "customer-service",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 21,
+      "question": "Are customer complaints handled professionally and promptly?",
+      "category": "customer-service",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 22,
+      "question": "Is there adequate seating or waiting area for customers?",
+      "category": "customer-service",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 23,
+      "question": "Are loyalty programs or offers clearly communicated to customers?",
+      "category": "customer-service",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 24,
+      "question": "Are store floors clean, mopped, and free from spills?",
+      "category": "store-appearance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 25,
+      "question": "Are windows and glass surfaces clean and streak-free?",
+      "category": "store-appearance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 26,
+      "question": "Is the store entrance welcoming and free from clutter?",
+      "category": "store-appearance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 27,
+      "question": "Are all lights functioning properly throughout the store?",
+      "category": "store-appearance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 28,
+      "question": "Are restrooms (if available) clean with adequate supplies?",
+      "category": "store-appearance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 29,
+      "question": "Is signage clear, professional, and properly displayed?",
+      "category": "store-appearance",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 30,
+      "question": "Is the store free from unpleasant odors?",
+      "category": "store-appearance",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 31,
+      "question": "Is the POS system functioning properly without delays?",
+      "category": "pos-billing",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 32,
+      "question": "Are multiple payment methods accepted (cash, card, UPI)?",
+      "category": "pos-billing",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 33,
+      "question": "Are receipts being printed and provided to all customers?",
+      "category": "pos-billing",
+      "type": "yes-no-na",
+      "photoRequired": false,
+      "critical": true,
+      "notes": ""
+    },
+    {
+      "id": 34,
+      "question": "Is the billing counter organized and free from clutter?",
+      "category": "pos-billing",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    },
+    {
+      "id": 35,
+      "question": "Are queue management systems in place during peak hours?",
+      "category": "pos-billing",
+      "type": "yes-no-na",
+      "photoRequired": true,
+      "critical": false,
+      "notes": ""
+    }
+  ]
+}

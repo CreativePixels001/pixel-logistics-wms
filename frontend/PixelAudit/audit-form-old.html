@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Complete Audit - PixelAudit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #000000;
+            background: #F5F5F5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Container for desktop */
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #F5F5F5;
+        }
+
+        /* Header */
+        .mobile-header {
+            position: sticky;
+            top: 0;
+            background: #FFFFFF;
+            border-bottom: 1px solid #E0E0E0;
+            padding: 1rem;
+            z-index: 100;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-header {
+                padding: 1.5rem 2rem;
+            }
+        }
+
+        .audit-info {
+            margin-bottom: 0.75rem;
+        }
+
+        .audit-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .audit-meta {
+            font-size: 0.875rem;
+            color: #666666;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #E0E0E0;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #000000;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            font-size: 0.75rem;
+            color: #666666;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+
+        /* Content */
+        .content {
+            padding: 1rem;
+            padding-bottom: 6rem;
+        }
+
+        /* Category Section */
+        .category-section {
+            background: #FFFFFF;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-header {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        /* Checklist Item */
+        .checklist-item {
+            padding: 1.25rem 0;
+            border-bottom: 1px solid #F5F5F5;
+        }
+
+        .checklist-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-question {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .item-question .critical-badge {
+            display: inline-block;
+            background: #000000;
+            color: #FFFFFF;
+            font-size: 0.625rem;
+            font-weight: 700;
+            padding: 0.125rem 0.375rem;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        /* Answer Buttons */
+        .answer-buttons {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .answer-btn {
+            min-height: 44px;
+            padding: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: 2px solid #E0E0E0;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #666666;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .answer-btn:active {
+            transform: scale(0.98);
+        }
+
+        .answer-btn.selected {
+            border-color: #000000;
+            background: #000000;
+            color: #FFFFFF;
+        }
+
+        .answer-btn.yes.selected {
+            border-color: #10B981;
+            background: #10B981;
+        }
+
+        .answer-btn.no.selected {
+            border-color: #EF4444;
+            background: #EF4444;
+        }
+
+        /* Photo Upload */
+        .photo-section {
+            margin-top: 0.75rem;
+        }
+
+        .photo-label {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #666666;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .photo-required {
+            color: #EF4444;
+        }
+
+        .photo-upload-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            min-height: 44px;
+            padding: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: 2px dashed #E0E0E0;
+            border-radius: 6px;
+            background: #F9F9F9;
+            color: #666666;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .photo-upload-btn:hover {
+            border-color: #000000;
+            color: #000000;
+        }
+
+        .photo-preview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .photo-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 6px;
+            overflow: hidden;
+            background: #F5F5F5;
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .photo-remove {
+            position: absolute;
+            top: 0.25rem;
+            right: 0.25rem;
+            width: 24px;
+            height: 24px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 50%;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Notes */
+        .notes-section {
+            margin-top: 0.75rem;
+        }
+
+        .notes-label {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #666666;
+            margin-bottom: 0.5rem;
+        }
+
+        .notes-input {
+            width: 100%;
+            min-height: 60px;
+            padding: 0.75rem;
+            font-size: 0.875rem;
+            font-family: inherit;
+            border: 1px solid #E0E0E0;
+            border-radius: 6px;
+            background: #FFFFFF;
+            color: #000000;
+            resize: vertical;
+        }
+
+        .notes-input:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        /* Hidden File Input */
+        .file-input {
+            display: none;
+        }
+
+        /* Bottom Actions */
+        .bottom-actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #FFFFFF;
+            border-top: 1px solid #E0E0E0;
+            padding: 1rem;
+            display: flex;
+            gap: 0.75rem;
+            z-index: 100;
+        }
+
+        .save-draft-btn,
+        .submit-btn {
+            flex: 1;
+            min-height: 48px;
+            font-size: 0.9375rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .save-draft-btn {
+            background: #FFFFFF;
+            color: #000000;
+            border: 2px solid #E0E0E0;
+        }
+
+        .save-draft-btn:active {
+            background: #F5F5F5;
+        }
+
+        .submit-btn {
+            background: #000000;
+            color: #FFFFFF;
+        }
+
+        .submit-btn:active {
+            background: #333333;
+        }
+
+        .submit-btn:disabled {
+            background: #E0E0E0;
+            color: #999999;
+            cursor: not-allowed;
+        }
+
+        /* Auto-save Indicator */
+        .autosave-indicator {
+            position: fixed;
+            top: 4.5rem;
+            right: 1rem;
+            background: rgba(0, 0, 0, 0.8);
+            color: #FFFFFF;
+            font-size: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 6px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 200;
+        }
+
+        .autosave-indicator.show {
+            opacity: 1;
+        }
+
+        /* Loading State */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+        }
+
+        .loading-spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid #E0E0E0;
+            border-top-color: #000000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: #666666;
+        }
+
+        /* Success Screen */
+        .success-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #FFFFFF;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+            z-index: 400;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #10B981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .success-icon svg {
+            width: 48px;
+            height: 48px;
+            stroke: #FFFFFF;
+            stroke-width: 3;
+        }
+
+        .success-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .success-message {
+            font-size: 0.9375rem;
+            color: #666666;
+            margin-bottom: 2rem;
+        }
+
+        .success-btn {
+            min-width: 200px;
+            padding: 1rem 2rem;
+            font-size: 0.9375rem;
+            font-weight: 700;
+            background: #000000;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <!-- Header -->
+        <div class="mobile-header">
+            <div class="audit-info">
+                <div class="audit-title" id="auditTitle">Loading audit...</div>
+                <div class="audit-meta" id="auditMeta">Please wait...</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 of 0 completed</div>
+        </div>
+
+        <!-- Auto-save Indicator -->
+        <div class="autosave-indicator" id="autosaveIndicator">Saved</div>
+
+        <!-- Content -->
+        <div class="content" id="checklistContent">
+            <!-- Categories and items will be loaded here -->
+        </div>
+
+        <!-- Bottom Actions -->
+        <div class="bottom-actions">
+        <button class="save-draft-btn" onclick="saveDraft()">Save Draft</button>
+        <button class="submit-btn" id="submitBtn" onclick="submitAudit()" disabled>Submit Audit</button>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Submitting audit...</div>
+    </div>
+
+    <!-- Success Screen -->
+    <div class="success-screen" id="successScreen">
+        <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </div>
+        <div class="success-title">Audit Submitted!</div>
+        <div class="success-message">Your audit has been successfully submitted for review. You'll receive a notification once it's approved.</div>
+        <button class="success-btn" onclick="window.location.href='dashboard.html'">Back to Dashboard</button>
+    </div>
+    </div> <!-- Close form-container -->
+
+    <script>
+        // Audit data structure
+        let auditData = {
+            id: null,
+            template: null,
+            responses: {},
+            photos: {},
+            notes: {},
+            progress: 0
+        };
+
+        // Auto-save interval
+        let autosaveTimer = null;
+
+        // Load audit from URL parameter or localStorage
+        function loadAudit() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const auditId = urlParams.get('audit');
+
+            if (auditId) {
+                // Load audit assignment details
+                const audits = JSON.parse(localStorage.getItem('pixelaudit_audits') || '[]');
+                const assignment = audits.find(a => a.id === auditId);
+                
+                if (assignment) {
+                    // Update header with assignment details
+                    document.querySelector('.audit-title').textContent = assignment.templateName;
+                    document.querySelector('.audit-meta').innerHTML = `
+                        <strong>${assignment.clientName}</strong> • ${assignment.location}<br>
+                        Due: ${new Date(assignment.dueDate).toLocaleDateString('en-IN')} • Assigned by: ${assignment.createdBy}
+                    `;
+                    
+                    // Store assignment details
+                    auditData.id = auditId;
+                    auditData.assignmentDetails = assignment;
+                    
+                    // Check for saved draft
+                    const savedDraft = localStorage.getItem(`audit_draft_${auditId}`);
+                    if (savedDraft) {
+                        auditData = JSON.parse(savedDraft);
+                        console.log('Loaded saved draft');
+                    }
+                } else {
+                    auditData.id = auditId;
+                }
+            }
+
+            // Load demo template (Restaurant Safety Audit)
+            loadDemoTemplate();
+        }
+
+        // Load demo template for testing
+        async function loadDemoTemplate() {
+            // Demo template data (inline for testing without server)
+            const template = {
+                "id": "restaurant-safety-audit",
+                "name": "Restaurant Safety Audit",
+                "description": "Comprehensive safety and compliance audit for restaurants",
+                "category": "retail",
+                "version": "1.0",
+                "totalItems": 12,
+                "estimatedTime": "20-30 minutes",
+                "categories": [
+                    {
+                        "name": "Food License & Compliance",
+                        "items": [
+                            {
+                                "id": "R001",
+                                "question": "Is valid FSSAI license displayed prominently?",
+                                "type": "yes-no-na",
+                                "photoRequired": true,
+                                "critical": true
+                            },
+                            {
+                                "id": "R002",
+                                "question": "Is food handler medical certificate up to date?",
+                                "type": "yes-no-na",
+                                "photoRequired": true,
+                                "critical": true
+                            },
+                            {
+                                "id": "R003",
+                                "question": "Is pest control certificate valid and displayed?",
+                                "type": "yes-no-na",
+                                "photoRequired": false,
+                                "critical": false
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Kitchen Hygiene",
+                        "items": [
+                            {
+                                "id": "R004",
+                                "question": "Are kitchen staff wearing hair nets/caps?",
+                                "type": "yes-no-na",
+                                "photoRequired": true,
+                                "critical": true
+                            },
+                            {
+                                "id": "R005",
+                                "question": "Are kitchen staff wearing clean aprons and gloves?",
+                                "type": "yes-no-na",
+                                "photoRequired": true,
+                                "critical": true
+                            },
+                            {
+                                "id": "R006",
+                                "question": "Is hand washing station available with soap?",
+                                "type": "yes-no-na",
+                                "photoRequired": true,
+                                "critical": true
+                            },
+                            {
+                                "id": "R007",
+                                "question": "Are kitchen surfaces and equipment sanitized?",
+                                "type": "yes-no-na",
+                                "photoRequired": true,
+                                "critical": false
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Fire Safety",
+                        "items": [
+                            {
+                                "id": "R008",
+                                "question": "Are fire extinguishers present and accessible?",
+                                "type": "yes-no-na",
+                                "photoRequired": true,
+                                "critical": true
+                            },
+                            {
+                                "id": "R009",
+                                "question": "Are emergency exit routes clearly marked?",
+                                "type": "yes-no-na",
+                                "photoRequired": true,
+                                "critical": true
+                            },
+                            {
+                                "id": "R010",
+                                "question": "Are emergency exits unobstructed?",
+                                "type": "yes-no-na",
+                                "photoRequired": false,
+                                "critical": true
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Storage & Refrigeration",
+                        "items": [
+                            {
+                                "id": "R011",
+                                "question": "Is refrigerator temperature below 4°C?",
+                                "type": "yes-no-na",
+                                "photoRequired": true,
+                                "critical": true
+                            },
+                            {
+                                "id": "R012",
+                                "question": "Are raw and cooked foods stored separately?",
+                                "type": "yes-no-na",
+                                "photoRequired": true,
+                                "critical": true
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            auditData.template = template;
+
+            // Update header
+            document.getElementById('auditTitle').textContent = template.name;
+            document.getElementById('auditMeta').textContent = `${template.totalItems} items • ${template.estimatedTime}`;
+
+            // Render checklist
+            renderChecklist();
+            updateProgress();
+        }
+
+        // Render checklist
+        function renderChecklist() {
+            const container = document.getElementById('checklistContent');
+            container.innerHTML = '';
+
+            auditData.template.categories.forEach(category => {
+                const section = document.createElement('div');
+                section.className = 'category-section';
+
+                const header = document.createElement('div');
+                header.className = 'category-header';
+                header.textContent = category.name;
+                section.appendChild(header);
+
+                category.items.forEach(item => {
+                    const itemEl = createChecklistItem(item);
+                    section.appendChild(itemEl);
+                });
+
+                container.appendChild(section);
+            });
+        }
+
+        // Create checklist item
+        function createChecklistItem(item) {
+            const div = document.createElement('div');
+            div.className = 'checklist-item';
+
+            // Question
+            const question = document.createElement('div');
+            question.className = 'item-question';
+            question.innerHTML = `${item.question}${item.critical ? '<span class="critical-badge">Critical</span>' : ''}`;
+            div.appendChild(question);
+
+            // Answer buttons
+            const buttons = document.createElement('div');
+            buttons.className = 'answer-buttons';
+
+            ['Yes', 'No', 'N/A'].forEach(answer => {
+                const btn = document.createElement('button');
+                btn.className = `answer-btn ${answer.toLowerCase()}`;
+                btn.textContent = answer;
+                btn.onclick = () => selectAnswer(item.id, answer, btn);
+
+                if (auditData.responses[item.id] === answer) {
+                    btn.classList.add('selected');
+                }
+
+                buttons.appendChild(btn);
+            });
+            div.appendChild(buttons);
+
+            // Photo section
+            if (item.photoRequired) {
+                const photoSection = document.createElement('div');
+                photoSection.className = 'photo-section';
+
+                const label = document.createElement('div');
+                label.className = 'photo-label';
+                label.innerHTML = `Photo ${item.photoRequired ? '<span class="photo-required">*required</span>' : ''}`;
+                photoSection.appendChild(label);
+
+                const uploadBtn = document.createElement('button');
+                uploadBtn.className = 'photo-upload-btn';
+                uploadBtn.innerHTML = `
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    Take Photo
+                `;
+
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = 'image/*';
+                fileInput.capture = 'environment';
+                fileInput.className = 'file-input';
+                fileInput.onchange = (e) => handlePhotoUpload(item.id, e);
+
+                uploadBtn.onclick = () => fileInput.click();
+                photoSection.appendChild(uploadBtn);
+                photoSection.appendChild(fileInput);
+
+                const preview = document.createElement('div');
+                preview.className = 'photo-preview';
+                preview.id = `photo-preview-${item.id}`;
+                photoSection.appendChild(preview);
+
+                div.appendChild(photoSection);
+
+                // Load existing photos
+                if (auditData.photos[item.id]) {
+                    renderPhotoPreview(item.id);
+                }
+            }
+
+            // Notes section
+            const notesSection = document.createElement('div');
+            notesSection.className = 'notes-section';
+
+            const notesLabel = document.createElement('div');
+            notesLabel.className = 'notes-label';
+            notesLabel.textContent = 'Notes (optional)';
+            notesSection.appendChild(notesLabel);
+
+            const notesInput = document.createElement('textarea');
+            notesInput.className = 'notes-input';
+            notesInput.placeholder = 'Add any observations or comments...';
+            notesInput.value = auditData.notes[item.id] || '';
+            notesInput.oninput = (e) => {
+                auditData.notes[item.id] = e.target.value;
+                scheduleAutosave();
+            };
+            notesSection.appendChild(notesInput);
+
+            div.appendChild(notesSection);
+
+            return div;
+        }
+
+        // Select answer
+        function selectAnswer(itemId, answer, clickedBtn) {
+            // Remove selected class from all buttons in this group
+            const parent = clickedBtn.parentElement;
+            parent.querySelectorAll('.answer-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+
+            // Add selected class to clicked button
+            clickedBtn.classList.add('selected');
+
+            // Save response
+            auditData.responses[itemId] = answer;
+
+            // Update progress
+            updateProgress();
+
+            // Schedule auto-save
+            scheduleAutosave();
+        }
+
+        // Handle photo upload
+        function handlePhotoUpload(itemId, event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Compress and convert to base64
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Resize to max 1200px width
+                    let width = img.width;
+                    let height = img.height;
+                    const maxWidth = 1200;
+
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Convert to base64 (JPEG, 0.8 quality)
+                    const compressedPhoto = canvas.toDataURL('image/jpeg', 0.8);
+
+                    // Save photo
+                    if (!auditData.photos[itemId]) {
+                        auditData.photos[itemId] = [];
+                    }
+                    auditData.photos[itemId].push(compressedPhoto);
+
+                    // Render preview
+                    renderPhotoPreview(itemId);
+
+                    // Schedule auto-save
+                    scheduleAutosave();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Render photo preview
+        function renderPhotoPreview(itemId) {
+            const preview = document.getElementById(`photo-preview-${itemId}`);
+            if (!preview) return;
+
+            preview.innerHTML = '';
+            const photos = auditData.photos[itemId] || [];
+
+            photos.forEach((photo, index) => {
+                const item = document.createElement('div');
+                item.className = 'photo-item';
+
+                const img = document.createElement('img');
+                img.src = photo;
+                item.appendChild(img);
+
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'photo-remove';
+                removeBtn.innerHTML = '×';
+                removeBtn.onclick = () => {
+                    auditData.photos[itemId].splice(index, 1);
+                    renderPhotoPreview(itemId);
+                    scheduleAutosave();
+                };
+                item.appendChild(removeBtn);
+
+                preview.appendChild(item);
+            });
+        }
+
+        // Update progress
+        function updateProgress() {
+            const totalItems = auditData.template.totalItems;
+            const completedItems = Object.keys(auditData.responses).length;
+            const percentage = Math.round((completedItems / totalItems) * 100);
+
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+            document.getElementById('progressText').textContent = `${completedItems} of ${totalItems} completed`;
+
+            auditData.progress = percentage;
+
+            // Enable submit button if all answered
+            const submitBtn = document.getElementById('submitBtn');
+            if (completedItems === totalItems) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        // Schedule auto-save
+        function scheduleAutosave() {
+            if (autosaveTimer) {
+                clearTimeout(autosaveTimer);
+            }
+            autosaveTimer = setTimeout(() => {
+                saveDraft(true);
+            }, 30000); // 30 seconds
+        }
+
+        // Save draft
+        function saveDraft(isAutoSave = false) {
+            localStorage.setItem(`audit_draft_${auditData.id}`, JSON.stringify(auditData));
+
+            if (!isAutoSave) {
+                showAutosaveIndicator('Draft saved');
+            } else {
+                showAutosaveIndicator();
+            }
+        }
+
+        // Show autosave indicator
+        function showAutosaveIndicator(text = 'Saved') {
+            const indicator = document.getElementById('autosaveIndicator');
+            indicator.textContent = text;
+            indicator.classList.add('show');
+
+            setTimeout(() => {
+                indicator.classList.remove('show');
+            }, 2000);
+        }
+
+        // Submit audit
+        async function submitAudit() {
+            // Show loading overlay
+            document.getElementById('loadingOverlay').style.display = 'flex';
+
+            // Simulate API call (2 seconds)
+            setTimeout(() => {
+                // Clear draft
+                localStorage.removeItem(`audit_draft_${auditData.id}`);
+
+                // Hide loading
+                document.getElementById('loadingOverlay').style.display = 'none';
+
+                // Show success screen
+                document.getElementById('successScreen').style.display = 'flex';
+            }, 2000);
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', loadAudit);
+    </script>
+</body>
+</html>

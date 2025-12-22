@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelVerse - Our Solution Ecosystem | CreativePixels</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #000000;
+            border-bottom: 2px solid #ffffff;
+            z-index: 1000;
+            padding: 1.5rem 2rem;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            opacity: 0.6;
+        }
+
+        .cta-btn {
+            padding: 0.75rem 1.75rem;
+            background: #ffffff;
+            color: #000000 !important;
+            border: 2px solid #ffffff;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            background: #000000;
+            color: #ffffff !important;
+        }
+
+        /* Banner Section */
+        .banner-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 3rem 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .banner-content {
+            max-width: 1000px;
+        }
+
+        .banner-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            opacity: 0.7;
+        }
+
+        .banner-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(3.5rem, 10vw, 8rem);
+            font-weight: 800;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+            line-height: 1;
+        }
+
+        .banner-subtitle {
+            font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+            line-height: 1.8;
+            opacity: 0.85;
+            margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 300;
+        }
+
+        .banner-cta {
+            display: inline-block;
+            padding: 1.25rem 3rem;
+            border: 2px solid #ffffff;
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .banner-cta:hover {
+            background: #ffffff;
+            color: #000000;
+        }
+
+        .scroll-down {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.875rem;
+            opacity: 0.5;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        .scroll-down::after {
+            content: '↓';
+            display: block;
+            text-align: center;
+            font-size: 1.5rem;
+            margin-top: 0.5rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+
+        /* Solutions Container */
+        .solutions-container {
+            min-height: 100vh;
+            height: 100vh;
+            padding: 0;
+            background: #000000;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Navigation Arrows */
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-arrow:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.6);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .nav-arrow.left {
+            left: 2rem;
+        }
+
+        .nav-arrow.right {
+            right: 2rem;
+        }
+
+        .nav-arrow svg {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: #ffffff;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .nav-arrow.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* Footer */
+        footer {
+            background: black;
+            color: white;
+            padding: 4rem 2rem 2rem;
+            border-top: 2px solid black;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 3rem;
+            padding-bottom: 3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .footer-brand h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-brand p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: white;
+            color: black;
+            border-color: white;
+        }
+
+        .footer-column h4 {
+            font-size: 1.125rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.875rem;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-legal a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+        }
+
+        .footer-legal a:hover {
+            color: white;
+        }
+
+        .scroll-wrapper {
+            width: 100%;
+            height: 100vh;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .scroll-wrapper::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cards-row {
+            display: flex;
+            align-items: center;
+            gap: 2.5rem;
+            padding: 0 0 0 calc(50vw - 275px);
+            width: fit-content;
+            min-height: 100vh;
+        }
+
+        .cards-row::after {
+            content: '';
+            display: block;
+            width: calc(50vw - 275px);
+            flex-shrink: 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            opacity: 0.7;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+        }
+
+        .section-description {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            line-height: 1.7;
+            opacity: 0.8;
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* Solution Cards */
+        .solution-card {
+            border: 1px solid #ffffff;
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            background: #000000;
+            position: relative;
+            transition: all 0.3s ease;
+            width: 480px;
+            min-height: 550px;
+            flex-shrink: 0;
+            cursor: pointer;
+            scroll-snap-align: center;
+        }
+
+        .solution-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .solution-image {
+            width: 100%;
+            height: 180px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .solution-image img {
+            width: 100%;
+            height: 100%;
+            filter: grayscale(100%) contrast(1.1) brightness(1.05);
+            opacity: 0.85;
+            transition: all 0.4s ease;
+            object-fit: cover;
+        }
+
+        .solution-card:hover {
+            background: #ffffff;
+            color: #000000;
+            transform: translateY(-8px);
+            box-shadow: 0 0 0 1px #ffffff;
+        }
+
+        .solution-card:hover .solution-image img {
+            filter: grayscale(100%) contrast(1.2) brightness(0.95) invert(1);
+            opacity: 0.95;
+            transform: scale(1.05);
+            border-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .solution-card:hover .solution-number,
+        .solution-card:hover .solution-title,
+        .solution-card:hover .solution-description,
+        .solution-card:hover .solution-features,
+        .solution-card:hover .solution-status,
+        .solution-card:hover .solution-stats {
+            color: #000000;
+        }
+
+        .solution-card:hover .feature-dot,
+        .solution-card:hover .stat-icon {
+            background: #000000;
+        }
+
+        .solution-card.coming-soon {
+            opacity: 0.5;
+            cursor: default;
+        }
+
+        .solution-card.coming-soon:hover {
+            background: #000000;
+            color: #ffffff;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .solution-card.coming-soon:hover .solution-image img {
+            filter: grayscale(100%) contrast(1.1) brightness(1.05);
+            opacity: 0.85;
+            transform: scale(1);
+        }
+
+        .solution-card.coming-soon:hover .solution-number,
+        .solution-card.coming-soon:hover .solution-title,
+        .solution-card.coming-soon:hover .solution-description,
+        .solution-card.coming-soon:hover .solution-status {
+            color: #ffffff;
+        }
+
+        .solution-card.coming-soon:hover .feature-dot {
+            background: #ffffff;
+        }
+
+        .solution-number {
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+            text-transform: uppercase;
+        }
+
+        .solution-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.01em;
+            line-height: 1.3;
+        }
+
+        .solution-description {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            opacity: 0.85;
+            font-weight: 300;
+        }
+
+        .solution-stats {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: transparent;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .stat-label {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .solution-features {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+            flex: 1;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .feature-dot {
+            width: 4px;
+            height: 4px;
+            background: #ffffff;
+            margin-top: 0.6rem;
+            flex-shrink: 0;
+            border-radius: 50%;
+        }
+
+        .feature-text {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            font-weight: 400;
+        }
+
+        .solution-status {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 1rem 2rem;
+            border: 1px solid #ffffff;
+            display: inline-block;
+            width: fit-content;
+            transition: all 0.3s ease;
+        }
+
+        .solution-card.coming-soon .solution-status {
+            border-style: dashed;
+        }
+
+        /* Scroll Down Indicator */
+        .scroll-down {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            opacity: 0.6;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        .scroll-down::after {
+            content: '↓';
+            display: block;
+            text-align: center;
+            margin-top: 0.5rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-menu {
+                gap: 1.5rem;
+            }
+
+            .nav-menu a {
+                font-size: 0.85rem;
+            }
+
+            .logo {
+                font-size: 1.25rem;
+            }
+
+            .banner-section {
+                padding: 90px 1.5rem 1.5rem;
+            }
+
+            .nav-arrow {
+                width: 50px;
+                height: 50px;
+            }
+
+            .nav-arrow.left {
+                left: 1rem;
+            }
+
+            .nav-arrow.right {
+                right: 1rem;
+            }
+
+            .nav-arrow svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .cards-row {
+                padding-left: calc(50vw - 175px);
+                gap: 1.5rem;
+            }
+
+            .cards-row::after {
+                width: calc(50vw - 175px);
+            }
+
+            .solution-card {
+                width: 350px;
+                padding: 2rem;
+                min-height: 450px;
+            }
+
+            .solution-image {
+                height: 150px;
+            }
+
+            .solution-title {
+                font-size: 1.75rem;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+
+            .footer-legal {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="home.html" class="logo">CreativePixels</a>
+            <ul class="nav-menu">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="pixelgram.html">PixelGram</a></li>
+                <li><a href="pixel-world.html">Pixel World</a></li>
+                <li><a href="pixelverse.html">PixelVerse</a></li>
+                <li><a href="get-in-touch.html" class="cta-btn">Get in Touch</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Banner Section -->
+    <section class="banner-section">
+        <div class="banner-content">
+            <div class="banner-label">Explore Our Solutions</div>
+            <h1 class="banner-title">PixelVerse</h1>
+            <p class="banner-subtitle">
+                Your gateway to enterprise-grade solutions. Discover comprehensive platforms designed to transform operations, 
+                streamline workflows, and drive innovation across industries.
+            </p>
+            <a href="#solution-01" class="banner-cta">Explore Solutions</a>
+        </div>
+        <div class="scroll-down">Scroll Down</div>
+    </section>
+
+    <!-- Solutions Container -->
+    <div class="solutions-container">
+        <div class="scroll-wrapper">
+            <div class="cards-row">
+                
+                <!-- Card 01: WMS -->
+                <div class="solution-card" id="solution-01" onclick="window.location.href='../frontend/WMS/PixelLogistics.html'" style="cursor: pointer;">
+                    <div class="solution-image">
+                        <img src="images/products/wms-dashboard.png" alt="Warehouse Management Dashboard">
+                    </div>
+                    <div class="solution-content">
+                        <div class="solution-number">01</div>
+                        <h2 class="solution-title">Warehouse Management</h2>
+                        <p class="solution-description">Smart warehouse operations with real-time inventory tracking and automated workflows.</p>
+                        
+                        <div class="solution-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">99.9%</div>
+                                <div class="stat-label">Accuracy</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">40%</div>
+                                <div class="stat-label">Cost Cut</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">24/7</div>
+                                <div class="stat-label">Active</div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-features">
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Real-time inventory with barcode/RFID</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Intelligent space optimization</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Automated picking & packing</div>
+                            </div>
+                        </div>
+                        
+                        <a href="../frontend/WMS/PixelLogistics.html" style="display: block; padding: 1rem; background: #ffffff; color: #000000; text-align: center; text-decoration: none; font-weight: 600; border: 1px solid #ffffff; transition: all 0.3s ease; margin-top: auto;" onmouseover="this.style.background='#000000'; this.style.color='#ffffff';" onmouseout="this.style.background='#ffffff'; this.style.color='#000000';">Explore Solution →</a>
+                    </div>
+                </div>
+
+                <!-- Card 02: TMS -->
+                <div class="solution-card" id="solution-02" onclick="window.location.href='../frontend/WMS/PixelLogistics.html'" style="cursor: pointer;">
+                    <div class="solution-image">
+                        <img src="images/products/tms-dashboard.png" alt="Transport Management Dashboard">
+                    </div>
+                    <div class="solution-content">
+                        <div class="solution-number">02</div>
+                        <h2 class="solution-title">Transport Management</h2>
+                        <p class="solution-description">AI-powered logistics with route optimization and real-time fleet tracking.</p>
+                        
+                        <div class="solution-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">35%</div>
+                                <div class="stat-label">Fuel Save</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">98%</div>
+                                <div class="stat-label">On-Time</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">Live</div>
+                                <div class="stat-label">GPS</div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-features">
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">AI route optimization</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Automated dispatch</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Fleet maintenance tracking</div>
+                            </div>
+                        </div>
+                        
+                        <a href="../frontend/WMS/PixelLogistics.html" style="display: block; padding: 1rem; background: #ffffff; color: #000000; text-align: center; text-decoration: none; font-weight: 600; border: 1px solid #ffffff; transition: all 0.3s ease; margin-top: auto;" onmouseover="this.style.background='#000000'; this.style.color='#ffffff';" onmouseout="this.style.background='#ffffff'; this.style.color='#000000';">Explore Solution →</a>
+                    </div>
+                </div>
+
+                <!-- Card 03: PIS -->
+                <div class="solution-card" id="solution-03" onclick="window.location.href='../frontend/PIS/index.html'" style="cursor: pointer;">
+                    <div class="solution-image">
+                        <img src="images/products/insurance-banner.png" alt="Insurance Solution Dashboard">
+                    </div>
+                    <div class="solution-content">
+                        <div class="solution-number">03</div>
+                        <h2 class="solution-title">Pixel Safe Insurance</h2>
+                        <p class="solution-description">Complete insurance platform with policy management and automated claims.</p>
+                        
+                        <div class="solution-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">60%</div>
+                                <div class="stat-label">Faster</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">100%</div>
+                                <div class="stat-label">Compliant</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">5★</div>
+                                <div class="stat-label">Rated</div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-features">
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Policy lifecycle automation</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Automated claims processing</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Integrated CRM portal</div>
+                            </div>
+                        </div>
+                        
+                        <a href="../frontend/PIS/index.html" style="display: block; padding: 1rem; background: #ffffff; color: #000000; text-align: center; text-decoration: none; font-weight: 600; border: 1px solid #ffffff; transition: all 0.3s ease; margin-top: auto;" onmouseover="this.style.background='#000000'; this.style.color='#ffffff';" onmouseout="this.style.background='#ffffff'; this.style.color='#000000';">Explore Solution →</a>
+                    </div>
+                </div>
+
+                <!-- Card 04: Pi-Trip -->
+                <div class="solution-card" id="solution-04" onclick="window.location.href='../frontend/Pi-Trip/index.html'" style="cursor: pointer;">
+                    <div class="solution-image">
+                        <img src="images/products/advocate-banner.png" alt="Pi-Trip Road Trip Platform">
+                    </div>
+                    <div class="solution-content">
+                        <div class="solution-number">04</div>
+                        <h2 class="solution-title">Pi-Trip</h2>
+                        <p class="solution-description">Collaborative road trip planning platform for riders and travelers across India.</p>
+                        
+                        <div class="solution-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">10K+</div>
+                                <div class="stat-label">Routes</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">Live</div>
+                                <div class="stat-label">GPS</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">Free</div>
+                                <div class="stat-label">Plan</div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-features">
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Collaborative trip planning</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Real-time group tracking</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Rider-friendly amenities</div>
+                            </div>
+                        </div>
+                        
+                        <a href="../frontend/Pi-Trip/index.html" style="display: block; padding: 1rem; background: #ffffff; color: #000000; text-align: center; text-decoration: none; font-weight: 600; border: 1px solid #ffffff; transition: all 0.3s ease; margin-top: auto;" onmouseover="this.style.background='#000000'; this.style.color='#ffffff';" onmouseout="this.style.background='#ffffff'; this.style.color='#000000';">Explore Solution →</a>
+                    </div>
+                </div>
+
+                <!-- Card 05: EMS -->
+                <div class="solution-card" id="solution-05" onclick="window.location.href='../frontend/EMS/index.html'" style="cursor: pointer;">
+                    <div class="solution-image">
+                        <img src="images/products/advocate-banner.png" alt="E-commerce Management">
+                    </div>
+                    <div class="solution-content">
+                        <div class="solution-number">05</div>
+                        <h2 class="solution-title">Pixel Commerce</h2>
+                        <p class="solution-description">Multi-platform e-commerce management for seamless online business operations.</p>
+                        
+                        <div class="solution-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">10+</div>
+                                <div class="stat-label">Platforms</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">Real-time</div>
+                                <div class="stat-label">Sync</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">24/7</div>
+                                <div class="stat-label">Support</div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-features">
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Unified dashboard</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Inventory sync across platforms</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Order & fulfillment automation</div>
+                            </div>
+                        </div>
+                        
+                        <a href="../frontend/EMS/index.html" style="display: block; padding: 1rem; background: #ffffff; color: #000000; text-align: center; text-decoration: none; font-weight: 600; border: 1px solid #ffffff; transition: all 0.3s ease; margin-top: auto;" onmouseover="this.style.background='#000000'; this.style.color='#ffffff';" onmouseout="this.style.background='#ffffff'; this.style.color='#000000';">Explore Solution →</a>
+                    </div>
+                </div>
+
+                <!-- Card 06: HRMS -->
+                <div class="solution-card" id="solution-06" onclick="window.location.href='../frontend/HRMS/index.html'" style="cursor: pointer;">
+                    <div class="solution-image">
+                        <img src="images/products/advocate-banner.png" alt="HR Management System">
+                    </div>
+                    <div class="solution-content">
+                        <div class="solution-number">06</div>
+                        <h2 class="solution-title">Pixel Resource</h2>
+                        <p class="solution-description">Enterprise HR platform for complete employee lifecycle management.</p>
+                        
+                        <div class="solution-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">500+</div>
+                                <div class="stat-label">Companies</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">70%</div>
+                                <div class="stat-label">Time Save</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">All</div>
+                                <div class="stat-label">Industries</div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-features">
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Attendance & shift management</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Automated payroll processing</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Performance & analytics</div>
+                            </div>
+                        </div>
+                        
+                        <a href="../frontend/HRMS/index.html" style="display: block; padding: 1rem; background: #ffffff; color: #000000; text-align: center; text-decoration: none; font-weight: 600; border: 1px solid #ffffff; transition: all 0.3s ease; margin-top: auto;" onmouseover="this.style.background='#000000'; this.style.color='#ffffff';" onmouseout="this.style.background='#ffffff'; this.style.color='#000000';">Explore Solution →</a>
+                    </div>
+                </div>
+
+                <!-- Card 07: PixelNotes -->
+                <div class="solution-card" id="solution-07" onclick="window.location.href='../frontend/PixelNotes/landing.html'" style="cursor: pointer;">
+                    <div class="solution-image">
+                        <img src="images/products/advocate-banner.png" alt="PixelNotes Smart Note-Taking">
+                    </div>
+                    <div class="solution-content">
+                        <div class="solution-number">07</div>
+                        <h2 class="solution-title">PixelNotes</h2>
+                        <p class="solution-description">Smart note-taking with voice input, auto-timestamps, image upload, and AI assistance.</p>
+                        
+                        <div class="solution-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">AI</div>
+                                <div class="stat-label">Powered</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">Voice</div>
+                                <div class="stat-label">Input</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">Free</div>
+                                <div class="stat-label">Forever</div>
+                            </div>
+                        </div>
+                        
+                        <div class="solution-features">
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Voice-to-text with smart pauses</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Auto timestamps & daily sections</div>
+                            </div>
+                            <div class="feature-item">
+                                <span class="feature-dot"></span>
+                                <div class="feature-text">Image upload with OCR scanning</div>
+                            </div>
+                        </div>
+                        
+                        <a href="../frontend/PixelNotes/landing.html" style="display: block; padding: 1rem; background: #ffffff; color: #000000; text-align: center; text-decoration: none; font-weight: 600; border: 1px solid #ffffff; transition: all 0.3s ease; margin-top: auto;" onmouseover="this.style.background='#000000'; this.style.color='#ffffff';" onmouseout="this.style.background='#ffffff'; this.style.color='#000000';">Explore Solution →</a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+
+        <!-- Navigation Arrows -->
+        <div class="nav-arrow left" id="navLeft">
+            <svg viewBox="0 0 24 24">
+                <path d="M15 18l-6-6 6-6"/>
+            </svg>
+        </div>
+        <div class="nav-arrow right" id="navRight">
+            <svg viewBox="0 0 24 24">
+                <path d="M9 18l6-6-6-6"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>CreativePixels</h3>
+                    <p>Transforming thoughts into monetizable products through innovative design, machine learning, and creative problem-solving.</p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                <rect x="2" y="9" width="4" height="12"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Email">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about-us.html">About Us</a></li>
+                        <li><a href="our-approach.html">Our Approach</a></li>
+                        <li><a href="pixel-world.html">Pixel World</a></li>
+                        <li><a href="pixelgram.html">PixelGram</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="digital-transformation.html">Digital Transformation</a></li>
+                        <li><a href="ai-ml.html">AI & Machine Learning</a></li>
+                        <li><a href="product-design.html">Product Design</a></li>
+                        <li><a href="development.html">Development</a></li>
+                        <li><a href="consulting.html">Consulting</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="get-in-touch.html">Get in Touch</a></li>
+                        <li><a href="support.html">Support</a></li>
+                        <li><a href="partners.html">Partners</a></li>
+                        <li><a href="press-kit.html">Press Kit</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 CreativePixels. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
+                    <a href="cookie-policy.html">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Horizontal scroll navigation
+        const scrollWrapper = document.querySelector('.scroll-wrapper');
+        const navLeft = document.getElementById('navLeft');
+        const navRight = document.getElementById('navRight');
+        const cardWidth = 550 + 40; // card width + gap
+
+        function updateArrows() {
+            const scrollLeft = scrollWrapper.scrollLeft;
+            const maxScroll = scrollWrapper.scrollWidth - scrollWrapper.clientWidth;
+            
+            // Update left arrow
+            if (scrollLeft <= 10) {
+                navLeft.classList.add('disabled');
+            } else {
+                navLeft.classList.remove('disabled');
+            }
+            
+            // Update right arrow
+            if (scrollLeft >= maxScroll - 10) {
+                navRight.classList.add('disabled');
+            } else {
+                navRight.classList.remove('disabled');
+            }
+        }
+
+        navLeft.addEventListener('click', () => {
+            scrollWrapper.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+        });
+
+        navRight.addEventListener('click', () => {
+            scrollWrapper.scrollBy({ left: cardWidth, behavior: 'smooth' });
+        });
+
+        scrollWrapper.addEventListener('scroll', updateArrows);
+        
+        // Initial arrow state
+        updateArrows();
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                scrollWrapper.scrollBy({ left: -cardWidth, behavior: 'smooth' });
+            } else if (e.key === 'ArrowRight') {
+                scrollWrapper.scrollBy({ left: cardWidth, behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>

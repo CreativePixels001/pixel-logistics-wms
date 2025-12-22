@@ -407,7 +407,7 @@ class PushNotificationManager {
    */
   testNotification() {
     this.showNotification('Test Notification', {
-      body: 'This is a test notification from DLT WMS',
+      body: 'This is a test notification from Pixel WMS',
       icon: '/icons/icon-192x192.png',
       badge: '/icons/badge-72x72.png',
       tag: 'test-notification',

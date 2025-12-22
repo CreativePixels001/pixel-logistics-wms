@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary Meta Tags -->
+    <title>Pixel Play - Free Online Music Player with Retro Vinyl Experience | Stream YouTube Music</title>
+    <meta name="title" content="Pixel Play - Free Online Music Player with Retro Vinyl Experience | Stream YouTube Music">
+    <meta name="description" content="Pixel Play is a free online music player with nostalgic vinyl aesthetics. Stream unlimited music from YouTube, create playlists, save favorites, and enjoy retro vibes. No ads, no subscriptions - just pure music. Play music online free now!">
+    <meta name="keywords" content="pixel play, free music player, online music player, youtube music player, retro music player, vinyl music player, stream music free, play music online, music streaming, nostalgic music player, free music streaming, web music player, aesthetic music player">
+    <meta name="author" content="Creative Pixels">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Open Graph / Facebook Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://play.creativepixels.in/">
+    <meta property="og:title" content="Pixel Play - Free Online Music Player with Retro Vinyl Experience">
+    <meta property="og:description" content="Stream unlimited music for free with Pixel Play's beautiful retro vinyl interface. Search YouTube, save favorites, and enjoy nostalgic vibes. No ads, no subscriptions!">
+    <meta property="og:image" content="https://play.creativepixels.in/SharePixel.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:site_name" content="Pixel Play">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://play.creativepixels.in/">
+    <meta name="twitter:title" content="Pixel Play - Free Online Music Player with Retro Vinyl Experience">
+    <meta name="twitter:description" content="Stream unlimited music for free with Pixel Play's beautiful retro vinyl interface. No ads, no subscriptions!">
+    <meta name="twitter:image" content="https://play.creativepixels.in/SharePixel.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://play.creativepixels.in/">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="PixelPlayLogo-White.svg">
+    <link rel="apple-touch-icon" href="PixelPlayLogo-White.svg">
+    
+    <!-- Structured Data / Schema.org -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Pixel Play",
+      "alternateName": "Pixel Play Music Player",
+      "url": "https://creativepixels.in/pixel-music/",
+      "logo": "https://creativepixels.in/pixel-music/PixelPlayLogo-White.svg",
+      "description": "Free online music player with retro vinyl aesthetics. Stream unlimited music from YouTube with beautiful interface. No ads, no subscriptions.",
+      "applicationCategory": "MultimediaApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "ratingCount": "61"
+      },
+      "featureList": [
+        "Stream music from YouTube",
+        "Retro vinyl interface",
+        "Save favorite songs",
+        "Create playlists",
+        "No advertisements",
+        "Free unlimited streaming",
+        "Mobile responsive",
+        "Background playback",
+        "Keyboard shortcuts"
+      ]
+    }
+    </script>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KYS6H6HWBL"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KYS6H6HWBL');
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-card: #111111;
+            --text-light: #ffffff;
+            --text-dim: #888888;
+            --accent: #ffffff;
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: #000000;
+            color: var(--text-light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+            animation: gradientShift 15s ease infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 4rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Navigation */
+        .nav {
+            padding: 2rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-logo img {
+            width: 45px;
+            height: 45px;
+        }
+
+        .nav-brand {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            letter-spacing: 3px;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 90vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6rem;
+            align-items: center;
+            padding: 4rem 0;
+        }
+
+        .hero-content h1 {
+            font-size: 5.5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -2px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-content h1 .highlight {
+            background: linear-gradient(135deg, #ffffff 0%, #666666 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-dim);
+            margin-bottom: 3rem;
+            line-height: 1.8;
+            max-width: 500px;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .btn-primary {
+            padding: 1.3rem 3rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            color: #000000;
+            background: #ffffff;
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-secondary {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            gap: 1rem;
+            color: var(--accent);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 3rem;
+            animation: fadeInUp 0.8s ease-out 0.6s backwards;
+        }
+
+        .stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Hero Visual */
+        .hero-visual {
+            position: relative;
+            animation: fadeInRight 1s ease-out 0.4s backwards;
+        }
+
+        .vinyl-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vinyl-disc {
+            width: 450px;
+            height: 450px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6),
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .vinyl-disc::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, #2a2a2a 0%, #0a0a0a 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .vinyl-disc::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: #000000;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            z-index: 2;
+        }
+
+        .logo-overlay img {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 10px 30px rgba(255, 255, 255, 0.3));
+        }
+
+        /* Features Grid */
+        .features-section {
+            padding: 6rem 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .feature-desc {
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        /* Footer CTA */
+        .footer-cta {
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+
+        .footer-cta h2 {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            line-height: 1.2;
+        }
+
+        .footer-cta p {
+            font-size: 1.3rem;
+            color: var(--text-dim);
+            margin-bottom: 3rem;
+        }
+
+        .footer {
+            padding: 3rem 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: var(--text-dim);
+            text-decoration: none;
+            margin: 0 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer a:hover {
+            color: var(--text-light);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-25px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 0 2rem;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 4rem;
+                text-align: center;
+            }
+
+            /* Reorder: Logo first, then content */
+            .hero-visual {
+                order: -1;
+            }
+
+            .hero-content h1 {
+                font-size: 4rem;
+            }
+
+            .hero-subtitle {
+                max-width: 100%;
+            }
+
+            .hero-cta {
+                justify-content: center;
+            }
+
+            .hero-stats {
+                justify-content: center;
+            }
+
+            .vinyl-disc {
+                width: 350px;
+                height: 350px;
+            }
+
+            .logo-overlay {
+                width: 360px;
+                height: 360px;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn-primary, .btn-secondary {
+                text-align: center;
+                justify-content: center;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 2.5rem;
+            }
+
+            .footer-cta h2 {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="nav">
+            <div class="nav-logo">
+                <img src="PixelPlayLogo-White.svg" alt="Pixel Play">
+                <span class="nav-brand">PIXEL PLAY</span>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>
+                    Free Online
+                    <span class="highlight">Music Player</span>
+                    With Retro Vibes
+                </h1>
+                <p class="hero-subtitle">
+                    Stream unlimited music for free with Pixel Play's nostalgic vinyl player. 
+                    No ads, no subscriptions—just pure music and beautiful design.
+                </p>
+                <div class="hero-cta">
+                    <a href="index.html" class="btn-primary">
+                        GET STARTED <i class="bi bi-arrow-right"></i>
+                    </a>
+                    <a href="#features" class="btn-secondary">
+                        Learn More <i class="bi bi-chevron-down"></i>
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">1000+</div>
+                        <div class="stat-label">Songs Played</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Beyond Imagination</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">Your Mood</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="vinyl-container">
+                    <div class="vinyl-disc"></div>
+                    <div class="logo-overlay">
+                        <img src="PixelPlayLogo-White.svg" alt="Pixel Play">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" id="features">
+            <div class="section-header">
+                <h2 class="section-title">Why Choose Pixel Play</h2>
+                <p class="section-subtitle">Everything you need for the perfect listening experience</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-infinity"></i>
+                    </div>
+                    <h3 class="feature-title">Unlimited Music</h3>
+                    <p class="feature-desc">Access millions of songs from YouTube. Search and play anything, anytime.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-heart-fill"></i>
+                    </div>
+                    <h3 class="feature-title">Your Library</h3>
+                    <p class="feature-desc">Save your favorite tracks in a personal library for instant access.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-vinyl"></i>
+                    </div>
+                    <h3 class="feature-title">Retro Aesthetic</h3>
+                    <p class="feature-desc">Beautiful vinyl player design with animated disc and tonearm.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-repeat"></i>
+                    </div>
+                    <h3 class="feature-title">Smart Autoplay</h3>
+                    <p class="feature-desc">Continuous playback keeps your music flowing without interruption.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-phone"></i>
+                    </div>
+                    <h3 class="feature-title">Mobile Ready</h3>
+                    <p class="feature-desc">Responsive design with background playback on mobile devices.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="bi bi-lightning-fill"></i>
+                    </div>
+                    <h3 class="feature-title">Lightning Fast</h3>
+                    <p class="feature-desc">Keyboard shortcuts and optimized performance for power users.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEO Content Section -->
+        <section style="padding: 6rem 0; max-width: 900px; margin: 0 auto;">
+            <h2 style="font-size: 2.5rem; font-weight: 700; margin-bottom: 2rem; text-align: center;">
+                The Best Free Online Music Player for 2025
+            </h2>
+            
+            <div style="color: var(--text-dim); line-height: 1.9; font-size: 1.05rem;">
+                <p style="margin-bottom: 1.5rem;">
+                    <strong style="color: var(--text-light);">Pixel Play</strong> is a completely free online music player that brings back the nostalgic charm of vinyl records while delivering modern streaming capabilities. Whether you're searching for <strong style="color: var(--text-light);">free music streaming</strong>, a <strong style="color: var(--text-light);">YouTube music player</strong>, or simply want to <strong style="color: var(--text-light);">play music online</strong> without interruptions, Pixel Play is your perfect companion.
+                </p>
+                
+                <h3 style="font-size: 1.8rem; color: var(--text-light); margin: 3rem 0 1.5rem;">
+                    Why Choose Pixel Play Music Player?
+                </h3>
+                
+                <p style="margin-bottom: 1.5rem;">
+                    Unlike other music streaming services that require subscriptions or bombard you with ads, <strong style="color: var(--text-light);">Pixel Play offers unlimited free music streaming</strong> with zero interruptions. Our retro-inspired vinyl interface isn't just beautiful—it's functional, fast, and designed for music lovers who appreciate both aesthetics and performance.
+                </p>
+                
+                <ul style="margin: 2rem 0; padding-left: 2rem; line-height: 2.2;">
+                    <li><strong style="color: var(--text-light);">100% Free Forever</strong> - No premium tiers, no hidden fees, no credit cards required</li>
+                    <li><strong style="color: var(--text-light);">No Advertisements</strong> - Enjoy uninterrupted music playback without annoying ads</li>
+                    <li><strong style="color: var(--text-light);">Unlimited Streaming</strong> - Search and play millions of songs from YouTube's vast library</li>
+                    <li><strong style="color: var(--text-light);">Works Everywhere</strong> - Play music on desktop, mobile, tablet - no app download needed</li>
+                    <li><strong style="color: var(--text-light);">Save Your Favorites</strong> - Build your personal music library and access it anytime</li>
+                    <li><strong style="color: var(--text-light);">Retro Vinyl Design</strong> - Beautiful interface with animated vinyl disc and tonearm</li>
+                </ul>
+                
+                <h3 style="font-size: 1.8rem; color: var(--text-light); margin: 3rem 0 1.5rem;">
+                    Features That Make Pixel Play Stand Out
+                </h3>
+                
+                <p style="margin-bottom: 1.5rem;">
+                    Our <strong style="color: var(--text-light);">web-based music player</strong> combines the best of modern technology with nostalgic design. The animated vinyl disc spins as your music plays, creating an immersive experience that transports you back to the golden age of music while enjoying today's hits.
+                </p>
+                
+                <p style="margin-bottom: 1.5rem;">
+                    With <strong style="color: var(--text-light);">smart autoplay</strong>, keyboard shortcuts (press Space to play/pause, Arrow keys to skip), and mobile-optimized controls, Pixel Play works seamlessly across all your devices. The background playback feature means your music continues even when you switch tabs or lock your phone.
+                </p>
+                
+                <h3 style="font-size: 1.8rem; color: var(--text-light); margin: 3rem 0 1.5rem;">
+                    Perfect for Every Music Lover
+                </h3>
+                
+                <p style="margin-bottom: 1.5rem;">
+                    Whether you're studying, working, exercising, or just relaxing, <strong style="color: var(--text-light);">Pixel Play makes listening to music online effortless</strong>. Search for any artist, song, or genre, and start streaming instantly. No sign-up required, no downloads, no hassle—just pure music enjoyment.
+                </p>
+                
+                <p style="margin-bottom: 1.5rem;">
+                    Join thousands of music enthusiasts who've made Pixel Play their go-to <strong style="color: var(--text-light);">free online music player</strong>. Experience the difference of a music player that's built by music lovers, for music lovers.
+                </p>
+            </div>
+        </section>
+
+        <!-- Footer CTA -->
+        <section class="footer-cta">
+            <h2>Ready to feel the music?</h2>
+            <p>Join 50+ active users who've already discovered a better way to listen</p>
+            <a href="index.html" class="btn-primary">
+                Launch Player <i class="bi bi-play-circle-fill"></i>
+            </a>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2025 Pixel Play - Free Online Music Player. A Creative Pixels Production.</p>
+            <p style="margin-top: 0.5rem;">
+                <a href="privacy-policy.html" style="color: var(--text-dim); text-decoration: none; margin: 0 1rem;">Privacy Policy</a>
+                <a href="terms-of-service.html" style="color: var(--text-dim); text-decoration: none; margin: 0 1rem;">Terms of Service</a>
+            </p>
+            <p style="margin-top: 1.5rem; font-size: 0.9rem; color: rgba(255,255,255,0.3);">
+                Keywords: pixel play, free music player, online music player, youtube music player, stream music free, play music online, retro vinyl player, aesthetic music player, web music player, free music streaming, music player no ads
+            </p>
+        </footer>
+    </div>
+</body>
+</html>

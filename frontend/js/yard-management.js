@@ -121,7 +121,91 @@ document.addEventListener('DOMContentLoaded', () => {
   renderYardTable();
   renderYardMap();
   updateDashboardStats();
+  initializeViewToggle();
 });
+
+/**
+ * Initialize view toggle
+ */
+function initializeViewToggle() {
+  const viewBtns = document.querySelectorAll('.view-btn');
+  viewBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      viewBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+}
+
+/**
+ * Switch between table and grid view
+ */
+function switchView(view) {
+  const tableView = document.getElementById('tableView');
+  const gridView = document.getElementById('gridView');
+  
+  if (view === 'grid') {
+    tableView.style.display = 'none';
+    gridView.style.display = 'block';
+    renderTrailerGrid();
+  } else {
+    tableView.style.display = 'block';
+    gridView.style.display = 'none';
+  }
+}
+
+/**
+ * Render trailer grid view
+ */
+function renderTrailerGrid() {
+  const gridView = document.getElementById('gridView');
+  const filteredData = currentFilter === 'all' 
+    ? yardData 
+    : currentFilter === 'detention'
+    ? yardData.filter(t => t.detentionHours > 2)
+    : yardData.filter(t => t.status === currentFilter);
+  
+  if (filteredData.length === 0) {
+    gridView.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-tertiary);">No trailers found</div>';
+    return;
+  }
+  
+  gridView.innerHTML = filteredData.map(trailer => `
+    <div class="trailer-card" onclick="viewTrailerDetails('${trailer.id}')">
+      <div class="trailer-card-header">
+        <div>
+          <div class="trailer-card-number">${trailer.trailerNumber}</div>
+          <div class="trailer-card-carrier">${trailer.carrier}</div>
+        </div>
+        ${getStatusBadge(trailer.status)}
+      </div>
+      <div class="trailer-card-body">
+        <div class="trailer-card-row">
+          <span class="trailer-card-label">Location:</span>
+          <span class="trailer-card-value">${trailer.location}</span>
+        </div>
+        <div class="trailer-card-row">
+          <span class="trailer-card-label">Type:</span>
+          <span class="trailer-card-value">${trailer.type}</span>
+        </div>
+        <div class="trailer-card-row">
+          <span class="trailer-card-label">Duration:</span>
+          <span class="trailer-card-value">${calculateDuration(trailer.checkInTime)}</span>
+        </div>
+        ${trailer.detentionHours > 2 ? `
+        <div class="trailer-card-row">
+          <span class="trailer-card-label">Detention:</span>
+          <span class="trailer-card-value" style="color: #ef4444;">${trailer.detentionHours}h</span>
+        </div>
+        ` : ''}
+      </div>
+      <div class="trailer-card-footer">
+        <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); openMovePanel('${trailer.id}')">Move</button>
+        <button class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); checkOutTrailer('${trailer.id}')">Check-Out</button>
+      </div>
+    </div>
+  `).join('');
+}
 
 /**
  * Update dashboard statistics
@@ -334,7 +418,7 @@ function submitCheckIn(event) {
   
   yardData.unshift(newTrailer);
   
-  closeModal('checkInModal');
+  closeSidePopup('checkInPanel');
   renderYardTable();
   renderYardMap();
   updateDashboardStats();
@@ -373,7 +457,7 @@ function confirmMove() {
   selectedTrailer.location = newLocation;
   selectedTrailer.status = newLocation.startsWith('DOCK') ? 'at_dock' : 'in_yard';
   
-  closeModal('moveModal');
+  closeSidePopup('movePanel');
   renderYardTable();
   renderYardMap();
   updateDashboardStats();
@@ -413,7 +497,7 @@ function viewTrailerDetails(trailerId) {
     </div>
   `;
   
-  openModal('detailsModal');
+  openSidePopup('detailsPanel');
 }
 
 /**
@@ -486,3 +570,46 @@ function toggleSidebarSection(element) {
     icon.style.transform = 'rotate(-90deg)';
   }
 }
+
+/**
+ * Open side popup
+ */
+function openSidePopup(popupId) {
+  const popup = document.getElementById(popupId);
+  if (popup) {
+    popup.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+/**
+ * Close side popup
+ */
+function closeSidePopup(popupId) {
+  const popup = document.getElementById(popupId);
+  if (popup) {
+    popup.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+
+/**
+ * Update function names to use side popups instead of modals
+ */
+function openCheckInModal() {
+  openSidePopup('checkInPanel');
+  document.getElementById('checkInForm').reset();
+}
+
+function openMoveModal(trailerId) {
+  selectedTrailer = yardData.find(t => t.id === trailerId);
+  if (!selectedTrailer) return;
+  
+  document.getElementById('moveTrailerNumber').textContent = selectedTrailer.trailerNumber;
+  document.getElementById('currentLocation').textContent = selectedTrailer.location;
+  document.getElementById('newLocation').value = '';
+  document.getElementById('moveReason').value = '';
+  
+  openSidePopup('movePanel');
+}
+

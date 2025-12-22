@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Pixel Resource</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/common-styles.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>Pixel Resource</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="dashboard.html" class="nav-link active">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"/>
+                            <rect x="14" y="3" width="7" height="7"/>
+                            <rect x="14" y="14" width="7" height="7"/>
+                            <rect x="3" y="14" width="7" height="7"/>
+                        </svg>
+                        Dashboard
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Employee Management</div>
+                    <a href="employees/directory.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        Employee Directory
+                    </a>
+                    <a href="employees/add.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <line x1="20" y1="8" x2="20" y2="14"/>
+                            <line x1="23" y1="11" x2="17" y2="11"/>
+                        </svg>
+                        Add Employee
+                    </a>
+                    <a href="employees/documents.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Documents
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Attendance & Shifts</div>
+                    <a href="attendance/daily.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        Daily Attendance
+                    </a>
+                    <a href="attendance/duty-roster.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Duty Roster
+                        <span class="nav-badge">New</span>
+                    </a>
+                    <a href="attendance/shifts.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                        Shift Management
+                    </a>
+                    <a href="attendance/overtime.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        Overtime
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Leave Management</div>
+                    <a href="leave/applications.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                        Leave Applications
+                        <span class="nav-badge warning">5</span>
+                    </a>
+                    <a href="leave/calendar.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        Leave Calendar
+                    </a>
+                    <a href="leave/balance.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="20" x2="18" y2="10"/>
+                            <line x1="12" y1="20" x2="12" y2="4"/>
+                            <line x1="6" y1="20" x2="6" y2="14"/>
+                        </svg>
+                        Leave Balance
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Payroll</div>
+                    <a href="payroll/process.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"/>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        Process Payroll
+                    </a>
+                    <a href="payroll/payslips.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        Payslips
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Recruitment</div>
+                    <a href="recruitment/jobs.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                        </svg>
+                        Job Postings
+                    </a>
+                    <a href="recruitment/applications.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="8.5" cy="7" r="4"/>
+                            <line x1="20" y1="8" x2="20" y2="14"/>
+                            <line x1="23" y1="11" x2="17" y2="11"/>
+                        </svg>
+                        Applications
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Performance</div>
+                    <a href="performance/appraisals.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                        Appraisals
+                    </a>
+                    <a href="performance/training.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        </svg>
+                        Training
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="settings/policies.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        Policies & SOPs
+                    </a>
+                    <a href="settings/grievance.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        Grievance
+                    </a>
+                    <a href="settings/configuration.html" class="nav-link">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"/>
+                            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                        </svg>
+                        Settings
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"/>
+                            <line x1="3" y1="6" x2="21" y2="6"/>
+                            <line x1="3" y1="18" x2="21" y2="18"/>
+                        </svg>
+                    </button>
+                    <div class="search-box">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input type="text" placeholder="Search employees, departments...">
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="header-date">
+                        <span id="currentDate"></span>
+                    </div>
+                    <button class="icon-btn" title="Notifications">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                        </svg>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    <div class="user-menu">
+                        <div class="user-avatar" id="userAvatar">A</div>
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Admin</span>
+                            <span class="user-role" id="userRole">Administrator</span>
+                        </div>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"/>
+                        </svg>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <div class="page-header">
+                    <div>
+                        <h1 class="page-title">Dashboard</h1>
+                        <p class="page-subtitle">Welcome back! Here's your workforce overview.</p>
+                    </div>
+                    <div class="page-actions">
+                        <button class="btn btn-secondary" onclick="refreshData()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"/>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                            </svg>
+                            Refresh
+                        </button>
+                        <button class="btn btn-primary" onclick="window.location.href='employees/add.html'">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            Add Employee
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Total Employees</div>
+                            <div class="kpi-value">248</div>
+                            <div class="kpi-change positive">+12 this month</div>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-icon success">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Present Today</div>
+                            <div class="kpi-value">231</div>
+                            <div class="kpi-change positive">93% attendance</div>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-icon warning">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                            </svg>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">On Leave</div>
+                            <div class="kpi-value">17</div>
+                            <div class="kpi-change">5 pending approvals</div>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-icon info">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/>
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                            </svg>
+                        </div>
+                        <div class="kpi-content">
+                            <div class="kpi-label">Open Positions</div>
+                            <div class="kpi-value">8</div>
+                            <div class="kpi-change">32 applications</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shift Overview & Quick Actions Row -->
+                <div class="content-grid">
+                    <!-- Shift Overview -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Today's Shift Overview</h3>
+                            <a href="attendance/duty-roster.html" class="card-link">View Roster →</a>
+                        </div>
+                        <div class="shift-overview">
+                            <div class="shift-item">
+                                <div class="shift-icon morning">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="5"/>
+                                        <line x1="12" y1="1" x2="12" y2="3"/>
+                                        <line x1="12" y1="21" x2="12" y2="23"/>
+                                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                        <line x1="1" y1="12" x2="3" y2="12"/>
+                                        <line x1="21" y1="12" x2="23" y2="12"/>
+                                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                                    </svg>
+                                </div>
+                                <div class="shift-info">
+                                    <div class="shift-name">Morning Shift</div>
+                                    <div class="shift-time">6:00 AM - 2:00 PM</div>
+                                </div>
+                                <div class="shift-count">82</div>
+                            </div>
+                            <div class="shift-item">
+                                <div class="shift-icon afternoon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 18a5 5 0 0 0-10 0"/>
+                                        <line x1="12" y1="2" x2="12" y2="9"/>
+                                        <line x1="4.22" y1="10.22" x2="5.64" y2="11.64"/>
+                                        <line x1="1" y1="18" x2="3" y2="18"/>
+                                        <line x1="21" y1="18" x2="23" y2="18"/>
+                                        <line x1="18.36" y1="11.64" x2="19.78" y2="10.22"/>
+                                    </svg>
+                                </div>
+                                <div class="shift-info">
+                                    <div class="shift-name">Afternoon Shift</div>
+                                    <div class="shift-time">2:00 PM - 10:00 PM</div>
+                                </div>
+                                <div class="shift-count">78</div>
+                            </div>
+                            <div class="shift-item">
+                                <div class="shift-icon night">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                                    </svg>
+                                </div>
+                                <div class="shift-info">
+                                    <div class="shift-name">Night Shift</div>
+                                    <div class="shift-time">10:00 PM - 6:00 AM</div>
+                                </div>
+                                <div class="shift-count">54</div>
+                            </div>
+                            <div class="shift-item">
+                                <div class="shift-icon general">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                        <line x1="3" y1="10" x2="21" y2="10"/>
+                                    </svg>
+                                </div>
+                                <div class="shift-info">
+                                    <div class="shift-name">General Shift</div>
+                                    <div class="shift-time">9:00 AM - 6:00 PM</div>
+                                </div>
+                                <div class="shift-count">17</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Quick Actions</h3>
+                        </div>
+                        <div class="quick-actions-grid">
+                            <button class="quick-action" onclick="window.location.href='attendance/daily.html'">
+                                <div class="quick-action-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <span>Mark Attendance</span>
+                            </button>
+                            <button class="quick-action" onclick="window.location.href='leave/applications.html'">
+                                <div class="quick-action-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                    </svg>
+                                </div>
+                                <span>Apply Leave</span>
+                            </button>
+                            <button class="quick-action" onclick="window.location.href='payroll/payslips.html'">
+                                <div class="quick-action-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                    </svg>
+                                </div>
+                                <span>View Payslip</span>
+                            </button>
+                            <button class="quick-action" onclick="window.location.href='attendance/overtime.html'">
+                                <div class="quick-action-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <polyline points="12 6 12 12 16 14"/>
+                                    </svg>
+                                </div>
+                                <span>Request Overtime</span>
+                            </button>
+                            <button class="quick-action" onclick="window.location.href='attendance/shifts.html'">
+                                <div class="quick-action-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                                    </svg>
+                                </div>
+                                <span>Shift Swap</span>
+                            </button>
+                            <button class="quick-action" onclick="window.location.href='settings/grievance.html'">
+                                <div class="quick-action-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                    </svg>
+                                </div>
+                                <span>Raise Grievance</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Department Overview -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Department Headcount</h3>
+                        <a href="employees/directory.html" class="card-link">View All →</a>
+                    </div>
+                    <div class="department-grid">
+                        <div class="dept-stat-card">
+                            <div class="dept-stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+                                    <line x1="8" y1="21" x2="16" y2="21"/>
+                                    <line x1="12" y1="17" x2="12" y2="21"/>
+                                </svg>
+                            </div>
+                            <div class="dept-stat-info">
+                                <div class="dept-stat-name">IT & Technology</div>
+                                <div class="dept-stat-count">42</div>
+                            </div>
+                            <div class="dept-stat-bar">
+                                <div class="dept-stat-fill" style="width: 42%;"></div>
+                            </div>
+                        </div>
+                        <div class="dept-stat-card">
+                            <div class="dept-stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                                </svg>
+                            </div>
+                            <div class="dept-stat-info">
+                                <div class="dept-stat-name">Operations</div>
+                                <div class="dept-stat-count">65</div>
+                            </div>
+                            <div class="dept-stat-bar">
+                                <div class="dept-stat-fill" style="width: 65%;"></div>
+                            </div>
+                        </div>
+                        <div class="dept-stat-card">
+                            <div class="dept-stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="12" y1="1" x2="12" y2="23"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                </svg>
+                            </div>
+                            <div class="dept-stat-info">
+                                <div class="dept-stat-name">Finance</div>
+                                <div class="dept-stat-count">48</div>
+                            </div>
+                            <div class="dept-stat-bar">
+                                <div class="dept-stat-fill" style="width: 48%;"></div>
+                            </div>
+                        </div>
+                        <div class="dept-stat-card">
+                            <div class="dept-stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                            </div>
+                            <div class="dept-stat-info">
+                                <div class="dept-stat-name">Sales & Marketing</div>
+                                <div class="dept-stat-count">38</div>
+                            </div>
+                            <div class="dept-stat-bar">
+                                <div class="dept-stat-fill" style="width: 38%;"></div>
+                            </div>
+                        </div>
+                        <div class="dept-stat-card">
+                            <div class="dept-stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                                </svg>
+                            </div>
+                            <div class="dept-stat-info">
+                                <div class="dept-stat-name">Maintenance</div>
+                                <div class="dept-stat-count">22</div>
+                            </div>
+                            <div class="dept-stat-bar">
+                                <div class="dept-stat-fill" style="width: 22%;"></div>
+                            </div>
+                        </div>
+                        <div class="dept-stat-card">
+                            <div class="dept-stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                            </div>
+                            <div class="dept-stat-info">
+                                <div class="dept-stat-name">Security</div>
+                                <div class="dept-stat-count">18</div>
+                            </div>
+                            <div class="dept-stat-bar">
+                                <div class="dept-stat-fill" style="width: 18%;"></div>
+                            </div>
+                        </div>
+                        <div class="dept-stat-card">
+                            <div class="dept-stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                    <line x1="12" y1="17" x2="12.01" y2="17"/>
+                                </svg>
+                            </div>
+                            <div class="dept-stat-info">
+                                <div class="dept-stat-name">Support</div>
+                                <div class="dept-stat-count">8</div>
+                            </div>
+                            <div class="dept-stat-bar">
+                                <div class="dept-stat-fill" style="width: 8%;"></div>
+                            </div>
+                        </div>
+                        <div class="dept-stat-card">
+                            <div class="dept-stat-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                            </div>
+                            <div class="dept-stat-info">
+                                <div class="dept-stat-name">HR & Admin</div>
+                                <div class="dept-stat-count">7</div>
+                            </div>
+                            <div class="dept-stat-bar">
+                                <div class="dept-stat-fill" style="width: 7%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Approvals & Recent Activity -->
+                <div class="content-grid">
+                    <!-- Pending Approvals -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Pending Approvals</h3>
+                            <span class="badge badge-warning">5 Pending</span>
+                        </div>
+                        <div class="approval-list">
+                            <div class="approval-item">
+                                <div class="approval-avatar">RS</div>
+                                <div class="approval-info">
+                                    <div class="approval-name">Rahul Sharma</div>
+                                    <div class="approval-details">Leave Request • 2 days • Medical</div>
+                                </div>
+                                <div class="approval-actions">
+                                    <button class="btn btn-sm btn-success" onclick="approveRequest(1)">Approve</button>
+                                    <button class="btn btn-sm btn-ghost" onclick="rejectRequest(1)">Reject</button>
+                                </div>
+                            </div>
+                            <div class="approval-item">
+                                <div class="approval-avatar">PK</div>
+                                <div class="approval-info">
+                                    <div class="approval-name">Priya Kumar</div>
+                                    <div class="approval-details">Overtime Request • 4 hours • F&B</div>
+                                </div>
+                                <div class="approval-actions">
+                                    <button class="btn btn-sm btn-success" onclick="approveRequest(2)">Approve</button>
+                                    <button class="btn btn-sm btn-ghost" onclick="rejectRequest(2)">Reject</button>
+                                </div>
+                            </div>
+                            <div class="approval-item">
+                                <div class="approval-avatar">AM</div>
+                                <div class="approval-info">
+                                    <div class="approval-name">Amit Mehta</div>
+                                    <div class="approval-details">Shift Change • Night → Morning</div>
+                                </div>
+                                <div class="approval-actions">
+                                    <button class="btn btn-sm btn-success" onclick="approveRequest(3)">Approve</button>
+                                    <button class="btn btn-sm btn-ghost" onclick="rejectRequest(3)">Reject</button>
+                                </div>
+                            </div>
+                            <div class="approval-item">
+                                <div class="approval-avatar">SG</div>
+                                <div class="approval-info">
+                                    <div class="approval-name">Sneha Gupta</div>
+                                    <div class="approval-details">Leave Request • 1 day • Personal</div>
+                                </div>
+                                <div class="approval-actions">
+                                    <button class="btn btn-sm btn-success" onclick="approveRequest(4)">Approve</button>
+                                    <button class="btn btn-sm btn-ghost" onclick="rejectRequest(4)">Reject</button>
+                                </div>
+                            </div>
+                            <div class="approval-item">
+                                <div class="approval-avatar">VR</div>
+                                <div class="approval-info">
+                                    <div class="approval-name">Vijay Reddy</div>
+                                    <div class="approval-details">Document Upload • Aadhaar</div>
+                                </div>
+                                <div class="approval-actions">
+                                    <button class="btn btn-sm btn-success" onclick="approveRequest(5)">Approve</button>
+                                    <button class="btn btn-sm btn-ghost" onclick="rejectRequest(5)">Reject</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Activity</h3>
+                            <a href="#" class="card-link">View All →</a>
+                        </div>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon success">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <p>New employee <strong>Kavita Singh</strong> joined as Receptionist</p>
+                                    <span class="activity-time">2 hours ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon info">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <p>Leave approved for <strong>Rahul Sharma</strong> (Dec 20-21)</p>
+                                    <span class="activity-time">4 hours ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon warning">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <line x1="12" y1="8" x2="12" y2="12"/>
+                                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <p>Overtime request from <strong>Kitchen Team</strong> - 6 staff</p>
+                                    <span class="activity-time">5 hours ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="1" x2="12" y2="23"/>
+                                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <p>December payroll processed for <strong>248 employees</strong></p>
+                                    <span class="activity-time">1 day ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon success">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <p>New duty roster published for <strong>Week 51</strong></p>
+                                    <span class="activity-time">2 days ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Events & Birthdays -->
+                <div class="content-grid">
+                    <!-- Upcoming Events -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Upcoming Events</h3>
+                        </div>
+                        <div class="event-list">
+                            <div class="event-item">
+                                <div class="event-date">
+                                    <span class="event-day">25</span>
+                                    <span class="event-month">Dec</span>
+                                </div>
+                                <div class="event-info">
+                                    <div class="event-name">Christmas - Holiday</div>
+                                    <div class="event-type">Public Holiday</div>
+                                </div>
+                            </div>
+                            <div class="event-item">
+                                <div class="event-date">
+                                    <span class="event-day">01</span>
+                                    <span class="event-month">Jan</span>
+                                </div>
+                                <div class="event-info">
+                                    <div class="event-name">New Year's Day</div>
+                                    <div class="event-type">Public Holiday</div>
+                                </div>
+                            </div>
+                            <div class="event-item">
+                                <div class="event-date">
+                                    <span class="event-day">05</span>
+                                    <span class="event-month">Jan</span>
+                                </div>
+                                <div class="event-info">
+                                    <div class="event-name">Fire Safety Training</div>
+                                    <div class="event-type">Training Program</div>
+                                </div>
+                            </div>
+                            <div class="event-item">
+                                <div class="event-date">
+                                    <span class="event-day">15</span>
+                                    <span class="event-month">Jan</span>
+                                </div>
+                                <div class="event-info">
+                                    <div class="event-name">Q4 Performance Review</div>
+                                    <div class="event-type">HR Event</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Birthdays -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 8px; vertical-align: middle;">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="12" cy="7" r="4"/>
+                                </svg>
+                                Birthdays This Week
+                            </h3>
+                        </div>
+                        <div class="birthday-list">
+                            <div class="birthday-item">
+                                <div class="birthday-avatar">AS</div>
+                                <div class="birthday-info">
+                                    <div class="birthday-name">Anjali Sharma</div>
+                                    <div class="birthday-dept">Front Office</div>
+                                </div>
+                                <div class="birthday-date">Today</div>
+                            </div>
+                            <div class="birthday-item">
+                                <div class="birthday-avatar">RK</div>
+                                <div class="birthday-info">
+                                    <div class="birthday-name">Ravi Kumar</div>
+                                    <div class="birthday-dept">Kitchen</div>
+                                </div>
+                                <div class="birthday-date">Dec 20</div>
+                            </div>
+                            <div class="birthday-item">
+                                <div class="birthday-avatar">NP</div>
+                                <div class="birthday-info">
+                                    <div class="birthday-name">Neha Patel</div>
+                                    <div class="birthday-dept">Housekeeping</div>
+                                </div>
+                                <div class="birthday-date">Dec 22</div>
+                            </div>
+                            <div class="birthday-item">
+                                <div class="birthday-avatar">MK</div>
+                                <div class="birthday-info">
+                                    <div class="birthday-name">Manoj Kulkarni</div>
+                                    <div class="birthday-dept">Security</div>
+                                </div>
+                                <div class="birthday-date">Dec 24</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserInfo();
+            setCurrentDate();
+        });
+
+        // Load user info from session
+        function loadUserInfo() {
+            const user = JSON.parse(sessionStorage.getItem('hrmsUser') || '{}');
+            if (user.name) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userRole').textContent = user.role;
+                document.getElementById('userAvatar').textContent = user.name.charAt(0);
+            }
+        }
+
+        // Set current date
+        function setCurrentDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', options);
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        }
+
+        // Refresh data
+        function refreshData() {
+            showToast('Data refreshed successfully', 'success');
+        }
+
+        // Approve request
+        function approveRequest(id) {
+            showToast('Request approved successfully', 'success');
+        }
+
+        // Reject request
+        function rejectRequest(id) {
+            showToast('Request rejected', 'info');
+        }
+
+        // Show toast notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span>${message}</span>
+                <button onclick="this.parentElement.remove()">×</button>
+            `;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customize Your Trip - Pi-Trip</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/wizard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="wizard-page">
+    <!-- Wizard Container -->
+    <div class="wizard-container" id="wizardContainer">
+        <!-- Close Button -->
+        <button class="wizard-close" onclick="closeWizard()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+
+        <!-- Progress Bar -->
+        <div class="wizard-progress">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-steps">
+                <div class="progress-step active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <span>Route</span>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <span>Group</span>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <span>Dates</span>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-circle">4</div>
+                    <span>Vehicle</span>
+                </div>
+                <div class="progress-step" data-step="5">
+                    <div class="step-circle">5</div>
+                    <span>Details</span>
+                </div>
+                <div class="progress-step" data-step="6">
+                    <div class="step-circle">6</div>
+                    <span>Review</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Wizard Content -->
+        <div class="wizard-content">
+            <!-- Step 1: Route Selection -->
+            <div class="wizard-step active" id="step1">
+                <div class="step-header">
+                    <h1>Where do you want to ride? 🏍️</h1>
+                    <p>Apni dream destination choose karo</p>
+                </div>
+
+                <div class="route-selection">
+                    <div class="search-box">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" placeholder="Search for routes or destinations..." id="routeSearch" oninput="searchRoutes(this.value)">
+                    </div>
+
+                    <div class="route-grid" id="routeGrid">
+                        <!-- Popular Routes -->
+                        <div class="route-option" onclick="selectRoute('MLH-001')">
+                            <div class="route-option-badge">Epic</div>
+                            <h3>Manali to Leh</h3>
+                            <div class="route-option-meta">
+                                <span>475 km</span>
+                                <span>•</span>
+                                <span>10 Days</span>
+                            </div>
+                            <div class="route-option-price">₹65,000 per person</div>
+                        </div>
+
+                        <div class="route-option" onclick="selectRoute('MGO-001')">
+                            <div class="route-option-badge popular">Popular</div>
+                            <h3>Mumbai to Goa</h3>
+                            <div class="route-option-meta">
+                                <span>580 km</span>
+                                <span>•</span>
+                                <span>3 Days</span>
+                            </div>
+                            <div class="route-option-price">₹18,000 per person</div>
+                        </div>
+
+                        <div class="route-option" onclick="selectRoute('GT-001')">
+                            <div class="route-option-badge">Heritage</div>
+                            <h3>Golden Triangle</h3>
+                            <div class="route-option-meta">
+                                <span>720 km</span>
+                                <span>•</span>
+                                <span>7 Days</span>
+                            </div>
+                            <div class="route-option-price">₹32,000 per person</div>
+                        </div>
+
+                        <div class="route-option" onclick="selectRoute('CUSTOM')">
+                            <div class="route-option-badge custom">Custom</div>
+                            <h3>Create Custom Route</h3>
+                            <div class="route-option-meta">
+                                <span>Your choice</span>
+                                <span>•</span>
+                                <span>Flexible</span>
+                            </div>
+                            <div class="route-option-price">Plan from scratch</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Group Setup -->
+            <div class="wizard-step" id="step2">
+                <div class="step-header">
+                    <h1>Solo ya Group mein? 👥</h1>
+                    <p>Kitne log jaa rahe hain iss trip pe?</p>
+                </div>
+
+                <div class="group-selection">
+                    <div class="trip-mode">
+                        <button class="mode-btn active" onclick="setTripMode('solo')">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                <circle cx="12" cy="7" r="4"/>
+                            </svg>
+                            <span>Solo Ride</span>
+                            <small>Just me, myself & the road</small>
+                        </button>
+                        <button class="mode-btn" onclick="setTripMode('group')">
+                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            <span>Group Trip</span>
+                            <small>Planning with friends</small>
+                        </button>
+                    </div>
+
+                    <div class="group-details" id="groupDetails" style="display: none;">
+                        <div class="guest-counter">
+                            <label>Total Travelers (Including You)</label>
+                            <div class="counter">
+                                <button onclick="changeGuestCount(-1)">−</button>
+                                <input type="number" id="guestCount" value="2" min="2" max="20" readonly>
+                                <button onclick="changeGuestCount(1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="invite-friends">
+                            <label>Invite Friends (Optional for now)</label>
+                            <div class="friend-input">
+                                <input type="text" placeholder="Enter phone number or email" id="friendInput">
+                                <button onclick="addFriend()">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"/>
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="friends-list" id="friendsList"></div>
+                            <small class="hint">You can invite friends later too. Abhi bas count bata do!</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Dates -->
+            <div class="wizard-step" id="step3">
+                <div class="step-header">
+                    <h1>Kab nikalna hai? 📅</h1>
+                    <p>Select your travel dates</p>
+                </div>
+
+                <div class="date-selection">
+                    <div class="date-grid">
+                        <div class="date-field">
+                            <label>Start Date</label>
+                            <input type="date" id="startDate" onchange="updateDuration()">
+                        </div>
+                        <div class="date-field">
+                            <label>End Date</label>
+                            <input type="date" id="endDate" onchange="updateDuration()">
+                        </div>
+                    </div>
+
+                    <div class="duration-display" id="durationDisplay">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                        <span>Select dates to see duration</span>
+                    </div>
+
+                    <div class="quick-dates">
+                        <p>Or choose a quick option:</p>
+                        <div class="quick-date-btns">
+                            <button onclick="setQuickDate('weekend')">This Weekend</button>
+                            <button onclick="setQuickDate('nextWeek')">Next Week</button>
+                            <button onclick="setQuickDate('nextMonth')">Next Month</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Vehicle Selection -->
+            <div class="wizard-step" id="step4">
+                <div class="step-header">
+                    <h1>Kya ride karoge? 🏍️🚗</h1>
+                    <p>Choose your wheels</p>
+                </div>
+
+                <div class="vehicle-selection">
+                    <div class="vehicle-mode">
+                        <button class="vehicle-mode-btn active" onclick="setVehicleMode('own')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            Own Vehicle
+                        </button>
+                        <button class="vehicle-mode-btn" onclick="setVehicleMode('rental')">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="3" width="15" height="13"/>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                                <circle cx="5.5" cy="18.5" r="2.5"/>
+                                <circle cx="18.5" cy="18.5" r="2.5"/>
+                            </svg>
+                            Rent Vehicle
+                        </button>
+                    </div>
+
+                    <div class="vehicle-options" id="ownVehicleOptions">
+                        <div class="vehicle-card" onclick="selectVehicle('bike')">
+                            <div class="vehicle-icon">🏍️</div>
+                            <h3>Bike</h3>
+                            <p>Perfect for solo or duo</p>
+                        </div>
+                        <div class="vehicle-card" onclick="selectVehicle('car')">
+                            <div class="vehicle-icon">🚗</div>
+                            <h3>Car</h3>
+                            <p>Comfortable for groups</p>
+                        </div>
+                        <div class="vehicle-card" onclick="selectVehicle('suv')">
+                            <div class="vehicle-icon">🚙</div>
+                            <h3>SUV</h3>
+                            <p>Off-road ready</p>
+                        </div>
+                    </div>
+
+                    <div class="vehicle-options" id="rentalVehicleOptions" style="display: none;">
+                        <div class="rental-card" onclick="selectRental('bike', 1200)">
+                            <div class="rental-header">
+                                <h3>Royal Enfield Classic 350</h3>
+                                <div class="rental-price">₹1,200<small>/day</small></div>
+                            </div>
+                            <div class="rental-features">
+                                <span>⚡ Fuel Included</span>
+                                <span>🛡️ Insurance</span>
+                                <span>🔧 Support</span>
+                            </div>
+                        </div>
+                        <div class="rental-card" onclick="selectRental('bike', 1500)">
+                            <div class="rental-header">
+                                <h3>Himalayan 411</h3>
+                                <div class="rental-price">₹1,500<small>/day</small></div>
+                            </div>
+                            <div class="rental-features">
+                                <span>⚡ Fuel Included</span>
+                                <span>🛡️ Insurance</span>
+                                <span>🔧 Support</span>
+                            </div>
+                        </div>
+                        <div class="rental-card" onclick="selectRental('car', 2500)">
+                            <div class="rental-header">
+                                <h3>Maruti Ertiga (6-seater)</h3>
+                                <div class="rental-price">₹2,500<small>/day</small></div>
+                            </div>
+                            <div class="rental-features">
+                                <span>⚡ Fuel Extra</span>
+                                <span>🛡️ Insurance</span>
+                                <span>👨‍✈️ Driver Optional</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Trip Details -->
+            <div class="wizard-step" id="step5">
+                <div class="step-header">
+                    <h1>Trip ki details bata do 📝</h1>
+                    <p>Last kuch choti-choti baatein</p>
+                </div>
+
+                <div class="trip-details-form">
+                    <div class="form-group">
+                        <label>Trip Name</label>
+                        <input type="text" placeholder="e.g., Leh Adventure 2025" id="tripName">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Budget Range (per person)</label>
+                        <select id="budgetRange">
+                            <option value="">Select budget</option>
+                            <option value="budget">Budget Friendly (₹10k-20k)</option>
+                            <option value="moderate">Moderate (₹20k-40k)</option>
+                            <option value="premium">Premium (₹40k+)</option>
+                            <option value="flexible">Flexible (No limit)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Trip Type</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="adventure">
+                                <span>Adventure</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="leisure">
+                                <span>Leisure</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="photography">
+                                <span>Photography</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" value="cultural">
+                                <span>Cultural</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Special Requirements (Optional)</label>
+                        <textarea placeholder="Any specific needs? Medical conditions? Dietary preferences?" id="specialRequirements" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Review & Confirm -->
+            <div class="wizard-step" id="step6">
+                <div class="step-header">
+                    <h1>Sab theek hai? ✓</h1>
+                    <p>Review karke confirm kar do</p>
+                </div>
+
+                <div class="trip-summary" id="tripSummary">
+                    <!-- Summary will be populated by JavaScript -->
+                </div>
+
+                <div class="cost-breakdown" id="costBreakdown">
+                    <!-- Cost breakdown will be populated -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Wizard Navigation -->
+        <div class="wizard-navigation">
+            <button class="btn-nav btn-back" onclick="previousStep()" id="btnBack" style="visibility: hidden;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="19" y1="12" x2="5" y2="12"/>
+                    <polyline points="12 19 5 12 12 5"/>
+                </svg>
+                Back
+            </button>
+            <button class="btn-nav btn-next" onclick="nextStep()" id="btnNext">
+                Next
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                    <polyline points="12 5 19 12 12 19"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <script src="../js/wizard.js"></script>
+</body>
+</html>

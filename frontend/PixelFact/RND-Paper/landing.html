@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelFact - Stories of Truth, Impact and Accountability</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&family=Noto+Serif+Devanagari:wght@300;400;500;600;700;800;900&family=Noto+Sans+Devanagari:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #0A0A0A;
+            --white: #FFFFFF;
+            --gray-50: #FAFAFA;
+            --gray-100: #F5F5F5;
+            --gray-200: #E8E8E8;
+            --gray-300: #D1D1D1;
+            --gray-500: #737373;
+            --gray-700: #404040;
+            --gray-800: #262626;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--white);
+            color: var(--black);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            z-index: 1000;
+            padding: 20px 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--black);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 40px;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: var(--gray-700);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--black);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 40px 80px;
+            background: var(--white);
+        }
+
+        .hero-content {
+            max-width: 1000px;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 6rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 40px;
+            letter-spacing: -3px;
+        }
+
+        .hero-subtitle {
+            font-size: 2rem;
+            font-weight: 300;
+            color: var(--gray-700);
+            margin-bottom: 60px;
+            line-height: 1.4;
+        }
+
+        /* Category Sections */
+        .sections {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 80px 40px;
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            background: var(--gray-200);
+            margin-bottom: 100px;
+        }
+
+        .section-card {
+            background: var(--white);
+            padding: 60px 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .section-card::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 3px;
+            background: var(--black);
+            transition: width 0.4s ease;
+        }
+
+        .section-card:hover::before {
+            width: 80%;
+        }
+
+        .section-card:hover {
+            background: var(--gray-50);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .section-desc {
+            font-size: 0.95rem;
+            color: var(--gray-700);
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .section-link {
+            display: inline-block;
+            padding: 12px 30px;
+            border: 2px solid var(--black);
+            color: var(--black);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .section-link:hover {
+            background: var(--black);
+            color: var(--white);
+        }
+
+        /* Featured Articles */
+        .featured {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px 100px;
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+
+        .featured-card {
+            text-decoration: none;
+            color: var(--black);
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .featured-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .featured-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .featured-category {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gray-500);
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .featured-headline {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 15px;
+        }
+
+        .featured-preview {
+            font-size: 1rem;
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--black);
+            color: var(--white);
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-text {
+            font-size: 0.9rem;
+            color: var(--gray-500);
+        }
+
+        @media (max-width: 1024px) {
+            .section-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.5rem;
+            }
+
+            .section-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="logo">PixelFact</div>
+            <ul class="nav-menu">
+                <li><a href="#news">News</a></li>
+                <li><a href="#analysis">Analysis</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Stories of truth, impact and accountability</h1>
+            <p class="hero-subtitle">a movement for change</p>
+        </div>
+    </section>
+
+    <!-- Category Sections -->
+    <section class="sections">
+        <div class="section-grid">
+            <div class="section-card">
+                <h2 class="section-title">News</h2>
+                <p class="section-desc">Breaking stories and investigations uncovering the truth behind Mumbai's most pressing issues.</p>
+                <a href="articles.html?category=news" class="section-link">View Articles</a>
+            </div>
+            <div class="section-card">
+                <h2 class="section-title">Analysis</h2>
+                <p class="section-desc">Deep dives into policy, politics, and social issues shaping our communities.</p>
+                <a href="articles.html?category=analysis" class="section-link">View Articles</a>
+            </div>
+            <div class="section-card">
+                <h2 class="section-title">हिंदी</h2>
+                <p class="section-desc">स्थानीय समाचार और जांच-पड़ताल जो मुंबई की सच्चाई को उजागर करते हैं।</p>
+                <a href="articles.html?language=hindi" class="section-link">View Articles</a>
+            </div>
+            <div class="section-card">
+                <h2 class="section-title">English</h2>
+                <p class="section-desc">In-depth reporting and commentary on democracy, justice, and community voices.</p>
+                <a href="articles.html?language=english" class="section-link">View Articles</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Articles -->
+    <section class="featured" id="featured">
+        <!-- Articles will be loaded here -->
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p class="footer-text">2024 © PIXELFACT</p>
+        </div>
+    </footer>
+
+    <script>
+        let magazineData = null;
+
+        // Load magazine data
+        async function loadMagazine() {
+            try {
+                const response = await fetch('magazine_articles.json');
+                magazineData = await response.json();
+                renderFeatured();
+            } catch (error) {
+                console.error('Error loading magazine:', error);
+            }
+        }
+
+        // Render featured articles
+        function renderFeatured() {
+            const grid = document.getElementById('featured');
+            if (!magazineData) return;
+
+            const html = `
+                <div class="featured-grid">
+                    ${magazineData.articles.slice(0, 4).map(article => `
+                        <a href="article.html?id=${article.id}" class="featured-card">
+                            <img src="${article.inline_images && article.inline_images.length > 0 ? article.inline_images[0].path : article.image}" 
+                                 alt="${article.headline}" class="featured-image">
+                            <div class="featured-category">${article.category}</div>
+                            <h3 class="featured-headline">${article.headline}</h3>
+                            <p class="featured-preview">${article.preview}</p>
+                        </a>
+                    `).join('')}
+                </div>
+            `;
+            grid.innerHTML = html;
+        }
+
+        // Load on page load
+        loadMagazine();
+    </script>
+</body>
+</html>

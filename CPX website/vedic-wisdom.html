@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vedic Wisdom - Sacred Geometry & Universal Patterns</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #000000;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            border-bottom: 2px solid #000000;
+            z-index: 1000;
+            padding: 1.5rem 2rem;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #000000;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border: 2px solid transparent;
+        }
+
+        .nav-links a:hover {
+            border: 2px solid #000000;
+        }
+
+        /* Back Button */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #000000;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #000000;
+            transition: all 0.3s ease;
+            margin-top: 6rem;
+            margin-left: 2rem;
+        }
+
+        .back-btn:hover {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8rem 2rem 4rem;
+            border-bottom: 2px solid #000000;
+            background: radial-gradient(circle at center, #f8f8f8 0%, #ffffff 100%);
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .hero-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 8vw, 7rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            line-height: 1.6;
+            color: #333333;
+        }
+
+        /* Content Section */
+        .content-section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-intro {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            margin-bottom: 4rem;
+            color: #333333;
+        }
+
+        /* Concept Cards */
+        .concept-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+            margin-bottom: 6rem;
+        }
+
+        .concept-card {
+            border: 2px solid #000000;
+            padding: 3rem;
+            transition: transform 0.3s ease;
+        }
+
+        .concept-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .concept-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            opacity: 0.6;
+        }
+
+        .concept-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .concept-description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #333333;
+        }
+
+        /* Sacred Geometry Section */
+        .sacred-section {
+            padding: 6rem 2rem;
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .sacred-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .sacred-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .sacred-intro {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            margin-bottom: 4rem;
+            color: #cccccc;
+            text-align: center;
+        }
+
+        .geometry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .geometry-card {
+            border: 2px solid #ffffff;
+            padding: 2.5rem;
+        }
+
+        .geo-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .geo-description {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #cccccc;
+            margin-bottom: 1.5rem;
+        }
+
+        .geo-application {
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            padding-top: 1rem;
+            margin-top: 1rem;
+        }
+
+        .app-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+            opacity: 0.7;
+        }
+
+        .app-text {
+            font-size: 0.9rem;
+            color: #ffffff;
+        }
+
+        /* Quantum Connection */
+        .quantum-section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .quantum-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .quantum-intro {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            margin-bottom: 4rem;
+            color: #333333;
+            text-align: center;
+        }
+
+        .parallels-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .parallel-column {
+            border: 2px solid #000000;
+            padding: 3rem;
+        }
+
+        .column-header {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #000000;
+        }
+
+        .parallel-item {
+            margin-bottom: 2rem;
+        }
+
+        .parallel-concept {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .parallel-description {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #555555;
+        }
+
+        /* Modern Applications */
+        .applications-section {
+            padding: 6rem 2rem;
+            background: #f5f5f5;
+        }
+
+        .applications-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .app-card {
+            background: #ffffff;
+            border: 2px solid #000000;
+            padding: 3rem;
+        }
+
+        .app-number {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .app-card-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .app-card-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #333333;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 8rem 2rem;
+            background: #000000;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+        }
+
+        .cta-description {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            color: #cccccc;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1.5rem 4rem;
+            background: #ffffff;
+            color: #000000;
+            text-decoration: none;
+            font-size: 1.25rem;
+            font-weight: 600;
+            border: 2px solid #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: transparent;
+            color: #ffffff;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            color: #ffffff;
+            padding: 4rem 2rem 2rem;
+            border-top: 2px solid #333333;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            opacity: 0.7;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .concept-grid, .geometry-grid, .app-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .parallels-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="home.html" class="logo">CPX</a>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="pixelgram.html">PixelGram</a></li>
+                <li><a href="pixel-world.html">Pixel World</a></li>
+                <li><a href="studio.html">Get Started</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <a href="pixel-world.html" class="back-btn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+        </svg>
+        Back to Pixel World
+    </a>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-label">BEYOND TIME</div>
+            <h1 class="hero-title">Vedic Wisdom</h1>
+            <p class="hero-subtitle">
+                Ancient scriptures that described universal interconnectedness millennia before quantum physics. Where sacred geometry meets consciousness, and design becomes a path to understanding reality itself.
+            </p>
+        </div>
+    </section>
+
+    <!-- Core Concepts -->
+    <section class="content-section">
+        <h2 class="section-title">Foundational Concepts</h2>
+        <p class="section-intro">
+            Vedic philosophy presents a holistic worldview where everything is interconnected—a concept modern science is only beginning to fully understand.
+        </p>
+
+        <div class="concept-grid">
+            <div class="concept-card">
+                <div class="concept-label">CORE PRINCIPLE</div>
+                <h3 class="concept-title">Brahman</h3>
+                <p class="concept-description">
+                    The ultimate reality—infinite, unchanging consciousness that underlies all existence. In design terms, Brahman is the blank canvas before creation, the white space that gives form meaning. Every pixel exists within this infinite field of potential.
+                </p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-label">MANIFESTATION</div>
+                <h3 class="concept-title">Maya</h3>
+                <p class="concept-description">
+                    The illusion of separation. What appears as distinct objects are waves in one ocean. In digital design, separate UI components are manifestations of underlying code—seemingly independent but fundamentally unified. Understanding Maya helps designers see systems, not just screens.
+                </p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-label">UNIVERSAL LAW</div>
+                <h3 class="concept-title">Dharma</h3>
+                <p class="concept-description">
+                    Cosmic order and right action. Every element has its dharma—its proper function and place. A button's dharma is to be clicked; a heading's dharma is to guide. Good design honors the dharma of each component, creating harmony through proper alignment with universal principles.
+                </p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-label">INTERCONNECTION</div>
+                <h3 class="concept-title">Indra's Net</h3>
+                <p class="concept-description">
+                    An infinite net of jewels, each reflecting all others. Change one jewel, and all reflections change. This describes modern web architecture perfectly—change one API, affect all connected services. Vedic sages understood systems thinking 3000 years ago.
+                </p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-label">CYCLES</div>
+                <h3 class="concept-title">Yugas</h3>
+                <p class="concept-description">
+                    Cosmic cycles of creation and dissolution. Design trends follow similar patterns—minimalism rises, maximalism returns, then minimalism again. Understanding cyclical nature helps designers see beyond current trends to timeless principles.
+                </p>
+            </div>
+
+            <div class="concept-card">
+                <div class="concept-label">CONSCIOUSNESS</div>
+                <h3 class="concept-title">Atman</h3>
+                <p class="concept-description">
+                    The individual soul, ultimately identical with Brahman. The user is not separate from the interface—they co-create the experience through observation and interaction. Quantum physics confirms this: observation affects reality. Design is conscious participation in creation.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sacred Geometry -->
+    <section class="sacred-section">
+        <div class="sacred-content">
+            <h2 class="sacred-title">Sacred Geometry</h2>
+            <p class="sacred-intro">
+                Visual patterns that encode universal principles. These aren't decorative—they're fundamental structures of reality, applicable to modern design systems.
+            </p>
+
+            <div class="geometry-grid">
+                <div class="geometry-card">
+                    <h3 class="geo-title">Sri Yantra</h3>
+                    <p class="geo-description">
+                        Nine interlocking triangles radiating from a central point (bindu), representing the cosmos and human consciousness. The precise mathematical relationships create visual harmony. Each triangle has specific meaning, yet they form one unified whole.
+                    </p>
+                    <div class="geo-application">
+                        <div class="app-label">Modern Application</div>
+                        <div class="app-text">
+                            Component architecture. Independent modules (triangles) that interlock to create complete systems. Center-radiating layouts. Visual hierarchy from a central focal point.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="geometry-card">
+                    <h3 class="geo-title">Mandala</h3>
+                    <p class="geo-description">
+                        Circular designs representing wholeness and the universe. Mandalas express unity through symmetry—a center point with radiating patterns. They're meditation tools that calm the mind through balanced geometric forms.
+                    </p>
+                    <div class="geo-application">
+                        <div class="app-label">Modern Application</div>
+                        <div class="app-text">
+                            Circular progress indicators. Radial menus. Dashboard layouts with central metrics. Logo design using rotational symmetry. Loading animations.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="geometry-card">
+                    <h3 class="geo-title">Bindu</h3>
+                    <p class="geo-description">
+                        The point—source of all creation. Everything emerges from and returns to the bindu. It's simultaneously nothing and everything, the dot from which the universe explodes. Zero and infinity occupy the same point.
+                    </p>
+                    <div class="geo-application">
+                        <div class="app-label">Modern Application</div>
+                        <div class="app-text">
+                            The pixel itself—the fundamental unit. Focal points in composition. Origin points in coordinate systems. Single-point perspective. Minimalist design reduced to essence.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="geometry-card">
+                    <h3 class="geo-title">Lotus Petals</h3>
+                    <p class="geo-description">
+                        Representing chakras (energy centers) with specific petal counts—4, 6, 10, 12, 16, 96, 1000. Each number has significance. The lotus grows from mud to flower—transformation through stages. Perfect symmetry in natural forms.
+                    </p>
+                    <div class="geo-application">
+                        <div class="app-label">Modern Application</div>
+                        <div class="app-text">
+                            Multi-step processes. Onboarding flows with distinct stages. Progress visualization. State management with defined phases. Transformation journeys in UX.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quantum Parallels -->
+    <section class="quantum-section">
+        <h2 class="quantum-title">Vedic Wisdom Meets Quantum Physics</h2>
+        <p class="quantum-intro">
+            Ancient scriptures described reality in ways that quantum mechanics now confirms. The parallels are striking—suggesting universal truths transcend time and culture.
+        </p>
+
+        <div class="parallels-grid">
+            <div class="parallel-column">
+                <h3 class="column-header">Vedic Concept (3000+ years ago)</h3>
+                
+                <div class="parallel-item">
+                    <div class="parallel-concept">Everything is Consciousness</div>
+                    <div class="parallel-description">
+                        "Sarvam Khalvidam Brahma" — All this is indeed Brahman. Consciousness isn't produced by matter; matter arises within consciousness.
+                    </div>
+                </div>
+
+                <div class="parallel-item">
+                    <div class="parallel-concept">Observer Creates Reality</div>
+                    <div class="parallel-description">
+                        The act of observation brings reality into manifestation. Unobserved, reality exists as infinite potential.
+                    </div>
+                </div>
+
+                <div class="parallel-item">
+                    <div class="parallel-concept">Non-Duality</div>
+                    <div class="parallel-description">
+                        Separation is illusion. Observer and observed are one. Subject and object are aspects of unified consciousness.
+                    </div>
+                </div>
+
+                <div class="parallel-item">
+                    <div class="parallel-concept">Vibration Creates Form</div>
+                    <div class="parallel-description">
+                        "Nada Brahma" — Sound is God. Primordial vibration (OM) manifests as all forms. Different frequencies create different realities.
+                    </div>
+                </div>
+
+                <div class="parallel-item">
+                    <div class="parallel-concept">Infinite Possibilities</div>
+                    <div class="parallel-description">
+                        Before manifestation, all possibilities coexist. The unmanifest contains every potential form simultaneously.
+                    </div>
+                </div>
+            </div>
+
+            <div class="parallel-column">
+                <h3 class="column-header">Quantum Physics (20th century)</h3>
+                
+                <div class="parallel-item">
+                    <div class="parallel-concept">Consciousness in Physics</div>
+                    <div class="parallel-description">
+                        Quantum mechanics suggests consciousness may be fundamental. Matter behaves differently when observed, implying mind-matter connection.
+                    </div>
+                </div>
+
+                <div class="parallel-item">
+                    <div class="parallel-concept">Observer Effect</div>
+                    <div class="parallel-description">
+                        Measuring a quantum system changes it. Particles exist in superposition until observed, then "collapse" into definite states. Observation determines reality.
+                    </div>
+                </div>
+
+                <div class="parallel-item">
+                    <div class="parallel-concept">Quantum Entanglement</div>
+                    <div class="parallel-description">
+                        Particles separated by vast distances remain connected. Change one, the other changes instantly. Einstein called it "spooky action at a distance."
+                    </div>
+                </div>
+
+                <div class="parallel-item">
+                    <div class="parallel-concept">Wave-Particle Duality</div>
+                    <div class="parallel-description">
+                        Matter is both particle and wave—energy vibrating at different frequencies. Form emerges from vibrational patterns in quantum fields.
+                    </div>
+                </div>
+
+                <div class="parallel-item">
+                    <div class="parallel-concept">Superposition</div>
+                    <div class="parallel-description">
+                        Quantum particles exist in all possible states simultaneously until measured. The wave function contains infinite possibilities.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modern Applications -->
+    <section class="applications-section">
+        <div class="applications-content">
+            <h2 class="section-title">Applying Vedic Wisdom to Design</h2>
+            <p class="section-intro">
+                These aren't metaphors—they're practical design principles derived from universal patterns.
+            </p>
+
+            <div class="app-grid">
+                <div class="app-card">
+                    <div class="app-number">01</div>
+                    <h3 class="app-card-title">Systems Thinking</h3>
+                    <p class="app-card-text">
+                        Understand that changing one component affects the entire system. Design holistically, considering interconnections. Your button redesign impacts user flow, brand perception, accessibility, and business metrics. Nothing exists in isolation.
+                    </p>
+                </div>
+
+                <div class="app-card">
+                    <div class="app-number">02</div>
+                    <h3 class="app-card-title">Center-Radiating Layouts</h3>
+                    <p class="app-card-text">
+                        Place the most important element at the center. Let secondary elements radiate outward in balanced symmetry. This mirrors natural patterns—from atoms to galaxies. Creates intuitive hierarchy and visual calm.
+                    </p>
+                </div>
+
+                <div class="app-card">
+                    <div class="app-number">03</div>
+                    <h3 class="app-card-title">Conscious Interaction</h3>
+                    <p class="app-card-text">
+                        Users co-create experiences through observation and action. Design for participation, not passive consumption. Every interaction is a conversation between consciousness and form. Honor the user as conscious agent.
+                    </p>
+                </div>
+
+                <div class="app-card">
+                    <div class="app-number">04</div>
+                    <h3 class="app-card-title">Symmetry & Balance</h3>
+                    <p class="app-card-text">
+                        Sacred geometry emphasizes perfect balance. Apply rotational, reflective, and translational symmetry to create harmony. Balance isn't just aesthetic—it reflects cosmic order. Asymmetry should be intentional, creating dynamic tension.
+                    </p>
+                </div>
+
+                <div class="app-card">
+                    <div class="app-number">05</div>
+                    <h3 class="app-card-title">Meaningful Numbers</h3>
+                    <p class="app-card-text">
+                        Use significant numbers in your grids and proportions. 12-column grids echo cosmic cycles. Base-60 timing (from ancient Sumeria and Vedic astronomy) still governs our seconds and minutes. Numbers carry meaning beyond mathematics.
+                    </p>
+                </div>
+
+                <div class="app-card">
+                    <div class="app-number">06</div>
+                    <h3 class="app-card-title">Simplicity as Complexity</h3>
+                    <p class="app-card-text">
+                        The bindu—a single point—contains infinite potential. Minimalism isn't simplistic; it's complexity distilled to essence. Remove everything except what's essential. What remains carries maximum power. Apple understood this. So did Vedic sages.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2 class="cta-title">Design Beyond Time</h2>
+        <p class="cta-description">
+            When we design with awareness of universal patterns—whether from ancient wisdom or quantum physics—we create work that transcends trends. Timeless design isn't retro; it taps into eternal principles that will be relevant in 3000 years as they were 3000 years ago.
+        </p>
+        <a href="home.html" class="cta-button">Create Timeless Work</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Creative Pixels</h3>
+                <p>Transforming thoughts into transactional digital products.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Company</h3>
+                <ul>
+                    <li><a href="home.html">Home</a></li>
+                    <li><a href="pixelgram.html">PixelGram</a></li>
+                    <li><a href="pixel-world.html">Pixel World</a></li>
+                    <li><a href="studio.html">Get Started</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Deep Dives</h3>
+                <ul>
+                    <li><a href="ancient-design.html">Ancient Design</a></li>
+                    <li><a href="vedic-wisdom.html">Vedic Wisdom</a></li>
+                    <li><a href="color-theory.html">Color Theory</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Creative Pixels. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

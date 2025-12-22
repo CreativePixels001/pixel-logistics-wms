@@ -1,4 +1,4 @@
-// DLT WMS - Labeling & Relabeling Module JavaScript
+// Pixel WMS - Labeling & Relabeling Module JavaScript
 // Handles label printing, relabeling workflows, batch uploads, and drag & drop functionality
 
 let uploadedFile = null;

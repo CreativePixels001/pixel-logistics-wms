@@ -1,4 +1,4 @@
-// DLT WMS - Quality Inspection Module JavaScript
+// Pixel WMS - Quality Inspection Module JavaScript
 // Handles quality inspections, defect recording, and disposition management
 
 let currentInspection = null;

@@ -1,4 +1,4 @@
-# End-to-End Testing Checklist - DLT WMS
+# End-to-End Testing Checklist - Pixel Logistics WMS
 **Date:** November 16, 2025  
 **Version:** Phase 12B Complete  
 **Status:** Ready for Testing

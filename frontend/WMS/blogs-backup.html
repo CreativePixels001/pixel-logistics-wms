@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Pixel Logistics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #000000;
+            --color-secondary: #1a1a1a;
+            --color-grey-dark: #4a4a4a;
+            --color-grey: #6b6b6b;
+            --color-grey-light: #9b9b9b;
+            --color-grey-lighter: #d1d1d1;
+            --color-background: #f5f5f5;
+            --color-white: #ffffff;
+            --transition: 0.3s ease;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--color-secondary);
+            background: var(--color-white);
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-grey-lighter);
+            padding: 1.5rem 0;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--color-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-back {
+            padding: 10px 24px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .nav-back:hover {
+            background: var(--color-secondary);
+        }
+
+        /* Hero Section */
+        .blog-hero {
+            padding: 120px 2rem 60px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            text-align: center;
+        }
+
+        .blog-hero h1 {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .blog-hero p {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Blog Grid */
+        .blog-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 80px 2rem;
+        }
+
+        .blog-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 24px;
+            background: var(--color-white);
+            border: 2px solid var(--color-grey-lighter);
+            color: var(--color-grey-dark);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-color: var(--color-primary);
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 40px;
+        }
+
+        .blog-card {
+            background: var(--color-white);
+            border: 2px solid var(--color-grey-lighter);
+            overflow: hidden;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .blog-card:hover {
+            border-color: var(--color-primary);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .blog-image {
+            width: 100%;
+            height: 240px;
+            background: var(--color-background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            color: var(--color-grey-light);
+            border-bottom: 2px solid var(--color-grey-lighter);
+        }
+
+        .blog-content {
+            padding: 30px;
+        }
+
+        .blog-meta {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: var(--color-grey);
+        }
+
+        .blog-category {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .blog-date {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .blog-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .blog-excerpt {
+            color: var(--color-grey-dark);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .blog-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-top: 20px;
+            border-top: 1px solid var(--color-grey-lighter);
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--color-primary);
+            color: var(--color-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            font-weight: 600;
+            color: var(--color-secondary);
+            font-size: 14px;
+        }
+
+        .read-time {
+            font-size: 13px;
+            color: var(--color-grey);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--color-primary);
+            color: rgba(255, 255, 255, 0.8);
+            padding: 40px 2rem;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        @media (max-width: 768px) {
+            .blog-hero h1 {
+                font-size: 36px;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="PixelLogistics.html" class="logo">
+                <span>📦</span> Pixel Logistics Blog
+            </a>
+            <a href="PixelLogistics.html" class="nav-back">← Back to Home</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="blog-hero">
+        <h1>Insights & Updates</h1>
+        <p>Explore the latest trends, best practices, and innovations in logistics and supply chain management</p>
+    </section>
+
+    <!-- Blog Container -->
+    <div class="blog-container">
+        <!-- Filters -->
+        <div class="blog-filters">
+            <button class="filter-btn active" onclick="filterBlogs('all')">All Posts</button>
+            <button class="filter-btn" onclick="filterBlogs('ai')">AI & Technology</button>
+            <button class="filter-btn" onclick="filterBlogs('wms')">Warehouse Management</button>
+            <button class="filter-btn" onclick="filterBlogs('tms')">Transportation</button>
+            <button class="filter-btn" onclick="filterBlogs('case-study')">Case Studies</button>
+            <button class="filter-btn" onclick="filterBlogs('industry')">Industry Trends</button>
+        </div>
+
+        <!-- Blog Grid -->
+        <div class="blog-grid" id="blogGrid"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Pixel Logistics. All rights reserved.</p>
+    </footer>
+
+    <script>
+        const blogs = [
+            {
+                id: 1,
+                title: "The Future of AI in Warehouse Management",
+                category: "ai",
+                categoryLabel: "AI & Technology",
+                date: "December 5, 2025",
+                author: "Sarah Johnson",
+                readTime: "8 min read",
+                excerpt: "Exploring how artificial intelligence is transforming inventory optimization, predictive analytics, and labor management in modern warehouses...",
+                icon: "🤖"
+            },
+            {
+                id: 2,
+                title: "5 Ways to Reduce Last-Mile Delivery Costs",
+                category: "tms",
+                categoryLabel: "Transportation",
+                date: "November 28, 2025",
+                author: "Michael Chen",
+                readTime: "6 min read",
+                excerpt: "Practical strategies for optimizing your last-mile operations and cutting delivery expenses by up to 40% through route optimization and technology...",
+                icon: "🚚"
+            },
+            {
+                id: 3,
+                title: "Case Study: 3x ROI in 6 Months with Pixel WMS",
+                category: "case-study",
+                categoryLabel: "Case Studies",
+                date: "November 15, 2025",
+                author: "David Martinez",
+                readTime: "10 min read",
+                excerpt: "A deep dive into how a mid-sized e-commerce retailer transformed their logistics operations and achieved remarkable ROI with Pixel Logistics...",
+                icon: "📊"
+            },
+            {
+                id: 4,
+                title: "Real-time Inventory Tracking: Best Practices",
+                category: "wms",
+                categoryLabel: "Warehouse Management",
+                date: "November 10, 2025",
+                author: "Emily Rodriguez",
+                readTime: "7 min read",
+                excerpt: "Master the art of real-time inventory management with RFID, barcode scanning, and automated tracking systems for 99.9% accuracy...",
+                icon: "📦"
+            },
+            {
+                id: 5,
+                title: "2025 Supply Chain Trends You Can't Ignore",
+                category: "industry",
+                categoryLabel: "Industry Trends",
+                date: "November 1, 2025",
+                author: "James Wilson",
+                readTime: "9 min read",
+                excerpt: "From sustainability initiatives to blockchain integration, discover the key trends shaping the future of global supply chains...",
+                icon: "🌐"
+            },
+            {
+                id: 6,
+                title: "Automating Warehouse Operations with IoT",
+                category: "wms",
+                categoryLabel: "Warehouse Management",
+                date: "October 25, 2025",
+                author: "Lisa Anderson",
+                readTime: "8 min read",
+                excerpt: "Learn how Internet of Things devices are revolutionizing warehouse automation, from smart sensors to autonomous robots...",
+                icon: "🔌"
+            },
+            {
+                id: 7,
+                title: "Route Optimization Algorithms Explained",
+                category: "tms",
+                categoryLabel: "Transportation",
+                date: "October 18, 2025",
+                author: "Robert Taylor",
+                readTime: "11 min read",
+                excerpt: "Understanding the mathematics and machine learning behind intelligent route planning that saves fuel and reduces delivery times...",
+                icon: "🗺️"
+            },
+            {
+                id: 8,
+                title: "Building a Sustainable Logistics Operation",
+                category: "industry",
+                categoryLabel: "Industry Trends",
+                date: "October 10, 2025",
+                author: "Amanda Green",
+                readTime: "7 min read",
+                excerpt: "Practical steps to reduce your carbon footprint while maintaining efficiency and profitability in modern logistics operations...",
+                icon: "🌱"
+            },
+            {
+                id: 9,
+                title: "Machine Learning for Demand Forecasting",
+                category: "ai",
+                categoryLabel: "AI & Technology",
+                date: "September 28, 2025",
+                author: "Kevin Park",
+                readTime: "10 min read",
+                excerpt: "How predictive analytics and ML models can help you anticipate demand fluctuations and optimize inventory levels year-round...",
+                icon: "📈"
+            },
+            {
+                id: 10,
+                title: "Multi-Warehouse Management Strategies",
+                category: "wms",
+                categoryLabel: "Warehouse Management",
+                date: "September 20, 2025",
+                author: "Jennifer Lee",
+                readTime: "9 min read",
+                excerpt: "Coordinate inventory across multiple locations efficiently with centralized control, automated transfers, and smart allocation...",
+                icon: "🏢"
+            },
+            {
+                id: 11,
+                title: "Case Study: 3PL Provider Scales to 50+ Clients",
+                category: "case-study",
+                categoryLabel: "Case Studies",
+                date: "September 15, 2025",
+                author: "Mark Thompson",
+                readTime: "12 min read",
+                excerpt: "Discover how a third-party logistics provider used Pixel Logistics to manage multiple clients with separate billing and reporting...",
+                icon: "📋"
+            },
+            {
+                id: 12,
+                title: "Cybersecurity in Logistics: Protecting Your Data",
+                category: "industry",
+                categoryLabel: "Industry Trends",
+                date: "September 5, 2025",
+                author: "Rachel Foster",
+                readTime: "8 min read",
+                excerpt: "Essential security measures every logistics company must implement to protect sensitive data and maintain customer trust...",
+                icon: "🔒"
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        function renderBlogs() {
+            const grid = document.getElementById('blogGrid');
+            const filteredBlogs = currentFilter === 'all' 
+                ? blogs 
+                : blogs.filter(blog => blog.category === currentFilter);
+
+            grid.innerHTML = filteredBlogs.map(blog => `
+                <div class="blog-card" onclick="openBlog(${blog.id})">
+                    <div class="blog-image">${blog.icon}</div>
+                    <div class="blog-content">
+                        <div class="blog-meta">
+                            <span class="blog-category">${blog.categoryLabel}</span>
+                            <span class="blog-date">📅 ${blog.date}</span>
+                        </div>
+                        <h3>${blog.title}</h3>
+                        <p class="blog-excerpt">${blog.excerpt}</p>
+                        <div class="blog-author">
+                            <div class="author-avatar">${blog.author.charAt(0)}</div>
+                            <div class="author-info">
+                                <div class="author-name">${blog.author}</div>
+                                <div class="read-time">⏱️ ${blog.readTime}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterBlogs(category) {
+            currentFilter = category;
+            
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderBlogs();
+        }
+
+        function openBlog(id) {
+            window.location.href = `blog-detail.html?id=${id}`;
+        }
+
+        // Initial render
+        renderBlogs();
+    </script>
+</body>
+</html>

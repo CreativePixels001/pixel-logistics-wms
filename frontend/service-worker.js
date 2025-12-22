@@ -1,10 +1,10 @@
 /**
- * DLT WMS Service Worker
+ * Pixel WMS Service Worker
  * Provides offline capabilities and caching for Progressive Web App
  * Version: 1.0.0
  */
 
-const CACHE_VERSION = 'dlt-wms-v1.0.0';
+const CACHE_VERSION = 'pixel-wms-v1.0.0';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const DYNAMIC_CACHE = `${CACHE_VERSION}-dynamic`;
 const IMAGE_CACHE = `${CACHE_VERSION}-images`;
@@ -91,7 +91,7 @@ self.addEventListener('activate', (event) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
             // Delete old caches
-            if (cacheName.startsWith('dlt-wms-') && cacheName !== STATIC_CACHE && 
+            if (cacheName.startsWith('pixel-wms-') && cacheName !== STATIC_CACHE && 
                 cacheName !== DYNAMIC_CACHE && cacheName !== IMAGE_CACHE) {
               console.log('[Service Worker] Deleting old cache:', cacheName);
               return caches.delete(cacheName);
@@ -291,7 +291,7 @@ self.addEventListener('push', (event) => {
   };
 
   event.waitUntil(
-    self.registration.showNotification('DLT WMS', options)
+    self.registration.showNotification('Pixel WMS', options)
   );
 });
 
@@ -344,7 +344,7 @@ self.addEventListener('push', (event) => {
   console.log('[Service Worker] Push received:', event);
 
   let notificationData = {
-    title: 'DLT WMS Notification',
+    title: 'Pixel WMS Notification',
     body: 'You have a new notification',
     icon: '/icons/icon-192x192.png',
     badge: '/icons/badge-72x72.png',

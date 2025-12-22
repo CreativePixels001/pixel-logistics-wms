@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PixelAudit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/global.css">
+</head>
+<body>
+    <div class="dashboard-layout">
+        <!-- Sidebar Container -->
+        <div id="sidebarContainer"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header Container -->
+            <div id="headerContainer"></div>
+
+            <!-- Page Content -->
+            <div class="page-content">
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background: #f5f5f5;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value" id="totalAudits">0</div>
+                        <div class="stat-label">Total Audits</div>
+                        <div class="stat-change up">
+                            Start your first audit
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background: #f5f5f5;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <polyline points="12 6 12 12 16 14"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Pending Audits</div>
+                        <div class="stat-change up">
+                            No pending tasks
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background: #f5f5f5;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Completed Audits</div>
+                        <div class="stat-change up">
+                            Complete your first audit
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <div class="stat-icon" style="background: #f5f5f5;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="9" cy="7" r="4"></circle>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-value">0</div>
+                        <div class="stat-label">Active Clients</div>
+                        <div class="stat-change down">
+                            Add your first client
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Audits & Templates -->
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                    <!-- Recent Audits -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Recent Audits</h3>
+                            <a href="audits.html" class="view-all-link" style="font-size: 0.875rem; text-decoration: none;">View All →</a>
+                        </div>
+                        <div id="recentAuditsContainer">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Popular Templates -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Popular Templates</h3>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div class="template-card" onclick="alert('Travel audit templates coming soon!')">
+                                <div class="template-card-header">
+                                    <span style="font-weight: 600;">Travel</span>
+                                    <span class="template-card-count">4 templates</span>
+                                </div>
+                                <div class="template-card-items">App • Driver • Vehicle • Trip</div>
+                            </div>
+
+                            <div class="template-card" onclick="alert('Logistics audit templates coming soon!')">
+                                <div class="template-card-header">
+                                    <span style="font-weight: 600;">Logistics</span>
+                                    <span class="template-card-count">5 templates</span>
+                                </div>
+                                <div class="template-card-items">Warehouse • Driver • Safety</div>
+                            </div>
+
+                            <div class="template-card" onclick="alert('Enterprise audit templates coming soon!')">
+                                <div class="template-card-header">
+                                    <span style="font-weight: 600;">Enterprise</span>
+                                    <span class="template-card-count">5 templates</span>
+                                </div>
+                                <div class="template-card-items">Process • HR • IT • Security</div>
+                            </div>
+
+                            <div class="template-card" onclick="alert('Retail audit templates coming soon!')">
+                                <div class="template-card-header">
+                                    <span style="font-weight: 600;">Retail</span>
+                                    <span class="template-card-count">3 templates</span>
+                                </div>
+                                <div class="template-card-items">Store • Inventory • Staff</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Assignment Modal -->
+    <div id="assignmentModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: #fff; border-radius: 8px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 24px rgba(0,0,0,0.15);">
+            <!-- Modal Header -->
+            <div style="padding: 1.5rem; border-bottom: 1px solid #e5e5e5; display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="modal-title" style="margin: 0; font-size: 1.25rem; font-weight: 700;">Create New Audit</h2>
+                <button onclick="closeAssignmentModal()" style="background: none; border: none; cursor: pointer; padding: 0.5rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="assignmentForm" style="padding: 1.5rem;">
+                <!-- Audit Template -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Audit Template *</label>
+                    <select id="templateSelect" required style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                        <option value="">Select a template...</option>
+                        <option value="restaurant-safety-audit">Restaurant Safety Audit (40 items)</option>
+                        <option value="warehouse-compliance-audit">Warehouse Compliance Audit (50 items)</option>
+                        <option value="retail-store-audit">Retail Store Audit (35 items)</option>
+                    </select>
+                </div>
+
+                <!-- Client -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Client *</label>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <select id="clientSelect" required style="flex: 1; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                            <option value="">Select a client...</option>
+                        </select>
+                        <button type="button" onclick="openAddClientModal()" style="padding: 0.75rem 1rem; background: #f5f5f5; border: 1px solid #e5e5e5; border-radius: 4px; cursor: pointer; white-space: nowrap; font-weight: 600;">
+                            + Add Client
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Location/Address *</label>
+                    <input type="text" id="locationInput" required placeholder="e.g., Andheri, Mumbai" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                </div>
+
+                <!-- Auditor -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Assign To *</label>
+                    <select id="auditorSelect" required style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                        <option value="self">Self Audit (Complete Myself)</option>
+                        <option value="rajesh">Rajesh Kumar - +91 98765 43210</option>
+                        <option value="priya">Priya Sharma - +91 98765 43211</option>
+                        <option value="amit">Amit Patel - +91 98765 43212</option>
+                    </select>
+                </div>
+
+                <!-- Due Date -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Due Date *</label>
+                    <input type="date" id="dueDateInput" required style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                </div>
+
+                <!-- Notes -->
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Instructions/Notes</label>
+                    <textarea id="notesInput" rows="3" placeholder="Any special instructions for the auditor..." style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem; resize: vertical;"></textarea>
+                </div>
+
+                <!-- Actions -->
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" onclick="closeAssignmentModal()" class="btn-secondary">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        Create & Assign
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Client Modal -->
+    <div id="addClientModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1001; align-items: center; justify-content: center;">
+        <div style="background: #fff; border-radius: 8px; max-width: 500px; width: 90%; box-shadow: 0 4px 24px rgba(0,0,0,0.15);">
+            <!-- Modal Header -->
+            <div style="padding: 1.5rem; border-bottom: 1px solid #e5e5e5; display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="modal-title" style="margin: 0; font-size: 1.25rem; font-weight: 700;">Add New Client</h2>
+                <button onclick="closeAddClientModal()" style="background: none; border: none; cursor: pointer; padding: 0.5rem;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <form id="addClientForm" style="padding: 1.5rem;">
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Company Name *</label>
+                    <input type="text" id="clientName" required placeholder="e.g., Mahindra Logistics" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Contact Person</label>
+                    <input type="text" id="clientContact" placeholder="e.g., Vishal Sharma" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Email</label>
+                    <input type="email" id="clientEmail" placeholder="contact@company.com" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">Phone</label>
+                    <input type="tel" id="clientPhone" placeholder="+91 98765 43210" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.875rem;">GST Number</label>
+                    <input type="text" id="clientGST" placeholder="27AABCM1234F1Z5" style="width: 100%; padding: 0.75rem; border: 1px solid #e5e5e5; border-radius: 4px; font-size: 0.9375rem;">
+                </div>
+
+                <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+                    <button type="button" onclick="closeAddClientModal()" class="btn-secondary">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        Add Client
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Modal Functions
+        function openAssignmentModal() {
+            document.getElementById('assignmentModal').style.display = 'flex';
+            loadClients();
+            loadAuditors();
+            // Set default due date to tomorrow
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('dueDateInput').value = tomorrow.toISOString().split('T')[0];
+        }
+
+        function loadAuditors() {
+            const auditors = JSON.parse(localStorage.getItem('pixelaudit_auditors') || '[]');
+            const select = document.getElementById('auditorSelect');
+            
+            // Keep Self Audit option
+            select.innerHTML = '<option value="self">Self Audit (Complete Myself)</option>';
+            
+            // Add auditors from localStorage
+            auditors.forEach(auditor => {
+                const option = document.createElement('option');
+                option.value = auditor.id;
+                option.textContent = `${auditor.name} - ${auditor.phone}`;
+                select.appendChild(option);
+            });
+        }
+
+        function closeAssignmentModal() {
+            document.getElementById('assignmentModal').style.display = 'none';
+            document.getElementById('assignmentForm').reset();
+        }
+
+        function openAddClientModal() {
+            document.getElementById('addClientModal').style.display = 'flex';
+        }
+
+        function closeAddClientModal() {
+            document.getElementById('addClientModal').style.display = 'none';
+            document.getElementById('addClientForm').reset();
+        }
+
+        // Load clients from localStorage
+        function loadClients() {
+            const clients = JSON.parse(localStorage.getItem('pixelaudit_clients') || '[]');
+            const select = document.getElementById('clientSelect');
+            
+            // Clear existing options except first
+            select.innerHTML = '<option value="">Select a client...</option>';
+            
+            // Add demo clients if none exist
+            if (clients.length === 0) {
+                const demoClients = [
+                    { id: 'demo1', name: 'Mahindra Logistics', contact: 'Vishal Sharma', email: 'vishal@mahindra.com', phone: '+91 98765 43210', gst: '27AABCM1234F1Z5' },
+                    { id: 'demo2', name: 'SBI Bank - Andheri Branch', contact: 'Rajesh Kumar', email: 'rajesh@sbi.co.in', phone: '+91 98765 43211', gst: '27AABCS5678G2A6' },
+                    { id: 'demo3', name: 'D-Mart - Mumbai Central', contact: 'Priya Patel', email: 'priya@dmart.com', phone: '+91 98765 43212', gst: '27AABCD9876H3B7' }
+                ];
+                localStorage.setItem('pixelaudit_clients', JSON.stringify(demoClients));
+                clients.push(...demoClients);
+            }
+            
+            // Populate dropdown
+            clients.forEach(client => {
+                const option = document.createElement('option');
+                option.value = client.id;
+                option.textContent = client.name;
+                select.appendChild(option);
+            });
+        }
+
+        // Add Client Form Submit
+        document.getElementById('addClientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newClient = {
+                id: 'client_' + Date.now(),
+                name: document.getElementById('clientName').value,
+                contact: document.getElementById('clientContact').value,
+                email: document.getElementById('clientEmail').value,
+                phone: document.getElementById('clientPhone').value,
+                gst: document.getElementById('clientGST').value,
+                createdAt: new Date().toISOString()
+            };
+            
+            const clients = JSON.parse(localStorage.getItem('pixelaudit_clients') || '[]');
+            clients.push(newClient);
+            localStorage.setItem('pixelaudit_clients', JSON.stringify(clients));
+            
+            closeAddClientModal();
+            loadClients();
+            
+            // Auto-select the new client
+            document.getElementById('clientSelect').value = newClient.id;
+            
+            alert('Client added successfully!');
+        });
+
+        // Assignment Form Submit
+        document.getElementById('assignmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const templateId = document.getElementById('templateSelect').value;
+            const clientId = document.getElementById('clientSelect').value;
+            const location = document.getElementById('locationInput').value;
+            const auditor = document.getElementById('auditorSelect').value;
+            const dueDate = document.getElementById('dueDateInput').value;
+            const notes = document.getElementById('notesInput').value;
+            
+            // Get client details
+            const clients = JSON.parse(localStorage.getItem('pixelaudit_clients') || '[]');
+            const client = clients.find(c => c.id === clientId);
+            
+            // Generate unique audit ID
+            const auditId = 'audit_' + Date.now();
+            
+            // Create audit object
+            const audit = {
+                id: auditId,
+                templateId: templateId,
+                templateName: document.getElementById('templateSelect').selectedOptions[0].text,
+                clientId: clientId,
+                clientName: client.name,
+                location: location,
+                auditor: auditor,
+                auditorName: document.getElementById('auditorSelect').selectedOptions[0].text,
+                dueDate: dueDate,
+                notes: notes,
+                status: 'pending',
+                createdAt: new Date().toISOString(),
+                createdBy: localStorage.getItem('pixelaudit_user_name') || 'Demo User'
+            };
+            
+            // Save to localStorage
+            const audits = JSON.parse(localStorage.getItem('pixelaudit_audits') || '[]');
+            audits.push(audit);
+            localStorage.setItem('pixelaudit_audits', JSON.stringify(audits));
+            
+            closeAssignmentModal();
+            
+            // Show success message
+            alert(`Audit created successfully!\nAudit ID: ${auditId}\n\nOpening audit form...`);
+            
+            // Redirect to audit form with audit ID
+            window.location.href = `audit-form.html?audit=${auditId}`;
+        });
+
+        // Update stats
+        function updateStats() {
+            const audits = JSON.parse(localStorage.getItem('pixelaudit_audits') || '[]');
+            const totalAudits = audits.length;
+            const pendingAudits = audits.filter(a => a.status === 'pending').length;
+            const completedAudits = audits.filter(a => a.status === 'completed').length;
+            
+            document.getElementById('totalAudits').textContent = totalAudits;
+            
+            // Update all stat values
+            const statValues = document.querySelectorAll('.stat-value');
+            if (statValues[0]) statValues[0].textContent = totalAudits;
+            if (statValues[1]) statValues[1].textContent = pendingAudits;
+            if (statValues[2]) statValues[2].textContent = completedAudits;
+            if (statValues[3]) {
+                const clients = JSON.parse(localStorage.getItem('pixelaudit_clients') || '[]');
+                statValues[3].textContent = clients.length;
+            }
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Trial Timer
+        function startTrialTimer(remainingTime) {
+            const timerEl = document.getElementById('timerText');
+            const timerContainer = document.getElementById('trialTimer');
+
+            function updateTimer() {
+                const minutes = Math.floor(remainingTime / 60000);
+                const seconds = Math.floor((remainingTime % 60000) / 1000);
+                
+                timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (remainingTime <= 0) {
+                    alert('Your 1-hour trial has expired! Upgrade for just ₹1 to continue.');
+                    window.location.href = 'index.html#pricing';
+                    return;
+                }
+                
+                remainingTime -= 1000;
+                setTimeout(updateTimer, 1000);
+            }
+            
+            updateTimer();
+        }
+
+        // Initialize Dashboard
+        function initDashboard() {
+            const token = localStorage.getItem('pixelaudit_access_token');
+            let trialStart = localStorage.getItem('pixelaudit_trial_start');
+            
+            if (!token || !trialStart) {
+                // Demo mode - create trial session and demo data
+                localStorage.setItem('pixelaudit_access_token', 'demo_' + Date.now());
+                localStorage.setItem('pixelaudit_trial_start', Date.now().toString());
+                localStorage.setItem('pixelaudit_user_name', 'Demo User');
+                localStorage.setItem('pixelaudit_user_email', 'demo@pixelaudit.com');
+                trialStart = Date.now().toString();
+                
+                // Create demo clients
+                const demoClients = [
+                    { id: 'demo1', name: 'Mahindra Logistics', contact: 'Vishal Sharma', email: 'vishal@mahindra.com', phone: '+91 98765 43210', gst: '27AABCM1234F1Z5', createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString() },
+                    { id: 'demo2', name: 'SBI Bank - Andheri Branch', contact: 'Rajesh Kumar', email: 'rajesh@sbi.co.in', phone: '+91 98765 43211', gst: '27AABCS5678G2A6', createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() },
+                    { id: 'demo3', name: 'D-Mart - Mumbai Central', contact: 'Priya Patel', email: 'priya@dmart.com', phone: '+91 98765 43212', gst: '27AABCD9876H3B7', createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString() }
+                ];
+                localStorage.setItem('pixelaudit_clients', JSON.stringify(demoClients));
+                
+                // Create demo auditors
+                const demoAuditors = [
+                    { id: 'auditor1', name: 'Rajesh Kumar', role: 'Senior Auditor', email: 'rajesh@pixelaudit.com', phone: '+91 98765 43210', employeeId: 'AUD001', createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString() },
+                    { id: 'auditor2', name: 'Priya Sharma', role: 'Field Auditor', email: 'priya@pixelaudit.com', phone: '+91 98765 43211', employeeId: 'AUD002', createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString() },
+                    { id: 'auditor3', name: 'Amit Patel', role: 'Junior Auditor', email: 'amit@pixelaudit.com', phone: '+91 98765 43212', employeeId: 'AUD003', createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString() }
+                ];
+                localStorage.setItem('pixelaudit_auditors', JSON.stringify(demoAuditors));
+                
+                // Create demo audits
+                const demoAudits = [
+                    {
+                        id: 'demo_audit_1',
+                        templateId: 'restaurant-safety-audit',
+                        templateName: 'Restaurant Safety Audit (40 items)',
+                        clientId: 'demo1',
+                        clientName: 'Mahindra Logistics',
+                        location: 'Andheri West, Mumbai',
+                        auditor: 'self',
+                        auditorName: 'Self Audit (Complete Myself)',
+                        dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        notes: 'Regular monthly safety audit',
+                        status: 'pending',
+                        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                        createdBy: 'Demo User'
+                    },
+                    {
+                        id: 'demo_audit_2',
+                        templateId: 'warehouse-compliance-audit',
+                        templateName: 'Warehouse Compliance Audit (50 items)',
+                        clientId: 'demo2',
+                        clientName: 'SBI Bank - Andheri Branch',
+                        location: 'Andheri East, Mumbai',
+                        auditor: 'rajesh',
+                        auditorName: 'Rajesh Kumar - +91 98765 43210',
+                        dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        notes: 'Quarterly compliance check',
+                        status: 'completed',
+                        createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+                        createdBy: 'Demo User',
+                        completedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+                    },
+                    {
+                        id: 'demo_audit_3',
+                        templateId: 'retail-store-audit',
+                        templateName: 'Retail Store Audit (35 items)',
+                        clientId: 'demo3',
+                        clientName: 'D-Mart - Mumbai Central',
+                        location: 'Mumbai Central',
+                        auditor: 'priya',
+                        auditorName: 'Priya Sharma - +91 98765 43211',
+                        dueDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        notes: 'Store cleanliness and staff performance check',
+                        status: 'pending',
+                        createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+                        createdBy: 'Demo User'
+                    }
+                ];
+                localStorage.setItem('pixelaudit_audits', JSON.stringify(demoAudits));
+            }
+
+            // Check trial status
+            const elapsed = Date.now() - parseInt(trialStart);
+            const oneHour = 60 * 60 * 1000;
+            
+            if (elapsed >= oneHour) {
+                // Trial expired
+                alert('Your 1-hour trial has expired! Upgrade for just ₹1 to continue.');
+                window.location.href = 'index.html#pricing';
+                return;
+            }
+
+            // Display user info
+            const userName = localStorage.getItem('pixelaudit_user_name') || 'Demo User';
+            const userEmail = localStorage.getItem('pixelaudit_user_email') || '';
+
+            document.getElementById('userName').textContent = userName;
+            document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
+            
+            // Start trial timer
+            startTrialTimer(oneHour - elapsed);
+            
+            // Update stats on load
+            updateStats();
+            
+            // Load recent audits
+            loadRecentAudits();
+        }
+
+        // Load recent audits
+        function loadRecentAudits() {
+            const audits = JSON.parse(localStorage.getItem('pixelaudit_audits') || '[]');
+            const container = document.getElementById('recentAuditsContainer');
+            
+            if (audits.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state-container">
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                            </div>
+                            <div class="empty-title">No audits yet</div>
+                            <div class="empty-text">Click "New Audit" to get started</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Show latest 5 audits
+            const recentAudits = audits.slice(-5).reverse();
+            
+            container.innerHTML = `
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Client</th>
+                            <th>Template</th>
+                            <th>Status</th>
+                            <th>Due Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${recentAudits.map(audit => {
+                            const statusBadge = audit.status === 'completed' 
+                                ? '<span class="badge badge-completed">Completed</span>'
+                                : '<span class="badge badge-pending">Pending</span>';
+                            
+                            const dueDate = new Date(audit.dueDate).toLocaleDateString('en-IN', { 
+                                day: 'numeric', 
+                                month: 'short', 
+                                year: 'numeric' 
+                            });
+                            
+                            return `
+                                <tr>
+                                    <td><strong>${audit.clientName}</strong><br><span class="location-text">${audit.location}</span></td>
+                                    <td>${audit.templateName.split('(')[0]}</td>
+                                    <td>${statusBadge}</td>
+                                    <td>${dueDate}</td>
+                                    <td>
+                                        ${audit.status === 'pending' 
+                                            ? `<button onclick="window.location.href='audit-form.html?audit=${audit.id}'" class="btn-start">Start</button>`
+                                            : `<button onclick="alert('Review feature coming soon!')" class="btn-view">View</button>`
+                                        }
+                                    </td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        // Load on page ready
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+
+    <!-- Components -->
+    <script src="assets/js/components.js"></script>
+    <script>
+        // Initialize components when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const headerActions = `
+                <button class="btn btn-secondary" onclick="alert('Download report feature coming soon!')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="7 10 12 15 17 10"/>
+                        <line x1="12" y1="15" x2="12" y2="3"/>
+                    </svg>
+                    Download Report
+                </button>
+                <button class="btn btn-secondary" onclick="openAssignmentModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19"/>
+                        <line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    New Audit
+                </button>
+            `;
+            
+            initializeComponents('dashboard', 'Dashboard', 'Welcome back! Here\'s what\'s happening with your audits today.', headerActions);
+        });
+    </script>
+</body>
+</html>

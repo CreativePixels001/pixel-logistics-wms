@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logistics Reports - PixelAudit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../../assets/css/global.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #ffffff; color: #000000; }
+        .dashboard-layout { display: flex; min-height: 100vh; }
+        .main-content { flex: 1; margin-left: 260px; }
+        .page-content { padding: 2rem; max-width: 1400px; }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: #666666;
+        }
+
+        .breadcrumb a { color: #000000; text-decoration: none; font-weight: 500; }
+
+        .page-header { margin-bottom: 2rem; }
+        .page-title { font-size: 2rem; font-weight: 800; color: #000000; margin-bottom: 0.5rem; }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            padding: 1.5rem;
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 1rem;
+        }
+
+        .table-card {
+            background: #ffffff;
+            border: 1px solid #e5e5e5;
+            border-radius: 4px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 0.75rem;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        th {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #666666;
+            text-transform: uppercase;
+        }
+
+        td {
+            font-size: 0.875rem;
+            color: #000000;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 2px;
+        }
+
+        .status-completed { background: #D1FAE5; color: #065F46; }
+        .status-pending { background: #FEF3C7; color: #92400E; }
+        .status-assigned { background: #E0E7FF; color: #3730A3; }
+    </style>
+</head>
+<body>
+    <div class="dashboard-layout">
+        <div id="sidebarContainer"></div>
+
+        <main class="main-content">
+            <div id="headerContainer"></div>
+
+            <div class="page-content">
+                <div class="breadcrumb">
+                    <a href="../../../dashboard.html">Dashboard</a>
+                    <span>/</span>
+                    <a href="logistics-dashboard.html">Logistics</a>
+                    <span>/</span>
+                    <span>Reports</span>
+                </div>
+
+                <div class="page-header">
+                    <h1 class="page-title">📊 Logistics Reports & Analytics</h1>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3 class="chart-title">Audits Over Time</h3>
+                        <canvas id="auditsTrendChart" height="200"></canvas>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Audit Status Distribution</h3>
+                        <canvas id="statusChart" height="200"></canvas>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Audits by Category</h3>
+                        <canvas id="categoryChart" height="200"></canvas>
+                    </div>
+
+                    <div class="chart-card">
+                        <h3 class="chart-title">Completion Rate</h3>
+                        <canvas id="completionChart" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Audits Table -->
+                <div class="table-card">
+                    <h3 class="chart-title">Recent Audits</h3>
+                    <table id="auditsTable">
+                        <thead>
+                            <tr>
+                                <th>Audit ID</th>
+                                <th>Template</th>
+                                <th>Client</th>
+                                <th>Auditor</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditsTableBody">
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #999999;">No audits found</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="../../../assets/js/components.js"></script>
+    <script src="../js/dashboard.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('sidebarContainer').innerHTML = renderSidebar('dashboard');
+            document.getElementById('headerContainer').innerHTML = renderHeader();
+            
+            loadReports();
+        });
+
+        function loadReports() {
+            const audits = JSON.parse(localStorage.getItem('pixelaudit_logistics_audits') || '[]');
+            
+            if (audits.length === 0) {
+                return;
+            }
+
+            // Trend Chart
+            const dates = getLast7Days();
+            const auditCounts = dates.map(date => {
+                return audits.filter(a => new Date(a.createdAt).toDateString() === date.toDateString()).length;
+            });
+
+            new Chart(document.getElementById('auditsTrendChart'), {
+                type: 'line',
+                data: {
+                    labels: dates.map(d => d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })),
+                    datasets: [{
+                        label: 'Audits Created',
+                        data: auditCounts,
+                        borderColor: '#000000',
+                        backgroundColor: 'rgba(0,0,0,0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Status Chart
+            const statusCounts = {
+                completed: audits.filter(a => a.status === 'completed').length,
+                pending: audits.filter(a => a.status === 'pending').length,
+                assigned: audits.filter(a => a.status === 'assigned').length
+            };
+
+            new Chart(document.getElementById('statusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'Pending', 'Assigned'],
+                    datasets: [{
+                        data: [statusCounts.completed, statusCounts.pending, statusCounts.assigned],
+                        backgroundColor: ['#10B981', '#F59E0B', '#3B82F6']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Category Chart
+            const categoryCounts = {
+                warehouse: audits.filter(a => a.category === 'warehouse').length,
+                driver: audits.filter(a => a.category === 'driver').length,
+                vehicle: audits.filter(a => a.category === 'vehicle').length,
+                trip: audits.filter(a => a.category === 'trip').length
+            };
+
+            new Chart(document.getElementById('categoryChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Warehouse', 'Driver', 'Vehicle', 'Trip'],
+                    datasets: [{
+                        label: 'Audits',
+                        data: [categoryCounts.warehouse, categoryCounts.driver, categoryCounts.vehicle, categoryCounts.trip],
+                        backgroundColor: '#000000'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Completion Rate
+            const completionRate = audits.length > 0 ? (statusCounts.completed / audits.length) * 100 : 0;
+            
+            new Chart(document.getElementById('completionChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'Not Completed'],
+                    datasets: [{
+                        data: [completionRate, 100 - completionRate],
+                        backgroundColor: ['#10B981', '#E5E5E5']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            // Populate table
+            const tbody = document.getElementById('auditsTableBody');
+            tbody.innerHTML = '';
+            
+            audits.slice(-10).reverse().forEach(audit => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td>${audit.id}</td>
+                    <td>${audit.templateName}</td>
+                    <td>${audit.clientName}</td>
+                    <td>${audit.auditorName}</td>
+                    <td>${new Date(audit.createdAt).toLocaleDateString()}</td>
+                    <td><span class="status-badge status-${audit.status}">${audit.status}</span></td>
+                `;
+            });
+        }
+
+        function getLast7Days() {
+            const dates = [];
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                dates.push(date);
+            }
+            return dates;
+        }
+    </script>
+</body>
+</html>

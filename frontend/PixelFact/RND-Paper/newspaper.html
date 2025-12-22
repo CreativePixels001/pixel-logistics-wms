@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VK Kalazar Weekly - Digital Edition</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans Devanagari', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .newspaper-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .edition-info {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .page-list {
+            list-style: none;
+        }
+
+        .page-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .page-item:hover {
+            background: #f0f0ff;
+        }
+
+        .page-item.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .newspaper-viewer {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .page-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .page-navigation {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .page-content {
+            line-height: 2;
+            font-size: 1.1rem;
+            color: #333;
+            text-align: justify;
+            white-space: pre-wrap;
+        }
+
+        .pdf-view {
+            display: none;
+            text-align: center;
+        }
+
+        .pdf-view.active {
+            display: block;
+        }
+
+        .pdf-embed {
+            width: 100%;
+            height: 800px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        .text-view {
+            display: block;
+        }
+
+        .text-view.hidden {
+            display: none;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .highlight {
+            background: yellow;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .newspaper-viewer {
+                padding: 20px;
+            }
+
+            .newspaper-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="newspaper-title">VK Kalazar Weekly</h1>
+            <p class="edition-info">🗞️ Digital Edition | Issue 4 | December 2024 | 8 Pages</p>
+            
+            <div class="controls">
+                <div class="view-toggle">
+                    <button class="btn btn-primary" onclick="switchView('text')" id="textViewBtn">📄 Text View</button>
+                    <button class="btn btn-secondary" onclick="switchView('pdf')" id="pdfViewBtn">📕 PDF View</button>
+                </div>
+                <button class="btn btn-secondary" onclick="downloadPDF()">⬇️ Download PDF</button>
+                <button class="btn btn-secondary" onclick="sharePage()">🔗 Share</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <h3>📑 Pages</h3>
+                <div class="search-box">
+                    <input type="text" class="search-input" id="searchInput" placeholder="खोजें..." onkeyup="searchContent()">
+                </div>
+                <ul class="page-list" id="pageList">
+                    <!-- Pages will be loaded here -->
+                </ul>
+            </div>
+
+            <div class="newspaper-viewer">
+                <div class="text-view" id="textView">
+                    <div class="page-header">
+                        <div class="page-number" id="pageNumber">Page 1</div>
+                        <div class="page-navigation">
+                            <button class="nav-btn" onclick="previousPage()" id="prevBtn">◀ Previous</button>
+                            <button class="nav-btn" onclick="nextPage()" id="nextBtn">Next ▶</button>
+                        </div>
+                    </div>
+                    <div class="page-content" id="pageContent">
+                        Loading content...
+                    </div>
+                </div>
+
+                <div class="pdf-view" id="pdfView">
+                    <embed class="pdf-embed" src="vkkalazar-4.pdf" type="application/pdf">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let newspaperData = null;
+        let totalPages = 8;
+
+        // Load newspaper data
+        async function loadNewspaperData() {
+            try {
+                const response = await fetch('newspaper_data.json');
+                newspaperData = await response.json();
+                totalPages = newspaperData.pages;
+                renderPageList();
+                showPage(1);
+            } catch (error) {
+                console.error('Error loading newspaper:', error);
+                document.getElementById('pageContent').innerHTML = 
+                    '<p style="color: red;">Error loading newspaper content. Please refresh the page.</p>';
+            }
+        }
+
+        // Render page list in sidebar
+        function renderPageList() {
+            const pageList = document.getElementById('pageList');
+            pageList.innerHTML = '';
+            
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.className = 'page-item' + (i === 1 ? ' active' : '');
+                li.textContent = `Page ${i}`;
+                li.onclick = () => showPage(i);
+                li.id = `page-item-${i}`;
+                pageList.appendChild(li);
+            }
+        }
+
+        // Show specific page
+        function showPage(pageNum) {
+            if (!newspaperData || pageNum < 1 || pageNum > totalPages) return;
+            
+            currentPage = pageNum;
+            const pageData = newspaperData.content[pageNum - 1];
+            
+            document.getElementById('pageNumber').textContent = `Page ${pageNum} of ${totalPages}`;
+            document.getElementById('pageContent').textContent = pageData.text;
+            
+            // Update active page in sidebar
+            document.querySelectorAll('.page-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById(`page-item-${pageNum}`).classList.add('active');
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = pageNum === 1;
+            document.getElementById('nextBtn').disabled = pageNum === totalPages;
+        }
+
+        // Navigation functions
+        function nextPage() {
+            if (currentPage < totalPages) {
+                showPage(currentPage + 1);
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                showPage(currentPage - 1);
+            }
+        }
+
+        // Switch between text and PDF view
+        function switchView(view) {
+            const textView = document.getElementById('textView');
+            const pdfView = document.getElementById('pdfView');
+            const textBtn = document.getElementById('textViewBtn');
+            const pdfBtn = document.getElementById('pdfViewBtn');
+            
+            if (view === 'text') {
+                textView.classList.remove('hidden');
+                pdfView.classList.remove('active');
+                textBtn.className = 'btn btn-primary';
+                pdfBtn.className = 'btn btn-secondary';
+            } else {
+                textView.classList.add('hidden');
+                pdfView.classList.add('active');
+                textBtn.className = 'btn btn-secondary';
+                pdfBtn.className = 'btn btn-primary';
+            }
+        }
+
+        // Search functionality
+        function searchContent() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (!searchTerm || !newspaperData) return;
+            
+            // Find pages containing search term
+            for (let i = 0; i < totalPages; i++) {
+                const pageItem = document.getElementById(`page-item-${i + 1}`);
+                const pageText = newspaperData.content[i].text.toLowerCase();
+                
+                if (pageText.includes(searchTerm)) {
+                    pageItem.style.background = '#fff3cd';
+                } else {
+                    pageItem.style.background = '';
+                }
+            }
+            
+            // Highlight in current page
+            const content = document.getElementById('pageContent');
+            let text = newspaperData.content[currentPage - 1].text;
+            
+            if (searchTerm) {
+                const regex = new RegExp(searchTerm, 'gi');
+                text = text.replace(regex, match => `<span class="highlight">${match}</span>`);
+            }
+            
+            content.innerHTML = text;
+        }
+
+        // Download PDF
+        function downloadPDF() {
+            window.open('vkkalazar-4.pdf', '_blank');
+        }
+
+        // Share page
+        function sharePage() {
+            const shareData = {
+                title: 'VK Kalazar Weekly - Digital Edition',
+                text: `Check out Page ${currentPage} of VK Kalazar Weekly`,
+                url: window.location.href
+            };
+            
+            if (navigator.share) {
+                navigator.share(shareData);
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(window.location.href);
+                alert('Link copied to clipboard!');
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') previousPage();
+            if (e.key === 'ArrowRight') nextPage();
+        });
+
+        // Load newspaper on page load
+        loadNewspaperData();
+    </script>
+</body>
+</html>

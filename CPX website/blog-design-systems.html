@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Systems: Why Every Product Team Needs One - CreativePixels Blog</title>
+    <meta name="description" content="From medieval illuminated manuscripts to modern design languages - how systematic design thinking evolved to solve chaos in digital product development.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --primary: #000000; --dark: #000000; --light: #FFFFFF; --gray: #666666; --border: 2px; }
+        body { font-family: 'Inter', sans-serif; background: white; color: var(--dark); line-height: 1.8; }
+        h1, h2, h3, h4 { font-family: 'Space Grotesk', sans-serif; line-height: 1.3; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 1000; background: white; border-bottom: var(--border) solid black; padding: 1.5rem 0; transition: box-shadow 0.3s ease; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; font-weight: 700; color: black; text-decoration: none; }
+        .nav-menu { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-menu a { color: black; text-decoration: none; font-weight: 500; transition: opacity 0.3s ease; }
+        .nav-menu a:hover { opacity: 0.6; }
+        .cta-btn { padding: 0.75rem 1.5rem; background: black; color: white !important; border: var(--border) solid black; transition: all 0.3s ease; }
+        .cta-btn:hover { background: white; color: black !important; }
+        
+        .hero { padding: 10rem 0 4rem; background: white; border-bottom: var(--border) solid black; }
+        .hero-badge { display: inline-block; padding: 0.5rem 1rem; background: black; color: white; font-size: 0.875rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 1.5rem; }
+        .hero-title { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 700; margin-bottom: 1.5rem; max-width: 900px; }
+        .hero-meta { display: flex; gap: 2rem; align-items: center; color: var(--gray); margin-bottom: 2rem; flex-wrap: wrap; }
+        .author { display: flex; align-items: center; gap: 0.75rem; }
+        .author-avatar { width: 48px; height: 48px; background: black; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 1.25rem; }
+        .author-info h4 { font-size: 1rem; font-weight: 600; color: black; margin-bottom: 0.25rem; }
+        .author-info p { font-size: 0.875rem; }
+        
+        .featured-image { width: 100%; height: 500px; background: black; display: flex; align-items: center; justify-content: center; color: white; margin: 3rem 0; }
+        .featured-image p { font-size: 2rem; font-weight: 700; }
+        
+        .article-content { max-width: 800px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+        .article-content p { font-size: 1.125rem; margin-bottom: 1.5rem; color: #333; }
+        .article-content h2 { font-size: 2rem; font-weight: 700; margin: 3rem 0 1.5rem; }
+        .article-content h3 { font-size: 1.5rem; font-weight: 600; margin: 2.5rem 0 1rem; }
+        .article-content strong { font-weight: 700; color: black; }
+        .article-content em { font-style: italic; }
+        
+        .pullquote { background: rgba(0, 0, 0, 0.03); border-left: 4px solid black; padding: 2rem; margin: 3rem 0; font-size: 1.375rem; font-weight: 500; font-style: italic; line-height: 1.6; }
+        
+        .article-content ul, .article-content ol { margin: 1.5rem 0 1.5rem 2rem; }
+        .article-content li { margin-bottom: 0.75rem; font-size: 1.125rem; color: #333; }
+        
+        .code-block { background: rgba(0, 0, 0, 0.05); border: var(--border) solid black; padding: 1.5rem; margin: 2rem 0; font-family: 'Courier New', monospace; font-size: 0.95rem; overflow-x: auto; }
+        
+        .image-caption { text-align: center; color: var(--gray); font-size: 0.95rem; margin-top: 0.75rem; font-style: italic; }
+        
+        .share-section { border-top: var(--border) solid black; border-bottom: var(--border) solid black; padding: 2rem 0; margin: 4rem 0; text-align: center; }
+        .share-section h4 { font-size: 1.125rem; font-weight: 600; margin-bottom: 1rem; }
+        .share-buttons { display: flex; gap: 1rem; justify-content: center; }
+        .share-btn { padding: 0.75rem 1.5rem; background: white; border: var(--border) solid black; color: black; text-decoration: none; font-weight: 600; transition: all 0.3s ease; }
+        .share-btn:hover { background: black; color: white; }
+        
+        .related-posts { padding: 6rem 0; background: rgba(0, 0, 0, 0.02); }
+        .related-title { font-size: 2rem; font-weight: 700; margin-bottom: 3rem; text-align: center; }
+        .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        .related-card { background: white; border: var(--border) solid black; padding: 2rem; transition: all 0.3s ease; }
+        .related-card:hover { transform: translateY(-5px); background: black; color: white; }
+        .related-card h3 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.75rem; }
+        .related-card p { color: var(--gray); font-size: 0.95rem; }
+        .related-card:hover p { color: rgba(255, 255, 255, 0.7); }
+        .related-card a { color: black; font-weight: 600; text-decoration: none; border-bottom: var(--border) solid black; padding-bottom: 2px; display: inline-block; margin-top: 1rem; }
+        .related-card:hover a { color: white; border-color: white; }
+        
+        .cta-section { padding: 6rem 0; background: black; color: white; text-align: center; }
+        .cta-section h2 { font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 700; margin-bottom: 1.5rem; }
+        .cta-section p { font-size: 1.125rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+        .cta-white { display: inline-block; padding: 1rem 2.5rem; background: white; color: black; text-decoration: none; font-weight: 600; border: var(--border) solid white; transition: all 0.3s ease; }
+        .cta-white:hover { background: black; color: white; }
+        
+        footer { background: black; color: white; padding: 4rem 0 2rem; }
+        .footer-container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
+        .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; margin-bottom: 3rem; }
+        .footer-brand h3 { font-size: 1.5rem; margin-bottom: 1rem; }
+        .footer-brand p { color: rgba(255, 255, 255, 0.7); line-height: 1.8; margin-bottom: 1.5rem; }
+        .footer-social { display: flex; gap: 1rem; }
+        .social-link { width: 40px; height: 40px; border: var(--border) solid white; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; }
+        .social-link:hover { background: white; }
+        .social-link:hover svg { stroke: black; }
+        .social-link svg { stroke: white; transition: stroke 0.3s ease; }
+        .footer-column h4 { margin-bottom: 1rem; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 0.75rem; }
+        .footer-links a { color: rgba(255, 255, 255, 0.7); text-decoration: none; transition: color 0.3s ease; }
+        .footer-links a:hover { color: white; }
+        .footer-bottom { padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; justify-content: space-between; align-items: center; }
+        .footer-bottom p { color: rgba(255, 255, 255, 0.5); }
+        .footer-legal { display: flex; gap: 2rem; }
+        .footer-legal a { color: rgba(255, 255, 255, 0.5); text-decoration: none; transition: color 0.3s ease; }
+        .footer-legal a:hover { color: white; }
+        
+        @media (max-width: 968px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-brand { grid-column: 1 / -1; } .featured-image { height: 350px; } .hero-meta { flex-direction: column; align-items: flex-start; gap: 1rem; } }
+        @media (max-width: 640px) { .nav-menu { gap: 1rem; font-size: 0.9rem; } .footer-grid, .related-grid { grid-template-columns: 1fr; } .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; } .footer-legal { flex-direction: column; gap: 0.5rem; } .featured-image { height: 250px; } .article-content { padding: 2rem 1rem 4rem; } .share-buttons { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="home.html" class="logo">CreativePixels</a>
+            <ul class="nav-menu">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="pixelgram.html">PixelGram</a></li>
+                <li><a href="pixel-world.html">Pixel World</a></li>
+                <li><a href="pixelverse.html">PixelVerse</a></li>
+                <li><a href="get-in-touch.html" class="cta-btn">Get in Touch</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">DESIGN & UX</div>
+            <h1 class="hero-title">Design Systems: Why Every Product Team Needs One</h1>
+            <div class="hero-meta">
+                <div class="author">
+                    <div class="author-avatar">PT</div>
+                    <div class="author-info">
+                        <h4>Pixel Talk</h4>
+                        <p>December 5, 2025 • 6 min read</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="featured-image">
+        <p>Design System Evolution</p>
+    </div>
+
+    <article class="article-content">
+        <p>In medieval monasteries, monks spent lifetimes creating illuminated manuscripts. Each monastery had its own style—distinctive letterforms, specific colors, particular decorative patterns. When a manuscript needed copying, the scribe referenced detailed style guides that prescribed everything from ink recipes to letter spacing. These weren't just aesthetic choices; they were systems ensuring consistency, quality, and recognizability across decades of work.</p>
+
+        <p>Fast forward to 2010, and a design team at a growing healthcare startup faced a similar challenge—but instead of parchment, they had pixels. Instead of months, they had days. And instead of one manuscript, they were creating hundreds of screens across web, mobile, and tablet platforms.</p>
+
+        <p>This is the story of how design systems evolved from ancient practices to modern necessity, solving one of the most persistent problems in digital product development: consistency at scale.</p>
+
+        <h2>The Crisis of the Early 2000s</h2>
+
+        <p>Meet Jessica, a design lead who joined a financial services company in 2007. The company had been building web applications since 1999, and each team had created their own buttons, forms, navigation patterns, and color schemes. The result? Their platform looked like it was designed by twelve different companies.</p>
+
+        <p>Blue buttons in the account dashboard. Green buttons in the payment section. Round corners here, square corners there. Some dropdowns opened downward, others upward. Every product release required designers to reinvent basic components. A simple login form took three days to design because nothing was reusable.</p>
+
+        <p>Worse, users were confused. Training materials became outdated within months. Customer support couldn't give consistent guidance because interfaces varied wildly. Jessica remembers one user who said, "I know how to pay bills in the old system, but this new feature feels like a different website."</p>
+
+        <p>It <em>was</em> a different website. Built by different teams at different times with different design philosophies. The company was drowning in inconsistency.</p>
+
+        <div class="pullquote">
+            "Design systems aren't about restricting creativity. They're about channeling it toward solving real problems instead of reinventing the wheel."
+        </div>
+
+        <h2>The 2010s: When Design Became Systematic</h2>
+
+        <p>The solution arrived not as a single innovation but as a convergence of ideas from print design, software engineering, and behavioral psychology. Companies like Google, Airbnb, and Salesforce pioneered what we now call design systems—comprehensive collections of reusable components, patterns, and guidelines that ensure consistency across products.</p>
+
+        <p>In 2012, Jessica's team began building their first design system. They called it "Compass," and it transformed everything.</p>
+
+        <h3>The Building Blocks</h3>
+
+        <p>A design system, they discovered, needed several layers:</p>
+
+        <p><strong>Design Tokens:</strong> The foundational variables—colors, typography, spacing, shadows. Instead of writing "#3366CC" everywhere, they defined "primary-blue" once and referenced it throughout. When the brand updated, they changed one value and every instance updated automatically. Like those medieval ink recipes, but instant and global.</p>
+
+        <p><strong>Component Library:</strong> Reusable UI elements—buttons, inputs, cards, modals. Each component came with usage guidelines, accessibility requirements, and code implementations. Designers and developers spoke the same language. A "primary button" meant exactly the same thing to everyone.</p>
+
+        <p><strong>Pattern Library:</strong> Higher-level solutions for common problems. How do we handle empty states? What's our approach to form validation? How should error messages appear? These patterns encoded years of user research and testing.</p>
+
+        <p><strong>Voice and Tone Guidelines:</strong> Consistent writing wasn't about making everything sound robotic—it was about making the product feel like it came from one coherent entity. Financial interfaces needed trust and clarity. Healthcare apps required empathy and precision. The guidelines captured these nuances.</p>
+
+        <h2>Real-World Transformations</h2>
+
+        <p>Let's look at how different industries leveraged design systems through the 2010s:</p>
+
+        <p><strong>Healthcare Revolution:</strong> A hospital network had seventeen different patient portals, each designed independently over a decade. Patients logging in for test results encountered completely different interfaces than those scheduling appointments. In 2014, they implemented a unified design system. Within two years, patient satisfaction scores increased 34%. Support calls about "how to use the website" dropped 62%. The secret? Consistency breeds confidence, especially when people are stressed about their health.</p>
+
+        <p><strong>E-commerce Consistency:</strong> An online retailer with presence in twelve countries faced a localization nightmare. Each regional team had modified the checkout flow to match "local preferences." The result? Ten different checkout experiences, each with different conversion rates. Their 2016 design system unified the experience while allowing cultural customization where it mattered. Conversion improved across all regions because users could apply knowledge from one market to another.</p>
+
+        <p><strong>Enterprise Efficiency:</strong> A B2B software company with 200 developers and 20 designers was spending 40% of development time rebuilding basic UI components. Each team created their own date pickers, modals, and data tables. Their 2015 design system changed everything. Development time for new features dropped 35%. More importantly, their application suite finally felt cohesive, improving enterprise sales by reducing the perception of "duct-taped" software.</p>
+
+        <h2>The Psychology of Consistency</h2>
+
+        <p>Here's what most people miss about design systems: they're not primarily about efficiency or aesthetics. They're about cognitive load.</p>
+
+        <p>When a user encounters your application, their brain is learning patterns. "This type of button performs actions. That icon means settings. These colors indicate success or error." Every inconsistency forces the brain to relearn. It's exhausting.</p>
+
+        <p>Jessica's team discovered this when they A/B tested their new systematic design against the old inconsistent approach. Users completed tasks 22% faster—not because the new design was somehow "better," but because they could predict how things worked. They built mental models that actually matched reality.</p>
+
+        <p>Think about driving a rental car. The first few minutes are awkward because things aren't quite where you expect. But the fundamentals—steering wheel, pedals, gear shift—are consistent across all cars. Imagine if every car manufacturer positioned these controls randomly. Driving would require constant conscious thought instead of fluid operation.</p>
+
+        <p>That's what inconsistent digital products do to users. Design systems solve this.</p>
+
+        <div class="pullquote">
+            "The best design system is invisible. Users shouldn't notice your consistency—they should just feel confident navigating your product."
+        </div>
+
+        <h2>Building for Scale</h2>
+
+        <p>By 2018, Jessica's company had grown from 50 to 500 employees. Twenty design teams worked across thirty product areas. Without their design system, this would have resulted in chaos. Instead, new designers could onboard in days rather than months. They had documentation, examples, and shared understanding.</p>
+
+        <p>But maintaining a design system at scale required new approaches:</p>
+
+        <p><strong>Living Documentation:</strong> Static PDF guides became outdated within weeks. Instead, they built dynamic documentation that showed actual components, generated from the same code used in production. Designers saw exactly what developers could build. Developers saw exactly what designers intended.</p>
+
+        <p><strong>Contribution Model:</strong> The design system team couldn't anticipate every need. They created contribution guidelines allowing any team to propose new components or patterns. This prevented both stagnation and fragmentation—the system evolved while maintaining coherence.</p>
+
+        <p><strong>Version Management:</strong> Products couldn't all update simultaneously. The design system supported multiple versions, with clear migration paths and deprecation timelines. Teams could upgrade when ready, not when forced.</p>
+
+        <p><strong>Accessibility by Default:</strong> Every component in the system met WCAG 2.1 AA standards. Keyboard navigation, screen reader support, color contrast—all baked in. Accessibility stopped being something teams added later (or forgot entirely) and became automatic.</p>
+
+        <h2>The Creative Paradox</h2>
+
+        <p>When Jessica first proposed a design system, some designers worried it would stifle creativity. "We'll all just be assembling Lego blocks," one complained. "Where's the craft in that?"</p>
+
+        <p>Three years later, that same designer gave a conference talk titled "How Design Systems Made Me More Creative." His argument? By removing the need to solve the same basic problems repeatedly, the system freed him to focus on genuinely challenging work—complex user flows, novel interactions, strategic improvements.</p>
+
+        <p>"I used to spend three days perfecting a button design," he explained. "Now I spend those three days understanding why users struggle with multi-step forms and designing better solutions. The buttons just work."</p>
+
+        <p>This is the creative paradox of design systems: constraints enable freedom. Jazz musicians master scales and chord progressions not to be limited by them, but to improvise fluently. Designers master component systems for the same reason.</p>
+
+        <h2>The Technical Evolution</h2>
+
+        <p>The 2010s also brought technological advances that made design systems practical:</p>
+
+        <p><strong>Sketch Libraries and Figma:</strong> Design tools evolved to support shared component libraries with automatic updating. When the design system updated a button style, every design file using that component updated automatically.</p>
+
+        <p><strong>CSS-in-JS and Component Frameworks:</strong> React, Vue, and similar frameworks made it natural to build UIs from reusable components. The technical architecture finally matched the design philosophy.</p>
+
+        <p><strong>Design Tokens and Theming:</strong> Tools like Style Dictionary made it possible to define design decisions once and output them for any platform—web CSS, iOS Swift, Android XML, documentation, and more.</p>
+
+        <h2>Lessons from the Journey</h2>
+
+        <p>After a decade of building and maintaining design systems, Jessica shared these insights:</p>
+
+        <p><strong>Start small, think big.</strong> Don't try to systematize everything immediately. Begin with your most-used components—buttons, inputs, typography. Build credibility through usefulness, then expand.</p>
+
+        <p><strong>Systems serve people.</strong> A design system isn't about enforcing control. It's about enabling teams. If your system makes work harder, it will be abandoned. Make it genuinely helpful.</p>
+
+        <p><strong>Documentation is your product.</strong> Components without clear usage guidelines are just a library, not a system. Invest in examples, do's and don'ts, and the reasoning behind decisions.</p>
+
+        <p><strong>Governance matters.</strong> Who decides what enters the system? How do requests get prioritized? What's the review process? Answer these questions early to avoid political battles later.</p>
+
+        <p><strong>Measure impact.</strong> Track metrics like designer productivity, code reuse, accessibility compliance, and user satisfaction. Systems require investment—prove their value.</p>
+
+        <h2>Looking Forward</h2>
+
+        <p>As we move deeper into the 2020s, design systems continue evolving. AI-assisted design tools that understand your system. Automated testing ensuring components maintain standards. Cross-platform systems spanning web, mobile, voice, and AR.</p>
+
+        <p>But the core principle remains unchanged from those medieval monasteries: consistency at scale requires systematic thinking. The monks had their style guides and ink recipes. We have our design tokens and component libraries.</p>
+
+        <p>Different tools. Same wisdom.</p>
+
+        <p>Whether you're a two-person startup or a thousand-person enterprise, the question isn't whether you need a design system. It's whether you're building one intentionally or letting one emerge chaotically. Choose intentionality. Your users, your team, and your future self will thank you.</p>
+
+        <div class="share-section">
+            <h4>Share This Article</h4>
+            <div class="share-buttons">
+                <a href="#" class="share-btn">Share on LinkedIn</a>
+                <a href="#" class="share-btn">Share on Twitter</a>
+                <a href="#" class="share-btn">Copy Link</a>
+            </div>
+        </div>
+    </article>
+
+    <section class="related-posts">
+        <div class="container">
+            <h2 class="related-title">Related Articles</h2>
+            <div class="related-grid">
+                <div class="related-card">
+                    <h3>The Future of AI in Enterprise Applications</h3>
+                    <p>Discover how AI is transforming enterprise software from counting stones to thinking machines.</p>
+                    <a href="blog-ai-enterprise.html">Read More →</a>
+                </div>
+                <div class="related-card">
+                    <h3>Building Scalable Microservices Architecture</h3>
+                    <p>From ancient libraries to cloud-native systems - the evolution of software architecture.</p>
+                    <a href="blog-microservices.html">Read More →</a>
+                </div>
+                <div class="related-card">
+                    <h3>Digital Transformation: A Practical Guide</h3>
+                    <p>Journey through the decades from analog to digital business operations.</p>
+                    <a href="blog-digital-transformation.html">Read More →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Need Help Building Your Design System?</h2>
+            <p>Let's create a cohesive design language that scales with your product and empowers your team.</p>
+            <a href="get-in-touch.html" class="cta-white">Let's Talk Design →</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <h3>CreativePixels</h3>
+                    <p>Transforming thoughts into monetizable products through innovative design, machine learning, and creative problem-solving.</p>
+                    <p style="margin-top: 1rem; font-size: 0.95rem;"><strong>Email:</strong> <a href="mailto:connect@creativepixels.in" style="color: rgba(255,255,255,0.8); text-decoration: none;">connect@creativepixels.in</a></p>
+                    <p style="font-size: 0.95rem;"><strong>Call/WhatsApp:</strong> <a href="tel:+919004789969" style="color: rgba(255,255,255,0.8); text-decoration: none;">+91 90047 89969</a></p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                                <rect x="2" y="9" width="4" height="12"/>
+                                <circle cx="4" cy="4" r="2"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="GitHub">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="about-us.html">About Us</a></li>
+                        <li><a href="our-approach.html">Our Approach</a></li>
+                        <li><a href="pixel-world.html">Pixel World</a></li>
+                        <li><a href="pixelgram.html">PixelGram</a></li>
+                        <li><a href="careers.html">Careers</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Services</h4>
+                    <ul class="footer-links">
+                        <li><a href="digital-transformation.html">Digital Transformation</a></li>
+                        <li><a href="ai-ml.html">AI & Machine Learning</a></li>
+                        <li><a href="product-design.html">Product Design</a></li>
+                        <li><a href="development.html">Development</a></li>
+                        <li><a href="consulting.html">Consulting</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h4>Contact</h4>
+                    <ul class="footer-links">
+                        <li><a href="get-in-touch.html">Get in Touch</a></li>
+                        <li><a href="support.html">Support</a></li>
+                        <li><a href="partners.html">Partners</a></li>
+                        <li><a href="press-kit.html">Press Kit</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 CreativePixels. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="privacy-policy.html">Privacy Policy</a>
+                    <a href="terms-of-service.html">Terms of Service</a>
+                    <a href="cookie-policy.html">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) navbar.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+            else navbar.style.boxShadow = 'none';
+        });
+    </script>
+</body>
+</html>

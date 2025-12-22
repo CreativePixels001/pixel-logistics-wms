@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shipments - TMS | Pixel Logistics</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/tms-dashboard.css">
+  <link rel="stylesheet" href="../css/side-panel.css">
+</head>
+<body>
+  
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="4" width="14" height="14" rx="2" fill="currentColor"/>
+          <rect x="4" y="20" width="14" height="14" rx="2" fill="currentColor" opacity="0.8"/>
+          <rect x="20" y="4" width="14" height="14" rx="2" fill="currentColor" opacity="0.6"/>
+          <rect x="20" y="20" width="14" height="14" rx="2" fill="currentColor" opacity="0.9"/>
+        </svg>
+        <div>
+          <div class="logo-text">Pixel Logistics</div>
+          <div class="logo-subtitle">Transportation Management System</div>
+        </div>
+      </div>
+      
+      <div style="flex: 1;"></div>
+      
+      <button class="header-btn" onclick="openSearch()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"></circle>
+          <path d="m21 21-4.35-4.35"></path>
+        </svg>
+        <span>Search</span>
+        <kbd style="margin-left: 8px; padding: 2px 6px; background: rgba(0,0,0,0.1); border-radius: 4px; font-size: 11px;">⌘K</kbd>
+      </button>
+      
+      <!-- Theme Toggle -->
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme">
+        <svg class="theme-icon theme-icon-light" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg class="theme-icon theme-icon-dark" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
+      
+      <!-- Search Modal -->
+      <div id="searchModal" class="search-modal" style="display: none;" onclick="if(event.target === this) closeSearch()">
+        <div class="search-content">
+          <div class="search-input-wrapper">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            <input type="text" id="globalSearchInput" placeholder="Search shipments, carriers, routes..." />
+            <button onclick="closeSearch()" style="background: none; border: none; cursor: pointer; padding: 8px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+          <div id="searchSuggestions" class="search-suggestions"></div>
+        </div>
+      </div>
+      
+      <!-- User Menu -->
+      <div class="user-menu">
+        <div class="user-info">
+          <div class="user-name">Transport Manager</div>
+          <div class="user-role">Fleet Operations</div>
+        </div>
+        <div class="user-avatar" onclick="toggleUserMenu()">TM</div>
+        <div class="user-dropdown" id="userDropdown">
+          <a href="#" class="dropdown-item" onclick="viewProfile(); return false;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            My Profile
+          </a>
+          <a href="#" class="dropdown-item" onclick="changePassword(); return false;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+            Change Password
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="landing.html" class="dropdown-item">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            Logout
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="layout">
+    
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title"><span>Transportation</span></div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="tms-dashboard.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="3" width="7" height="7"></rect>
+                  <rect x="14" y="14" width="7" height="7"></rect>
+                  <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+              </span>
+              <span class="sidebar-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-shipments.html" class="sidebar-link active">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="3" width="15" height="13"/>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/>
+                  <circle cx="5.5" cy="18.5" r="2.5"/>
+                  <circle cx="18.5" cy="18.5" r="2.5"/>
+                </svg>
+              </span>
+              <span class="sidebar-text">Shipments</span>
+              <span class="badge">248</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-tracking.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="10" r="3"/>
+                  <path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 1 0-16 0c0 3 2.7 7 8 11.7z"/>
+                </svg>
+              </span>
+              <span class="sidebar-text">Live Tracking</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-routes.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+                </svg>
+              </span>
+              <span class="sidebar-text">Route Optimization</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="sidebar-title"><span>Management</span></div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-item">
+            <a href="tms-carriers.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </span>
+              <span class="sidebar-text">Carriers</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-fleet.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+              </span>
+              <span class="sidebar-text">Fleet Management</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a href="tms-compliance.html" class="sidebar-link">
+              <span class="sidebar-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                </svg>
+              </span>
+              <span class="sidebar-text">DOT Compliance</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Shipments</h1>
+          <p class="page-description">Manage and track all freight shipments</p>
+        </div>
+        <button class="btn btn-primary" onclick="showCreateShipmentModal()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Create Shipment
+        </button>
+      </div>
+
+      <!-- Filters -->
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <div class="card-body" style="padding: 1rem;">
+          <div class="filter-grid">
+            <div class="filter-item">
+              <label class="filter-label">Status</label>
+              <select class="filter-select" id="statusFilter">
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="picked_up">Picked Up</option>
+                <option value="in_transit">In Transit</option>
+                <option value="delivered">Delivered</option>
+                <option value="delayed">Delayed</option>
+              </select>
+            </div>
+            <div class="filter-item">
+              <label class="filter-label">Priority</label>
+              <select class="filter-select" id="priorityFilter">
+                <option value="">All Priorities</option>
+                <option value="urgent">Urgent</option>
+                <option value="high">High</option>
+                <option value="normal">Normal</option>
+                <option value="low">Low</option>
+              </select>
+            </div>
+            <div class="filter-item">
+              <label class="filter-label">Search</label>
+              <input type="text" class="filter-input" placeholder="Shipment ID, tracking #..." id="searchFilter">
+            </div>
+            <div class="filter-item" style="display: flex; align-items: flex-end;">
+              <button class="btn btn-secondary" onclick="applyFilters()">Apply Filters</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shipments Table -->
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title">All Shipments</h3>
+          <div style="display: flex; gap: 0.5rem;">
+            <button class="btn btn-sm btn-secondary" onclick="exportShipments()">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+              Export
+            </button>
+          </div>
+        </div>
+        
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th style="width: 140px;">Shipment ID</th>
+                <th style="width: 240px;">Route</th>
+                <th style="width: 150px;">Carrier</th>
+                <th style="width: 130px;">Status</th>
+                <th style="width: 100px;">Priority</th>
+                <th style="width: 150px;">ETA</th>
+                <th style="width: 120px;">Progress</th>
+                <th style="width: 80px; text-align: center;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="shipmentsTableBody">
+              <tr>
+                <td colspan="8" style="text-align: center; padding: 3rem;">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="margin: 0 auto; opacity: 0.3;">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                  </svg>
+                  <p style="margin-top: 1rem; color: var(--color-text-secondary);">Loading shipments...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="card-footer">
+          <div id="paginationContainer" style="display: flex; align-items: center; justify-content: space-between; width: 100%;"></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // API Configuration
+    const API_BASE_URL = 'http://localhost:5001/api/v1/tms';
+    const token = localStorage.getItem('token') || 'demo-token';
+
+    let currentPage = 1;
+    let totalPages = 1;
+
+    // Load shipments on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadShipments();
+    });
+
+    // Load shipments from API
+    async function loadShipments() {
+      try {
+        const status = document.getElementById('statusFilter').value;
+        const priority = document.getElementById('priorityFilter').value;
+        const search = document.getElementById('searchFilter').value;
+
+        let url = `${API_BASE_URL}/shipments?page=${currentPage}&limit=20`;
+        if (status) url += `&status=${status}`;
+        if (priority) url += `&priority=${priority}`;
+        if (search) url += `&search=${search}`;
+
+        const response = await fetch(url, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to load shipments');
+        }
+
+        const { data, pagination } = await response.json();
+        
+        displayShipments(data);
+        updatePagination(pagination);
+      } catch (error) {
+        console.error('Error loading shipments:', error);
+        showDemoData();
+      }
+    }
+
+    // Display shipments in table
+    function displayShipments(shipments) {
+      const tbody = document.getElementById('shipmentsTableBody');
+      
+      if (shipments.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 3rem;">
+              <p style="color: var(--color-text-secondary);">No shipments found</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = shipments.map(shipment => `
+        <tr>
+          <td><strong>${shipment.formattedId || shipment.shipmentId}</strong></td>
+          <td>
+            <div style="font-size: 0.875rem;">
+              <div>${shipment.origin.city}, ${shipment.origin.state}</div>
+              <div style="color: var(--color-text-secondary); font-size: 0.75rem;">→ ${shipment.destination.city}, ${shipment.destination.state}</div>
+            </div>
+          </td>
+          <td>${shipment.carrierName || shipment.carrier?.name || 'N/A'}</td>
+          <td><span class="status-badge status-${shipment.status}">${formatStatus(shipment.status)}</span></td>
+          <td><span class="priority-badge priority-${shipment.priority}">${shipment.priority.toUpperCase()}</span></td>
+          <td style="font-size: 0.875rem;">${formatDate(shipment.estimatedDeliveryDate)}</td>
+          <td>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: ${shipment.progress}%"></div>
+              </div>
+              <span style="font-size: 0.75rem; color: var(--color-text-secondary);">${shipment.progress}%</span>
+            </div>
+          </td>
+          <td style="text-align: center;">
+            <button class="btn-icon" onclick="viewShipment('${shipment._id}')" title="View Details">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Show demo data if API fails
+    function showDemoData() {
+      const demoShipments = [
+        { _id: '1', shipmentId: 'SH-2024-0001', origin: { city: 'Los Angeles', state: 'CA' }, destination: { city: 'Chicago', state: 'IL' }, carrierName: 'Fast Freight Lines', status: 'in_transit', priority: 'high', estimatedDeliveryDate: '2024-11-22T17:00:00Z', progress: 65 },
+        { _id: '2', shipmentId: 'SH-2024-0002', origin: { city: 'New York', state: 'NY' }, destination: { city: 'Miami', state: 'FL' }, carrierName: 'Express Cargo', status: 'picked_up', priority: 'normal', estimatedDeliveryDate: '2024-11-23T14:00:00Z', progress: 15 },
+        { _id: '3', shipmentId: 'SH-2024-0003', origin: { city: 'Dallas', state: 'TX' }, destination: { city: 'Phoenix', state: 'AZ' }, carrierName: 'Swift Transport', status: 'in_transit', priority: 'urgent', estimatedDeliveryDate: '2024-11-20T10:00:00Z', progress: 85 },
+        { _id: '4', shipmentId: 'SH-2024-0004', origin: { city: 'Seattle', state: 'WA' }, destination: { city: 'Portland', state: 'OR' }, carrierName: 'Pacific Freight', status: 'delivered', priority: 'normal', estimatedDeliveryDate: '2024-11-19T16:00:00Z', progress: 100 }
+      ];
+      displayShipments(demoShipments);
+      document.getElementById('paginationInfo').textContent = '1-4 of 248';
+    }
+
+    // Helper functions
+    function formatStatus(status) {
+      return status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const options = { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      return date.toLocaleDateString('en-US', options);
+    }
+
+    function updatePagination(pagination) {
+      if (pagination) {
+        currentPage = pagination.page;
+        totalPages = pagination.pages;
+        document.getElementById('paginationInfo').textContent = 
+          `${((pagination.page - 1) * pagination.limit) + 1}-${Math.min(pagination.page * pagination.limit, pagination.total)} of ${pagination.total}`;
+      }
+    }
+
+    function applyFilters() {
+      currentPage = 1;
+      loadShipments();
+    }
+
+    function nextPage() {
+      if (currentPage < totalPages) {
+        currentPage++;
+        loadShipments();
+      }
+    }
+
+    function previousPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        loadShipments();
+      }
+    }
+
+    function viewShipment(id) {
+      window.location.href = `tms-shipment-details.html?id=${id}`;
+    }
+
+    function showCreateShipmentModal() {
+      openCreatePanel('Shipment', null, saveShipment);
+    }
+
+    async function saveShipment(shipmentData) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/shipments`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('authToken') || 'demo-token'}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(shipmentData)
+        });
+
+        if (!response.ok) throw new Error(`API Error: ${response.status}`);
+        
+        alert('Shipment created successfully!');
+        await loadShipments();
+      } catch (error) {
+        console.error('Error saving shipment:', error);
+        alert('Shipment saved in demo mode. Backend integration pending.');
+      }
+    }
+  </script>
+
+  <style>
+    .filter-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      align-items: end;
+    }
+
+    .filter-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: var(--color-text-secondary);
+    }
+
+    .filter-select, .filter-input {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+      font-size: 0.875rem;
+      background: var(--color-white);
+    }
+
+    .filter-select:focus, .filter-input:focus {
+      outline: none;
+      border-color: var(--color-text);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .status-pending { background: rgba(150, 150, 150, 0.1); color: #666; }
+    .status-picked_up { background: rgba(59, 130, 246, 0.1); color: #2563eb; }
+    .status-in_transit { background: rgba(139, 92, 246, 0.1); color: #7c3aed; }
+    .status-delivered { background: rgba(34, 197, 94, 0.1); color: #16a34a; }
+    .status-delayed { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
+
+    .priority-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .priority-urgent { background: rgba(239, 68, 68, 0.1); color: #dc2626; }
+    .priority-high { background: rgba(249, 115, 22, 0.1); color: #ea580c; }
+    .priority-normal { background: rgba(59, 130, 246, 0.1); color: #2563eb; }
+    .priority-low { background: rgba(107, 114, 128, 0.1); color: #6b7280; }
+
+    .progress-bar {
+      flex: 1;
+      height: 6px;
+      background: var(--color-background);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, #7c3aed, #a855f7);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    .pagination {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .pagination-btn {
+      padding: 0.375rem 0.75rem;
+      border: 1px solid var(--color-border);
+      background: var(--color-white);
+      border-radius: 4px;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pagination-btn:hover {
+      background: var(--color-background);
+    }
+
+    .pagination-btn.active {
+      background: var(--color-text);
+      color: var(--color-white);
+      border-color: var(--color-text);
+    }
+
+    .pagination-info {
+      font-size: 0.875rem;
+      color: var(--color-text-secondary);
+    }
+  </style>
+
+  <script src="../js/tms-common.js"></script>
+  <script src="../js/tms-side-panel.js"></script>
+  <script src="../js/tms-shipments-api.js"></script>
+</body>
+</html>
