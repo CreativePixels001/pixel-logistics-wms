@@ -15,12 +15,29 @@ let loadingTimeout = null;
 let isBuffering = false;
 let pendingDeepLinkVideoId = null; // Store video ID from deep link until player is ready
 
+// 🎨 ROTATING SHARE BANNERS - Like API keys, rotate banners on share!
+const SHARE_BANNER_CONFIG = {
+    maxBanners: 12,
+    basePath: 'banners/SongShareBanner',
+    extensions: ['.jpeg', '.jpg', '.png', '.webp'], // Support all formats - Gen-Z designers! 😄
+    currentIndex: 0,
+    cachedBanners: new Map() // Track which banners exist with their actual extension
+};
+
 // Vibe Shuffle System - Smart DJ that keeps users in the right mood
 let vibeHistory = []; // Track mood of last songs: 'sad', 'happy', 'love', 'party', 'chill'
 let consecutiveSadCount = 0; // Track consecutive sad songs
 let isVibeShuffleEnabled = true; // Smart shuffle enabled by default
 let lastPlayedVideoIds = []; // Prevent repeats
 let songStartTime = 0; // Track when current song started (for skip detection)
+
+// 🎧 REAL LISTENING TIME TRACKER - Background time bhi track karo!
+let listeningSession = {
+    startTime: 0,           // When current song started playing
+    totalListenedTime: 0,   // Total seconds listened in this session
+    songsPlayed: 0,         // Number of songs played
+    sessionStart: Date.now() // When session started
+};
 
 // 🧠 INVISIBLE INTELLIGENCE SYSTEM - Learns user preferences without any UI
 // "No Settings, No Checkboxes - System khud seekhe"
@@ -325,6 +342,1036 @@ const InvisibleIntelligence = {
     }
 };
 
+// 💓 HEART ALGORITHM - Harmonic Emotional Adaptive Resonance Technology
+// "We are harmonic beings" - Search It, Play It, Feel It!
+// System learns user's emotional patterns over 3 days and suggests perfect vibes
+const HEART = {
+    storageKey: 'pixelPlayHeart',
+    
+    // Feeling categories with energy levels
+    // Feeling categories with energy levels
+    // 🌉 LoFi added as "bridge" mood - perfect for sad → happy transition
+    feelings: {
+        workout: { energy: 90, keywords: ['pump', 'gym', 'workout', 'exercise', 'power', 'energy'] },
+        party: { energy: 85, keywords: ['party', 'dance', 'club', 'dj', 'remix', 'nachle'] },
+        travel: { energy: 70, keywords: ['safar', 'road', 'travel', 'journey', 'musafir'] },
+        romance: { energy: 60, keywords: ['pyaar', 'ishq', 'love', 'dil', 'romantic', 'sajna'] },
+        lofi: { energy: 45, keywords: ['lofi', 'lo-fi', 'aesthetic', 'study', 'focus', 'vibes'] }, // Bridge mood!
+        chill: { energy: 40, keywords: ['relax', 'chill', 'peaceful', 'calm', 'sukoon'] },
+        rain: { energy: 50, keywords: ['baarish', 'rain', 'monsoon', 'sawan', 'bheegi'] },
+        devotional: { energy: 30, keywords: ['bhajan', 'aarti', 'bhakti', 'spiritual', 'mantra'] },
+        sad: { energy: 20, keywords: ['sad', 'dard', 'gham', 'broken', 'judai', 'alvida'] }
+    },
+    
+    // Get stored HEART data
+    getData() {
+        try {
+            const data = localStorage.getItem(this.storageKey);
+            return data ? JSON.parse(data) : this.getDefaultData();
+        } catch (e) {
+            return this.getDefaultData();
+        }
+    },
+    
+    // Default HEART data structure
+    getDefaultData() {
+        return {
+            // First use timestamp (for 3-day learning period)
+            firstUse: Date.now(),
+            
+            // Session tracking
+            currentSession: {
+                startTime: Date.now(),
+                songsPlayed: 0,
+                dominantMood: null,
+                moods: [] // Track moods in current session
+            },
+            
+            // Energy level (0-100, adjusts with song moods)
+            energyLevel: 50,
+            
+            // Time-based patterns
+            timePatterns: {
+                morning: { moods: {}, count: 0 },    // 5am - 12pm
+                workday: { moods: {}, count: 0 },    // 12pm - 5pm  
+                evening: { moods: {}, count: 0 },    // 5pm - 9pm
+                night: { moods: {}, count: 0 },      // 9pm - 12am
+                latenight: { moods: {}, count: 0 }   // 12am - 5am
+            },
+            
+            // Mood history for pattern detection
+            moodHistory: [],
+            
+            // Consecutive sad song counter (for mood uplift)
+            consecutiveSadSongs: 0,
+            
+            // Last updated
+            lastUpdated: Date.now()
+        };
+    },
+    
+    // Save HEART data
+    saveData(data) {
+        try {
+            data.lastUpdated = Date.now();
+            localStorage.setItem(this.storageKey, JSON.stringify(data));
+        } catch (e) {
+            console.error('[HEART] Save error:', e);
+        }
+    },
+    
+    // Get current time period
+    getTimePeriod() {
+        const hour = new Date().getHours();
+        if (hour >= 5 && hour < 12) return 'morning';
+        if (hour >= 12 && hour < 17) return 'workday';
+        if (hour >= 17 && hour < 21) return 'evening';
+        if (hour >= 21 || hour < 0) return 'night';
+        return 'latenight'; // 0am - 5am
+    },
+    
+    // Get time-based mood suggestion
+    getTimeSuggestedMood() {
+        const period = this.getTimePeriod();
+        const data = this.getData();
+        const patterns = data.timePatterns[period];
+        
+        // If we have learned patterns for this time
+        if (patterns && patterns.count > 3) {
+            const moods = patterns.moods;
+            const topMood = Object.entries(moods)
+                .sort((a, b) => b[1] - a[1])[0];
+            if (topMood) {
+                console.log(`[HEART] 🎯 Time-based suggestion: ${topMood[0]} (${period})`);
+                return topMood[0];
+            }
+        }
+        
+        // Default suggestions based on time
+        const defaults = {
+            morning: 'devotional',
+            workday: 'chill',
+            evening: 'romance',
+            night: 'party',
+            latenight: 'chill'
+        };
+        return defaults[period];
+    },
+    
+    // Start new session
+    startSession() {
+        const data = this.getData();
+        data.currentSession = {
+            startTime: Date.now(),
+            songsPlayed: 0,
+            dominantMood: null,
+            moods: []
+        };
+        this.saveData(data);
+        console.log('[HEART] 💓 New session started');
+    },
+    
+    // Update session with song mood
+    updateSessionMood(mood) {
+        const data = this.getData();
+        data.currentSession.songsPlayed++;
+        data.currentSession.moods.push(mood);
+        
+        // Calculate dominant mood
+        const moodCounts = {};
+        data.currentSession.moods.forEach(m => {
+            moodCounts[m] = (moodCounts[m] || 0) + 1;
+        });
+        data.currentSession.dominantMood = Object.entries(moodCounts)
+            .sort((a, b) => b[1] - a[1])[0]?.[0];
+        
+        // Update time-based patterns
+        const period = this.getTimePeriod();
+        if (!data.timePatterns[period].moods[mood]) {
+            data.timePatterns[period].moods[mood] = 0;
+        }
+        data.timePatterns[period].moods[mood]++;
+        data.timePatterns[period].count++;
+        
+        // Update energy level based on mood
+        const feeling = this.feelings[mood];
+        if (feeling) {
+            // Gradual energy adjustment (weighted average)
+            data.energyLevel = Math.round((data.energyLevel * 0.7) + (feeling.energy * 0.3));
+        }
+        
+        // Track sad songs for mood uplift
+        if (mood === 'sad') {
+            data.consecutiveSadSongs++;
+            
+            // 🤗 JADU KI JHAPPI - Check if user needs a hug!
+            // "Apne ko user ko jada rone nahi dena..."
+            if (data.consecutiveSadSongs >= 3 && typeof HEARTWhisper !== 'undefined') {
+                setTimeout(() => {
+                    HEARTWhisper.checkSadLoop();
+                }, 2000); // Slight delay for natural feel
+            }
+        } else {
+            data.consecutiveSadSongs = 0;
+        }
+        
+        // Add to mood history
+        data.moodHistory.push({
+            mood,
+            time: Date.now(),
+            period: period
+        });
+        
+        // Keep history manageable (last 100 songs)
+        if (data.moodHistory.length > 100) {
+            data.moodHistory = data.moodHistory.slice(-50);
+        }
+        
+        this.saveData(data);
+        console.log(`[HEART] 💓 Session mood: ${mood}, Energy: ${data.energyLevel}, Dominant: ${data.currentSession.dominantMood}`);
+    },
+    
+    // Get dominant session mood
+    getDominantSessionMood() {
+        const data = this.getData();
+        return data.currentSession.dominantMood;
+    },
+    
+    // Check if mood uplift is needed (3+ sad songs)
+    shouldUpliftMood() {
+        const data = this.getData();
+        return data.consecutiveSadSongs >= 3;
+    },
+    
+    // Get uplift suggestions (gradual mood lift: sad → lofi → happy)
+    // 🌉 LoFi added as bridge - smooth transition instead of sudden party songs!
+    getUpliftSuggestions() {
+        const data = this.getData();
+        const sadStreak = data.consecutiveSadSongs || 0;
+        
+        // Gradual uplift: first try LoFi (bridge), then go happier
+        if (sadStreak <= 3) {
+            // First level: LoFi bridge
+            return [
+                'hindi lofi songs',
+                'bollywood lofi mix',
+                'chill hindi songs',
+                'aesthetic bollywood songs',
+                'relaxing hindi music'
+            ];
+        } else if (sadStreak <= 5) {
+            // Second level: Romantic/feel good
+            return [
+                'feel good hindi songs',
+                'upbeat romantic songs',
+                'happy bollywood songs',
+                'positive vibes hindi'
+            ];
+        } else {
+            // Third level: Full party mode!
+            return [
+                'bollywood party songs',
+                'peppy bollywood songs',
+                'dance hindi songs',
+                'energy bollywood hits'
+            ];
+        }
+    },
+    
+    // Check if user is "known" (3+ days of usage)
+    isUserKnown() {
+        const data = this.getData();
+        const daysSinceFirst = (Date.now() - data.firstUse) / (1000 * 60 * 60 * 24);
+        return daysSinceFirst >= 3;
+    },
+    
+    // Get confidence level
+    getConfidenceLevel() {
+        const data = this.getData();
+        const daysSinceFirst = (Date.now() - data.firstUse) / (1000 * 60 * 60 * 24);
+        const totalSongs = data.moodHistory.length;
+        
+        if (daysSinceFirst < 1 || totalSongs < 10) return 'learning';
+        if (daysSinceFirst < 3 || totalSongs < 30) return 'medium';
+        return 'high';
+    },
+    
+    // Get current energy level
+    getEnergyLevel() {
+        const data = this.getData();
+        return data.energyLevel;
+    },
+    
+    // Detect mood from song title
+    detectMoodFromTitle(title) {
+        const lowerTitle = title.toLowerCase();
+        
+        for (const [mood, config] of Object.entries(this.feelings)) {
+            for (const keyword of config.keywords) {
+                if (lowerTitle.includes(keyword)) {
+                    return mood;
+                }
+            }
+        }
+        return 'chill'; // Default mood
+    },
+    
+    // Get smart recommendation based on all factors
+    getSmartRecommendation() {
+        const data = this.getData();
+        const period = this.getTimePeriod();
+        const confidence = this.getConfidenceLevel();
+        
+        // If mood uplift needed
+        if (this.shouldUpliftMood()) {
+            console.log('[HEART] 🌈 Mood uplift triggered!');
+            return {
+                type: 'uplift',
+                suggestions: this.getUpliftSuggestions(),
+                reason: 'Time for some positive vibes!'
+            };
+        }
+        
+        // If high confidence, use learned patterns
+        if (confidence === 'high') {
+            const suggestedMood = this.getTimeSuggestedMood();
+            return {
+                type: 'learned',
+                mood: suggestedMood,
+                reason: `Based on your ${period} listening patterns`
+            };
+        }
+        
+        // Default time-based suggestion
+        return {
+            type: 'time',
+            mood: this.getTimeSuggestedMood(),
+            reason: `Perfect for ${period} vibes`
+        };
+    },
+    
+    // Initialize HEART on app load
+    init() {
+        console.log('[HEART] 💓 HEART Algorithm initialized - "We are harmonic beings"');
+        const period = this.getTimePeriod();
+        const suggestedMood = this.getTimeSuggestedMood();
+        const confidence = this.getConfidenceLevel();
+        
+        console.log(`[HEART] 💓 Time period: ${period}`);
+        console.log(`[HEART] 💓 Suggested mood: ${suggestedMood}`);
+        console.log(`[HEART] 💓 Confidence: ${confidence}`);
+        
+        // Start new session if needed
+        const data = this.getData();
+        const sessionAge = Date.now() - data.currentSession.startTime;
+        if (sessionAge > 30 * 60 * 1000) { // 30 minutes
+            this.startSession();
+        }
+    },
+    
+    // 🧘‍♂️ DEEP LISTENING MODE - When user is in the zone
+    // "Jab user zone mein ho, disturb mat karo"
+    deepListening: {
+        startTime: null,
+        skipCount: 0,
+        isActive: false,
+        currentMood: null
+    },
+    
+    // Start tracking deep listening
+    startDeepListening(mood) {
+        this.deepListening.startTime = Date.now();
+        this.deepListening.skipCount = 0;
+        this.deepListening.currentMood = mood;
+        this.deepListening.isActive = true;
+        console.log('[HEART] 🧘‍♂️ Deep Listening started - tracking engagement...');
+    },
+    
+    // Record a skip (breaks deep listening)
+    recordSkip() {
+        this.deepListening.skipCount++;
+        if (this.deepListening.skipCount >= 2) {
+            this.deepListening.isActive = false;
+            console.log('[HEART] 🧘‍♂️ Deep Listening broken - user is browsing');
+        }
+    },
+    
+    // Check if user is in deep listening mode
+    isInDeepListening() {
+        if (!this.deepListening.isActive || !this.deepListening.startTime) return false;
+        
+        const listenTime = (Date.now() - this.deepListening.startTime) / 1000 / 60; // minutes
+        const noSkips = this.deepListening.skipCount === 0;
+        
+        // 5+ minutes without skip = DEEP LISTENING! 🧘‍♂️
+        if (listenTime >= 5 && noSkips) {
+            console.log(`[HEART] 🧘‍♂️ DEEP LISTENING MODE ACTIVE! (${listenTime.toFixed(1)} min, 0 skips)`);
+            return true;
+        }
+        return false;
+    },
+    
+    // Get deep listening stats
+    getDeepListeningStats() {
+        if (!this.deepListening.startTime) return null;
+        
+        const listenTime = (Date.now() - this.deepListening.startTime) / 1000 / 60;
+        return {
+            minutes: listenTime.toFixed(1),
+            skips: this.deepListening.skipCount,
+            mood: this.deepListening.currentMood,
+            isDeep: this.isInDeepListening()
+        };
+    },
+    
+    // Save deep listening session (for learning)
+    saveDeepSession() {
+        if (!this.isInDeepListening()) return;
+        
+        const data = this.getData();
+        const stats = this.getDeepListeningStats();
+        
+        // Initialize deep sessions array if not exists
+        if (!data.deepSessions) data.deepSessions = [];
+        
+        data.deepSessions.push({
+            mood: stats.mood,
+            duration: stats.minutes,
+            time: Date.now(),
+            period: this.getTimePeriod()
+        });
+        
+        // Keep last 20 deep sessions
+        if (data.deepSessions.length > 20) {
+            data.deepSessions = data.deepSessions.slice(-20);
+        }
+        
+        this.saveData(data);
+        console.log(`[HEART] 🧘‍♂️ Deep session saved: ${stats.mood} for ${stats.minutes} min`);
+    },
+    
+    // Debug: Show HEART state
+    debug() {
+        const data = this.getData();
+        const deepStats = this.getDeepListeningStats();
+        console.log('[HEART] 💓 Current State:');
+        console.log('  Time Period:', this.getTimePeriod());
+        console.log('  Suggested Mood:', this.getTimeSuggestedMood());
+        console.log('  Energy Level:', data.energyLevel);
+        console.log('  Confidence:', this.getConfidenceLevel());
+        console.log('  Session Songs:', data.currentSession.songsPlayed);
+        console.log('  Dominant Mood:', data.currentSession.dominantMood);
+        console.log('  Consecutive Sad:', data.consecutiveSadSongs);
+        console.log('  Is User Known:', this.isUserKnown());
+        if (deepStats) {
+            console.log('  🧘‍♂️ Deep Listening:', deepStats.isDeep ? 'ACTIVE' : 'inactive');
+            console.log('     Duration:', deepStats.minutes, 'min');
+            console.log('     Skips:', deepStats.skips);
+        }
+        return data;
+    },
+    
+    // 💕 HEART SYNC PERCENTAGE - BODMAS/BIDMAS Calculation
+    // 🎬 Inside Out Style: 5 Senses working together for emotional intelligence
+    // 🧮 BODMAS: Brackets, Orders, Division, Multiplication, Addition, Subtraction
+    // #FeatureDevelopedOnFeelings
+    getHeartSyncPercentage() {
+        const data = this.getData();
+        const intelligenceData = InvisibleIntelligence.getData();
+        
+        // ═══════════════════════════════════════════════════════════════
+        // 🎬 PANCH TATVA (5 SENSES) - Like Inside Out emotions
+        // ═══════════════════════════════════════════════════════════════
+        // Joy (Romance) | Sadness | Energy (Anger) | Chill (Fear) | Party (Disgust)
+        
+        // ════════════════════════════════════════════════════════════════
+        // B = BRACKETS/BASE - The foundation (ADDITION - as you said!)
+        // "Multiplication is nothing but adding 1+1+1+1+1"
+        // ════════════════════════════════════════════════════════════════
+        
+        // Sense 1: Days of usage (max 20 points)
+        const daysSinceFirst = (Date.now() - data.firstUse) / (1000 * 60 * 60 * 24);
+        const daysScore = Math.min(20, (daysSinceFirst / 7) * 20);
+        
+        // Sense 2: Songs played (max 25 points)
+        const songsPlayed = data.moodHistory?.length || 0;
+        const songsScore = Math.min(25, (songsPlayed / 50) * 25);
+        
+        // Sense 3: Languages learned (max 20 points)
+        const preferredLangs = InvisibleIntelligence.getPreferredLanguages();
+        const langScore = Math.min(20, preferredLangs.length * 5);
+        
+        // Sense 4: Genres learned (max 20 points)
+        const preferredGenres = InvisibleIntelligence.getPreferredGenres();
+        const genreScore = Math.min(20, preferredGenres.length * 5);
+        
+        // Sense 5: Deep sessions (max 15 points)
+        const deepSessions = data.deepSessions?.length || 0;
+        const deepScore = Math.min(15, deepSessions * 3);
+        
+        // B = BASE SCORE (Pure Addition - the foundation)
+        const BASE = daysScore + songsScore + langScore + genreScore + deepScore;
+        
+        // ════════════════════════════════════════════════════════════════
+        // O/I = ORDERS/INDICES - Mood Power Multiplier
+        // ════════════════════════════════════════════════════════════════
+        const currentMood = data.currentSession?.dominantMood || 'neutral';
+        const moodPowers = {
+            romance: 1.15,   // 💕 Love songs boost sync
+            party: 1.12,     // 🎉 Party energy boost
+            chill: 1.08,     // 🌿 Relaxed = good connection
+            devotional: 1.10, // 🙏 Spiritual connection
+            lofi: 1.05,      // 🎧 Focus mode
+            sad: 0.92,       // 😢 Reduce for sad loops (Jadu Ki Jhappi needed!)
+            neutral: 1.0
+        };
+        const moodPower = moodPowers[currentMood] || 1.0;
+        const ORDERED = BASE * moodPower;
+        
+        // ════════════════════════════════════════════════════════════════
+        // D = DIVISION - Quality over Quantity (Normalize by sessions)
+        // ════════════════════════════════════════════════════════════════
+        const totalSessions = Math.max(1, deepSessions + Math.floor(songsPlayed / 10));
+        const qualityFactor = Math.min(1.5, 1 + (deepSessions / totalSessions));
+        const DIVIDED = ORDERED * qualityFactor;
+        
+        // ════════════════════════════════════════════════════════════════
+        // M = MULTIPLICATION - Engagement Boost
+        // ════════════════════════════════════════════════════════════════
+        const fullPlays = intelligenceData.fullPlays || 0;
+        const shares = data.shareCount || 0;
+        const engagementBoost = 1 + (Math.min(10, fullPlays) / 100) + (shares * 0.02);
+        const MULTIPLIED = DIVIDED * engagementBoost;
+        
+        // ════════════════════════════════════════════════════════════════
+        // A = ADDITION - Milestone Bonuses
+        // ════════════════════════════════════════════════════════════════
+        let BONUS = 0;
+        if (songsPlayed >= 100) BONUS += 5;       // Century bonus
+        if (daysSinceFirst >= 7) BONUS += 3;       // Week streak
+        if (deepSessions >= 5) BONUS += 3;         // Deep listener
+        if (preferredLangs.length >= 3) BONUS += 2; // Multilingual
+        const ADDED = MULTIPLIED + BONUS;
+        
+        // ════════════════════════════════════════════════════════════════
+        // S = SUBTRACTION - Penalties (Sad Loop, Skips)
+        // ════════════════════════════════════════════════════════════════
+        let PENALTY = 0;
+        const sadStreak = data.consecutiveSadSongs || 0;
+        if (sadStreak > 3) {
+            PENALTY += (sadStreak - 3) * 2; // -2 per sad song after 3
+            console.log(`[HEART] 😢 Sad loop detected! ${sadStreak} songs. Jadu Ki Jhappi needed!`);
+        }
+        
+        // Check autoplay status
+        const autoplayEnabled = localStorage.getItem('autoplayEnabled') !== 'false';
+        if (!autoplayEnabled) {
+            PENALTY += 5; // Autoplay off = connection paused
+            console.log('[HEART] ⏸️ Autoplay off - HEART connection paused');
+        }
+        
+        const FINAL = ADDED - PENALTY;
+        
+        // ════════════════════════════════════════════════════════════════
+        // Final percentage (0-100)
+        // ════════════════════════════════════════════════════════════════
+        const percentage = Math.round(Math.min(100, Math.max(0, FINAL)));
+        
+        // Detailed logging for debugging
+        console.log(`[HEART] 🧮 BODMAS Calculation:`);
+        console.log(`  B (Base): ${BASE.toFixed(1)} = days:${daysScore.toFixed(0)} + songs:${songsScore.toFixed(0)} + lang:${langScore} + genre:${genreScore} + deep:${deepScore}`);
+        console.log(`  O (Order): ${ORDERED.toFixed(1)} = ${BASE.toFixed(1)} × ${moodPower} (${currentMood})`);
+        console.log(`  D (Divide): ${DIVIDED.toFixed(1)} = quality factor ${qualityFactor.toFixed(2)}`);
+        console.log(`  M (Multiply): ${MULTIPLIED.toFixed(1)} = engagement ${engagementBoost.toFixed(2)}`);
+        console.log(`  A (Add): ${ADDED.toFixed(1)} = +${BONUS} bonus`);
+        console.log(`  S (Subtract): ${FINAL.toFixed(1)} = -${PENALTY} penalty`);
+        console.log(`[HEART] 💕 Final Sync: ${percentage}%`);
+        
+        return percentage;
+    },
+    
+    // Get sync status message
+    getSyncStatus() {
+        const percentage = this.getHeartSyncPercentage();
+        
+        if (percentage < 10) return { level: 'new', message: 'Just met you...', emoji: '🤍' };
+        if (percentage < 25) return { level: 'learning', message: 'Learning your vibe...', emoji: '🩶' };
+        if (percentage < 50) return { level: 'growing', message: 'Getting to know you...', emoji: '🩷' };
+        if (percentage < 75) return { level: 'connected', message: 'Feeling your rhythm!', emoji: '💗' };
+        if (percentage < 90) return { level: 'synced', message: 'Almost in sync!', emoji: '💓' };
+        return { level: 'soulmate', message: 'We are one! 🎵', emoji: '❤️' };
+    }
+};
+
+// 💭 HEART WHISPER - Subtle organic messages like BABA in the jungle
+// "Aao beta..." - System whispers to users based on their listening patterns
+// #FeatureDevelopedOnFeelings - Inspired by Nana's jungle story
+const HEARTWhisper = {
+    storageKey: 'pixelPlayWhisper',
+    
+    // 🏷️ Language-based address terms - User ki language = User ki boli!
+    // Data se khud seekh ke terms use karega
+    languageTerms: {
+        hindi: ['bhai', 'yaar', 'dost', 'pagle', 'mere'],
+        english: ['buddy', 'friend', 'mate', 'pal', 'legend'],
+        punjabi: ['veere', 'yaar', 'paaji', 'bai', 'champ'],
+        marathi: ['bhau', 'dosta', 'mitra', 'baba', 'raja'],
+        tamil: ['da', 'nanba', 'machan', 'thala', 'boss'],
+        telugu: ['ra', 'bro', 'anna', 'mama', 'star'],
+        bengali: ['dada', 'bondhu', 'bhai', 'boss', 'tui'],
+        gujarati: ['bhai', 'yaar', 'dost', 'mitra', 'hero'],
+        kannada: ['maga', 'guru', 'boss', 'anna', 'thala'],
+        malayalam: ['machane', 'kutta', 'mone', 'chetta', 'bro'],
+        // Gender neutral fallback
+        neutral: ['hey', 'suniye', 'friend', 'dear', 'listener']
+    },
+    
+    // 🧠 Get user's preferred language from listening data
+    getTopLanguage() {
+        try {
+            const data = InvisibleIntelligence.getData();
+            const languages = data.languages;
+            let topLang = 'hindi'; // Default
+            let topScore = 0;
+            
+            Object.keys(languages).forEach(lang => {
+                const score = (languages[lang].plays || 0) - (languages[lang].skips || 0);
+                if (score > topScore) {
+                    topScore = score;
+                    topLang = lang;
+                }
+            });
+            
+            return topLang;
+        } catch (e) {
+            return 'hindi'; // Default fallback
+        }
+    },
+    
+    // Get user's preferred address term based on their listening language!
+    getAddressTerm() {
+        const topLang = this.getTopLanguage();
+        const terms = this.languageTerms[topLang] || this.languageTerms.neutral;
+        const data = this.getData();
+        const index = (data.whisperCount || 0) % terms.length;
+        
+        console.log(`[HEART] 🗣️ Address term: ${terms[index]} (from ${topLang} listening)`);
+        return terms[index];
+    },
+    
+    // 🕐 Get time of day for context
+    getTimeOfDay() {
+        const hour = new Date().getHours();
+        if (hour >= 5 && hour < 11) return 'morning';
+        if (hour >= 11 && hour < 16) return 'afternoon';
+        if (hour >= 16 && hour < 20) return 'evening';
+        if (hour >= 20 || hour < 1) return 'night';
+        return 'latenight'; // 1 AM - 5 AM
+    },
+    
+    // 🎭 Get current dominant mood from session
+    getCurrentMood() {
+        const data = InvisibleIntelligence.getData();
+        const genres = data.genres;
+        let topMood = 'chill';
+        let topScore = 0;
+        
+        const moodMap = {
+            'romantic': 'romance',
+            'sad': 'sad', 
+            'party': 'party',
+            'devotional': 'peaceful',
+            'bollywood': 'filmy'
+        };
+        
+        Object.keys(genres).forEach(genre => {
+            if (genres[genre].plays > topScore) {
+                topScore = genres[genre].plays;
+                topMood = moodMap[genre] || genre;
+            }
+        });
+        
+        return topMood;
+    },
+    
+    // Whisper messages categorized by trigger
+    messages: {
+        // Mood detection whispers - FEELING based, no numbers!
+        mood: {
+            romance: ['Pyaar ki hawa chal rahi hai...', 'Dil romantic mood mein hai aaj...', 'Love is in the air!'],
+            sad: ['Dard bhi zaroori hai kabhi kabhi...', 'Aansu bhi gaane sun sakte hain...', 'Sukoon milega, bas sun-te raho...'],
+            party: ['Party mood on hai!', 'Nachne ka mann hai aaj!', 'Energy high hai!'],
+            chill: ['Sukoon wali vibes...', 'Relax mode activated...', 'Chill vibes aa rahe hain...'],
+            devotional: ['Aatma ko sukoon mil raha hai...', 'Bhakti mein shakti hai...', 'Inner peace activated...'],
+            lofi: ['Focus mode...', 'Study vibes detected...', 'LoFi vibes on point...']
+        },
+        
+        // Milestone whispers - FEELING based, no numbers!
+        milestone: {
+            firstSong: ['Pehla gaana! Safar shuru...', 'Welcome! Let the music begin...'],
+            gettingStarted: ['HEART seekh raha hai...', 'Getting to know you...'],
+            connected: ['Ab samajh aane lagi hai...', 'Vibe mil rahi hai ab!'],
+            synced: ['HEART synced ho gaya!', 'We know your soul now!'],
+            deepSession: ['Deep listening mode on!', 'Kho gaye music mein...'],
+            longSession: ['True music lover!', 'Music soul detected!']
+        },
+        
+        // Time-based greetings - SUBAH HO GAYI style!
+        timeBased: {
+            morning: ['Subah ho gayi! Fresh vibes ready!', 'Morning energy aa gayi!', 'Nayi subah, naye gaane!'],
+            afternoon: ['Dopahar ki dhoop mein chill!', 'Lunch break vibes!', 'Afternoon groove on!'],
+            evening: ['Shaam dhalne lagi... music time!', 'Evening vibes setting in...', 'Sunset feels...'],
+            night: ['Raat ho gayi... sukoon time!', 'Night vibes are the best!', 'Shaam ke baad ka magic...'],
+            latenight: ['Late night warrior!', 'Neend nahi aayi? Hum hain na...', 'Raat ke raaz... music ke saath!']
+        },
+        
+        // Journey whispers (mood transitions)
+        journey: {
+            sadToHappy: ['Dard se sukoon tak... beautiful journey!', 'Tears to smiles... music heals!'],
+            moodShift: ['Mood change ho gaya!', 'Energy shift felt!'],
+            romantic: ['Aaj ka din romantic raha... waah!', 'Pyaar bhari shaam!'],
+            peaceful: ['Aaj sukoon mila...', 'Inner peace day!'],
+            energetic: ['Energy wala din tha aaj!', 'Full on vibes today!']
+        },
+        
+        // Special whispers
+        special: {
+            returnUser: ['Wapas aa gaye! Yaad kiya kya?', 'Welcome back!'],
+            consistentUser: ['Rozana aate ho... HEART happy hai!', 'Daily vibes! True dedication!'],
+            weekend: ['Weekend hai! Time to vibe!', 'Chutti ka din... full music mode!']
+        },
+        
+        // 🤗 GALE LAGAO - Warm welcome messages (first hug, then whisper)
+        galeLagao: {
+            firstTime: ['Welcome to Pixel Play! Aao, gaane suno...', 'First time? Let the music begin!'],
+            returning: ['Arey waah! Wapas aa gaye!', 'Welcome back!'],
+            morning: ['Good morning! Chai ke saath gaane?', 'Subah ho gayi! Fresh vibes ready!'],
+            afternoon: ['Dopahar ki vibes ready!', 'Lunch break? Perfect!'],
+            evening: ['Shaam aa gayi! Music time!', 'Evening mood set karte hain!'],
+            night: ['Night vibes activate!', 'Perfect music time...'],
+            latenight: ['Late night warrior spotted!', 'Neend nahi aayi? Music sun!'],
+            longGap: ['Bahut waqt ho gaya! Miss kiya?', 'Finally wapas! Kahan the itne din?']
+        },
+        
+        // 🤗 JADU KI JHAPPI - When user is in sad loop (3+ sad songs)
+        jaduKiJhappi: {
+            gentle: ['Hey... sab theek hai?', 'Kuch baat hai? Hum hain yahan...'],
+            caring: ['Bahut sad gaane ho gaye... thoda chill karein?', 'Dil bhari hai? Chalo mood change karein...'],
+            uplifting: ['Ek jhappi le lo... Ab kuch peppy sunein?', 'Rona zaroori hai, par muskurana bhi!'],
+            suggestion: ['Kuch feel-good sunoge? HEART suggest kar raha hai...', 'Thoda vibe change? Trust me!']
+        },
+        
+        // 🌅 Day Summary whispers - Mood based, not number based!
+        daySummary: {
+            romantic: ['Aaj ka din romantic raha... waah!', 'Pyaar wali playlist chal rahi thi!'],
+            chill: ['Aaj sukoon wala din tha!', 'Chill vibes all day!'],
+            party: ['Energy wala din tha aaj!', 'Party mood mein the aaj!'],
+            sad: ['Dard bhi gaane ki tarah hai... beautiful!', 'Emotions explored today...'],
+            mixed: ['Bahut variety suni aaj!', 'Har mood cover kiya aaj!'],
+            peaceful: ['Sukoon mila aaj...', 'Inner peace day!']
+        }
+    },
+    
+    // Get stored whisper data
+    getData() {
+        try {
+            const data = localStorage.getItem(this.storageKey);
+            return data ? JSON.parse(data) : this.getDefaultData();
+        } catch (e) {
+            return this.getDefaultData();
+        }
+    },
+    
+    // Default whisper data
+    getDefaultData() {
+        return {
+            lastWhisperTime: 0,
+            lastWhisperType: null,
+            whisperCount: 0,
+            seenWhispers: [],
+            sessionWhispers: 0, // Max 3 per session to avoid annoyance
+            lastSessionStart: Date.now()
+        };
+    },
+    
+    // Save whisper data
+    saveData(data) {
+        try {
+            localStorage.setItem(this.storageKey, JSON.stringify(data));
+        } catch (e) {
+            console.error('[HEART Whisper] Save error:', e);
+        }
+    },
+    
+    // Check if we should show a whisper (rate limiting)
+    canWhisper() {
+        const data = this.getData();
+        const now = Date.now();
+        
+        // Reset session count if new session (30 min gap)
+        if (now - data.lastSessionStart > 30 * 60 * 1000) {
+            data.sessionWhispers = 0;
+            data.lastSessionStart = now;
+            this.saveData(data);
+        }
+        
+        // Max 3 whispers per session
+        if (data.sessionWhispers >= 3) return false;
+        
+        // Minimum 5 minutes between whispers
+        if (now - data.lastWhisperTime < 5 * 60 * 1000) return false;
+        
+        return true;
+    },
+    
+    // Get random message from category
+    getRandomMessage(category, subcategory) {
+        const messages = this.messages[category]?.[subcategory];
+        if (!messages || messages.length === 0) return null;
+        return messages[Math.floor(Math.random() * messages.length)];
+    },
+    
+    // Show a whisper in the song title area (like BABA's gentle message)
+    // "Aao beta..." - subtle, in the song title area, not a popup
+    showWhisper(message) {
+        if (!message || !this.canWhisper()) return;
+        
+        const data = this.getData();
+        const titleElement = document.getElementById('currentSongTitle');
+        
+        if (!titleElement) return;
+        
+        // Store the original title
+        const originalTitle = titleElement.textContent;
+        const originalStyle = titleElement.style.cssText;
+        
+        // Show whisper in title area (no emoji, clean text)
+        const cleanMessage = message.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F600}-\u{1F64F}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]/gu, '').trim();
+        
+        titleElement.textContent = cleanMessage;
+        titleElement.style.cssText = `
+            ${originalStyle}
+            font-style: italic;
+            opacity: 0.9;
+            transition: all 0.5s ease;
+        `;
+        
+        // Update data
+        data.lastWhisperTime = Date.now();
+        data.whisperCount++;
+        data.sessionWhispers++;
+        data.seenWhispers.push(message);
+        if (data.seenWhispers.length > 50) data.seenWhispers = data.seenWhispers.slice(-50);
+        this.saveData(data);
+        
+        console.log(`[HEART Whisper] 💭 "${cleanMessage}"`);
+        
+        // Restore original title after 3 seconds
+        setTimeout(() => {
+            titleElement.textContent = originalTitle;
+            titleElement.style.cssText = originalStyle;
+        }, 3000);
+    },
+    
+    // Trigger whisper based on mood
+    whisperMood(mood) {
+        const message = this.getRandomMessage('mood', mood);
+        if (message) this.showWhisper(message);
+    },
+    
+    // Trigger whisper based on milestone
+    whisperMilestone(milestone) {
+        const message = this.getRandomMessage('milestone', milestone);
+        if (message) this.showWhisper(message);
+    },
+    
+    // Trigger whisper based on time
+    whisperTimeBased(period) {
+        const message = this.getRandomMessage('timeBased', period);
+        const term = this.getAddressTerm();
+        if (message) this.showWhisper(`${term}! ${message}`);
+    },
+    
+    // Trigger whisper for mood journey (sad → happy)
+    whisperJourney(journeyType) {
+        const message = this.getRandomMessage('journey', journeyType);
+        if (message) this.showWhisper(message);
+    },
+    
+    // Check and trigger automatic whispers - FEELING based, not number based!
+    checkAutoWhisper() {
+        if (!this.canWhisper()) return;
+        
+        const heartData = HEART.getData();
+        const timeOfDay = this.getTimeOfDay();
+        const songsPlayed = heartData.moodHistory?.length || 0;
+        const term = this.getAddressTerm();
+        
+        // Milestone checks - FEELING based messages
+        if (songsPlayed === 1) {
+            this.whisperMilestone('firstSong');
+        } else if (songsPlayed >= 5 && songsPlayed < 10) {
+            // Getting started - low probability to avoid spam
+            if (Math.random() < 0.3) {
+                this.whisperMilestone('gettingStarted');
+            }
+        } else if (songsPlayed >= 20 && songsPlayed < 30) {
+            if (Math.random() < 0.2) {
+                this.whisperMilestone('connected');
+            }
+        } else if (songsPlayed >= 50) {
+            if (Math.random() < 0.1) {
+                this.whisperMilestone('synced');
+            }
+        }
+        
+        // Deep listening check
+        if (HEART.isInDeepListening()) {
+            const stats = HEART.getDeepListeningStats();
+            if (stats && parseFloat(stats.minutes) >= 5) {
+                this.whisperMilestone('deepSession');
+            }
+        }
+        
+        // Time-based whispers with personal address (low probability)
+        if (Math.random() < 0.1) { // 10% chance
+            this.whisperTimeBased(timeOfDay);
+        }
+    },
+    
+    // 🤗 GALE LAGAO - Welcome hug before whisper
+    // "Pahale gale lagate hain... fir whisper karte hain... pyaar se..."
+    galeLagao(type = 'returning') {
+        const message = this.getRandomMessage('galeLagao', type);
+        if (message) {
+            console.log(`[HEART] 🤗 Gale Lagao: ${type}`);
+            this.showWhisper(message);
+        }
+    },
+    
+    // Check if should show welcome (Gale Lagao)
+    checkGaleLagao() {
+        const heartData = HEART.getData();
+        const whisperData = this.getData();
+        const now = Date.now();
+        const hoursSinceLastVisit = (now - (heartData.lastVisit || 0)) / (1000 * 60 * 60);
+        const songsPlayed = heartData.moodHistory?.length || 0;
+        const hour = new Date().getHours();
+        
+        // First time user
+        if (songsPlayed === 0) {
+            this.galeLagao('firstTime');
+            return;
+        }
+        
+        // Long gap (24+ hours)
+        if (hoursSinceLastVisit > 24) {
+            this.galeLagao('longGap');
+            return;
+        }
+        
+        // Time-based welcome using getTimeOfDay()
+        const timeOfDay = this.getTimeOfDay();
+        if (timeOfDay === 'morning') {
+            this.galeLagao('morning');
+        } else if (timeOfDay === 'afternoon') {
+            this.galeLagao('afternoon');
+        } else if (timeOfDay === 'evening') {
+            this.galeLagao('evening');
+        } else if (timeOfDay === 'night') {
+            this.galeLagao('night');
+        } else if (timeOfDay === 'latenight') {
+            this.galeLagao('latenight');
+        } else if (hoursSinceLastVisit > 6) {
+            this.galeLagao('returning');
+        }
+    },
+    
+    // 🌅 Show day summary based on mood, not numbers!
+    showDaySummary() {
+        const mood = this.getCurrentMood();
+        const term = this.getAddressTerm();
+        const message = this.getRandomMessage('daySummary', mood);
+        
+        if (message) {
+            // Add personal touch with address term
+            const personalMessage = `Hey ${term}! ${message}`;
+            console.log(`[HEART] 🌅 Day Summary: ${personalMessage}`);
+            this.showWhisper(personalMessage);
+        }
+    },
+    
+    // 🤗 JADU KI JHAPPI - Hug when user is sad
+    // "Apne ko user ko jada rone nahi dena... jaldi jaake jadu ki jhappi dalni hai!"
+    jaduKiJhappi() {
+        const heartData = HEART.getData();
+        const sadStreak = heartData.consecutiveSadSongs || 0;
+        const term = this.getAddressTerm();
+        
+        if (sadStreak < 3) return; // Not enough sad songs yet
+        
+        let type = 'gentle';
+        if (sadStreak >= 5) {
+            type = 'suggestion';
+        } else if (sadStreak >= 4) {
+            type = 'uplifting';
+        } else if (sadStreak >= 3) {
+            type = 'caring';
+        }
+        
+        let message = this.getRandomMessage('jaduKiJhappi', type);
+        if (message) {
+            // Add personal address term for warmth
+            message = `Hey ${term}... ${message}`;
+            console.log(`[HEART] 🤗 Jadu Ki Jhappi triggered! Sad streak: ${sadStreak}`);
+            this.showWhisper(message);
+            
+            // Optionally trigger mood uplift suggestion
+            if (sadStreak >= 4 && HEART.shouldUpliftMood) {
+                console.log('[HEART] 💫 Suggesting mood uplift...');
+            }
+        }
+    },
+    
+    // Check for sad song loop and trigger Jadu Ki Jhappi
+    checkSadLoop() {
+        const heartData = HEART.getData();
+        const sadStreak = heartData.consecutiveSadSongs || 0;
+        
+        if (sadStreak >= 3 && this.canWhisper()) {
+            this.jaduKiJhappi();
+        }
+    }
+};
+
+// Add CSS animations for whisper
+(function addWhisperStyles() {
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes whisperIn {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        @keyframes whisperOut {
+            from { opacity: 1; transform: translateX(-50%) translateY(0); }
+            to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+        }
+        @keyframes whisperPulse {
+            0%, 100% { box-shadow: 0 4px 25px rgba(255, 107, 129, 0.2), 0 0 40px rgba(255, 107, 129, 0.1); }
+            50% { box-shadow: 0 4px 30px rgba(255, 107, 129, 0.35), 0 0 50px rgba(255, 107, 129, 0.2); }
+        }
+        .heart-whisper .whisper-icon {
+            font-size: 1.2rem;
+            animation: whisperIconFloat 2s ease-in-out infinite;
+        }
+        @keyframes whisperIconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+    `;
+    document.head.appendChild(style);
+})();
+
 // 🧠 VIBE KEYWORD INTELLIGENCE - Hindi/Bollywood action words to vibe mapping
 const VIBE_KEYWORDS = {
     // Dance/Party Vibes
@@ -496,14 +1543,109 @@ function detectVibeKeywords(title) {
     return detectedVibes;
 }
 
+// 💕 HEART SYNC UI - Update the SVG heart with smooth fill animation
+function updateHeartSyncUI() {
+    const heartClipRect = document.getElementById('heartClipRect');
+    const heartPercent = document.getElementById('heartSyncPercent');
+    const heartSvg = document.getElementById('heartSyncSvg');
+    
+    if (!heartClipRect || !heartPercent) return;
+    
+    const percentage = HEART.getHeartSyncPercentage();
+    
+    // Update percentage text
+    heartPercent.textContent = `${percentage}%`;
+    
+    // Calculate fill: SVG viewBox is 24x22, so height 22 = 100%
+    // Fill from bottom: y starts at 22 (bottom), decreases as percentage increases
+    const totalHeight = 22;
+    const fillHeight = (percentage / 100) * totalHeight;
+    const fillY = totalHeight - fillHeight;
+    
+    // Smooth animation using CSS transition (defined in CSS)
+    // Just update the clip rect position
+    heartClipRect.setAttribute('y', fillY);
+    heartClipRect.setAttribute('height', fillHeight);
+    
+    // Add syncing animation if actively learning (between 0-100%)
+    if (heartSvg) {
+        if (percentage > 0 && percentage < 100) {
+            heartSvg.classList.add('syncing');
+        } else {
+            heartSvg.classList.remove('syncing');
+        }
+    }
+    
+    console.log(`[HEART UI] 💕 Updated to ${percentage}% (fill: y=${fillY.toFixed(1)}, h=${fillHeight.toFixed(1)})`);
+}
+
+// Show HEART Sync Status (placeholder for future overlay)
+function showHeartSyncStatus() {
+    const status = HEART.getSyncStatus();
+    const percentage = HEART.getHeartSyncPercentage();
+    
+    // For now, just show a toast. Future: Beautiful overlay!
+    showToast(`${status.emoji} ${status.message} (${percentage}% synced)`);
+    
+    // Log to console for debugging
+    console.log('[HEART] 💕 Sync Status:', status);
+    HEART.debug();
+}
+
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
     registerServiceWorker();
     setSearchPlaceholder();
     
+    // 💕 Initialize HEART Sync UI
+    setTimeout(() => {
+        updateHeartSyncUI();
+    }, 1000);
+    
+    // 🤗 GALE LAGAO - Welcome hug on page load
+    // "Pahale gale lagate hain... fir whisper karte hain... pyaar se..."
+    setTimeout(() => {
+        if (typeof HEARTWhisper !== 'undefined') {
+            HEARTWhisper.checkGaleLagao();
+        }
+    }, 3000); // Wait 3 seconds for smooth experience
+    
+    // 🎵 Initialize Dynamic Tonearm
+    initDynamicTonearm();
+    
     // Handle deep link parameters for auto-play
     handleDeepLink();
+    
+    // Disable right-click context menu (protection)
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+        return false;
+    });
+    
+    // Disable keyboard shortcuts for inspect/devtools (optional protection)
+    document.addEventListener('keydown', function(e) {
+        // Disable F12
+        if (e.key === 'F12') {
+            e.preventDefault();
+            return false;
+        }
+        // Disable Ctrl+Shift+I / Cmd+Option+I (Inspect)
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'I') {
+            e.preventDefault();
+            return false;
+        }
+        // Disable Ctrl+Shift+C / Cmd+Option+C (Inspect element)
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') {
+            e.preventDefault();
+            return false;
+        }
+        // Disable Ctrl+U / Cmd+U (View source)
+        if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+            e.preventDefault();
+            return false;
+        }
+    });
 });
 
 function initializeApp() {
@@ -513,6 +1655,20 @@ function initializeApp() {
     
     // Initialize Media Session API for background playback controls
     initializeMediaSession();
+    
+    // Initialize HEART Algorithm
+    HEART.init();
+    
+    // 💭 HEART Whisper: Check if returning user (show welcome back message)
+    const heartData = HEART.getData();
+    const lastVisitGap = Date.now() - heartData.lastUpdated;
+    const hoursAway = lastVisitGap / (1000 * 60 * 60);
+    if (hoursAway > 12 && heartData.moodHistory?.length > 5) {
+        // User was away for 12+ hours and has played songs before
+        setTimeout(() => {
+            HEARTWhisper.showWhisper('Wapas aa gaye! Missed you! 🎵');
+        }, 3000); // Show after 3 seconds
+    }
     
     // Search button event
     const searchBtn = document.getElementById('searchBtn');
@@ -730,7 +1886,7 @@ function onYouTubeIframeAPIReady() {
 }
 
 function onPlayerReady(event) {
-    console.log('YouTube player ready!');
+    console.log('🎵 Pixel Player ready!');
     const volumeSlider = document.getElementById('volumeSlider');
     player.setVolume(volumeSlider.value);
     setInterval(updateProgress, 1000);
@@ -756,6 +1912,20 @@ function onPlayerStateChange(event) {
             const duration = player.getDuration ? player.getDuration() : 0;
             const playTime = (Date.now() - songStartTime) / 1000; // seconds
             InvisibleIntelligence.learnFromPlay(currentSongData, playTime, duration);
+            
+            // 💕 Update HEART Sync UI after learning
+            updateHeartSyncUI();
+        }
+        
+        // 🎧 LISTENING TIME: Song ended, add to total
+        if (listeningSession.startTime > 0) {
+            const listenedNow = (Date.now() - listeningSession.startTime) / 1000;
+            listeningSession.totalListenedTime += listenedNow;
+            listeningSession.startTime = 0;
+            console.log('[Listening] ⏹️ Song ended. This: ' + listenedNow.toFixed(1) + 's, Total: ' + listeningSession.totalListenedTime.toFixed(1) + 's');
+            
+            // Send to GA4 every song end
+            sendListeningTimeToGA4();
         }
         
         // Check if autoplay is enabled
@@ -770,9 +1940,31 @@ function onPlayerStateChange(event) {
         isPlaying = true;
         isBuffering = false;
         
+        // 🔊 UNMUTE after play starts (for mobile autoplay workaround)
+        try {
+            if (player && player.unMute) {
+                player.unMute();
+                const volumeSlider = document.getElementById('volumeSlider');
+                if (volumeSlider) {
+                    player.setVolume(volumeSlider.value);
+                } else {
+                    player.setVolume(70);
+                }
+            }
+        } catch(e) {
+            console.log('[Player] Unmute error:', e);
+        }
+        
         // 🧠 INTELLIGENCE: Track when song started
         if (songStartTime === 0) {
             songStartTime = Date.now();
+        }
+        
+        // 🎧 LISTENING TIME: Start tracking
+        if (listeningSession.startTime === 0) {
+            listeningSession.startTime = Date.now();
+            listeningSession.songsPlayed++;
+            console.log('[Listening] ▶️ Started tracking song #' + listeningSession.songsPlayed);
         }
         
         startVinylAnimation();
@@ -810,6 +2002,14 @@ function onPlayerStateChange(event) {
     } else if (event.data === YT.PlayerState.BUFFERING) {
         isBuffering = true;
         console.log('Video buffering...');
+    } else if (event.data === YT.PlayerState.PAUSED) {
+        // 🎧 LISTENING TIME: Pause tracking, save listened time
+        if (listeningSession.startTime > 0) {
+            const listenedNow = (Date.now() - listeningSession.startTime) / 1000;
+            listeningSession.totalListenedTime += listenedNow;
+            listeningSession.startTime = 0; // Reset for next play
+            console.log('[Listening] ⏸️ Paused. This segment: ' + listenedNow.toFixed(1) + 's, Total: ' + listeningSession.totalListenedTime.toFixed(1) + 's');
+        }
     } else {
         isPlaying = false;
         stopVinylAnimation();
@@ -919,7 +2119,7 @@ async function performSearch() {
     }
     
     const songList = document.getElementById('songList');
-    songList.innerHTML = '<div class="loading"><i class="bi bi-hourglass-split"></i><p>Searching YouTube for: ' + query + '</p></div>';
+    songList.innerHTML = '<div class="loading"><i class="bi bi-heart-pulse"></i><p>💫 HEART Syncing: ' + query + '</p></div>';
     
     try {
         const results = await searchYouTube(query);
@@ -1170,23 +2370,50 @@ function playYouTubeSong(index) {
     
     // Load and play video first
     if (player && player.loadVideoById) {
-        // For iOS: unmute and play - iOS requires user gesture
+        // For iOS/Mobile: Start muted, then unmute after play starts
+        // This bypasses browser autoplay restrictions
         try {
-            player.unMute();
-            player.setVolume(100);
+            player.mute(); // Start muted to satisfy autoplay policy
         } catch(e) {}
         
         player.loadVideoById(videoId);
         
-        // Attempt multiple play calls for iOS compatibility
-        player.playVideo();
+        // Attempt play immediately
+        try {
+            player.playVideo();
+        } catch(e) {
+            console.log('[Autoplay] Initial playVideo failed:', e);
+        }
         
-        // iOS sometimes needs a slight delay
-        setTimeout(() => {
-            if (player && player.playVideo) {
-                player.playVideo();
-            }
-        }, 100);
+        // Multiple retry attempts with unmute to ensure playback starts
+        // This handles browser autoplay policies and slow loading
+        const playRetryIntervals = [100, 300, 500, 1000, 2000, 3000];
+        playRetryIntervals.forEach((delay) => {
+            setTimeout(() => {
+                try {
+                    if (player && player.getPlayerState && player.playVideo) {
+                        const state = player.getPlayerState();
+                        // If not playing and not ended, try to play again
+                        if (state !== YT.PlayerState.PLAYING && state !== YT.PlayerState.ENDED) {
+                            console.log(`[Autoplay Retry] Attempting playVideo at ${delay}ms, current state: ${state}`);
+                            player.playVideo();
+                        }
+                        // Unmute after play attempt (user clicked = interaction happened)
+                        if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING) {
+                            player.unMute();
+                            const volumeSlider = document.getElementById('volumeSlider');
+                            if (volumeSlider) {
+                                player.setVolume(volumeSlider.value);
+                            } else {
+                                player.setVolume(70);
+                            }
+                        }
+                    }
+                } catch(e) {
+                    console.log(`[Autoplay Retry] Error at ${delay}ms:`, e);
+                }
+            }, delay);
+        });
         
         player.setPlaybackQuality('small'); // Force lower quality for faster loading
         
@@ -1223,6 +2450,24 @@ function playYouTubeSong(index) {
     
     // Update Media Session metadata for background playback
     updateMediaSessionMetadata(title, channel, thumbnail);
+    
+    // 💓 HEART: Update session mood based on song
+    const detectedMood = HEART.detectMoodFromTitle(title);
+    HEART.updateSessionMood(detectedMood);
+    
+    // 🧘‍♂️ Start Deep Listening tracking
+    HEART.startDeepListening(detectedMood);
+    
+    // 💕 Update HEART Sync UI (heart fills as we learn more)
+    updateHeartSyncUI();
+    
+    // 💭 HEART Whisper: Check for whisper triggers (mood, milestones)
+    HEARTWhisper.checkAutoWhisper();
+    
+    // 💭 Mood-based whisper (10% chance to avoid spamming)
+    if (detectedMood && Math.random() < 0.1) {
+        HEARTWhisper.whisperMood(detectedMood);
+    }
     
     // Trigger disc slide-up animation
     triggerDiscAnimation();
@@ -1362,6 +2607,8 @@ function playNext() {
         // If skipped within first 30 seconds, count as a skip
         if (playTime < 30) {
             InvisibleIntelligence.learnFromSkip(currentSongData, playTime);
+            // 🧘‍♂️ Record skip - breaks deep listening
+            HEART.recordSkip();
         } else {
             // Played more than 30 sec = partial play, still positive
             const duration = player?.getDuration ? player.getDuration() : 180;
@@ -1399,12 +2646,46 @@ async function playVibeShuffledNext() {
     console.log('[Vibe Shuffle] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('[Vibe Shuffle] 🎵 Current: ' + currentTitle.substring(0, 50));
     
+    // 🧘‍♂️ DEEP LISTENING: Check if user is in the zone
+    if (HEART.isInDeepListening()) {
+        const deepStats = HEART.getDeepListeningStats();
+        console.log(`[HEART] 🧘‍♂️ Deep Listening ACTIVE - ${deepStats.minutes} min in ${deepStats.mood} mood`);
+        console.log('[HEART] 🧘‍♂️ Prioritizing same mood songs to maintain the vibe...');
+        // Save deep session for future learning
+        HEART.saveDeepSession();
+    }
+    
+    // 💓 HEART: Check for mood uplift (3+ sad songs)
+    // But NOT if user is in deep listening mode (respect their mood choice)
+    if (HEART.shouldUpliftMood() && !HEART.isInDeepListening()) {
+        console.log('[HEART] 🌈 Mood uplift triggered - switching to happy vibes!');
+        
+        // 💭 HEART Whisper: Journey whisper for sad → happy transition
+        HEARTWhisper.whisperJourney('sadToHappy');
+        
+        const upliftSuggestions = HEART.getUpliftSuggestions();
+        const randomSearch = upliftSuggestions[Math.floor(Math.random() * upliftSuggestions.length)];
+        
+        try {
+            const results = await searchYouTube(randomSearch);
+            if (results && results.length > 0) {
+                const randomIndex = Math.floor(Math.random() * Math.min(5, results.length));
+                youtubeSearchResults = results;
+                playYouTubeSong(randomIndex);
+                return;
+            }
+        } catch (e) {
+            console.log('[HEART] Uplift search failed, continuing with vibe shuffle');
+        }
+    }
+    
     // Detect vibes from current song
     const detectedVibes = detectVibeKeywords(currentTitle);
     if (detectedVibes.length > 0) {
         console.log('[Vibe Shuffle] 🧠 Detected vibes:');
         detectedVibes.forEach(v => {
             console.log(`   → "${v.matchedWord}" = ${v.category} (${v.vibeType})`);
+
         });
     } else {
         console.log('[Vibe Shuffle] 🧠 No specific vibe keywords detected');
@@ -1452,10 +2733,20 @@ async function playVibeShuffledNext() {
             // User wants these: "Sundar Kand", "Ramayan", "Romantic Jukebox" are valid content!
             // Long devotional/spiritual content (2-3 hours) is intentional and valid
             
-            // 🚫 Skip SLOW REVERB / LOFI versions - they shift vibe unexpectedly
+            // 🚫 Skip SLOW REVERB - too drastic vibe shift
             if (title.includes('slowed') && title.includes('reverb')) return false;
-            if (title.includes('lofi') || title.includes('lo-fi')) return false;
             if (title.includes('8d audio') || title.includes('8d song')) return false;
+            
+            // ✅ LOFI - Now ALLOWED as mood transition bridge!
+            // LoFi is perfect for: sad → chill → happy (gradual uplift)
+            // Don't skip: if (title.includes('lofi') || title.includes('lo-fi')) return false;
+            
+            // 💓 HEART: Use LoFi as bridge when transitioning from sad mood
+            const heartMood = HEART.getDominantSessionMood();
+            if (heartMood === 'sad' && (title.includes('lofi') || title.includes('lo-fi'))) {
+                console.log('[HEART] 🌉 LoFi bridge allowed for mood transition');
+                // Allow LoFi to play as bridge
+            }
             
             // 🚫 Skip BHAJAN / DEVOTIONAL when coming from party songs
             // This prevents sudden mood shift from party → bhakti
@@ -1570,10 +2861,20 @@ async function fetchRelatedVideos(videoId) {
         let searchQuery = extractMusicKeywords(currentTitle);
         
         // 🧠 INVISIBLE INTELLIGENCE: Boost search with preferred language
-        const searchBoost = InvisibleIntelligence.getSearchBoost();
-        if (searchBoost) {
-            searchQuery = `${searchQuery} ${searchBoost}`;
-            console.log(`[Invisible Intelligence] 🎯 Search boosted with: ${searchBoost}`);
+        // BUT respect current song's language - don't force Hindi on English songs!
+        const currentLanguage = InvisibleIntelligence.detectLanguage(currentTitle, currentSongData?.channelTitle || '');
+        let searchBoost = '';
+        
+        // Only boost if current song matches user's preferred language
+        if (currentLanguage === 'hindi' || currentLanguage === 'punjabi') {
+            searchBoost = InvisibleIntelligence.getSearchBoost();
+            if (searchBoost) {
+                searchQuery = `${searchQuery} ${searchBoost}`;
+                console.log(`[Invisible Intelligence] 🎯 Search boosted with: ${searchBoost}`);
+            }
+        } else {
+            // English/International song - don't add Hindi boost, let it flow naturally
+            console.log(`[Invisible Intelligence] 🌍 International mode - no language boost`);
         }
         
         const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(searchQuery)}&type=video&videoCategoryId=10&maxResults=15&key=${API_KEY}`;
@@ -1858,6 +3159,71 @@ function resetTelescopicTonearm() {
     if (segment2) segment2.style.width = '75%';
     if (segment3) segment3.style.width = '50%';
     if (tonearmHead) tonearmHead.style.left = '-13px';
+}
+
+// Dynamic Tonearm Position - calculates arm length based on vinyl position
+// Base stays fixed at screen right, arm stretches to reach vinyl grooves
+function updateTonearmPosition() {
+    const tonearm = document.getElementById('tonearm');
+    const tonearmArm = document.getElementById('tonearmArm');
+    const vinylDisc = document.getElementById('vinylDisc');
+    const playerArea = document.querySelector('.player-area');
+    
+    if (!tonearm || !tonearmArm || !playerArea) return;
+    
+    // Get player area dimensions
+    const playerRect = playerArea.getBoundingClientRect();
+    const playerCenterX = playerRect.width / 2;
+    
+    // Get vinyl disc size (or use platter if disc not loaded)
+    const vinyl = vinylDisc || document.getElementById('turntablePlatter');
+    const vinylWidth = vinyl ? vinyl.offsetWidth : 400;
+    const vinylRadius = vinylWidth / 2;
+    
+    // Tonearm base is fixed at right edge (30px from right)
+    // Needle should reach vinyl outer grooves (radius + some offset for grooves area)
+    // Arm length = distance from base to vinyl grooves
+    const basePosition = 30; // Right offset of tonearm base
+    const grooveOffset = 80; // How far into grooves the needle should reach
+    
+    // Calculate required arm length
+    // From right edge to center = playerCenterX
+    // From center to groove = vinylRadius - grooveOffset (inner part of grooves)
+    const armLength = (playerRect.width - basePosition) - playerCenterX + (vinylRadius - grooveOffset);
+    
+    // Apply with min/max limits
+    const clampedArmLength = Math.max(150, Math.min(600, armLength));
+    tonearmArm.style.width = clampedArmLength + 'px';
+    
+    console.log('[Tonearm] 🎵 Arm length updated:', Math.round(clampedArmLength) + 'px', 
+                '(Screen:', playerRect.width + 'px, Vinyl:', vinylWidth + 'px)');
+}
+
+// Initialize and update tonearm on various events
+function initDynamicTonearm() {
+    // Initial calculation
+    setTimeout(updateTonearmPosition, 100);
+    
+    // Update on window resize
+    window.addEventListener('resize', debounce(updateTonearmPosition, 150));
+    
+    // Update on fullscreen change
+    document.addEventListener('fullscreenchange', () => {
+        setTimeout(updateTonearmPosition, 300);
+    });
+}
+
+// Simple debounce helper
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
 }
 
 // Progress Updates
@@ -2148,7 +3514,7 @@ async function performMobileSearch() {
     }
     
     const mobileSongList = document.getElementById('mobileSongList');
-    mobileSongList.innerHTML = '<div class="loading"><i class="bi bi-hourglass-split"></i><p>Searching YouTube for: ' + query + '</p></div>';
+    mobileSongList.innerHTML = '<div class="loading"><i class="bi bi-heart-pulse"></i><p>💫 HEART Syncing: ' + query + '</p></div>';
     
     try {
         const results = await searchYouTube(query);
@@ -2231,7 +3597,7 @@ function toggleMute() {
     }
 }
 
-// Share Function with Deep Link and UTM tracking
+// Share Function - Direct URL Copy to Clipboard with Rotating Banners
 function shareSong() {
     const songTitle = document.getElementById('currentSongTitle').textContent;
     const songArtist = document.getElementById('currentSongArtist').textContent;
@@ -2252,38 +3618,288 @@ function shareSong() {
         shareUrl += `?q=${encodeURIComponent(songTitle)}&utm_source=share&utm_medium=social&utm_campaign=song_share`;
     }
     
-    const shareText = `🎵 Listen to "${songTitle}" by ${songArtist} on Pixel Play!`;
+    // 🎨 Rotate banner for OG meta tag (for WhatsApp/social preview)
+    rotateBannerForShare();
     
-    // Check if Web Share API is available
-    if (navigator.share) {
-        navigator.share({
-            title: `${songTitle} - Pixel Play`,
-            text: shareText,
-            url: shareUrl
-        }).then(() => {
-            console.log('Shared successfully');
-            showStatus('Shared!', 2000);
+    // Direct copy to clipboard - no dialogs!
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(shareUrl).then(() => {
+            showToast('🔗 Link copied! Paste anywhere to share');
+            console.log('Share URL copied:', shareUrl);
         }).catch((error) => {
-            console.log('Error sharing:', error);
-            fallbackShare(shareText, shareUrl);
+            console.log('Clipboard error:', error);
+            showStatus('Copy failed', 2000);
         });
     } else {
-        fallbackShare(shareText, shareUrl);
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = shareUrl;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-9999px';
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            showToast('🔗 Link copied! Paste anywhere to share');
+        } catch (err) {
+            showStatus('Copy failed', 2000);
+        }
+        document.body.removeChild(textArea);
     }
 }
 
-function fallbackShare(text, url) {
-    // Copy URL to clipboard as fallback
-    const copyText = url ? `${text}\n${url}` : text;
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(copyText).then(() => {
-            showStatus('Link copied!', 2000);
-        }).catch(() => {
-            showStatus('Share failed', 2000);
+// 🎧 REAL LISTENING TIME - Send to Google Analytics 4
+function sendListeningTimeToGA4() {
+    const sessionDuration = (Date.now() - listeningSession.sessionStart) / 1000; // seconds
+    
+    // Send custom event to GA4
+    if (typeof gtag === 'function') {
+        gtag('event', 'actual_listening_time', {
+            'total_seconds': Math.round(listeningSession.totalListenedTime),
+            'songs_played': listeningSession.songsPlayed,
+            'session_duration_seconds': Math.round(sessionDuration),
+            'avg_per_song': listeningSession.songsPlayed > 0 
+                ? Math.round(listeningSession.totalListenedTime / listeningSession.songsPlayed) 
+                : 0
         });
-    } else {
-        showStatus('Share not supported', 2000);
+        console.log('[Listening] 📊 Sent to GA4: ' + Math.round(listeningSession.totalListenedTime) + 's across ' + listeningSession.songsPlayed + ' songs');
     }
+}
+
+// Send listening time when user leaves page
+window.addEventListener('beforeunload', function() {
+    // Capture any remaining listening time
+    if (listeningSession.startTime > 0) {
+        listeningSession.totalListenedTime += (Date.now() - listeningSession.startTime) / 1000;
+    }
+    
+    if (listeningSession.totalListenedTime > 0) {
+        sendListeningTimeToGA4();
+        console.log('[Listening] 👋 Final session: ' + listeningSession.totalListenedTime.toFixed(1) + 's, ' + listeningSession.songsPlayed + ' songs');
+    }
+});
+
+// Toast notification for share feedback
+function showToast(message) {
+    // Remove existing toast if any
+    const existingToast = document.querySelector('.toast-notification');
+    if (existingToast) {
+        existingToast.remove();
+    }
+    
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.innerHTML = `
+        <span>${message}</span>
+    `;
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(40, 40, 40, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        padding: 12px 24px;
+        border-radius: 30px;
+        font-size: 0.95rem;
+        z-index: 9999;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // Auto remove after 2.5 seconds
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 2500);
+}
+
+// ===== ROTATING SHARE BANNER SYSTEM =====
+// Like API key rotation - cycles through banners for social sharing
+
+/**
+ * Rotate to next banner for share
+ * Cycles 001 → 012, tries all extensions (jpeg, jpg, png, webp)
+ * Gen-Z designers send any format! 😄
+ */
+function rotateBannerForShare() {
+    // Increment index (wraps around after 12)
+    SHARE_BANNER_CONFIG.currentIndex++;
+    if (SHARE_BANNER_CONFIG.currentIndex > SHARE_BANNER_CONFIG.maxBanners) {
+        SHARE_BANNER_CONFIG.currentIndex = 1;
+    }
+    
+    const bannerNumber = String(SHARE_BANNER_CONFIG.currentIndex).padStart(3, '0');
+    
+    // Check if we already know the extension for this banner
+    if (SHARE_BANNER_CONFIG.cachedBanners.has(bannerNumber)) {
+        const cachedUrl = SHARE_BANNER_CONFIG.cachedBanners.get(bannerNumber);
+        updateOGBanner(cachedUrl);
+        console.log(`[ShareBanner] 🎨 Rotated to banner ${bannerNumber} (cached)`);
+        return;
+    }
+    
+    // Try all extensions to find the banner
+    findBannerWithAnyExtension(bannerNumber)
+        .then(foundUrl => {
+            if (foundUrl) {
+                updateOGBanner(foundUrl);
+                SHARE_BANNER_CONFIG.cachedBanners.set(bannerNumber, foundUrl);
+                console.log(`[ShareBanner] 🎨 Rotated to banner ${bannerNumber}`);
+            } else {
+                // Banner doesn't exist, reset to 001
+                console.log(`[ShareBanner] Banner ${bannerNumber} not found, using 001`);
+                SHARE_BANNER_CONFIG.currentIndex = 1;
+                findBannerWithAnyExtension('001').then(fallbackUrl => {
+                    if (fallbackUrl) {
+                        updateOGBanner(fallbackUrl);
+                        SHARE_BANNER_CONFIG.cachedBanners.set('001', fallbackUrl);
+                    }
+                });
+            }
+        });
+}
+
+/**
+ * Find banner by trying all supported extensions
+ * Returns first URL that works (jpeg, jpg, png, webp)
+ */
+function findBannerWithAnyExtension(bannerNumber) {
+    return new Promise((resolve) => {
+        const baseUrl = `https://play.creativepixels.in/${SHARE_BANNER_CONFIG.basePath}${bannerNumber}`;
+        const extensions = SHARE_BANNER_CONFIG.extensions;
+        let checked = 0;
+        let found = false;
+        
+        extensions.forEach(ext => {
+            const url = baseUrl + ext;
+            checkBannerExists(url).then(exists => {
+                checked++;
+                if (exists && !found) {
+                    found = true;
+                    resolve(url);
+                } else if (checked === extensions.length && !found) {
+                    resolve(null);
+                }
+            });
+        });
+    });
+}
+
+/**
+ * Check if banner image exists
+ */
+function checkBannerExists(url) {
+    return new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(true);
+        img.onerror = () => resolve(false);
+        img.src = url;
+    });
+}
+
+/**
+ * Update OG meta tag for social preview
+ */
+function updateOGBanner(bannerUrl) {
+    let ogImage = document.querySelector('meta[property="og:image"]');
+    if (!ogImage) {
+        ogImage = document.createElement('meta');
+        ogImage.setAttribute('property', 'og:image');
+        document.head.appendChild(ogImage);
+    }
+    ogImage.setAttribute('content', bannerUrl);
+    
+    // Also update Twitter card image
+    let twitterImage = document.querySelector('meta[name="twitter:image"]');
+    if (!twitterImage) {
+        twitterImage = document.createElement('meta');
+        twitterImage.setAttribute('name', 'twitter:image');
+        document.head.appendChild(twitterImage);
+    }
+    twitterImage.setAttribute('content', bannerUrl);
+}
+
+/**
+ * Cache banner image for faster loading
+ * Preloads in user's browser cache
+ */
+function cacheBannerForSpeed(url, bannerNumber) {
+    if (SHARE_BANNER_CONFIG.cachedBanners.has(bannerNumber)) {
+        return; // Already cached
+    }
+    
+    // Preload the image
+    const img = new Image();
+    img.src = url;
+    SHARE_BANNER_CONFIG.cachedBanners.set(bannerNumber, url);
+}
+
+/**
+ * Preload all available banners on app start
+ * Stops when first missing banner is found (no more 404 spam!)
+ */
+function preloadShareBanners() {
+    console.log('[ShareBanner] 🖼️ Preloading share banners...');
+    
+    // Start with banner 001 and go sequentially
+    preloadBannerSequentially(1);
+}
+
+/**
+ * Preload banners one by one, stop when not found
+ */
+function preloadBannerSequentially(index) {
+    if (index > SHARE_BANNER_CONFIG.maxBanners) {
+        console.log('[ShareBanner] ✅ Preload complete!');
+        return;
+    }
+    
+    const bannerNumber = String(index).padStart(3, '0');
+    
+    // Try just .jpeg first (most common)
+    const jpegUrl = `https://play.creativepixels.in/${SHARE_BANNER_CONFIG.basePath}${bannerNumber}.jpeg`;
+    
+    checkBannerExists(jpegUrl).then(exists => {
+        if (exists) {
+            SHARE_BANNER_CONFIG.cachedBanners.set(bannerNumber, jpegUrl);
+            console.log(`[ShareBanner] ✓ Banner ${bannerNumber} cached`);
+            // Continue to next
+            preloadBannerSequentially(index + 1);
+        } else {
+            // Try other formats before giving up
+            tryOtherFormats(bannerNumber, index);
+        }
+    });
+}
+
+/**
+ * Try other image formats if jpeg not found
+ */
+function tryOtherFormats(bannerNumber, index) {
+    const formats = ['.jpg', '.png', '.webp'];
+    let found = false;
+    let checked = 0;
+    
+    formats.forEach(ext => {
+        const url = `https://play.creativepixels.in/${SHARE_BANNER_CONFIG.basePath}${bannerNumber}${ext}`;
+        checkBannerExists(url).then(exists => {
+            checked++;
+            if (exists && !found) {
+                found = true;
+                SHARE_BANNER_CONFIG.cachedBanners.set(bannerNumber, url);
+                console.log(`[ShareBanner] ✓ Banner ${bannerNumber}${ext} cached`);
+                preloadBannerSequentially(index + 1);
+            } else if (checked === formats.length && !found) {
+                // No more banners found, stop here
+                console.log(`[ShareBanner] ✅ Found ${SHARE_BANNER_CONFIG.cachedBanners.size} banners total`);
+            }
+        });
+    });
 }
 
 // Disc Animation Function
@@ -2679,7 +4295,6 @@ function playLibrarySong(videoId, title, artist, thumbnail) {
         player.loadVideoById(videoId);
         player.playVideo();
         isPlaying = true;
-        startVinylAnimation();
         updatePlayButton();
     }
     
@@ -2688,8 +4303,9 @@ function playLibrarySong(videoId, title, artist, thumbnail) {
     updatePlayButton();
     updateMediaSessionMetadata(title, artist, thumbnail);
     
-    // Trigger disc slide-up animation
+    // Trigger disc slide-up animation first, then spinning
     triggerDiscAnimation();
+    startVinylAnimation();
     
     // Highlight active song
     document.querySelectorAll('.song-item').forEach(item => {
@@ -2916,7 +4532,8 @@ function playFromHistory(song) {
         // Manually set playing state and start animation
         isPlaying = true;
         isBuffering = true; // Set buffering true until PLAYING state received
-        startVinylAnimation();
+        triggerDiscAnimation(); // Slide up the disc
+        startVinylAnimation();  // Start spinning
         updatePlayButton();
         
         // Set loading timeout (20 seconds) - only skip if still buffering (PLAYING state not received)
@@ -2957,21 +4574,20 @@ function waitForPlayerAndPlay(videoId, attempts = 0) {
     const maxAttempts = 30; // Try for up to 15 seconds (30 * 500ms)
     
     if (player && player.loadVideoById) {
-        console.log('Player ready! Playing video:', videoId);
-        // Force play the video
-        player.loadVideoById(videoId);
-        isPlaying = true;
-        updatePlayButton();
-        startVinylAnimation();
+        console.log('Player ready! Playing video from deep link:', videoId);
         
-        // Also call playVideoById to update UI and metadata
+        // Clear pending flag since we're playing now
+        pendingDeepLinkVideoId = null;
+        
+        // Call playVideoById which handles everything: API fetch, UI update, and playback
         playVideoById(videoId);
+        
     } else if (attempts < maxAttempts) {
         console.log(`Waiting for YouTube player... attempt ${attempts + 1}/${maxAttempts}`);
         setTimeout(() => waitForPlayerAndPlay(videoId, attempts + 1), 500);
     } else {
         // Store the video ID to play when player becomes ready
-        console.log('Player not ready yet, storing video ID for later:', videoId);
+        console.log('Player not ready after max attempts, storing for later:', videoId);
         pendingDeepLinkVideoId = videoId;
         showStatus('Loading player...', 0);
     }
@@ -3010,12 +4626,25 @@ function handleDeepLink() {
                 
                 // Add one-time click listener for mobile autoplay policy
                 const playOnTap = () => {
-                    if (pendingDeepLinkVideoId && player && player.loadVideoById) {
-                        console.log('User tapped - playing video');
-                        player.loadVideoById(pendingDeepLinkVideoId);
-                        player.playVideo();
-                        pendingDeepLinkVideoId = null;
+                    console.log('User tapped - attempting to play');
+                    
+                    if (player) {
+                        // If video is paused/stopped, play it
+                        if (player.getPlayerState && player.getPlayerState() !== 1) {
+                            player.playVideo();
+                            isPlaying = true;
+                            updatePlayButton();
+                            startVinylAnimation();
+                        }
+                        
+                        // If pending video exists, load and play it
+                        if (pendingDeepLinkVideoId && player.loadVideoById) {
+                            console.log('Playing pending deep link video on tap:', pendingDeepLinkVideoId);
+                            playVideoById(pendingDeepLinkVideoId);
+                            pendingDeepLinkVideoId = null;
+                        }
                     }
+                    
                     document.removeEventListener('click', playOnTap);
                     document.removeEventListener('touchstart', playOnTap);
                 };
@@ -3066,7 +4695,44 @@ function playVideoById(videoId, retryCount = 0) {
     // Check if API key is available
     const apiKey = CONFIG.getCurrentApiKey();
     if (!apiKey) {
-        showStatus('API limit reached', 3000);
+        console.log('All API keys exhausted, but still trying to play video...');
+        // Even without API key, we can still play the video!
+        if (player && player.loadVideoById) {
+            currentPlatform = 'youtube';
+            currentVideoId = videoId;
+            currentSongData = {
+                videoId: videoId,
+                title: 'Now Playing',
+                artist: 'Pixel Play',
+                channelTitle: 'Pixel Play',
+                thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+            };
+            
+            updateSongInfo('Now Playing', 'Pixel Play', `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`);
+            player.loadVideoById(videoId);
+            
+            // Robust autoplay with retries
+            player.playVideo();
+            const retryDelays = [100, 500, 1000];
+            retryDelays.forEach(delay => {
+                setTimeout(() => {
+                    if (player && player.getPlayerState && player.playVideo) {
+                        const state = player.getPlayerState();
+                        if (state !== YT.PlayerState.PLAYING && state !== YT.PlayerState.ENDED) {
+                            player.playVideo();
+                        }
+                    }
+                }, delay);
+            });
+            
+            isPlaying = true;
+            updatePlayButton();
+            triggerDiscAnimation(); // Slide up the disc
+            startVinylAnimation();  // Start spinning
+            showStatus('🎵 Playing...', 2000);
+        } else {
+            showStatus('API limit reached', 3000);
+        }
         return;
     }
     
@@ -3125,10 +4791,27 @@ function playVideoById(videoId, retryCount = 0) {
                 // Load video in player
                 if (player && player.loadVideoById) {
                     player.loadVideoById(videoId);
+                    
+                    // Robust autoplay with multiple retry attempts
+                    player.playVideo();
+                    const playRetryIntervals = [100, 300, 500, 1000, 2000];
+                    playRetryIntervals.forEach((delay) => {
+                        setTimeout(() => {
+                            if (player && player.getPlayerState && player.playVideo) {
+                                const state = player.getPlayerState();
+                                if (state !== YT.PlayerState.PLAYING && state !== YT.PlayerState.ENDED) {
+                                    console.log(`[Autoplay Retry] playVideoById retry at ${delay}ms, state: ${state}`);
+                                    player.playVideo();
+                                }
+                            }
+                        }, delay);
+                    });
+                    
                     isPlaying = true;
                     isBuffering = true;
                     updatePlayButton();
-                    startVinylAnimation();
+                    triggerDiscAnimation(); // Slide up the disc
+                    startVinylAnimation();  // Start spinning
                 } else {
                     // Player not ready, wait and retry
                     console.log('Player not ready in playVideoById, waiting...');
@@ -3136,10 +4819,23 @@ function playVideoById(videoId, retryCount = 0) {
                     setTimeout(() => {
                         if (player && player.loadVideoById) {
                             player.loadVideoById(videoId);
+                            
+                            // Robust autoplay with retries
+                            player.playVideo();
+                            setTimeout(() => {
+                                if (player && player.getPlayerState && player.playVideo) {
+                                    const state = player.getPlayerState();
+                                    if (state !== YT.PlayerState.PLAYING && state !== YT.PlayerState.ENDED) {
+                                        player.playVideo();
+                                    }
+                                }
+                            }, 500);
+                            
                             isPlaying = true;
                             isBuffering = true;
                             updatePlayButton();
-                            startVinylAnimation();
+                            triggerDiscAnimation(); // Slide up the disc
+                            startVinylAnimation();  // Start spinning
                         } else {
                             showStatus('Player error', 3000);
                         }
@@ -3150,8 +4846,51 @@ function playVideoById(videoId, retryCount = 0) {
             }
         })
         .catch(error => {
-            console.error('Error fetching video:', error);
-            showStatus('Failed to load', 3000);
+            console.error('Error fetching video details:', error);
+            
+            // FALLBACK: Even if API fails, try to play the video anyway!
+            console.log('API failed but attempting to play video anyway...');
+            if (player && player.loadVideoById) {
+                // Set basic info without API
+                currentPlatform = 'youtube';
+                currentVideoId = videoId;
+                currentSongData = {
+                    videoId: videoId,
+                    title: 'Now Playing',
+                    artist: 'Pixel Play',
+                    channelTitle: 'Pixel Play',
+                    thumbnail: `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+                };
+                
+                // Use YouTube thumbnail directly
+                updateSongInfo('Loading...', 'Pixel Play', `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`);
+                
+                // Load and play with robust retry
+                player.loadVideoById(videoId);
+                player.playVideo();
+                
+                // Retry playback if needed
+                const retryDelays = [100, 500, 1000];
+                retryDelays.forEach(delay => {
+                    setTimeout(() => {
+                        if (player && player.getPlayerState && player.playVideo) {
+                            const state = player.getPlayerState();
+                            if (state !== YT.PlayerState.PLAYING && state !== YT.PlayerState.ENDED) {
+                                player.playVideo();
+                            }
+                        }
+                    }, delay);
+                });
+                
+                isPlaying = true;
+                updatePlayButton();
+                triggerDiscAnimation(); // Slide up the disc
+                startVinylAnimation();  // Start spinning
+                
+                showStatus('🎵 Playing...', 2000);
+            } else {
+                showStatus('Player not ready', 3000);
+            }
         });
 }
 
@@ -3161,4 +4900,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Show recently played on load
     displayPlayHistory();
+    
+    // 🎨 Preload share banners in background (like API keys warming up)
+    setTimeout(preloadShareBanners, 2000);
 });
