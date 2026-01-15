@@ -2,24 +2,26 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        />
 
         <!-- Primary Meta Tags - SEO Optimized -->
         <title>
-            Pixel Play Music - Free Online Music Player | Stream Songs Free | No
-            Ads
+            Pixel Play Music - Online Music Player | Search, Play, Feel the Vibe
         </title>
         <meta
             name="title"
-            content="Pixel Play Music - Free Online Music Player | Stream Songs Free | No Ads"
+            content="Pixel Play Music - Online Music Player | Search, Play, Feel the Vibe"
         />
         <meta
             name="description"
-            content="Pixel Play Music is a FREE online music player with retro vinyl design. Stream unlimited songs from YouTube - no ads, no subscription, no credit card needed. Just pure music! 🎵"
+            content="Pixel Play - Just a music player, with heart. Search any song, play instantly. Learns your taste, stays on your phone. Hindi, Bollywood, Punjabi, Tamil, Telugu - your mood, your music."
         />
         <meta
             name="keywords"
-            content="pixel play music, free music player, online music player, stream music free, youtube music player, retro vinyl player, play songs online, free music streaming, web music player, no ads music player, pixel music, vinyl music player, aesthetic music player"
+            content="pixel play music, free music player, online music player, stream music free, youtube music player, retro vinyl player, play songs online, free music streaming, web music player, no ads music player, pixel music, vinyl music player, aesthetic music player, hindi songs free online, bollywood songs player, punjabi songs free, tamil songs online, telugu songs player, malayalam songs free, arijit singh songs, shreya ghoshal hits, ar rahman songs, 90s bollywood songs, romantic songs hindi, sad songs playlist, latest bollywood 2026, party songs free, gaana free online, spotify alternative free, wynk alternative, jiosaavn alternative"
         />
         <meta name="author" content="Creative Pixels" />
         <meta
@@ -43,11 +45,11 @@
         <!-- Open Graph Meta Tags (Facebook, WhatsApp, LinkedIn) -->
         <meta
             property="og:title"
-            content="Pixel Play Music - FREE Online Music Player 🎵"
+            content="Pixel Play Music - Online Music Player"
         />
         <meta
             property="og:description"
-            content="Stream unlimited songs for FREE! No ads, no subscription. Beautiful retro vinyl player. Your mood, your music - play instantly!"
+            content="Just a music player, with heart. Search any song, play instantly. Learns your taste, stays on your phone."
         />
         <meta
             property="og:image"
@@ -63,11 +65,11 @@
         <meta name="twitter:card" content="summary_large_image" />
         <meta
             name="twitter:title"
-            content="Pixel Play Music - FREE Online Music Player 🎵"
+            content="Pixel Play Music - Online Music Player"
         />
         <meta
             name="twitter:description"
-            content="Stream unlimited songs for FREE! No ads, no subscription. Your mood, your music!"
+            content="Just a music player, with heart. Learns your taste, stays on your phone."
         />
         <meta
             name="twitter:image"
@@ -84,40 +86,63 @@
                 "alternateName": [
                     "Pixel Play",
                     "Pixel Music Player",
-                    "Creative Pixels Music"
+                    "Creative Pixels Music",
+                    "Free Music Player India",
+                    "Bollywood Music Player"
                 ],
                 "url": "https://play.creativepixels.in/",
                 "logo": "https://play.creativepixels.in/PixelPlayLogo-White.svg",
-                "description": "Free online music player with retro vinyl aesthetics. Stream unlimited songs from YouTube. No ads, no subscription required.",
+                "description": "100% FREE online music player with retro vinyl design. Stream unlimited Hindi, Bollywood, Punjabi, Tamil, Telugu songs. No ads, no subscription, no login. Play Arijit Singh, Shreya Ghoshal, AR Rahman & more!",
                 "applicationCategory": "MultimediaApplication",
                 "operatingSystem": "Any",
                 "browserRequirements": "Requires JavaScript",
+                "inLanguage": [
+                    "en",
+                    "hi",
+                    "ta",
+                    "te",
+                    "pa",
+                    "mr",
+                    "bn",
+                    "ml",
+                    "kn"
+                ],
                 "offers": {
                     "@type": "Offer",
                     "price": "0",
-                    "priceCurrency": "USD"
+                    "priceCurrency": "INR",
+                    "availability": "https://schema.org/InStock",
+                    "priceValidUntil": "2030-12-31"
                 },
                 "aggregateRating": {
                     "@type": "AggregateRating",
                     "ratingValue": "4.9",
-                    "ratingCount": "259",
+                    "ratingCount": "2700",
                     "bestRating": "5"
                 },
                 "author": {
                     "@type": "Organization",
                     "name": "Creative Pixels",
-                    "url": "https://creativepixels.in"
+                    "url": "https://creativepixels.in",
+                    "sameAs": [
+                        "https://instagram.com/playatpixels",
+                        "https://youtube.com/@brhman"
+                    ]
                 },
                 "featureList": [
-                    "Stream music from YouTube",
+                    "Stream unlimited Hindi songs free",
+                    "Bollywood music - old and new",
+                    "Punjabi, Tamil, Telugu songs",
                     "Retro vinyl interface",
                     "HEART Algorithm - learns your taste",
-                    "Vibe Shuffle - mood-based recommendations",
-                    "No advertisements",
-                    "Free unlimited streaming",
+                    "Vibe Shuffle - mood-based songs",
+                    "100% FREE - No ads ever",
+                    "No subscription needed",
+                    "No login required",
                     "Background playback",
-                    "Works on all devices"
-                ]
+                    "Works on mobile, tablet, desktop"
+                ],
+                "keywords": "free music player, bollywood songs, hindi songs online, punjabi songs, tamil songs, telugu songs, arijit singh, shreya ghoshal, no ads music"
             }
         </script>
 
@@ -198,18 +223,23 @@
             // Google Analytics
             gtag('config', 'G-KYS6H6HWBL');
 
-            // Google Ads Conversion Tracking
-            gtag('config', 'AW-17781306562');
+            // Google Ads - Track clicks only, NOT instant conversions!
+            // Real conversions are fired by ads-quality-tracker.js based on engagement
+            gtag('config', 'AW-17781306562', {
+                send_page_view: false, // Don't auto-send, we track quality instead
+            });
+
+            // Track that an ad click arrived (for analysis, not conversion)
+            if (new URLSearchParams(window.location.search).get('gclid')) {
+                gtag('event', 'ad_click_arrived', {
+                    page: 'index',
+                    timestamp: new Date().toISOString(),
+                });
+            }
         </script>
 
-        <!-- Google Ads Conversion Event - Fires on page load -->
-        <script>
-            gtag('event', 'conversion', {
-                send_to: 'AW-17781306562/CWDjCMG5oswbEMLp5J5C',
-                value: 1.0,
-                currency: 'INR',
-            });
-        </script>
+        <!-- Quality User Tracker - Fires conversion only for ENGAGED users -->
+        <script src="ads-quality-tracker.js" defer></script>
 
         <!-- Bootstrap CSS - Async load -->
         <link
@@ -348,6 +378,7 @@
                             >
                                 <!-- Gradient for fill -->
                                 <defs>
+                                    <!-- 💕 Normal pink gradient -->
                                     <linearGradient
                                         id="heartGradient"
                                         x1="0%"
@@ -373,6 +404,36 @@
                                             offset="100%"
                                             style="
                                                 stop-color: #ff6b6b;
+                                                stop-opacity: 1;
+                                            "
+                                        />
+                                    </linearGradient>
+                                    <!-- 🌟 GINI Golden Gradient - Jadhu ki jhappi! -->
+                                    <linearGradient
+                                        id="heartGradientGold"
+                                        x1="0%"
+                                        y1="100%"
+                                        x2="0%"
+                                        y2="0%"
+                                    >
+                                        <stop
+                                            offset="0%"
+                                            style="
+                                                stop-color: #ffd700;
+                                                stop-opacity: 1;
+                                            "
+                                        />
+                                        <stop
+                                            offset="50%"
+                                            style="
+                                                stop-color: #ffb347;
+                                                stop-opacity: 1;
+                                            "
+                                        />
+                                        <stop
+                                            offset="100%"
+                                            style="
+                                                stop-color: #ffa500;
                                                 stop-opacity: 1;
                                             "
                                         />
@@ -520,7 +581,7 @@
 
             <!-- Mobile Profile Menu -->
             <div class="mobile-profile-menu" id="mobileProfileMenu">
-                <!-- 📲 PWA Install Button - Shows only when installable -->
+                <!-- 📲 PWA Install - HIDDEN until app is ready
                 <a
                     href="#"
                     class="mobile-profile-item"
@@ -530,6 +591,7 @@
                 >
                     <i class="bi bi-download"></i> Install App
                 </a>
+                -->
                 <!-- Profile hidden - P4 task, will add when users request
             <a href="#" class="mobile-profile-item" onclick="showProfile(); closeMobileProfileMenu(); return false;">
                 <i class="bi bi-person"></i> Profile
@@ -730,14 +792,12 @@
                         <!-- Controls Panel -->
                         <div class="controls-panel" id="controlsPanel">
                             <div class="song-info">
-                                <div
-                                    class="song-title new-year-celebration"
-                                    id="currentSongTitle"
-                                >
-                                    Happy New Year 2026
+                                <div class="song-title" id="currentSongTitle">
+                                    Search it, Play it, Feel it...
                                 </div>
                                 <div class="song-artist" id="currentSongArtist">
-                                    Search your favorite song to celebrate
+                                    Keep the vibe going, Search your favorite
+                                    song
                                 </div>
                             </div>
 
@@ -872,9 +932,32 @@
                             >Cookie Policy</a
                         >
                     </div>
+                    <!-- YouTube API Compliance Links -->
+                    <div
+                        class="footer-links"
+                        style="
+                            margin-top: 5px;
+                            font-size: 0.75rem;
+                            opacity: 0.7;
+                        "
+                    >
+                        <a
+                            href="https://www.youtube.com/t/terms"
+                            target="_blank"
+                            rel="noopener"
+                            >YouTube Terms</a
+                        >
+                        <span class="footer-divider">|</span>
+                        <a
+                            href="http://www.google.com/policies/privacy"
+                            target="_blank"
+                            rel="noopener"
+                            >Google Privacy</a
+                        >
+                    </div>
                     <div class="footer-copyright">
                         <p>
-                            &copy; 2025 Pixel Play by
+                            &copy; 2026 Pixel Play by
                             <a href="https://creativepixels.in" target="_blank"
                                 >Creative Pixels</a
                             >. All rights reserved.

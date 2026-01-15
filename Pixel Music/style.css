@@ -7,6 +7,30 @@
     --accent: #666;
     --border: #333;
     --shadow: rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+    /* Safe area insets for Android/iOS notch & navigation */
+    --safe-area-top: env(safe-area-inset-top, 24px);
+    --safe-area-bottom: env(safe-area-inset-bottom, 24px);
+
+    /* 🎯 FLUID TYPOGRAPHY - Scales with viewport */
+    --text-xs: clamp(0.65rem, 0.6rem + 0.25vw, 0.75rem);
+    --text-sm: clamp(0.75rem, 0.7rem + 0.3vw, 0.875rem);
+    --text-base: clamp(0.875rem, 0.8rem + 0.4vw, 1rem);
+    --text-lg: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+    --text-xl: clamp(1.25rem, 1rem + 0.8vw, 1.5rem);
+    --text-2xl: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    --text-3xl: clamp(2rem, 1.5rem + 1.5vw, 2.5rem);
+
+    /* 🎯 FLUID SPACING */
+    --space-xs: clamp(0.25rem, 0.2rem + 0.2vw, 0.5rem);
+    --space-sm: clamp(0.5rem, 0.4rem + 0.3vw, 0.75rem);
+    --space-md: clamp(0.75rem, 0.6rem + 0.5vw, 1rem);
+    --space-lg: clamp(1rem, 0.8rem + 0.6vw, 1.5rem);
+    --space-xl: clamp(1.5rem, 1rem + 1vw, 2rem);
+
+    /* 🎯 VINYL SCALING - Based on viewport minimum */
+    --vinyl-size: min(55vh, 55vw, 700px);
+    --platter-size: min(56vh, 56vw, 720px);
 }
 
 /* ===== GLOBAL STYLES ===== */
@@ -16,13 +40,22 @@
     box-sizing: border-box;
 }
 
+html {
+    background: #000000;
+    background-color: #000000;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+    background: #000000;
+    background-color: #000000;
     color: var(--text-light);
     overflow: hidden;
     height: 100vh;
     position: relative;
+    /* Android App Safe Area */
+    padding-top: var(--safe-area-top);
+    padding-bottom: var(--safe-area-bottom);
 }
 
 /* Wood grain texture */
@@ -33,9 +66,8 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-        linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px),
-        linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px);
     background-size: 50px 50px;
     pointer-events: none;
     z-index: 0;
@@ -56,16 +88,37 @@ body::after {
 }
 
 @keyframes grain {
-    0%, 100% { transform: translate(0, 0); }
-    10% { transform: translate(-5%, -10%); }
-    20% { transform: translate(-15%, 5%); }
-    30% { transform: translate(7%, -25%); }
-    40% { transform: translate(-5%, 25%); }
-    50% { transform: translate(-15%, 10%); }
-    60% { transform: translate(15%, 0%); }
-    70% { transform: translate(0%, 15%); }
-    80% { transform: translate(3%, 35%); }
-    90% { transform: translate(-10%, 10%); }
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+    10% {
+        transform: translate(-5%, -10%);
+    }
+    20% {
+        transform: translate(-15%, 5%);
+    }
+    30% {
+        transform: translate(7%, -25%);
+    }
+    40% {
+        transform: translate(-5%, 25%);
+    }
+    50% {
+        transform: translate(-15%, 10%);
+    }
+    60% {
+        transform: translate(15%, 0%);
+    }
+    70% {
+        transform: translate(0%, 15%);
+    }
+    80% {
+        transform: translate(3%, 35%);
+    }
+    90% {
+        transform: translate(-10%, 10%);
+    }
 }
 
 /* Scan lines */
@@ -87,8 +140,9 @@ body::after {
     z-index: 2;
 }
 
-/* ===== LOGIN SCREEN ===== */
-.login-screen {
+/* ===== SPLASH SCREEN ===== */
+.login-screen,
+.splash-screen {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -98,6 +152,98 @@ body::after {
     z-index: 3;
 }
 
+.splash-container {
+    text-align: center;
+    padding: 3rem;
+}
+
+.splash-logo {
+    margin-bottom: 1.5rem;
+}
+
+.splash-logo-img {
+    width: 100px;
+    height: 100px;
+    animation: splashPulse 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.3));
+}
+
+@keyframes splashPulse {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+}
+
+.splash-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-light);
+    text-shadow: 2px 2px 4px var(--shadow);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.splash-tagline {
+    font-size: 1rem;
+    color: var(--text-dim);
+    margin-bottom: 2rem;
+    animation: fadeInUp 0.8s ease 0.2s forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Splash Loader Bar */
+.splash-loader {
+    width: 120px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    margin: 0 auto;
+    overflow: hidden;
+    animation: fadeInUp 0.8s ease 0.4s forwards;
+    opacity: 0;
+}
+
+.splash-loader-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0.8) 50%,
+        rgba(255, 255, 255, 0.3) 100%
+    );
+    border-radius: 3px;
+    animation: splashLoad 2.5s ease forwards;
+}
+
+@keyframes splashLoad {
+    0% {
+        width: 0%;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+/* Legacy login styles (for logout redirect) */
 .login-container {
     text-align: center;
     padding: 3rem;
@@ -106,13 +252,6 @@ body::after {
     border-radius: 10px;
     backdrop-filter: blur(10px);
     box-shadow: 0 10px 40px var(--shadow);
-}
-
-.login-logo i {
-    font-size: 5rem;
-    color: var(--text-light);
-    margin-bottom: 1rem;
-    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
 }
 
 .login-title {
@@ -143,6 +282,7 @@ body::after {
     background: rgba(20, 20, 20, 0.95);
     border-bottom: 1px solid var(--border);
     padding: 1rem 2rem;
+    padding-top: calc(1rem + var(--safe-area-top, 0px));
     backdrop-filter: blur(10px);
     position: relative;
     z-index: 100;
@@ -166,10 +306,163 @@ body::after {
     letter-spacing: 1px;
 }
 
+/* Brand container with tagline */
+.navbar-brand .brand-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.navbar-brand .brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.navbar-brand .brand-tagline {
+    font-family: 'Roboto', sans-serif;
+    font-size: 8px;
+    font-weight: 400;
+    color: var(--text-light);
+    opacity: 0.6;
+    letter-spacing: 0.5px;
+    margin-left: 2px;
+}
+
 .navbar-brand i {
     margin-right: 0.5rem;
     font-size: 1.8rem;
     vertical-align: middle;
+}
+
+/* 💕 HEART SYNC Indicator - Plain icon like search (no box) */
+.heart-sync-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: auto;
+    margin-right: 0.5rem;
+}
+
+.heart-sync-container:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+/* Custom SVG Heart Container */
+.heart-sync-svg {
+    width: 28px;
+    height: 26px;
+    position: relative;
+}
+
+.heart-sync-svg svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+}
+
+/* Heart outline - always visible */
+.heart-sync-svg .heart-outline {
+    fill: none;
+    stroke: rgba(255, 255, 255, 0.4);
+    stroke-width: 1.5;
+    transition: stroke 0.3s ease;
+}
+
+.heart-sync-container:hover .heart-outline {
+    stroke: rgba(255, 255, 255, 0.6);
+}
+
+/* Heart fill - gradient that rises from bottom */
+.heart-sync-svg .heart-fill-path {
+    fill: url(#heartGradient);
+    clip-path: url(#heartClip);
+    transition: none; /* JS handles smooth animation */
+}
+
+/* The clip rect that controls fill level */
+.heart-sync-svg .heart-clip-rect {
+    transition: y 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+        height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glow effect when syncing */
+.heart-sync-svg.syncing .heart-fill-path {
+    filter: drop-shadow(0 0 4px rgba(255, 107, 129, 0.6));
+}
+
+/* Subtle pulse when actively learning */
+@keyframes heartBreath {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.08);
+    }
+}
+
+.heart-sync-svg.syncing {
+    animation: heartBreath 2s ease-in-out infinite;
+}
+
+/* 🌟 GINI GOLDEN GLOW - Jadhu ki jhappi when user shows extra love! */
+@keyframes giniGoldenGlow {
+    0% {
+        filter: drop-shadow(0 0 0px rgba(255, 215, 0, 0));
+        transform: scale(1);
+    }
+    15% {
+        filter: drop-shadow(0 0 20px rgba(255, 215, 0, 1))
+            drop-shadow(0 0 40px rgba(255, 165, 0, 0.8));
+        transform: scale(1.3);
+    }
+    30% {
+        filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.9))
+            drop-shadow(0 0 30px rgba(255, 165, 0, 0.6));
+        transform: scale(1.15);
+    }
+    50% {
+        filter: drop-shadow(0 0 25px rgba(255, 215, 0, 1))
+            drop-shadow(0 0 50px rgba(255, 165, 0, 0.9));
+        transform: scale(1.35);
+    }
+    70% {
+        filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.7));
+        transform: scale(1.1);
+    }
+    100% {
+        filter: drop-shadow(0 0 0px rgba(255, 215, 0, 0));
+        transform: scale(1);
+    }
+}
+
+.heart-sync-svg.gini-glow {
+    animation: giniGoldenGlow 1.5s ease-in-out forwards !important;
+}
+
+/* Change heart gradient to golden during glow */
+.heart-sync-svg.gini-glow .heart-fill-path {
+    fill: url(#heartGradientGold) !important;
+}
+
+/* Percentage text - Hidden for clean look, heart fill tells the story */
+.heart-sync-percent {
+    display: none; /* Sirf dil dikhega, number nahi! */
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .heart-sync-container {
+        padding: 6px 10px;
+        margin-right: 0.5rem;
+    }
 }
 
 .navbar-actions {
@@ -180,6 +473,11 @@ body::after {
 
 .mobile-search-btn,
 .mobile-menu-btn {
+    display: none;
+}
+
+/* Mobile Sidebar Back Button - Hidden on desktop */
+.mobile-sidebar-back {
     display: none;
 }
 
@@ -334,7 +632,7 @@ body::after {
 
 .profile-btn {
     background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: none;
     border-radius: 8px;
     color: #fff;
     padding: 8px 16px;
@@ -347,9 +645,34 @@ body::after {
     font-size: 0.9rem;
 }
 
+.profile-btn .profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.profile-btn .profile-info #userName {
+    display: flex;
+    align-items: center;
+}
+
+.profile-btn .heart-status-text.syncing {
+    color: #ff6b81;
+    animation: pulseText 2s ease-in-out infinite;
+}
+
+@keyframes pulseText {
+    0%,
+    100% {
+        opacity: 0.7;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
 .profile-btn:hover {
     background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.5);
 }
 
 .profile-btn .dropdown-arrow {
@@ -498,7 +821,11 @@ body::after {
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 100%);
+    background: radial-gradient(
+        ellipse at center,
+        transparent 0%,
+        rgba(0, 0, 0, 0.4) 100%
+    );
     pointer-events: none;
     z-index: 0;
 }
@@ -511,7 +838,7 @@ body::after {
 /* Platform Tabs */
 .platform-tabs {
     background: rgba(30, 30, 30, 0.9);
-    border: 1px solid var(--border);
+    border: none;
     border-radius: 8px;
     padding: 0.25rem;
     margin-bottom: 1rem;
@@ -567,92 +894,101 @@ body::after {
 /* Tab Content */
 .tab-content {
     background: rgba(30, 30, 30, 0.6);
-    border: 1px solid var(--border);
+    border: none;
     border-radius: 12px;
     padding: 1.5rem;
     box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
     flex: 1;
-    overflow: hidden;
+    overflow: visible; /* Allow song-list to handle its own scroll */
     display: flex;
     flex-direction: column;
     min-height: 0;
 }
 
-/* Search Box */
+/* Search Box - Minimal Style */
 .search-box {
     display: flex;
+    align-items: center;
     gap: 0.5rem;
-    margin-bottom: 1.5rem;
-    position: relative;
-    background: rgba(25, 25, 25, 0.8);
-    padding: 1rem;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1rem;
     flex-shrink: 0;
+}
+
+/* Mobile Back Button - Left of search (hidden on desktop) */
+.search-back-btn {
+    display: none;
+}
+
+.search-input-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    background: rgba(60, 60, 60, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    padding: 0.4rem 0.75rem;
+    height: 44px;
+    transition: all 0.3s ease;
+}
+
+.search-input-wrapper:focus-within {
+    background: rgba(70, 70, 70, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
 }
 
 .search-box input {
     flex: 1;
-    background: rgba(60, 60, 60, 0.9);
-    border: 1px solid var(--border);
+    background: transparent !important;
+    border: none !important;
     color: #ffffff !important;
-    padding: 0.85rem 1rem;
-    padding-right: 60px; /* Make room for shortcut badge */
-    border-radius: 8px;
-    transition: all 0.3s ease;
+    padding: 0.3rem 0.5rem;
     font-size: 1rem;
+    outline: none !important;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.search-box input:focus {
+    background: transparent !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 .search-box input::placeholder {
     color: rgba(255, 255, 255, 0.4);
 }
 
-.search-box input:focus {
-    outline: none;
-    border-color: #888;
-    background: rgba(70, 70, 70, 0.95);
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.15);
-    color: #ffffff !important;
+/* Override Bootstrap form-control styles */
+.search-box .form-control {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
 }
 
-/* Keyboard Shortcut Badge */
-.search-shortcut-badge {
-    position: absolute;
-    right: 105px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 5px;
-    padding: 4px 10px;
-    font-size: 0.75rem;
-    font-family: 'Roboto Mono', monospace;
-    color: var(--text-dim);
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-.search-box input:focus ~ .search-shortcut-badge {
-    opacity: 0;
-}
-
-.search-box button {
-    background: var(--accent);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 0.85rem 1.5rem;
-    border-radius: 8px;
-    color: var(--text-light);
+/* Search Button Inside - Minimal */
+.search-btn-inside {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 0.3rem 0.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
 }
 
-.search-box button:hover {
-    background: #777;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+.search-btn-inside:hover {
+    color: rgba(255, 255, 255, 0.9);
+    transform: scale(1.1);
+}
+
+/* Hide old shortcut badge */
+.search-shortcut-badge {
+    display: none;
 }
 
 /* Song List */
@@ -661,6 +997,9 @@ body::after {
     overflow-y: auto;
     overflow-x: hidden;
     min-height: 0;
+    max-height: calc(100vh - 350px); /* Ensure scrolling after Load More */
+    padding-right: 8px; /* Space for scrollbar */
+    -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
 }
 
 /* Slide-up animation for song items */
@@ -691,16 +1030,36 @@ body::after {
     opacity: 0;
 }
 
-.song-item:nth-child(1) { animation-delay: 0.05s; }
-.song-item:nth-child(2) { animation-delay: 0.1s; }
-.song-item:nth-child(3) { animation-delay: 0.15s; }
-.song-item:nth-child(4) { animation-delay: 0.2s; }
-.song-item:nth-child(5) { animation-delay: 0.25s; }
-.song-item:nth-child(6) { animation-delay: 0.3s; }
-.song-item:nth-child(7) { animation-delay: 0.35s; }
-.song-item:nth-child(8) { animation-delay: 0.4s; }
-.song-item:nth-child(9) { animation-delay: 0.45s; }
-.song-item:nth-child(10) { animation-delay: 0.5s; }
+.song-item:nth-child(1) {
+    animation-delay: 0.05s;
+}
+.song-item:nth-child(2) {
+    animation-delay: 0.1s;
+}
+.song-item:nth-child(3) {
+    animation-delay: 0.15s;
+}
+.song-item:nth-child(4) {
+    animation-delay: 0.2s;
+}
+.song-item:nth-child(5) {
+    animation-delay: 0.25s;
+}
+.song-item:nth-child(6) {
+    animation-delay: 0.3s;
+}
+.song-item:nth-child(7) {
+    animation-delay: 0.35s;
+}
+.song-item:nth-child(8) {
+    animation-delay: 0.4s;
+}
+.song-item:nth-child(9) {
+    animation-delay: 0.45s;
+}
+.song-item:nth-child(10) {
+    animation-delay: 0.5s;
+}
 
 .song-item:hover {
     background: rgba(60, 60, 60, 0.9);
@@ -713,6 +1072,41 @@ body::after {
     background: rgba(80, 80, 80, 0.9);
     border-color: var(--text-light);
     box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* 🎯 Quick Picks Section - Subtle gold feel (user's choice remembered) */
+.quick-pick-item {
+    background: linear-gradient(
+        135deg,
+        rgba(50, 50, 50, 0.9) 0%,
+        rgba(40, 40, 40, 0.8) 100%
+    );
+    border: 1px solid rgba(255, 215, 0, 0.12);
+    position: relative;
+}
+
+.quick-pick-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 215, 0, 0.2),
+        transparent
+    );
+}
+
+.quick-pick-item:hover {
+    border-color: rgba(255, 215, 0, 0.25);
+    background: linear-gradient(
+        135deg,
+        rgba(60, 60, 60, 0.95) 0%,
+        rgba(50, 50, 50, 0.9) 100%
+    );
 }
 
 /* Load More Button */
@@ -751,14 +1145,17 @@ body::after {
     height: 50px;
     object-fit: cover;
     border-radius: 8px;
-    filter: grayscale(100%);
+    filter: grayscale(100%) !important;
     transition: filter 0.3s ease;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-.song-item:hover img,
+.song-item:hover img {
+    filter: grayscale(0%) !important;
+}
+
 .song-item.active img {
-    filter: grayscale(0%);
+    filter: grayscale(0%) !important;
 }
 
 .song-item-info {
@@ -781,6 +1178,27 @@ body::after {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* 🛡️ TRUST Badge - Simple line icons, fast load */
+.trust-badge {
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    color: #1da1f2; /* Twitter/WhatsApp blue - user familiar */
+    margin-right: 2px;
+}
+
+/* Verified channels get brighter blue */
+.trust-badge.bi-patch-check-fill {
+    color: #1da1f2;
+}
+
+/* Trusted channels slightly dimmer */
+.trust-badge.bi-shield-check {
+    color: #5b9bd5;
 }
 
 .song-item-remove {
@@ -824,13 +1242,22 @@ body::after {
 }
 
 @keyframes heartPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.3); }
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.3);
+    }
 }
 
 @keyframes heartFill {
-    0% { opacity: 0.5; }
-    100% { opacity: 1; }
+    0% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 /* Records Library Styles */
@@ -898,7 +1325,7 @@ body::after {
 
 .empty-library small {
     font-size: 0.875rem;
-    opacity: 0.7
+    opacity: 0.7;
 }
 
 .song-item-remove:hover {
@@ -975,7 +1402,8 @@ body::after {
     padding: 2rem;
     background: #1a1a1a;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* Allow controls to be visible */
+    height: calc(100vh - 73px); /* Fixed height = navbar height subtracted */
 }
 
 /* Vignette effect */
@@ -986,7 +1414,11 @@ body::after {
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(ellipse at center, transparent 0%, rgba(0,0,0,0.4) 100%);
+    background: radial-gradient(
+        ellipse at center,
+        transparent 0%,
+        rgba(0, 0, 0, 0.4) 100%
+    );
     pointer-events: none;
 }
 
@@ -997,19 +1429,20 @@ body::after {
     align-items: center;
     justify-content: center;
     position: relative;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
+    min-height: 0; /* Important for flex shrinking */
+    overflow: visible;
 }
 
 /* Turntable Platter Base - Always Visible */
 .turntable-platter {
-    width: 740px;
-    height: 740px;
+    /* Responsive: 55% of viewport height OR 55% of container width, max 740px */
+    width: min(55vh, 55vw, 740px);
+    height: min(55vh, 55vw, 740px);
     border-radius: 50%;
     position: absolute;
     background: radial-gradient(circle, #2a2a2a 0%, #1a1a1a 40%, #0f0f0f 100%);
-    box-shadow: 
-        0 0 50px rgba(0, 0, 0, 0.8),
-        0 15px 40px rgba(0, 0, 0, 0.6),
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 15px 40px rgba(0, 0, 0, 0.6),
         inset 0 0 80px rgba(0, 0, 0, 0.5),
         inset 0 2px 10px rgba(255, 255, 255, 0.05);
     z-index: 1;
@@ -1023,9 +1456,7 @@ body::after {
     bottom: 10px;
     border-radius: 50%;
     border: 2px solid #333;
-    box-shadow: 
-        inset 0 0 20px rgba(0, 0, 0, 0.5),
-        0 0 10px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5), 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .platter-center {
@@ -1036,9 +1467,13 @@ body::after {
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #444 0%, #222 50%, #111 100%);
-    box-shadow: 
-        0 2px 10px rgba(0, 0, 0, 0.8),
+    background: radial-gradient(
+        circle at 30% 30%,
+        #444 0%,
+        #222 50%,
+        #111 100%
+    );
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8),
         inset 0 1px 3px rgba(255, 255, 255, 0.1);
     border: 1px solid #333;
 }
@@ -1058,16 +1493,14 @@ body::after {
 
 /* Vinyl Disc - Hidden below, slides up when song plays */
 .vinyl-disc {
-    width: 720px;
-    height: 720px;
+    /* Responsive: almost same as platter, tiny edge visible */
+    width: min(54vh, 54vw, 730px);
+    height: min(54vh, 54vw, 730px);
     border-radius: 50%;
     position: relative;
     background: radial-gradient(circle, #1a1a1a 0%, #0a0a0a 100%);
-    box-shadow: 
-        0 0 40px rgba(0, 0, 0, 0.9),
-        0 10px 60px rgba(0, 0, 0, 0.8),
-        inset 0 0 60px rgba(0, 0, 0, 0.6),
-        inset 0 5px 20px rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.9), 0 10px 60px rgba(0, 0, 0, 0.8),
+        inset 0 0 60px rgba(0, 0, 0, 0.6), inset 0 5px 20px rgba(0, 0, 0, 0.7);
     transition: transform 0.3s ease;
     transform: translateY(150vh);
     opacity: 0;
@@ -1092,17 +1525,25 @@ body::after {
     }
 }
 
+/* Spinning ONLY when song is actually playing */
 .vinyl-disc.spinning {
     animation: spin 3s linear infinite;
 }
 
+/* After slide-up completes, disc is at translateY(0), then spin takes over */
 .vinyl-disc.loaded.spinning {
-    animation: slideUpFromCover 1s cubic-bezier(0.34, 1.2, 0.64, 1) forwards, spin 3s linear infinite 1s;
+    transform: translateY(0);
+    opacity: 1;
+    animation: spin 3s linear infinite;
 }
 
 @keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 /* Vinyl Outer Ring */
@@ -1114,9 +1555,7 @@ body::after {
     bottom: 10px;
     border-radius: 50%;
     border: 3px solid #2a2a2a;
-    box-shadow: 
-        0 0 10px rgba(0, 0, 0, 0.5),
-        inset 0 0 20px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(0, 0, 0, 0.8);
 }
 
 /* Vinyl Grooves */
@@ -1142,8 +1581,8 @@ body::after {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 324px;
-    height: 324px;
+    width: 45%; /* Responsive percentage of vinyl */
+    height: 45%;
     border-radius: 50%;
     background: radial-gradient(circle, #f5f5f5 0%, #d0d0d0 100%);
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
@@ -1162,6 +1601,7 @@ body::after {
     justify-content: center;
     background: #e0e0e0;
     border-radius: 50%;
+    overflow: hidden;
 }
 
 .album-art i {
@@ -1173,7 +1613,10 @@ body::after {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     border-radius: 50%;
+    min-width: 100%;
+    min-height: 100%;
 }
 
 /* Vinyl Center Hole */
@@ -1186,8 +1629,7 @@ body::after {
     height: 40px;
     border-radius: 50%;
     background: radial-gradient(circle, #0a0a0a 0%, #000 100%);
-    box-shadow: 
-        0 0 10px rgba(0, 0, 0, 0.8),
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.8),
         inset 0 0 5px rgba(255, 255, 255, 0.1);
 }
 
@@ -1200,22 +1642,30 @@ body::after {
     right: 0;
     bottom: 0;
     border-radius: 50%;
-    background-image: 
-        radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px),
-        radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-image: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.1) 1px,
+            transparent 1px
+        ),
+        radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
     background-size: 50px 50px, 80px 80px;
     background-position: 0 0, 40px 40px;
     pointer-events: none;
 }
 
-/* Tonearm */
+/* 🎵 TONEARM - Pixel Perfect on ALL screens
+   Position & arm length calculated by JavaScript
+   CSS only handles appearance, animations, and base styles
+   JS sets: right, top, transform, arm width */
 .tonearm {
     position: absolute;
-    right: 50px;
-    top: 50%;
-    transform: translateY(-50%) rotate(-25deg);
+    /* Position will be set by JS based on vinyl position */
+    right: 30px; /* Fallback - JS overrides */
+    top: 50%; /* Fallback - JS overrides */
+    transform: translateY(-50%) rotate(-25deg); /* Resting angle */
     transform-origin: right center;
-    transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+        right 0.3s ease-out, top 0.3s ease-out;
     z-index: 10;
     opacity: 1;
     filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
@@ -1232,20 +1682,24 @@ body::after {
 }
 
 .tonearm.playing {
-    transform: translateY(-50%) rotate(-5deg) translateX(-50px);
+    transform: translateY(-50%) rotate(-5deg);
 }
 
 .tonearm-base {
     width: 36px;
     height: 36px;
-    background: radial-gradient(circle at 30% 30%, #999 0%, #555 50%, #333 100%);
+    background: radial-gradient(
+        circle at 30% 30%,
+        #999 0%,
+        #555 50%,
+        #333 100%
+    );
     border-radius: 50%;
     position: absolute;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    box-shadow: 
-        0 4px 15px rgba(0, 0, 0, 0.7),
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.7),
         inset 0 2px 4px rgba(255, 255, 255, 0.2),
         inset 0 -2px 4px rgba(0, 0, 0, 0.3);
     border: 2px solid #444;
@@ -1265,7 +1719,9 @@ body::after {
 }
 
 .tonearm-arm {
-    width: 420px;
+    width: min(350px, 40vw); /* Responsive default, JS will override */
+    min-width: 100px;
+    max-width: 600px;
     height: 12px;
     background: transparent;
     position: relative;
@@ -1274,6 +1730,7 @@ body::after {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    transition: width 0.3s ease-out;
 }
 
 /* Telescopic Segments */
@@ -1289,8 +1746,7 @@ body::after {
     width: 100%;
     height: 14px;
     background: linear-gradient(180deg, #888 0%, #666 50%, #444 100%);
-    box-shadow: 
-        0 3px 8px rgba(0, 0, 0, 0.5),
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5),
         inset 0 1px 2px rgba(255, 255, 255, 0.3),
         inset 0 -1px 2px rgba(0, 0, 0, 0.3);
     border: 1px solid #555;
@@ -1301,8 +1757,7 @@ body::after {
     width: 75%;
     height: 11px;
     background: linear-gradient(180deg, #999 0%, #777 50%, #555 100%);
-    box-shadow: 
-        0 2px 6px rgba(0, 0, 0, 0.4),
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4),
         inset 0 1px 2px rgba(255, 255, 255, 0.35);
     border: 1px solid #666;
     z-index: 2;
@@ -1312,8 +1767,7 @@ body::after {
     width: 50%;
     height: 8px;
     background: linear-gradient(180deg, #aaa 0%, #888 50%, #666 100%);
-    box-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.3),
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3),
         inset 0 1px 2px rgba(255, 255, 255, 0.4);
     border: 1px solid #777;
     z-index: 3;
@@ -1327,21 +1781,29 @@ body::after {
     top: 2px;
     width: 80%;
     height: 2px;
-    background: linear-gradient(90deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.1) 100%);
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.4) 0%,
+        rgba(255, 255, 255, 0.1) 100%
+    );
     border-radius: 2px;
 }
 
 .tonearm-head {
     width: 26px;
     height: 26px;
-    background: radial-gradient(circle at 30% 30%, #777 0%, #444 50%, #222 100%);
+    background: radial-gradient(
+        circle at 30% 30%,
+        #777 0%,
+        #444 50%,
+        #222 100%
+    );
     border-radius: 50%;
     position: absolute;
     left: -13px;
     top: 50%;
     transform: translateY(-50%);
-    box-shadow: 
-        0 3px 10px rgba(0, 0, 0, 0.7),
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.7),
         inset 0 2px 3px rgba(255, 255, 255, 0.2),
         inset 0 -2px 3px rgba(0, 0, 0, 0.4);
     border: 2px solid #555;
@@ -1552,6 +2014,34 @@ body::after {
     text-overflow: ellipsis;
 }
 
+/* New Year 2026 Celebration - Subtle shimmer */
+.song-title.new-year-celebration {
+    background: linear-gradient(
+        90deg,
+        var(--text-light) 0%,
+        #c0c0c0 25%,
+        #ffffff 50%,
+        #c0c0c0 75%,
+        var(--text-light) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: newYearShimmer 3s linear infinite;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+@keyframes newYearShimmer {
+    0% {
+        background-position: 0% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
 .song-artist {
     font-size: 1rem;
     color: var(--text-dim);
@@ -1673,31 +2163,32 @@ body::after {
 }
 
 @keyframes heartPulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.3); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.3);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
-/* Autoplay Toggle Switch */
+/* Autoplay Toggle Switch - Text Inside */
 .autoplay-toggle-container {
     display: flex;
     align-items: center;
-    gap: 10px;
 }
 
 .toggle-label {
-    font-size: 0.85rem;
-    color: var(--text-light);
-    font-family: 'Roboto Mono', monospace;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
+    display: none; /* Hidden - text is now inside toggle */
 }
 
 .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 50px;
-    height: 26px;
+    width: 88px;
+    height: 30px;
     margin: 0;
 }
 
@@ -1714,35 +2205,74 @@ body::after {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(60, 60, 60, 0.8);
+    background: rgba(60, 60, 60, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.2);
     transition: all 0.3s ease;
-    border-radius: 13px;
+    border-radius: 16px;
+    overflow: hidden;
 }
 
+/* Toggle ball */
 .toggle-slider:before {
     position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
+    content: '';
+    height: 22px;
+    width: 22px;
     left: 4px;
     bottom: 3px;
     background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
     transition: all 0.3s ease;
     border-radius: 50%;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    z-index: 2;
 }
 
+/* Text inside toggle - Micro interaction style */
+.toggle-text-off,
+.toggle-text-on {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 8px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+}
+
+.toggle-text-off {
+    right: 6px;
+    color: rgba(255, 255, 255, 0.6);
+    opacity: 1;
+}
+
+.toggle-text-on {
+    left: 8px;
+    color: #fff;
+    opacity: 0;
+}
+
+/* Checked state */
 .toggle-switch input:checked + .toggle-slider {
-    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
     border-color: rgba(255, 255, 255, 0.4);
     box-shadow: 0 0 10px rgba(76, 175, 80, 0.4);
 }
 
 .toggle-switch input:checked + .toggle-slider:before {
-    transform: translateX(24px);
+    transform: translateX(58px);
     background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.toggle-switch input:checked + .toggle-slider .toggle-text-off {
+    opacity: 0;
+}
+
+.toggle-switch input:checked + .toggle-slider .toggle-text-on {
+    opacity: 1;
 }
 
 .toggle-slider:hover {
@@ -1806,7 +2336,11 @@ body::after {
 .volume-slider-inline {
     width: 120px;
     height: 6px;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.2) 0%,
+        rgba(255, 255, 255, 0.1) 100%
+    );
     border-radius: 3px;
     outline: none;
     cursor: pointer;
@@ -1814,7 +2348,11 @@ body::after {
 }
 
 .volume-slider-inline:hover {
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.15) 100%);
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0.15) 100%
+    );
 }
 
 .volume-slider-inline::-webkit-slider-thumb {
@@ -1902,14 +2440,25 @@ body::after {
     margin-bottom: 0;
 }
 
+/* Fullscreen Tonearm - JS handles positioning, just adjust sizes */
+.fullscreen-mode .tonearm-base {
+    width: 40px;
+    height: 40px;
+}
+
+.fullscreen-mode .tonearm-head {
+    width: 28px;
+    height: 28px;
+}
+
 .fullscreen-mode .vinyl-disc {
-    width: 900px;
-    height: 900px;
+    width: min(77vh, 77vw, 910px);
+    height: min(77vh, 77vw, 910px);
 }
 
 .fullscreen-mode .turntable-platter {
-    width: 920px;
-    height: 920px;
+    width: min(78vh, 78vw, 920px);
+    height: min(78vh, 78vw, 920px);
 }
 
 .fullscreen-mode .controls-panel {
@@ -1925,18 +2474,186 @@ body::after {
 }
 
 .fullscreen-mode .fullscreen-btn i::before {
-    content: "\f32a";
+    content: '\f32a';
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
-/* iPad Pro and Tablets - Landscape */
-@media (min-width: 769px) and (max-width: 1366px) {
+
+/* iPad Pro 12"+ and Large Tablets - Desktop-like experience */
+@media (min-width: 1024px) and (max-width: 1400px) {
+    /* Compact navbar for tablets */
+    .navbar {
+        padding: 0.5rem 1.5rem;
+    }
+
+    .navbar-brand .logo-text {
+        font-size: 1.4rem;
+    }
+
+    .navbar-brand i {
+        font-size: 1.4rem;
+    }
+
+    .player-area {
+        padding: 0.75rem 1rem 80px 1rem; /* Less bottom padding - compact controls */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: calc(100vh - 50px);
+        overflow: visible;
+    }
+
+    .vinyl-container {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    /* Vinyl sized for tablet */
+    .vinyl-disc {
+        width: min(53vh, 53vw, 470px);
+        height: min(53vh, 53vw, 470px);
+    }
+
+    .turntable-platter {
+        width: min(54vh, 54vw, 480px);
+        height: min(54vh, 54vw, 480px);
+    }
+
+    .platter-center {
+        width: 50px;
+        height: 50px;
+    }
+
+    .platter-spindle {
+        width: 12px;
+        height: 12px;
+    }
+
+    .vinyl-label {
+        width: 45%;
+        height: 45%;
+    }
+
+    .album-art i {
+        font-size: 3.5rem;
+    }
+
+    /* Tonearm - JS handles positioning, just adjust base size */
+    .tonearm-base {
+        width: 32px;
+        height: 32px;
+    }
+
+    /* Controls panel - FIXED at bottom, HORIZONTAL layout like Spotify */
+    .controls-panel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-width: 100%;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0;
+        border: none;
+        border-top: 1px solid var(--border);
+        z-index: 100;
+        background: rgba(30, 30, 30, 0.98);
+        backdrop-filter: blur(10px);
+
+        /* Horizontal flex layout */
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    /* Song info - left side, compact */
+    .song-info {
+        flex: 0 0 180px;
+        margin-bottom: 0;
+        text-align: left;
+    }
+
+    .song-title {
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .song-artist {
+        font-size: 0.8rem;
+        display: none; /* Hide artist for compact view */
+    }
+
+    /* Progress - center, grows */
+    .progress-container {
+        flex: 1;
+        margin-bottom: 0;
+        gap: 0.5rem;
+    }
+
+    .time-display {
+        font-size: 0.75rem;
+        min-width: 35px;
+    }
+
+    /* Playback controls - center-right */
+    .playback-controls {
+        flex: 0 0 auto;
+        gap: 0.5rem;
+        margin-bottom: 0;
+    }
+
+    .control-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    .play-btn {
+        width: 46px;
+        height: 46px;
+        font-size: 1.3rem;
+    }
+
+    /* Volume - right side */
+    .volume-control-inline {
+        display: flex;
+        flex: 0 0 auto;
+    }
+
+    .volume-slider-inline {
+        width: 80px;
+    }
+
+    /* Autoplay toggle */
+    .autoplay-toggle-container {
+        flex: 0 0 auto;
+    }
+
+    .toggle-switch {
+        width: 70px;
+        height: 26px;
+    }
+
+    .sidebar {
+        max-height: calc(100vh - 73px);
+        overflow-y: auto;
+    }
+}
+
+/* Smaller Tablets (iPad Air, iPad Mini landscape) */
+@media (min-width: 769px) and (max-width: 1023px) {
     .player-area {
         padding: 1rem;
         display: flex;
         flex-direction: column;
         align-items: center;
-        overflow-y: auto; /* Allow scrolling if needed */
+        overflow-y: auto;
         height: calc(100vh - 73px);
     }
 
@@ -1945,38 +2662,43 @@ body::after {
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 15px; /* Space between disc and controls */
+        margin-bottom: 15px;
     }
 
     .vinyl-disc {
-        width: 280px;
-        height: 280px;
+        width: min(47vh, 370px);
+        height: min(47vh, 370px);
     }
 
     .turntable-platter {
-        width: 300px;
-        height: 300px;
+        width: min(48vh, 380px);
+        height: min(48vh, 380px);
     }
 
     .platter-center {
-        width: 40px;
-        height: 40px;
+        width: 45px;
+        height: 45px;
     }
 
     .platter-spindle {
-        width: 10px;
-        height: 10px;
+        width: 12px;
+        height: 12px;
     }
 
     .vinyl-label {
         width: 45%;
         height: 45%;
     }
-    
-    .tonearm {
-        transform: scale(0.55);
-        right: 0;
-        top: 0;
+
+    /* Tonearm - JS handles positioning, just adjust sizes */
+    .tonearm-base {
+        width: 28px;
+        height: 28px;
+    }
+
+    .tonearm-head {
+        width: 24px;
+        height: 24px;
     }
 
     /* Controls directly below disc */
@@ -1991,52 +2713,52 @@ body::after {
         z-index: 10;
         background: rgba(30, 30, 30, 0.95);
     }
-    
+
     .song-info {
         margin-bottom: 0.5rem;
     }
-    
+
     .song-title {
         font-size: 0.95rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    
+
     .song-artist {
         font-size: 0.8rem;
     }
-    
+
     .progress-container {
         margin-bottom: 0.5rem;
         gap: 0.5rem;
     }
-    
+
     .playback-controls {
         gap: 0.5rem;
         flex-wrap: nowrap;
     }
-    
+
     .control-btn {
-        width: 36px;
-        height: 36px;
+        width: 38px;
+        height: 38px;
         font-size: 1rem;
     }
-    
+
     .play-btn {
-        width: 48px;
-        height: 48px;
+        width: 50px;
+        height: 50px;
         font-size: 1.3rem;
     }
-    
+
     .volume-control-inline {
         max-width: 120px;
     }
-    
+
     .volume-slider-inline {
         width: 60px;
     }
-    
+
     /* Make sidebar scrollable */
     .sidebar {
         max-height: calc(100vh - 73px);
@@ -2049,7 +2771,7 @@ body::after {
     .player-area {
         padding: 1rem 1rem 200px 1rem;
     }
-    
+
     .controls-panel {
         position: fixed;
         bottom: 0;
@@ -2057,77 +2779,13 @@ body::after {
         right: 0;
         margin: 0;
         padding: 1rem;
+        padding-bottom: calc(
+            1.5rem + var(--safe-area-bottom, 32px)
+        ); /* Extra padding for Android nav bar */
         border-radius: 0;
         border: none;
         border-top: 1px solid var(--border);
         z-index: 100;
-    }
-}
-
-/* Tablet adjustments for smaller tablets */
-@media (min-width: 769px) and (max-width: 992px) {
-    .vinyl-disc {
-        width: 40vw;
-        max-width: 380px;
-        height: 40vw;
-        max-height: 380px;
-    }
-
-    .turntable-platter {
-        width: 42vw;
-        max-width: 400px;
-        height: 42vw;
-        max-height: 400px;
-    }
-
-    .platter-center {
-        width: 50px;
-        height: 50px;
-    }
-
-    .platter-spindle {
-        width: 12px;
-        height: 12px;
-    }
-
-    .vinyl-label {
-        width: 47%;
-        height: 47%;
-    }
-
-    .album-art i {
-        font-size: 3rem;
-    }
-
-    .tonearm {
-        right: 30px;
-    }
-
-    .tonearm-arm {
-        width: 250px;
-    }
-
-    .lyrics-modal {
-        width: 95%;
-        max-height: 70vh;
-    }
-    
-    .song-title {
-        font-size: 1.1rem;
-    }
-    
-    .playback-controls {
-        gap: 0.5rem;
-    }
-    
-    .control-btn {
-        width: 40px;
-        height: 40px;
-    }
-    
-    .play-btn {
-        width: 55px;
-        height: 55px;
     }
 }
 
@@ -2144,7 +2802,7 @@ body::after {
     .desktop-only {
         display: none;
     }
-    
+
     /* Hide volume slider on mobile - users use physical buttons */
     .volume-control-inline {
         display: none;
@@ -2177,8 +2835,12 @@ body::after {
         top: 0;
         z-index: 200;
         transition: left 0.3s ease;
-        overflow: hidden;
+        overflow-y: auto;
+        overflow-x: hidden;
         padding: 1rem;
+        padding-top: calc(
+            1rem + var(--safe-area-top, 24px)
+        ); /* Safe area for Android notch */
         display: flex;
         flex-direction: column;
     }
@@ -2187,13 +2849,51 @@ body::after {
         left: 0;
     }
 
+    /* Mobile Back Button - Left of search (shown on mobile) */
+    .search-back-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        background: rgba(60, 60, 60, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .search-back-btn:active {
+        transform: scale(0.9);
+        background: rgba(80, 80, 80, 0.8);
+    }
+
+    .search-back-btn i {
+        margin-left: -2px; /* Optical center */
+    }
+
+    /* Hide old floating button styles */
+    .floating-back-btn {
+        display: none !important;
+    }
+
+    .mobile-sidebar-back {
+        display: none !important;
+    }
+
     /* Make tab content fill remaining space and contain scroll */
     .sidebar .tab-content {
         flex: 1;
         display: flex;
         flex-direction: column;
         min-height: 0;
-        overflow: hidden;
+        overflow: hidden; /* Container fixed, song-list scrolls inside */
+        border: none; /* Minimal look - Steve philosophy */
+        background: transparent;
+        padding: 0.5rem;
     }
 
     .sidebar .tab-pane {
@@ -2201,7 +2901,7 @@ body::after {
         display: flex;
         flex-direction: column;
         min-height: 0;
-        overflow: hidden;
+        overflow: hidden; /* Let song-list handle scroll */
     }
 
     .sidebar .tab-pane.active {
@@ -2213,8 +2913,11 @@ body::after {
         flex: 1;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
-        padding-bottom: 20px;
+        padding-bottom: 100px; /* Extra space for controls */
         min-height: 0;
+        max-height: calc(
+            100vh - 250px
+        ); /* Ensure scroll works after Load More */
     }
 
     .player-area {
@@ -2222,24 +2925,28 @@ body::after {
         max-width: 100%;
         display: flex;
         flex-direction: column;
-        padding: 1rem 1rem 180px 1rem;
+        align-items: center;
+        justify-content: center; /* Center vinyl vertically */
+        padding: 1rem 1rem 200px 1rem; /* Extra bottom padding for controls */
         height: calc(100vh - 73px);
+        min-height: calc(100vh - 73px);
     }
 
     .vinyl-container {
-        flex: 1;
-        margin-bottom: 0;
+        flex: 0 0 auto; /* Don't stretch, natural size */
+        margin: auto 0; /* Vertically center */
         overflow: visible;
         display: flex;
         align-items: center;
         justify-content: center;
+        position: relative;
     }
 
     .vinyl-disc {
-        width: 65vw;
-        height: 65vw;
-        max-width: 450px;
-        max-height: 450px;
+        width: 68vw;
+        height: 68vw;
+        max-width: 470px;
+        max-height: 470px;
     }
 
     .turntable-platter {
@@ -2268,25 +2975,43 @@ body::after {
         font-size: 2.5rem;
     }
 
+    /* Tonearm - JS handles all positioning on mobile
+       Just adjust base/head sizes for smaller screens */
     .tonearm {
-        right: 80px;
-        top: 80px;
-        transform: rotate(-65deg);
-        transform-origin: top right;
+        /* Position set by JS - these are fallbacks only */
+        transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1),
+            right 0.3s ease-out, top 0.3s ease-out;
     }
 
     .tonearm.playing {
-        transform: rotate(-45deg);
-        transform-origin: top right;
-    }
-
-    .tonearm-arm {
-        width: 280px;
+        /* Playing transform set by JS */
     }
 
     .tonearm-base {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
+    }
+
+    .tonearm-head {
+        width: 22px;
+        height: 22px;
+    }
+
+    .tonearm-arm {
+        /* Width set by JS */
+        height: 10px;
+    }
+
+    .arm-segment.segment-1 {
+        height: 12px;
+    }
+
+    .arm-segment.segment-2 {
+        height: 9px;
+    }
+
+    .arm-segment.segment-3 {
+        height: 6px;
     }
 
     .controls-panel {
@@ -2319,7 +3044,7 @@ body::after {
         width: 60px;
         height: 60px;
     }
-    
+
     /* Hide autoplay toggle on mobile */
     .autoplay-toggle-container {
         display: none;
@@ -2365,8 +3090,13 @@ body::after {
 }
 
 @keyframes pulse {
-    0%, 100% { opacity: 0.5; }
-    50% { opacity: 1; }
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+    50% {
+        opacity: 1;
+    }
 }
 
 /* ===== ERROR STATES ===== */
@@ -2389,10 +3119,10 @@ body::after {
 /* ===== EXTRA SMALL MOBILE ===== */
 @media (max-width: 480px) {
     .vinyl-disc {
-        width: 75vw;
-        height: 75vw;
-        max-width: 320px;
-        max-height: 320px;
+        width: 78vw;
+        height: 78vw;
+        max-width: 340px;
+        max-height: 340px;
     }
 
     .turntable-platter {
@@ -2417,25 +3147,39 @@ body::after {
         height: 48%;
     }
 
-    .tonearm {
-        right: 60px;
-        top: 60px;
-        transform: rotate(-70deg);
-        transform-origin: top right;
+    /* Tonearm - JS handles positioning
+       CSS only adjusts sizes for small screens */
+    .tonearm-base {
+        width: 22px;
+        height: 22px;
     }
 
-    .tonearm.playing {
-        transform: rotate(-50deg);
-        transform-origin: top right;
+    .tonearm-head {
+        width: 18px;
+        height: 18px;
     }
 
     .tonearm-arm {
-        width: 220px;
+        height: 8px;
     }
 
-    .tonearm-base {
-        width: 28px;
-        height: 28px;
+    .arm-segment.segment-1 {
+        height: 10px;
+    }
+
+    .arm-segment.segment-2 {
+        height: 7px;
+    }
+
+    .arm-segment.segment-3 {
+        height: 5px;
+    }
+
+    /* Needle (head::after) smaller */
+    .tonearm-head::after {
+        width: 7px;
+        height: 2px;
+        left: -6px;
     }
 
     .album-art i {
@@ -2513,27 +3257,27 @@ body::after {
         padding: 12px 0;
         font-size: 0.75rem;
     }
-    
+
     .footer-links {
         display: flex;
         flex-direction: column;
         gap: 5px;
         margin-bottom: 10px;
     }
-    
+
     .footer-divider {
         display: none;
     }
-    
+
     .footer-links a {
         font-size: 0.8rem;
         padding: 5px 0;
     }
-    
+
     .footer-copyright {
         font-size: 0.7rem;
     }
-    
+
     .main-content {
         padding-bottom: 120px !important;
     }
@@ -2569,4 +3313,677 @@ body::after {
 
 .toast-notification {
     animation: slideIn 0.3s ease;
+}
+
+/* ===== GUEST LOGIN PROMPT ===== */
+
+/* Desktop: Song title area prompt styling */
+.song-info.login-prompt-active {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.song-info.login-prompt-active:hover {
+    transform: scale(1.02);
+}
+
+.song-info.login-prompt-active .song-title,
+.song-info.login-prompt-active .song-artist {
+    color: #ff6b81;
+}
+
+/* Mobile: Bottom Sheet Prompt */
+.guest-login-prompt.mobile-bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    transform: translateY(100%);
+    background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px 20px 0 0;
+    padding: 0.75rem 1.5rem 2rem 1.5rem;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.guest-login-prompt.mobile-bottom-sheet.show {
+    transform: translateY(0);
+}
+
+.bottom-sheet-handle {
+    width: 40px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+    margin: 0 auto 1rem auto;
+}
+
+.guest-login-prompt.mobile-bottom-sheet .prompt-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+}
+
+.guest-login-prompt.mobile-bottom-sheet .prompt-text h4 {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 0 0 0.25rem 0;
+}
+
+.guest-login-prompt.mobile-bottom-sheet .prompt-text p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.guest-login-prompt.mobile-bottom-sheet .prompt-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.prompt-btn-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #fff;
+    color: #333;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.prompt-btn-google:hover {
+    background: #f5f5f5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.prompt-btn-google img {
+    width: 20px;
+    height: 20px;
+}
+
+.prompt-btn-later {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.5);
+    border: none;
+    padding: 10px;
+    font-size: 0.85rem;
+    transition: color 0.3s ease;
+}
+
+.prompt-btn-later:hover {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* � PWA INSTALL PROMPT - Same style as guest login prompt */
+.pwa-install-prompt.mobile-bottom-sheet {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100%;
+    transform: translateY(100%);
+    background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%);
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px 20px 0 0;
+    padding: 0.75rem 1.5rem 2rem 1.5rem;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.pwa-install-prompt.mobile-bottom-sheet.show {
+    transform: translateY(0);
+}
+
+.pwa-install-prompt .prompt-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+}
+
+.pwa-install-prompt .prompt-icon {
+    color: var(--text-light);
+    opacity: 0.9;
+    margin-bottom: 0.25rem;
+}
+
+.pwa-install-prompt .prompt-icon svg {
+    width: 48px;
+    height: 48px;
+}
+
+.pwa-install-prompt .prompt-text h4 {
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 0 0 0.25rem 0;
+}
+
+.pwa-install-prompt .prompt-text p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.pwa-install-prompt .prompt-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
+.prompt-btn-install {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #fff;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.prompt-btn-install:hover {
+    background: #f0f0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* 💕 HEART Feedback styles moved to HeartFeedback/style.css */
+/* Player stays lightweight! Feedback page loads separately on Day 4+ */
+
+/* ===== iOS Safari Tap Hint - Glowing Effect ===== */
+.tap-to-play-glow {
+    display: inline-block;
+    color: #ffffff;
+    font-size: 1.3rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    animation: glowPulse 1.2s ease-in-out infinite;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+@keyframes glowPulse {
+    0%,
+    100% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5),
+            0 0 10px rgba(255, 255, 255, 0.3);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+    50% {
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.9),
+            0 0 25px rgba(255, 255, 255, 0.6), 0 0 35px rgba(255, 255, 255, 0.4);
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.4),
+            0 0 30px rgba(255, 255, 255, 0.2);
+    }
+}
+
+/* ===== 🖥️ LARGE MONITORS (1920px+) - Full HD / 1080p ===== */
+@media (min-width: 1920px) {
+    .vinyl-disc {
+        width: min(60vh, 700px);
+        height: min(60vh, 700px);
+    }
+
+    .turntable-platter {
+        width: min(62vh, 720px);
+        height: min(62vh, 720px);
+    }
+
+    .vinyl-label {
+        width: 42%;
+        height: 42%;
+    }
+
+    .platter-center {
+        width: 90px;
+        height: 90px;
+    }
+
+    .platter-spindle {
+        width: 22px;
+        height: 22px;
+    }
+
+    .album-art i {
+        font-size: 5rem;
+    }
+
+    /* Tonearm - JS handles positioning, just adjust sizes */
+    .tonearm-base {
+        width: 42px;
+        height: 42px;
+    }
+
+    .tonearm-head {
+        width: 30px;
+        height: 30px;
+    }
+
+    .song-title {
+        font-size: 1.8rem;
+    }
+
+    .song-artist {
+        font-size: 1.2rem;
+    }
+
+    .control-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 1.8rem;
+    }
+
+    .play-btn {
+        width: 85px;
+        height: 85px;
+        font-size: 2.5rem;
+    }
+
+    .sidebar {
+        min-width: 400px;
+    }
+
+    .song-item {
+        padding: 1.25rem;
+    }
+
+    .song-item img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .song-item-title {
+        font-size: 1.1rem;
+    }
+}
+
+/* ===== 🖥️ ULTRA-WIDE MONITORS (2560px+) - QHD / Ultra-wide ===== */
+@media (min-width: 2560px) {
+    .vinyl-disc {
+        width: min(55vh, 850px);
+        height: min(55vh, 850px);
+    }
+
+    .turntable-platter {
+        width: min(57vh, 870px);
+        height: min(57vh, 870px);
+    }
+
+    .vinyl-label {
+        width: 40%;
+        height: 40%;
+    }
+
+    .platter-center {
+        width: 100px;
+        height: 100px;
+    }
+
+    .platter-spindle {
+        width: 26px;
+        height: 26px;
+    }
+
+    .album-art i {
+        font-size: 6rem;
+    }
+
+    /* Tonearm - JS handles positioning, just adjust sizes */
+    .tonearm-base {
+        width: 48px;
+        height: 48px;
+    }
+
+    .tonearm-head {
+        width: 32px;
+        height: 32px;
+    }
+
+    .song-title {
+        font-size: 2rem;
+    }
+
+    .song-artist {
+        font-size: 1.3rem;
+    }
+
+    .control-btn {
+        width: 70px;
+        height: 70px;
+        font-size: 2rem;
+    }
+
+    .play-btn {
+        width: 100px;
+        height: 100px;
+        font-size: 3rem;
+    }
+
+    .sidebar {
+        min-width: 450px;
+    }
+
+    .song-item {
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .song-item img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .song-item-title {
+        font-size: 1.2rem;
+    }
+
+    .song-item-artist {
+        font-size: 1rem;
+    }
+
+    .navbar {
+        padding: 1.25rem 2.5rem;
+    }
+
+    .navbar-brand .logo-text {
+        font-size: 2rem;
+    }
+}
+
+/* ===== 📺 TV MODE (4K / Large Screens) - Remote Friendly ===== */
+@media (min-width: 3000px), (min-height: 1600px) and (min-width: 2500px) {
+    /* Bigger everything for TV viewing from sofa */
+    .vinyl-disc {
+        width: min(50vh, 1000px);
+        height: min(50vh, 1000px);
+    }
+
+    .turntable-platter {
+        width: min(52vh, 1020px);
+        height: min(52vh, 1020px);
+    }
+
+    .platter-center {
+        width: 120px;
+        height: 120px;
+    }
+
+    .platter-spindle {
+        width: 30px;
+        height: 30px;
+    }
+
+    .vinyl-label {
+        width: 38%;
+        height: 38%;
+    }
+
+    .album-art i {
+        font-size: 7rem;
+    }
+
+    /* Tonearm - JS handles positioning, just adjust sizes for TV */
+    .tonearm-base {
+        width: 54px;
+        height: 54px;
+    }
+
+    .tonearm-head {
+        width: 32px;
+        height: 32px;
+    }
+
+    .song-title {
+        font-size: 2.5rem;
+    }
+
+    .song-artist {
+        font-size: 1.5rem;
+    }
+
+    .control-btn {
+        width: 90px;
+        height: 90px;
+        font-size: 2.5rem;
+    }
+
+    .play-btn {
+        width: 130px;
+        height: 130px;
+        font-size: 4rem;
+    }
+
+    .sidebar {
+        min-width: 500px;
+    }
+
+    .song-item {
+        padding: 2rem;
+        margin-bottom: 1.25rem;
+        border-radius: 15px;
+    }
+
+    .song-item img {
+        width: 90px;
+        height: 90px;
+        border-radius: 12px;
+    }
+
+    .song-item-title {
+        font-size: 1.5rem;
+    }
+
+    .song-item-artist {
+        font-size: 1.2rem;
+    }
+
+    .navbar {
+        padding: 1.5rem 3rem;
+    }
+
+    .navbar-brand .logo-text {
+        font-size: 2.5rem;
+    }
+
+    /* TV Focus States for D-pad navigation */
+    .song-item:focus,
+    .control-btn:focus,
+    .play-btn:focus {
+        outline: 4px solid rgba(255, 255, 255, 0.8);
+        outline-offset: 4px;
+        transform: scale(1.05);
+    }
+
+    .search-box input {
+        font-size: 1.5rem;
+        padding: 1rem 1.5rem;
+    }
+}
+
+/* ===== 📽️ PROJECTOR MODE - Dark room optimized ===== */
+@media (min-aspect-ratio: 16/9) and (min-width: 1920px) {
+    /* Ensure vinyl stays centered in ultra-wide */
+    .player-area {
+        max-width: 1600px;
+        margin: 0 auto;
+    }
+}
+
+/* ===== 🖥️ ULTRA-WIDE 21:9 Aspect Ratio ===== */
+@media (min-aspect-ratio: 21/9) {
+    /* Side panels on ultra-wide */
+    .main-content .row {
+        max-width: 2200px;
+        margin: 0 auto;
+    }
+
+    .sidebar {
+        min-width: 380px;
+        max-width: 450px;
+    }
+
+    .player-area {
+        flex: 1;
+        max-width: 1200px;
+    }
+
+    .vinyl-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+}
+
+/* ===== 🎯 FOCUS STATES FOR ALL DEVICES ===== */
+/* Keyboard & Remote navigation */
+.song-item:focus-visible,
+.control-btn:focus-visible,
+.play-btn:focus-visible,
+.nav-link:focus-visible {
+    outline: 3px solid rgba(255, 255, 255, 0.7);
+    outline-offset: 3px;
+}
+
+/* ===== 🖼️ PORTRAIT MONITORS (Rotated) ===== */
+@media (max-aspect-ratio: 3/4) and (min-height: 1000px) {
+    /* Portrait mode - stack layout */
+    .main-content .row {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        max-height: 40vh;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .player-area {
+        width: 100%;
+        flex: 1;
+    }
+
+    .vinyl-disc {
+        width: min(70vw, 60vh, 500px);
+        height: min(70vw, 60vh, 500px);
+    }
+
+    .turntable-platter {
+        width: min(72vw, 62vh, 520px);
+        height: min(72vw, 62vh, 520px);
+    }
+}
+
+/* ===== 🎯 DEVICE CLASS BASED STYLES (JavaScript adds these) ===== */
+
+/* Touch devices - larger tap targets */
+.touch-device .control-btn {
+    min-width: 48px;
+    min-height: 48px;
+}
+
+.touch-device .song-item {
+    min-height: 60px;
+}
+
+/* Mouse devices - smaller precise controls */
+.mouse-device .song-item:hover {
+    cursor: pointer;
+}
+
+/* TV Mode - Extra large for couch viewing */
+body.device-tv .song-item {
+    padding: 1.75rem;
+    margin-bottom: 1rem;
+}
+
+body.device-tv .control-btn {
+    width: 80px;
+    height: 80px;
+    font-size: 2.2rem;
+}
+
+body.device-tv .play-btn {
+    width: 120px;
+    height: 120px;
+    font-size: 3.5rem;
+}
+
+body.device-tv .song-title {
+    font-size: 2.2rem;
+}
+
+body.device-tv .song-artist {
+    font-size: 1.4rem;
+}
+
+/* TV Focus glow effect */
+body.device-tv .song-item:focus,
+body.device-tv .control-btn:focus {
+    box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.6),
+        0 0 30px rgba(255, 255, 255, 0.3);
+    transform: scale(1.02);
+}
+
+/* Ultra-wide specific */
+body.device-ultrawide .sidebar {
+    min-width: 420px;
+}
+
+body.device-ultrawide .player-area {
+    max-width: 1400px;
+}
+
+/* Mobile specific */
+body.device-mobile .navbar {
+    padding: 0.75rem 1rem;
+}
+
+body.device-mobile .song-item {
+    padding: 0.875rem;
+}
+
+/* Portrait mode adjustments */
+body.device-portrait .main-content .row {
+    flex-direction: column;
+}
+
+body.device-portrait .sidebar {
+    max-height: 45vh;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
 }
