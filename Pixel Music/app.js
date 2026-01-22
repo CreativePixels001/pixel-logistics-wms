@@ -1,3 +1,21 @@
+// ═══════════════════════════════════════════════════════════════════════════════
+// ╔═══════════════════════════════════════════════════════════════════════════════╗
+// ║  PIXEL PLAY - app.js Architecture Map                                         ║
+// ║  Total Lines: ~11,746 | Last Updated: Jan 2026                                ║
+// ╠═══════════════════════════════════════════════════════════════════════════════╣
+// ║  TIER LEGEND:                                                                  ║
+// ║  🔵 PIXEL CORE    = Product-agnostic, extractable to any Pixel app            ║
+// ║  🟡 ADAPTER       = Logic agnostic, implementation music-specific             ║
+// ║  🔴 MUSIC-ONLY    = Specific to Pixel Play, stays here                        ║
+// ╚═══════════════════════════════════════════════════════════════════════════════╝
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🟡 ADAPTER: GLOBAL STATE VARIABLES
+// Classification: MIXED | Extractable: Partial
+// Note: Variable names are music-specific, but pattern is reusable
+// ═══════════════════════════════════════════════════════════════════════════════
+
 // Global Variables
 let player;
 let currentPlatform = 'youtube';
@@ -6,6 +24,7 @@ let currentVideoId = null; // Store current playing video ID for sharing
 let currentSongData = null; // Store current song metadata for sharing
 let youtubeSearchResults = [];
 let displayedResultsCount = 0; // Track how many results are shown (for load more)
+let keyboardSelectedIndex = -1; // 🎯 Keyboard navigation: currently selected search result
 let localFiles = [];
 let isPlaying = false;
 let audioPlayer;
@@ -15,8 +34,29 @@ let loadingTimeout = null;
 let isBuffering = false;
 let pendingDeepLinkVideoId = null; // Store video ID from deep link until player is ready
 
-// 🎯 DEVICE DETECTION - Pixel Perfect on every screen!
-// Adds class to body: device-mobile, device-tablet, device-desktop, device-tv, device-ultrawide
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🔵 PIXEL CORE: DEVICE DETECTOR
+// ✅ EXTRACTED: 19 Jan 2026 → /pixel-core/utils/device-detector.js
+// Classification: PRODUCT-AGNOSTIC | Status: MODULARIZED
+// ═══════════════════════════════════════════════════════════════════════════════
+
+// 🎯 Import DeviceDetector from modular file
+// Note: Using dynamic import since app.js is not a module yet
+// DeviceDetector is loaded via script tag in index.html
+
+/* LEGACY CODE - Moved to pixel-core/utils/device-detector.js
+const DeviceDetector = {
+    init() {
+        this.detect();
+        window.addEventListener('resize', () => this.detect());
+        console.log('[Device] 🎯 Device detector initialized');
+    },
+    detect() { ... }
+};
+DeviceDetector.init();
+*/
+
+// Inline fallback - will be removed once index.html loads module
 const DeviceDetector = {
     init() {
         this.detect();
@@ -82,6 +122,22 @@ const DeviceDetector = {
             }`
         );
     },
+
+    // Helper methods
+    isMobile() {
+        return document.body.classList.contains('device-mobile');
+    },
+    isTablet() {
+        return document.body.classList.contains('device-tablet');
+    },
+    isDesktop() {
+        return document.body.classList.contains('device-desktop');
+    },
+    getDeviceClass() {
+        if (this.isMobile()) return 'mobile';
+        if (this.isTablet()) return 'tablet';
+        return 'desktop';
+    },
 };
 
 // Initialize device detector immediately
@@ -115,16 +171,179 @@ let songStartTime = 0; // Track when current song started (for skip detection)
 // 🎯 USER SEARCH PROTECTION - Track the song user explicitly searched for
 // This song should NEVER auto-repeat! "3-4 gaane ke baad search kiya hua gaana fir aata hai" - FIXED!
 let userSearchedVideoId = null; // The video ID user explicitly clicked from search results
+let userSearchKeyword = null; // 💡 The KEYWORD user typed - HEART of autoplay! "User jab dimag se type karta hai, woh KEYWORD system ka HEART hai!"
 let autoplayLoopBreaker = 0; // Prevent infinite recursion between playArtistMoreSongs ↔ playVibeShuffledNext
+let artistMoreCooldown = 0; // 🛡️ Rate limit Artist More - not every song!
 
 // 📱 BACKGROUND AUTOPLAY FIX - Timer backup for when ENDED event doesn't fire (Android lock screen)
 let backgroundAutoplayTimer = null;
 let expectedSongEndTime = 0; // When we expect current song to end
 
+// 🎵 DEEP SESSION MODE - After 10 songs, play long jukeboxes (20-40 min)
+// "User gano me kho chuka hoga... dhyan nahi rahega!" - Sleep mode friendly
+let sessionSongCounter = 0; // Songs played in current session
+let deepSessionMode = false; // Once activated, plays longer content
+let longSongStreak = 0; // Track consecutive long songs (if user doesn't skip)
+
+const DeepSessionConfig = {
+    triggerAfterSongs: 10, // Activate deep session after 10 songs
+    longSongMinDuration: 15, // Minutes - consider as "long song"
+    jukeboxMinDuration: 20, // Minutes - search for 20+ min content
+    jukeboxMaxDuration: 45, // Minutes - max 45 min jukeboxes
+    longSongStreakMax: 3, // Play up to 3 consecutive long songs if user doesn't skip
+
+    // Keywords to find jukebox/long content
+    JUKEBOX_KEYWORDS: [
+        'jukebox',
+        'nonstop',
+        'non stop',
+        'collection',
+        'best of',
+        'top 10',
+        'top 15',
+        'top 20',
+        'hits collection',
+        'mashup',
+        'all songs',
+        'songs collection',
+        'audio jukebox',
+        'back to back',
+    ],
+
+    // Official/Verified channel patterns (prioritize these!)
+    OFFICIAL_CHANNEL_PATTERNS: [
+        'vevo',
+        '- topic',
+        'music',
+        'official',
+        'records',
+        'entertainment',
+        't-series',
+        'tips',
+        'zee music',
+        'sony music',
+        'saregama',
+        'yrf',
+        'eros now',
+        'speed records',
+        'desi music factory',
+        'dharma',
+    ],
+
+    // Unofficial/Voice recorded patterns (BLOCK these!)
+    UNOFFICIAL_PATTERNS: [
+        'cover',
+        'karaoke',
+        'remix by',
+        'sung by',
+        'singing',
+        'my voice',
+        'practice',
+        'amateur',
+        'homemade',
+        'diy',
+        'tutorial',
+        'reaction',
+        'review',
+        'unplugged by',
+        'performed by',
+    ],
+
+    // Check if in deep session mode
+    isDeepSession() {
+        return deepSessionMode || sessionSongCounter >= this.triggerAfterSongs;
+    },
+
+    // Reset on new search (user is actively engaged)
+    reset() {
+        sessionSongCounter = 0;
+        deepSessionMode = false;
+        longSongStreak = 0;
+        console.log('[DeepSession] 🔄 Reset - User searching actively');
+    },
+
+    // Increment song count
+    incrementSong() {
+        sessionSongCounter++;
+        console.log(`[DeepSession] 🎵 Song #${sessionSongCounter} in session`);
+
+        if (sessionSongCounter === this.triggerAfterSongs) {
+            deepSessionMode = true;
+            console.log(
+                '[DeepSession] 🌙 DEEP SESSION MODE ACTIVATED! Switching to long content...'
+            );
+        }
+    },
+
+    // Track if user skipped long song (reset streak)
+    onSkip() {
+        if (longSongStreak > 0) {
+            longSongStreak = 0;
+            console.log(
+                '[DeepSession] ⏭️ User skipped long song - resetting streak'
+            );
+        }
+    },
+
+    // Track successful long song play
+    onLongSongComplete() {
+        longSongStreak++;
+        console.log(
+            `[DeepSession] ✅ Long song completed! Streak: ${longSongStreak}`
+        );
+    },
+
+    // Check if channel is official/trusted
+    isOfficialChannel(channelTitle) {
+        if (!channelTitle) return false;
+        const lower = channelTitle.toLowerCase();
+        return this.OFFICIAL_CHANNEL_PATTERNS.some((p) => lower.includes(p));
+    },
+
+    // Check if content is unofficial (voice recorded, cover, etc.)
+    isUnofficialContent(title, channelTitle) {
+        const text = ((title || '') + ' ' + (channelTitle || '')).toLowerCase();
+        return this.UNOFFICIAL_PATTERNS.some((p) => text.includes(p));
+    },
+
+    // Build jukebox search query based on current song vibe
+    buildJukeboxQuery(currentTitle, currentChannel) {
+        // Extract language/genre from current song
+        const language = InvisibleIntelligence.detectLanguage(
+            currentTitle,
+            currentChannel
+        );
+        const detectedVibes = detectVibeKeywords(currentTitle);
+        const mood =
+            detectedVibes.length > 0 ? detectedVibes[0].category : 'romantic';
+
+        // Pick random jukebox keyword
+        const jukeboxWord =
+            this.JUKEBOX_KEYWORDS[
+                Math.floor(Math.random() * this.JUKEBOX_KEYWORDS.length)
+            ];
+
+        // Build query: "hindi romantic songs jukebox" or "bollywood sad songs collection"
+        const langWord =
+            language === 'hindi' ? 'bollywood' : language || 'hindi';
+        const query = `${langWord} ${mood} songs ${jukeboxWord}`;
+
+        console.log(`[DeepSession] 🎵 Jukebox query: "${query}"`);
+        return query;
+    },
+};
+
 // � iOS Detection (global for crossfade check)
 const isIOSDevice =
     /iPad|iPhone|iPod/.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🟡 ADAPTER: CROSSFADE AUDIO SYSTEM
+// Classification: MIXED | Extractable: Phase 3
+// Dependencies: YouTube player API, audioPlayer, isIOSDevice
+// Note: Logic is generic (fade volume), but tied to YouTube/Audio implementation
+// ═══════════════════════════════════════════════════════════════════════════════
 
 // 🎚️ CROSSFADE SYSTEM - Spotify-like smooth transitions between songs
 // "Gaano ke beech mein brake nahi lagega!" - Seamless experience
@@ -517,6 +736,13 @@ window.addEventListener('load', () => {
     PWAHelper.logStatus();
 });
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🔴 MUSIC-ONLY: SMART THUMBNAIL SYSTEM
+// Classification: MUSIC-SPECIFIC | Extractable: No
+// Dependencies: YouTube thumbnail URLs, albumArt DOM element
+// Note: YouTube-specific thumbnail frame selection, vinyl disc display
+// ═══════════════════════════════════════════════════════════════════════════════
+
 // 🎬 SMART THUMBNAIL SYSTEM - YouTube jaisa variety!
 // Default thumbnail list mein, random frame disc pe, preload background mein
 // Like Vera chat - dhire dhire reveal, mystery banao! 😏
@@ -670,6 +896,14 @@ const SmartThumbnail = {
         }
     },
 };
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🔵 PIXEL CORE: QED_HEART - QUANTUM AMPLITUDE SELECTION
+// Classification: PRODUCT-AGNOSTIC | Extractable: Phase 1
+// Dependencies: InvisibleIntelligence, song object structure
+// Purpose: Feynman-inspired weighted selection algorithm
+// Portable: YES - Works with any item that has attributes to score
+// ═══════════════════════════════════════════════════════════════════════════════
 
 // 🔬 QED HEART - Quantum Amplitude Selection (Inspired by Feynman)
 // Like QED: Calculate amplitude for each path, sum them, highest wins!
@@ -835,982 +1069,1054 @@ const QED_HEART = {
     },
 };
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🔵 PIXEL CORE: INVISIBLE INTELLIGENCE - SILENT LEARNING SYSTEM
+// Classification: PRODUCT-AGNOSTIC | Extractable: Phase 1
+// Dependencies: localStorage
+// Purpose: Learns user preferences WITHOUT any UI - "No Settings, No Checkboxes"
+// Portable: YES - Abstract preference learning, content-type agnostic
+// ───────────────────────────────────────────────────────────────────────────────
+// ✅ EXTRACTED: 19 Jan 2026
+// → pixel-core/intelligence/invisible-intelligence.js
+// → INLINE FALLBACK BELOW (kept for safety, module takes priority)
+// ═══════════════════════════════════════════════════════════════════════════════
+
 // 🧠 INVISIBLE INTELLIGENCE SYSTEM - Learns user preferences without any UI
 // "No Settings, No Checkboxes - System khud seekhe"
-const InvisibleIntelligence = {
-    storageKey: 'pixelPlayIntelligence',
+// 📦 MODULE LOADED: pixel-core/intelligence/invisible-intelligence.js (index.html)
+// ⚠️ FALLBACK: This inline version runs ONLY if module fails to load
+// 🔧 FIX: Check if already defined by pixel-core module before declaring
+if (typeof InvisibleIntelligence === 'undefined') {
+    window.InvisibleIntelligence = {
+        storageKey: 'pixelPlayIntelligence',
 
-    // Get stored intelligence data
-    getData() {
-        try {
-            const data = localStorage.getItem(this.storageKey);
-            return data ? JSON.parse(data) : this.getDefaultData();
-        } catch (e) {
-            return this.getDefaultData();
-        }
-    },
+        // Get stored intelligence data
+        getData() {
+            try {
+                const data = localStorage.getItem(this.storageKey);
+                return data ? JSON.parse(data) : this.getDefaultData();
+            } catch (e) {
+                return this.getDefaultData();
+            }
+        },
 
-    // Default data structure
-    getDefaultData() {
-        return {
-            // Language preferences (learned from play history)
-            languages: {
-                hindi: { plays: 0, skips: 0, score: 0 },
-                english: { plays: 0, skips: 0, score: 0 },
-                punjabi: { plays: 0, skips: 0, score: 0 },
-                tamil: { plays: 0, skips: 0, score: 0 },
-                telugu: { plays: 0, skips: 0, score: 0 },
-                bengali: { plays: 0, skips: 0, score: 0 },
-                marathi: { plays: 0, skips: 0, score: 0 },
-                kannada: { plays: 0, skips: 0, score: 0 },
-                malayalam: { plays: 0, skips: 0, score: 0 },
-                gujarati: { plays: 0, skips: 0, score: 0 },
-            },
-            // Genre preferences
-            genres: {
-                bollywood: { plays: 0, skips: 0, score: 0 },
-                devotional: { plays: 0, skips: 0, score: 0 },
-                romantic: { plays: 0, skips: 0, score: 0 },
-                party: { plays: 0, skips: 0, score: 0 },
-                sad: { plays: 0, skips: 0, score: 0 },
-                sufi: { plays: 0, skips: 0, score: 0 },
-                indie: { plays: 0, skips: 0, score: 0 },
-                classical: { plays: 0, skips: 0, score: 0 },
-            },
-            // 🛡️ TRUST: Channel Trust Scores (Rishiyon ki Pehchaan)
-            channelTrust: {},
-            // Channels to avoid (learned from skips)
-            avoidChannels: [],
-            // Keywords to avoid
-            avoidKeywords: [],
-            // Liked artists (learned from full plays)
-            likedArtists: [],
-            // Skip patterns
-            skipHistory: [],
-            // 🛡️ TRUST: Clickbait patterns detected
-            clickbaitPatterns: [],
-            // 🎯 SELECTION PATTERN - User's choice intelligence (40% of HEART)
-            selectionPattern: {
-                // Channel preferences from selections
-                channelSelections: {}, // { "T-Series": {selected: 5, available: 10} }
-                // Verified vs non-verified preference
-                verifiedPreference: { verified: 0, nonVerified: 0 },
-                // Position preference (which result index user picks)
-                positionPreference: { top3: 0, mid: 0, bottom: 0 },
-                // Content type preference
-                contentType: { video: 0, audio: 0, lyrical: 0 },
-                // Total selections tracked
-                totalSelections: 0,
-                // Selection-to-skip ratio
-                selectSkipRatio: { selected: 0, skipped: 0 },
-            },
-            // Last updated
-            lastUpdated: Date.now(),
-        };
-    },
+        // Default data structure
+        getDefaultData() {
+            return {
+                // Language preferences (learned from play history)
+                languages: {
+                    hindi: { plays: 0, skips: 0, score: 0 },
+                    english: { plays: 0, skips: 0, score: 0 },
+                    punjabi: { plays: 0, skips: 0, score: 0 },
+                    tamil: { plays: 0, skips: 0, score: 0 },
+                    telugu: { plays: 0, skips: 0, score: 0 },
+                    bengali: { plays: 0, skips: 0, score: 0 },
+                    marathi: { plays: 0, skips: 0, score: 0 },
+                    kannada: { plays: 0, skips: 0, score: 0 },
+                    malayalam: { plays: 0, skips: 0, score: 0 },
+                    gujarati: { plays: 0, skips: 0, score: 0 },
+                },
+                // Genre preferences
+                genres: {
+                    bollywood: { plays: 0, skips: 0, score: 0 },
+                    devotional: { plays: 0, skips: 0, score: 0 },
+                    romantic: { plays: 0, skips: 0, score: 0 },
+                    party: { plays: 0, skips: 0, score: 0 },
+                    sad: { plays: 0, skips: 0, score: 0 },
+                    sufi: { plays: 0, skips: 0, score: 0 },
+                    indie: { plays: 0, skips: 0, score: 0 },
+                    classical: { plays: 0, skips: 0, score: 0 },
+                },
+                // 🛡️ TRUST: Channel Trust Scores (Rishiyon ki Pehchaan)
+                channelTrust: {},
+                // Channels to avoid (learned from skips)
+                avoidChannels: [],
+                // Keywords to avoid
+                avoidKeywords: [],
+                // Liked artists (learned from full plays)
+                likedArtists: [],
+                // Skip patterns
+                skipHistory: [],
+                // 🛡️ TRUST: Clickbait patterns detected
+                clickbaitPatterns: [],
+                // 🎯 SELECTION PATTERN - User's choice intelligence (40% of HEART)
+                selectionPattern: {
+                    // Channel preferences from selections
+                    channelSelections: {}, // { "T-Series": {selected: 5, available: 10} }
+                    // Verified vs non-verified preference
+                    verifiedPreference: { verified: 0, nonVerified: 0 },
+                    // Position preference (which result index user picks)
+                    positionPreference: { top3: 0, mid: 0, bottom: 0 },
+                    // Content type preference
+                    contentType: { video: 0, audio: 0, lyrical: 0 },
+                    // Total selections tracked
+                    totalSelections: 0,
+                    // Selection-to-skip ratio
+                    selectSkipRatio: { selected: 0, skipped: 0 },
+                },
+                // Last updated
+                lastUpdated: Date.now(),
+            };
+        },
 
-    // Save data
-    saveData(data) {
-        try {
-            data.lastUpdated = Date.now();
-            localStorage.setItem(this.storageKey, JSON.stringify(data));
-        } catch (e) {
-            console.error('[Intelligence] Save error:', e);
-        }
-    },
+        // Save data
+        saveData(data) {
+            try {
+                data.lastUpdated = Date.now();
+                localStorage.setItem(this.storageKey, JSON.stringify(data));
+            } catch (e) {
+                console.error('[Intelligence] Save error:', e);
+            }
+        },
 
-    // Language detection keywords
-    languageMarkers: {
-        hindi: [
-            'hindi',
-            'bollywood',
-            'हिंदी',
-            'dil',
-            'pyaar',
-            'ishq',
-            'mohabbat',
-            'zindagi',
-            'tere',
-            'mere',
-            'tumhe',
-            'mujhe',
-            'yrf',
-            't-series',
-            'zee music',
-            'tips official',
-            'saregama',
-        ],
-        english: [
-            'english',
-            'pop',
-            'rock',
-            'jazz',
-            'billboard',
-            'vevo',
-            'official video',
-        ],
-        punjabi: [
-            'punjabi',
-            'punjab',
-            'bhangra',
-            'gidda',
-            'jatt',
-            'desi',
-            'speed records',
-            'white hill',
-        ],
-        tamil: [
-            'tamil',
-            'தமிழ்',
-            'kollywood',
-            'think music',
-            'sony music south',
-            'lahari music',
-        ],
-        telugu: [
-            'telugu',
-            'తెలుగు',
-            'tollywood',
-            'aditya music',
-            'mango music',
-            'saavn telugu',
-        ],
-        bengali: [
-            'bengali',
-            'bangla',
-            'বাংলা',
-            'tollywood',
-            'rabindra sangeet',
-        ],
-        marathi: ['marathi', 'मराठी'],
-        kannada: ['kannada', 'ಕನ್ನಡ', 'sandalwood', 'anand audio'],
-        malayalam: ['malayalam', 'മലയാളം', 'mollywood', 'muzik247'],
-        gujarati: ['gujarati', 'ગુજરાતી', 'garba', 'dandiya'],
-    },
+        // Language detection keywords
+        languageMarkers: {
+            hindi: [
+                'hindi',
+                'bollywood',
+                'हिंदी',
+                'dil',
+                'pyaar',
+                'ishq',
+                'mohabbat',
+                'zindagi',
+                'tere',
+                'mere',
+                'tumhe',
+                'mujhe',
+                'yrf',
+                't-series',
+                'zee music',
+                'tips official',
+                'saregama',
+            ],
+            english: [
+                'english',
+                'pop',
+                'rock',
+                'jazz',
+                'billboard',
+                'vevo',
+                'official video',
+            ],
+            punjabi: [
+                'punjabi',
+                'punjab',
+                'bhangra',
+                'gidda',
+                'jatt',
+                'desi',
+                'speed records',
+                'white hill',
+            ],
+            tamil: [
+                'tamil',
+                'தமிழ்',
+                'kollywood',
+                'think music',
+                'sony music south',
+                'lahari music',
+            ],
+            telugu: [
+                'telugu',
+                'తెలుగు',
+                'tollywood',
+                'aditya music',
+                'mango music',
+                'saavn telugu',
+            ],
+            bengali: [
+                'bengali',
+                'bangla',
+                'বাংলা',
+                'tollywood',
+                'rabindra sangeet',
+            ],
+            marathi: ['marathi', 'मराठी'],
+            kannada: ['kannada', 'ಕನ್ನಡ', 'sandalwood', 'anand audio'],
+            malayalam: ['malayalam', 'മലയാളം', 'mollywood', 'muzik247'],
+            gujarati: ['gujarati', 'ગુજરાતી', 'garba', 'dandiya'],
+        },
 
-    // Genre detection keywords
-    genreMarkers: {
-        bollywood: [
-            'bollywood',
-            'hindi film',
-            'movie song',
-            'film song',
-            'yrf',
-            't-series',
-            'zee music',
-        ],
-        devotional: [
-            'bhajan',
-            'aarti',
-            'bhakti',
-            'mantra',
-            'devotional',
-            'spiritual',
-            'krishna',
-            'shiva',
-            'ram',
-            'ganesh',
-            'sai',
-            'ministries',
-            'worship',
-            'hymn',
-            'gospel',
-            'christian',
-        ],
-        romantic: [
-            'romantic',
-            'love song',
-            'pyaar',
-            'ishq',
-            'mohabbat',
-            'dil',
-            'heart',
-            'valentine',
-        ],
-        party: [
-            'party',
-            'dance',
-            'dj',
-            'remix',
-            'club',
-            'beat',
-            'dhol',
-            'item song',
-        ],
-        sad: [
-            'sad',
-            'emotional',
-            'heartbreak',
-            'dard',
-            'gham',
-            'bewafa',
-            'judai',
-            'alvida',
-            'broken',
-        ],
-        sufi: ['sufi', 'qawwali', 'naat', 'ghazal', 'mehfil'],
-        indie: ['indie', 'independent', 'unplugged', 'acoustic', 'raw'],
-        classical: [
-            'classical',
-            'raag',
-            'taal',
-            'hindustani',
-            'carnatic',
-            'bandish',
-        ],
-    },
+        // Genre detection keywords
+        genreMarkers: {
+            bollywood: [
+                'bollywood',
+                'hindi film',
+                'movie song',
+                'film song',
+                'yrf',
+                't-series',
+                'zee music',
+            ],
+            devotional: [
+                'bhajan',
+                'aarti',
+                'bhakti',
+                'mantra',
+                'devotional',
+                'spiritual',
+                'krishna',
+                'shiva',
+                'ram',
+                'ganesh',
+                'sai',
+                'ministries',
+                'worship',
+                'hymn',
+                'gospel',
+                'christian',
+            ],
+            romantic: [
+                'romantic',
+                'love song',
+                'pyaar',
+                'ishq',
+                'mohabbat',
+                'dil',
+                'heart',
+                'valentine',
+            ],
+            party: [
+                'party',
+                'dance',
+                'dj',
+                'remix',
+                'club',
+                'beat',
+                'dhol',
+                'item song',
+            ],
+            sad: [
+                'sad',
+                'emotional',
+                'heartbreak',
+                'dard',
+                'gham',
+                'bewafa',
+                'judai',
+                'alvida',
+                'broken',
+            ],
+            sufi: ['sufi', 'qawwali', 'naat', 'ghazal', 'mehfil'],
+            indie: ['indie', 'independent', 'unplugged', 'acoustic', 'raw'],
+            classical: [
+                'classical',
+                'raag',
+                'taal',
+                'hindustani',
+                'carnatic',
+                'bandish',
+            ],
+        },
 
-    // Detect language from title/channel
-    detectLanguage(title, channelTitle = '') {
-        const text = (title + ' ' + channelTitle).toLowerCase();
-        for (const [lang, markers] of Object.entries(this.languageMarkers)) {
-            for (const marker of markers) {
-                if (text.includes(marker.toLowerCase())) {
-                    return lang;
+        // Detect language from title/channel
+        detectLanguage(title, channelTitle = '') {
+            const text = (title + ' ' + channelTitle).toLowerCase();
+            for (const [lang, markers] of Object.entries(
+                this.languageMarkers
+            )) {
+                for (const marker of markers) {
+                    if (text.includes(marker.toLowerCase())) {
+                        return lang;
+                    }
                 }
             }
-        }
-        return 'hindi'; // Default to Hindi for Indian users
-    },
+            return 'hindi'; // Default to Hindi for Indian users
+        },
 
-    // Detect genre from title
-    detectGenre(title) {
-        const text = title.toLowerCase();
-        for (const [genre, markers] of Object.entries(this.genreMarkers)) {
-            for (const marker of markers) {
-                if (text.includes(marker.toLowerCase())) {
-                    return genre;
+        // Detect genre from title
+        detectGenre(title) {
+            const text = title.toLowerCase();
+            for (const [genre, markers] of Object.entries(this.genreMarkers)) {
+                for (const marker of markers) {
+                    if (text.includes(marker.toLowerCase())) {
+                        return genre;
+                    }
                 }
             }
-        }
-        return 'bollywood'; // Default genre
-    },
+            return 'bollywood'; // Default genre
+        },
 
-    // Learn from PLAY (user listened)
-    learnFromPlay(
-        songData,
-        playDuration,
-        totalDuration,
-        isFromUserSearch = false
-    ) {
-        const data = this.getData();
-        const title = songData?.title || '';
-        const channel = songData?.channelTitle || '';
-
-        // Calculate engagement (did user listen to most of the song?)
-        const engagementRatio =
-            totalDuration > 0 ? playDuration / totalDuration : 0;
-        const isFullPlay = engagementRatio > 0.7; // Listened to 70%+
-
-        // Detect language and genre
-        const language = this.detectLanguage(title, channel);
-        const genre = this.detectGenre(title);
-
-        // Update language score
-        if (data.languages[language]) {
-            data.languages[language].plays++;
-            data.languages[language].score = this.calculateScore(
-                data.languages[language]
-            );
-        }
-
-        // Update genre score
-        if (data.genres[genre]) {
-            data.genres[genre].plays++;
-            data.genres[genre].score = this.calculateScore(data.genres[genre]);
-        }
-
-        // If full play, add artist to liked list
-        if (isFullPlay && channel) {
-            if (!data.likedArtists.includes(channel)) {
-                data.likedArtists.push(channel);
-                // Keep only last 50 artists
-                if (data.likedArtists.length > 50) data.likedArtists.shift();
-            }
-        }
-
-        // 🛡️ TRUST: Update channel trust on play
-        // 🎯 GINI MODE: Only update trust if user explicitly selected this song from search
-        this.updateChannelTrust(
-            channel,
-            'play',
+        // Learn from PLAY (user listened)
+        learnFromPlay(
+            songData,
             playDuration,
             totalDuration,
-            isFromUserSearch
-        );
-
-        console.log(
-            `[Intelligence] 📚 Learned: ${language}/${genre} (${
-                isFullPlay ? 'full play' : 'partial'
-            }) ${isFromUserSearch ? '👆 USER SELECTED' : '🤖 AUTOPLAY'}`
-        );
-        this.saveData(data);
-    },
-
-    // Learn from SKIP (user skipped)
-    learnFromSkip(songData, skipTime) {
-        const data = this.getData();
-        const title = songData?.title || '';
-        const channel = songData?.channelTitle || '';
-
-        // Only count as skip if user skipped within first 30 seconds
-        if (skipTime > 30) return;
-
-        // Detect language and genre
-        const language = this.detectLanguage(title, channel);
-        const genre = this.detectGenre(title);
-
-        // Update language score (negative)
-        if (data.languages[language]) {
-            data.languages[language].skips++;
-            data.languages[language].score = this.calculateScore(
-                data.languages[language]
-            );
-        }
-
-        // Update genre score (negative)
-        if (data.genres[genre]) {
-            data.genres[genre].skips++;
-            data.genres[genre].score = this.calculateScore(data.genres[genre]);
-        }
-
-        // 🛡️ TRUST: Update channel trust on skip
-        this.updateChannelTrust(channel, 'skip', skipTime, 0);
-
-        // Add channel to avoid list if skipped 3+ times
-        const skipEntry = { channel, title, time: Date.now() };
-        data.skipHistory.push(skipEntry);
-
-        // Count skips per channel
-        const channelSkips = data.skipHistory.filter(
-            (s) => s.channel === channel
-        ).length;
-        if (channelSkips >= 3 && !data.avoidChannels.includes(channel)) {
-            data.avoidChannels.push(channel);
-            console.log(`[Intelligence] 🚫 Auto-blocking channel: ${channel}`);
-        }
-
-        // Keep skip history manageable
-        if (data.skipHistory.length > 100) {
-            data.skipHistory = data.skipHistory.slice(-50);
-        }
-
-        // 🎯 Update selectSkipRatio for HEART Sync (20% weight)
-        if (data.selectionPattern) {
-            data.selectionPattern.selectSkipRatio.skipped++;
-            console.log(
-                `[Intelligence] ⏭️ Skip tracked: ${data.selectionPattern.selectSkipRatio.skipped} skips / ${data.selectionPattern.selectSkipRatio.selected} selections`
-            );
-        }
-
-        console.log(
-            `[Intelligence] ⏭️ Skip learned: ${language}/${genre} from ${channel}`
-        );
-        this.saveData(data);
-    },
-
-    // 🎯 SELECTION PATTERN - Learn from user's choice (40% of HEART Sync)
-    // "21 results mein se user ne kya choose kiya - that's REAL intelligence!"
-    learnFromSelection(selectionData) {
-        const data = this.getData();
-
-        // Initialize selectionPattern if not exists
-        if (!data.selectionPattern) {
-            data.selectionPattern = {
-                channelSelections: {},
-                verifiedPreference: { verified: 0, nonVerified: 0 },
-                positionPreference: { top3: 0, mid: 0, bottom: 0 },
-                contentType: { video: 0, audio: 0, lyrical: 0 },
-                totalSelections: 0,
-                selectSkipRatio: { selected: 0, skipped: 0 },
-            };
-        }
-
-        const sp = data.selectionPattern;
-        const {
-            selectedIndex,
-            totalResults,
-            channel,
-            isVerified,
-            title,
-            isAutoPlay,
-        } = selectionData;
-
-        // Only track user selections, not autoplay
-        if (isAutoPlay) return;
-
-        sp.totalSelections++;
-        sp.selectSkipRatio.selected++;
-
-        // 1. Channel Selection Tracking
-        if (channel) {
-            if (!sp.channelSelections[channel]) {
-                sp.channelSelections[channel] = { selected: 0, available: 0 };
-            }
-            sp.channelSelections[channel].selected++;
-            sp.channelSelections[channel].available++;
-        }
-
-        // 2. Verified vs Non-Verified Preference
-        if (isVerified) {
-            sp.verifiedPreference.verified++;
-        } else {
-            sp.verifiedPreference.nonVerified++;
-        }
-
-        // 3. Position Preference (where in list did they pick?)
-        if (selectedIndex <= 2) {
-            sp.positionPreference.top3++; // First 3 results
-        } else if (selectedIndex <= 6) {
-            sp.positionPreference.mid++; // 4th to 7th
-        } else {
-            sp.positionPreference.bottom++; // 8th and beyond (discerning user!)
-        }
-
-        // 4. Content Type Detection
-        const titleLower = title?.toLowerCase() || '';
-        if (titleLower.includes('lyric') || titleLower.includes('lyrics')) {
-            sp.contentType.lyrical++;
-        } else if (
-            titleLower.includes('audio') ||
-            titleLower.includes('full album')
+            isFromUserSearch = false
         ) {
-            sp.contentType.audio++;
-        } else {
-            sp.contentType.video++; // Default to video
-        }
+            const data = this.getData();
+            const title = songData?.title || '';
+            const channel = songData?.channelTitle || '';
 
-        // Keep channel selections manageable (top 30 channels)
-        const channelEntries = Object.entries(sp.channelSelections);
-        if (channelEntries.length > 30) {
-            const sorted = channelEntries.sort(
-                (a, b) => b[1].selected - a[1].selected
-            );
-            sp.channelSelections = Object.fromEntries(sorted.slice(0, 30));
-        }
-
-        console.log(
-            `[Intelligence] 🎯 Selection learned: "${channel}" at position ${
-                selectedIndex + 1
-            }/${totalResults} (verified: ${isVerified})`
-        );
-        console.log(
-            `[Intelligence] 📊 Total selections: ${
-                sp.totalSelections
-            }, Verified ratio: ${sp.verifiedPreference.verified}/${
-                sp.verifiedPreference.verified +
-                sp.verifiedPreference.nonVerified
-            }`
-        );
-
-        this.saveData(data);
-    },
-
-    // 📊 Get Selection Pattern Score (0-40 points for HEART Sync)
-    getSelectionPatternScore() {
-        const data = this.getData();
-        const sp = data.selectionPattern;
-
-        if (!sp || sp.totalSelections === 0) {
-            return 0; // No selections yet
-        }
-
-        let score = 0;
-
-        // 1. Channel Loyalty Score (max 15 points)
-        // More selections = more data = more points
-        const channelEntries = Object.entries(sp.channelSelections || {});
-        const totalChannelSelections = channelEntries.reduce(
-            (sum, [, v]) => sum + v.selected,
-            0
-        );
-
-        // Has consistent channel preference?
-        if (channelEntries.length > 0) {
-            const topChannel = channelEntries.sort(
-                (a, b) => b[1].selected - a[1].selected
-            )[0];
-            const topChannelRatio =
-                topChannel[1].selected / totalChannelSelections;
-
-            // Strong preference = higher score
-            const loyaltyScore = Math.min(
-                15,
-                topChannelRatio * 10 +
-                    Math.min(totalChannelSelections, 10) * 0.5
-            );
-            score += loyaltyScore;
-        }
-
-        // 2. Verified Preference Score (max 10 points)
-        const totalVerified =
-            sp.verifiedPreference.verified + sp.verifiedPreference.nonVerified;
-        if (totalVerified > 0) {
-            const verifiedRatio =
-                sp.verifiedPreference.verified / totalVerified;
-            // Prefer verified = quality conscious user
-            score += Math.min(10, verifiedRatio * 10);
-        }
-
-        // 3. Position Pattern Score (max 10 points)
-        const totalPos =
-            sp.positionPreference.top3 +
-            sp.positionPreference.mid +
-            sp.positionPreference.bottom;
-        if (totalPos > 0) {
-            // Users who scroll down and pick = discerning = higher score
-            const discernmentRatio =
-                (sp.positionPreference.mid + sp.positionPreference.bottom * 2) /
-                totalPos;
-            score += Math.min(10, 3 + discernmentRatio * 7);
-        }
-
-        // 4. Selection-to-Skip Ratio Bonus (max 5 points)
-        const totalActions =
-            sp.selectSkipRatio.selected + sp.selectSkipRatio.skipped;
-        if (totalActions > 0) {
-            const selectRatio = sp.selectSkipRatio.selected / totalActions;
-            score += Math.min(5, selectRatio * 5);
-        }
-
-        const finalScore = Math.round(Math.min(40, score));
-        console.log(
-            `[Intelligence] 🎯 Selection Pattern Score: ${finalScore}/40`
-        );
-
-        return finalScore;
-    },
-
-    // Calculate preference score
-    calculateScore(stats) {
-        // Score = plays - (skips * 2)
-        // Skips have more weight because they indicate active dislike
-        return stats.plays - stats.skips * 2;
-    },
-
-    // Get preferred languages (score > 0)
-    getPreferredLanguages() {
-        const data = this.getData();
-        return Object.entries(data.languages)
-            .filter(([lang, stats]) => stats.score > 0)
-            .sort((a, b) => b[1].score - a[1].score)
-            .map(([lang]) => lang);
-    },
-
-    // Get avoided languages (score < -3)
-    getAvoidedLanguages() {
-        const data = this.getData();
-        return Object.entries(data.languages)
-            .filter(([lang, stats]) => stats.score < -3)
-            .map(([lang]) => lang);
-    },
-
-    // Get preferred genres
-    getPreferredGenres() {
-        const data = this.getData();
-        return Object.entries(data.genres)
-            .filter(([genre, stats]) => stats.score > 0)
-            .sort((a, b) => b[1].score - a[1].score)
-            .map(([genre]) => genre);
-    },
-
-    // Get avoided genres (score < -3)
-    getAvoidedGenres() {
-        const data = this.getData();
-        return Object.entries(data.genres)
-            .filter(([genre, stats]) => stats.score < -3)
-            .map(([genre]) => genre);
-    },
-
-    // Check if a song should be filtered
-    shouldFilter(title, channelTitle) {
-        const data = this.getData();
-        const language = this.detectLanguage(title, channelTitle);
-        const genre = this.detectGenre(title);
-
-        // Check if language is avoided
-        if (this.getAvoidedLanguages().includes(language)) {
-            console.log(`[Intelligence] 🚫 Filtering ${language} song`);
-            return true;
-        }
-
-        // Check if genre is avoided
-        if (this.getAvoidedGenres().includes(genre)) {
-            console.log(`[Intelligence] 🚫 Filtering ${genre} song`);
-            return true;
-        }
-
-        // Check if channel is avoided
-        if (data.avoidChannels.includes(channelTitle)) {
-            console.log(
-                `[Intelligence] 🚫 Filtering avoided channel: ${channelTitle}`
-            );
-            return true;
-        }
-
-        return false;
-    },
-
-    // Get search boost keywords based on preferences
-    getSearchBoost() {
-        const preferredLangs = this.getPreferredLanguages();
-        const preferredGenres = this.getPreferredGenres();
-
-        let boost = [];
-
-        // Add top language
-        if (preferredLangs.length > 0) {
-            boost.push(preferredLangs[0] + ' songs');
-        }
-
-        // Add top genre
-        if (preferredGenres.length > 0 && preferredGenres[0] !== 'bollywood') {
-            boost.push(preferredGenres[0]);
-        }
-
-        return boost.join(' ');
-    },
-
-    // Debug: Show current intelligence
-    debug() {
-        const data = this.getData();
-        console.log('[Intelligence] 🧠 Current State:');
-        console.log('  Preferred Languages:', this.getPreferredLanguages());
-        console.log('  Avoided Languages:', this.getAvoidedLanguages());
-        console.log('  Preferred Genres:', this.getPreferredGenres());
-        console.log('  Avoided Genres:', this.getAvoidedGenres());
-        console.log('  Avoided Channels:', data.avoidChannels);
-        console.log('  Liked Artists:', data.likedArtists.slice(0, 5));
-        return data;
-    },
-
-    // ═══════════════════════════════════════════════════════════════
-    // 🛡️ TRUST SYSTEM - Rishiyon ki Pehchaan (Channel Authenticity)
-    // "Jaise sadhu ne 2 baar observe kiya, phir trust diya"
-    // ═══════════════════════════════════════════════════════════════
-
-    // 🛡️ TRUST: Pre-trusted channels (Quality music - No borders, just HEART!)
-    // "Koi desh ban nahi hai... bus dil ko ghayal kare..." - Ashish
-    TRUSTED_CHANNELS: [
-        // 🇮🇳 Indian Labels
-        't-series',
-        'zee music company',
-        'tips official',
-        'sony music india',
-        'saregama music',
-        'yrf',
-        'eros now music',
-        'zee music',
-        'shemaroo',
-        'venus',
-        'ultra bollywood',
-        'speed records',
-        'white hill music',
-        'desi music factory',
-        'voilà! digi',
-        'tseries',
-        'aditya music',
-        'lahari music',
-        'mango music',
-        'sun tv',
-        'think music',
-        // 🇵🇰 Pakistan (Music has no borders!)
-        'coke studio pakistan',
-        'coke studio',
-        'patari',
-        'bisconni music',
-        // 🌍 International Quality
-        'vevo',
-        'colors tv',
-        'mtv',
-        'bollywood classics',
-        'filmigaane',
-        'rajshri',
-        'gaana',
-        'jiocinema',
-        'amazon music',
-        'spotify',
-        // 🎤 Artist Channels (Verified quality)
-        'arijit singh',
-        'shreya ghoshal',
-        'sonu nigam',
-        'kumar sanu official',
-        'udit narayan',
-        'alka yagnik',
-        'lata mangeshkar',
-        'kishore kumar',
-        'ar rahman',
-        'amit trivedi',
-        'vishal dadlani',
-        'pritam',
-        'sachin-jigar',
-        'atif aslam',
-        'rahat fateh ali khan',
-        'nusrat fateh ali khan',
-        // 🙏 Bhakti Channels (Baba ki mahima!)
-        'tilak',
-        't-series bhakti sagar',
-        'bhakti sagar',
-        'shemaroo bhakti',
-        'rajshri soul',
-        'iskon',
-        'art of living',
-        'sadhguru',
-        'bhajan',
-        'gulshan kumar',
-        'anuradha paudwal',
-        'anup jalota',
-        'hariharan',
-    ],
-
-    // 🙏 BHAKTI: Keywords to detect devotional content (allow longer duration)
-    BHAKTI_KEYWORDS: [
-        'sunderkand',
-        'hanuman chalisa',
-        'aarti',
-        'bhajan',
-        'kirtan',
-        'path',
-        'geeta',
-        'gita',
-        'ramayan',
-        'mahabharat',
-        'shiv',
-        'krishna',
-        'ram',
-        'sai baba',
-        'shirdi',
-        'ganesh',
-        'durga',
-        'lakshmi',
-        'vishnu',
-        'brahma',
-        'mantra',
-        'jaap',
-        'stuti',
-        'stotra',
-        'chalisa',
-        'satnam',
-        'waheguru',
-        'gurbani',
-        'shabad',
-        'bhakti',
-        'devotional',
-        'spiritual',
-        'meditation',
-    ],
-
-    // 🙏 BHAKTI: Check if content is devotional
-    isBhaktiContent(title, channel) {
-        const text = ((title || '') + ' ' + (channel || '')).toLowerCase();
-        return this.BHAKTI_KEYWORDS.some((keyword) => text.includes(keyword));
-    },
-
-    // 🛡️ TRUST: Clickbait patterns to detect (spam indicators)
-    CLICKBAIT_PATTERNS: [
-        /^[A-Z\s]{10,}$/, // ALL CAPS titles (10+ chars)
-        /[😍🔥💕❤️]{3,}/, // Excessive emojis (3+)
-        /\b(leaked|banned|deleted|removed)\b/i, // Misleading words
-        /\b(full\s*hd|4k\s*video|1080p|720p)\b/i, // Quality spam
-        /\b(bass\s*boosted|8d\s*audio|slowed\s*reverb)\b/i, // Audio gimmicks
-        /\[(official|lyrical|lyrics)\s*video\]/i, // Not spam, but low priority
-    ],
-
-    // 🛡️ TRUST: Get channel trust score
-    getChannelTrust(channelTitle) {
-        if (!channelTitle) return 0;
-
-        const data = this.getData();
-        const channelKey = channelTitle.toLowerCase().trim();
-
-        // Pre-trusted channels start with high score
-        if (this.TRUSTED_CHANNELS.some((tc) => channelKey.includes(tc))) {
-            return 100; // Maximum trust for verified channels
-        }
-
-        // Check stored trust
-        if (data.channelTrust && data.channelTrust[channelKey]) {
-            return data.channelTrust[channelKey].score || 0;
-        }
-
-        return 0; // New channel = neutral
-    },
-
-    // 🛡️ TRUST: Update channel trust based on play behavior
-    // 🎯 GINI MODE: Only learn from USER's explicit search/selection, NOT autoplay!
-    updateChannelTrust(
-        channelTitle,
-        action,
-        playDuration = 0,
-        totalDuration = 0,
-        isFromUserSearch = false // 🎯 NEW: Only true when user explicitly selected from search
-    ) {
-        if (!channelTitle) return;
-
-        // 🎯 GINI MODE: Autoplay songs shouldn't affect trust scoring
-        // User's explicit choice matters - "User search matters, not what plays automatically"
-        if (!isFromUserSearch && action === 'play') {
-            console.log(
-                `[TRUST] ⏭️ Skipping trust update (autoplay): ${channelTitle}`
-            );
-            return;
-        }
-
-        const data = this.getData();
-        const channelKey = channelTitle.toLowerCase().trim();
-
-        // Initialize channel trust if not exists
-        if (!data.channelTrust) data.channelTrust = {};
-        if (!data.channelTrust[channelKey]) {
-            data.channelTrust[channelKey] = {
-                score: 0,
-                plays: 0,
-                skips: 0,
-                totalListenTime: 0,
-                firstSeen: Date.now(),
-            };
-        }
-
-        const channel = data.channelTrust[channelKey];
-
-        if (action === 'play') {
+            // Calculate engagement (did user listen to most of the song?)
             const engagementRatio =
                 totalDuration > 0 ? playDuration / totalDuration : 0;
+            const isFullPlay = engagementRatio > 0.7; // Listened to 70%+
 
-            if (engagementRatio > 0.7) {
-                // Full play = +3 trust (Sadhu approved!)
-                channel.score += 3;
-                channel.plays++;
-                console.log(
-                    `[TRUST] 🛡️ Full play! ${channelTitle} trust: +3 → ${channel.score}`
-                );
-            } else if (engagementRatio > 0.3) {
-                // Partial play = +1 trust
-                channel.score += 1;
-                channel.plays++;
-                console.log(
-                    `[TRUST] 🛡️ Partial play. ${channelTitle} trust: +1 → ${channel.score}`
+            // Detect language and genre
+            const language = this.detectLanguage(title, channel);
+            const genre = this.detectGenre(title);
+
+            // Update language score
+            if (data.languages[language]) {
+                data.languages[language].plays++;
+                data.languages[language].score = this.calculateScore(
+                    data.languages[language]
                 );
             }
 
-            channel.totalListenTime += playDuration;
-        } else if (action === 'skip') {
-            // Skip within 30s = -2 trust
-            if (playDuration < 30) {
-                channel.score -= 2;
-                channel.skips++;
-                console.log(
-                    `[TRUST] 🛡️ Quick skip! ${channelTitle} trust: -2 → ${channel.score}`
+            // Update genre score
+            if (data.genres[genre]) {
+                data.genres[genre].plays++;
+                data.genres[genre].score = this.calculateScore(
+                    data.genres[genre]
                 );
             }
-        }
 
-        // Clamp score between -10 and 100
-        channel.score = Math.max(-10, Math.min(100, channel.score));
+            // If full play, add artist to liked list
+            if (isFullPlay && channel) {
+                if (!data.likedArtists.includes(channel)) {
+                    data.likedArtists.push(channel);
+                    // Keep only last 50 artists
+                    if (data.likedArtists.length > 50)
+                        data.likedArtists.shift();
+                }
+            }
 
-        // Auto-block if trust goes below -5
-        if (channel.score <= -5 && !data.avoidChannels.includes(channelTitle)) {
-            data.avoidChannels.push(channelTitle);
-            console.log(
-                `[TRUST] 🚫 Channel blocked due to low trust: ${channelTitle}`
+            // 🛡️ TRUST: Update channel trust on play
+            // 🎯 GINI MODE: Only update trust if user explicitly selected this song from search
+            this.updateChannelTrust(
+                channel,
+                'play',
+                playDuration,
+                totalDuration,
+                isFromUserSearch
             );
-        }
 
-        this.saveData(data);
-    },
-
-    // 🛡️ TRUST: Check if title is clickbait
-    isClickbait(title) {
-        if (!title) return false;
-
-        let clickbaitScore = 0;
-
-        for (const pattern of this.CLICKBAIT_PATTERNS) {
-            if (pattern.test(title)) {
-                clickbaitScore++;
-            }
-        }
-
-        // Count excessive uppercase words
-        const words = title.split(' ');
-        const capsWords = words.filter(
-            (w) => w.length > 3 && w === w.toUpperCase()
-        ).length;
-        if (capsWords > 2) clickbaitScore++;
-
-        // Count emojis
-        const emojiCount = (
-            title.match(
-                /[\u{1F600}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu
-            ) || []
-        ).length;
-        if (emojiCount > 3) clickbaitScore++;
-
-        const isClickbait = clickbaitScore >= 2;
-        if (isClickbait) {
             console.log(
-                `[TRUST] 🎣 Clickbait detected: "${title.substring(
-                    0,
-                    40
-                )}..." (score: ${clickbaitScore})`
+                `[Intelligence] 📚 Learned: ${language}/${genre} (${
+                    isFullPlay ? 'full play' : 'partial'
+                }) ${isFromUserSearch ? '👆 USER SELECTED' : '🤖 AUTOPLAY'}`
             );
-        }
+            this.saveData(data);
+        },
 
-        return isClickbait;
-    },
+        // Learn from SKIP (user skipped)
+        learnFromSkip(songData, skipTime) {
+            const data = this.getData();
+            const title = songData?.title || '';
+            const channel = songData?.channelTitle || '';
 
-    // 🛡️ TRUST: Get trust level label
-    getTrustLevel(channelTitle) {
-        const score = this.getChannelTrust(channelTitle);
+            // Only count as skip if user skipped within first 30 seconds
+            if (skipTime > 30) return;
 
-        // Simple Bootstrap Icons - fast load, clean look (Steve philosophy)
-        if (score >= 50)
-            return {
-                level: 'verified',
-                icon: 'bi-patch-check-fill',
-                label: 'Verified Channel',
-            };
-        if (score >= 20)
-            return {
-                level: 'trusted',
-                icon: 'bi-shield-check',
-                label: 'Trusted',
-            };
-        if (score >= 5)
-            return {
-                level: 'known',
-                icon: 'bi-hand-thumbs-up',
-                label: 'Known',
-            };
-        if (score >= 0) return { level: 'new', icon: '', label: 'New' }; // No icon for new
-        return {
-            level: 'suspect',
-            icon: 'bi-exclamation-triangle',
-            label: 'Suspect',
-        };
-    },
+            // Detect language and genre
+            const language = this.detectLanguage(title, channel);
+            const genre = this.detectGenre(title);
 
-    // 🛡️ TRUST: Should prioritize this channel?
-    shouldPrioritize(channelTitle, title) {
-        // Pre-trusted channels = always prioritize
-        const channelKey = (channelTitle || '').toLowerCase();
-        if (this.TRUSTED_CHANNELS.some((tc) => channelKey.includes(tc))) {
-            return true;
-        }
+            // Update language score (negative)
+            if (data.languages[language]) {
+                data.languages[language].skips++;
+                data.languages[language].score = this.calculateScore(
+                    data.languages[language]
+                );
+            }
 
-        // High trust score = prioritize
-        if (this.getChannelTrust(channelTitle) >= 10) {
-            return true;
-        }
+            // Update genre score (negative)
+            if (data.genres[genre]) {
+                data.genres[genre].skips++;
+                data.genres[genre].score = this.calculateScore(
+                    data.genres[genre]
+                );
+            }
 
-        // Clickbait = de-prioritize
-        if (this.isClickbait(title)) {
+            // 🛡️ TRUST: Update channel trust on skip
+            this.updateChannelTrust(channel, 'skip', skipTime, 0);
+
+            // Add channel to avoid list if skipped 3+ times
+            const skipEntry = { channel, title, time: Date.now() };
+            data.skipHistory.push(skipEntry);
+
+            // Count skips per channel
+            const channelSkips = data.skipHistory.filter(
+                (s) => s.channel === channel
+            ).length;
+            if (channelSkips >= 3 && !data.avoidChannels.includes(channel)) {
+                data.avoidChannels.push(channel);
+                console.log(
+                    `[Intelligence] 🚫 Auto-blocking channel: ${channel}`
+                );
+            }
+
+            // Keep skip history manageable
+            if (data.skipHistory.length > 100) {
+                data.skipHistory = data.skipHistory.slice(-50);
+            }
+
+            // 🎯 Update selectSkipRatio for HEART Sync (20% weight)
+            if (data.selectionPattern) {
+                data.selectionPattern.selectSkipRatio.skipped++;
+                console.log(
+                    `[Intelligence] ⏭️ Skip tracked: ${data.selectionPattern.selectSkipRatio.skipped} skips / ${data.selectionPattern.selectSkipRatio.selected} selections`
+                );
+            }
+
+            console.log(
+                `[Intelligence] ⏭️ Skip learned: ${language}/${genre} from ${channel}`
+            );
+            this.saveData(data);
+        },
+
+        // 🎯 SELECTION PATTERN - Learn from user's choice (40% of HEART Sync)
+        // "21 results mein se user ne kya choose kiya - that's REAL intelligence!"
+        learnFromSelection(selectionData) {
+            const data = this.getData();
+
+            // Initialize selectionPattern if not exists
+            if (!data.selectionPattern) {
+                data.selectionPattern = {
+                    channelSelections: {},
+                    verifiedPreference: { verified: 0, nonVerified: 0 },
+                    positionPreference: { top3: 0, mid: 0, bottom: 0 },
+                    contentType: { video: 0, audio: 0, lyrical: 0 },
+                    totalSelections: 0,
+                    selectSkipRatio: { selected: 0, skipped: 0 },
+                };
+            }
+
+            const sp = data.selectionPattern;
+            const {
+                selectedIndex,
+                totalResults,
+                channel,
+                isVerified,
+                title,
+                isAutoPlay,
+            } = selectionData;
+
+            // Only track user selections, not autoplay
+            if (isAutoPlay) return;
+
+            sp.totalSelections++;
+            sp.selectSkipRatio.selected++;
+
+            // 1. Channel Selection Tracking
+            if (channel) {
+                if (!sp.channelSelections[channel]) {
+                    sp.channelSelections[channel] = {
+                        selected: 0,
+                        available: 0,
+                    };
+                }
+                sp.channelSelections[channel].selected++;
+                sp.channelSelections[channel].available++;
+            }
+
+            // 2. Verified vs Non-Verified Preference
+            if (isVerified) {
+                sp.verifiedPreference.verified++;
+            } else {
+                sp.verifiedPreference.nonVerified++;
+            }
+
+            // 3. Position Preference (where in list did they pick?)
+            if (selectedIndex <= 2) {
+                sp.positionPreference.top3++; // First 3 results
+            } else if (selectedIndex <= 6) {
+                sp.positionPreference.mid++; // 4th to 7th
+            } else {
+                sp.positionPreference.bottom++; // 8th and beyond (discerning user!)
+            }
+
+            // 4. Content Type Detection
+            const titleLower = title?.toLowerCase() || '';
+            if (titleLower.includes('lyric') || titleLower.includes('lyrics')) {
+                sp.contentType.lyrical++;
+            } else if (
+                titleLower.includes('audio') ||
+                titleLower.includes('full album')
+            ) {
+                sp.contentType.audio++;
+            } else {
+                sp.contentType.video++; // Default to video
+            }
+
+            // Keep channel selections manageable (top 30 channels)
+            const channelEntries = Object.entries(sp.channelSelections);
+            if (channelEntries.length > 30) {
+                const sorted = channelEntries.sort(
+                    (a, b) => b[1].selected - a[1].selected
+                );
+                sp.channelSelections = Object.fromEntries(sorted.slice(0, 30));
+            }
+
+            console.log(
+                `[Intelligence] 🎯 Selection learned: "${channel}" at position ${
+                    selectedIndex + 1
+                }/${totalResults} (verified: ${isVerified})`
+            );
+            console.log(
+                `[Intelligence] 📊 Total selections: ${
+                    sp.totalSelections
+                }, Verified ratio: ${sp.verifiedPreference.verified}/${
+                    sp.verifiedPreference.verified +
+                    sp.verifiedPreference.nonVerified
+                }`
+            );
+
+            this.saveData(data);
+        },
+
+        // 📊 Get Selection Pattern Score (0-40 points for HEART Sync)
+        getSelectionPatternScore() {
+            const data = this.getData();
+            const sp = data.selectionPattern;
+
+            if (!sp || sp.totalSelections === 0) {
+                return 0; // No selections yet
+            }
+
+            let score = 0;
+
+            // 1. Channel Loyalty Score (max 15 points)
+            // More selections = more data = more points
+            const channelEntries = Object.entries(sp.channelSelections || {});
+            const totalChannelSelections = channelEntries.reduce(
+                (sum, [, v]) => sum + v.selected,
+                0
+            );
+
+            // Has consistent channel preference?
+            if (channelEntries.length > 0) {
+                const topChannel = channelEntries.sort(
+                    (a, b) => b[1].selected - a[1].selected
+                )[0];
+                const topChannelRatio =
+                    topChannel[1].selected / totalChannelSelections;
+
+                // Strong preference = higher score
+                const loyaltyScore = Math.min(
+                    15,
+                    topChannelRatio * 10 +
+                        Math.min(totalChannelSelections, 10) * 0.5
+                );
+                score += loyaltyScore;
+            }
+
+            // 2. Verified Preference Score (max 10 points)
+            const totalVerified =
+                sp.verifiedPreference.verified +
+                sp.verifiedPreference.nonVerified;
+            if (totalVerified > 0) {
+                const verifiedRatio =
+                    sp.verifiedPreference.verified / totalVerified;
+                // Prefer verified = quality conscious user
+                score += Math.min(10, verifiedRatio * 10);
+            }
+
+            // 3. Position Pattern Score (max 10 points)
+            const totalPos =
+                sp.positionPreference.top3 +
+                sp.positionPreference.mid +
+                sp.positionPreference.bottom;
+            if (totalPos > 0) {
+                // Users who scroll down and pick = discerning = higher score
+                const discernmentRatio =
+                    (sp.positionPreference.mid +
+                        sp.positionPreference.bottom * 2) /
+                    totalPos;
+                score += Math.min(10, 3 + discernmentRatio * 7);
+            }
+
+            // 4. Selection-to-Skip Ratio Bonus (max 5 points)
+            const totalActions =
+                sp.selectSkipRatio.selected + sp.selectSkipRatio.skipped;
+            if (totalActions > 0) {
+                const selectRatio = sp.selectSkipRatio.selected / totalActions;
+                score += Math.min(5, selectRatio * 5);
+            }
+
+            const finalScore = Math.round(Math.min(40, score));
+            console.log(
+                `[Intelligence] 🎯 Selection Pattern Score: ${finalScore}/40`
+            );
+
+            return finalScore;
+        },
+
+        // Calculate preference score
+        calculateScore(stats) {
+            // Score = plays - (skips * 2)
+            // Skips have more weight because they indicate active dislike
+            return stats.plays - stats.skips * 2;
+        },
+
+        // Get preferred languages (score > 0)
+        getPreferredLanguages() {
+            const data = this.getData();
+            return Object.entries(data.languages)
+                .filter(([lang, stats]) => stats.score > 0)
+                .sort((a, b) => b[1].score - a[1].score)
+                .map(([lang]) => lang);
+        },
+
+        // Get avoided languages (score < -3)
+        getAvoidedLanguages() {
+            const data = this.getData();
+            return Object.entries(data.languages)
+                .filter(([lang, stats]) => stats.score < -3)
+                .map(([lang]) => lang);
+        },
+
+        // Get preferred genres
+        getPreferredGenres() {
+            const data = this.getData();
+            return Object.entries(data.genres)
+                .filter(([genre, stats]) => stats.score > 0)
+                .sort((a, b) => b[1].score - a[1].score)
+                .map(([genre]) => genre);
+        },
+
+        // Get avoided genres (score < -3)
+        getAvoidedGenres() {
+            const data = this.getData();
+            return Object.entries(data.genres)
+                .filter(([genre, stats]) => stats.score < -3)
+                .map(([genre]) => genre);
+        },
+
+        // Check if a song should be filtered
+        shouldFilter(title, channelTitle) {
+            const data = this.getData();
+            const language = this.detectLanguage(title, channelTitle);
+            const genre = this.detectGenre(title);
+            const titleLower = title.toLowerCase();
+
+            // 🚫 SPAM FILTER - Hashtags, shorts, promotional content
+            const spamPatterns = [
+                /#\w+/, // Any hashtag (#shorts, #trending, etc)
+                /\bshorts?\b/i, // "short" or "shorts"
+                /\breels?\b/i, // "reel" or "reels"
+                /\bstatus\b/i, // WhatsApp status videos
+                /\btiktok\b/i, // TikTok content
+                /\binsta(gram)?\b/i, // Instagram content
+                /\bwhatsapp\b/i, // WhatsApp content
+                /\b(subscribe|like\s*&?\s*share)\b/i, // Promotional
+                /\bringtone\b/i, // Ringtones
+                /\bfull\s*screen\b/i, // "Full screen status"
+                /\b4k\s*status\b/i, // "4K status"
+            ];
+
+            for (const pattern of spamPatterns) {
+                if (pattern.test(title)) {
+                    console.log(
+                        `[Intelligence] 🚫 Filtering spam: "${title}" (pattern: ${pattern})`
+                    );
+                    return true;
+                }
+            }
+
+            // Check if language is avoided
+            if (this.getAvoidedLanguages().includes(language)) {
+                console.log(`[Intelligence] 🚫 Filtering ${language} song`);
+                return true;
+            }
+
+            // Check if genre is avoided
+            if (this.getAvoidedGenres().includes(genre)) {
+                console.log(`[Intelligence] 🚫 Filtering ${genre} song`);
+                return true;
+            }
+
+            // Check if channel is avoided
+            if (data.avoidChannels.includes(channelTitle)) {
+                console.log(
+                    `[Intelligence] 🚫 Filtering avoided channel: ${channelTitle}`
+                );
+                return true;
+            }
+
             return false;
-        }
+        },
 
-        return null; // Neutral
-    },
-};
+        // Get search boost keywords based on preferences
+        getSearchBoost() {
+            const preferredLangs = this.getPreferredLanguages();
+            const preferredGenres = this.getPreferredGenres();
+
+            let boost = [];
+
+            // Add top language
+            if (preferredLangs.length > 0) {
+                boost.push(preferredLangs[0] + ' songs');
+            }
+
+            // Add top genre
+            if (
+                preferredGenres.length > 0 &&
+                preferredGenres[0] !== 'bollywood'
+            ) {
+                boost.push(preferredGenres[0]);
+            }
+
+            return boost.join(' ');
+        },
+
+        // Debug: Show current intelligence
+        debug() {
+            const data = this.getData();
+            console.log('[Intelligence] 🧠 Current State:');
+            console.log('  Preferred Languages:', this.getPreferredLanguages());
+            console.log('  Avoided Languages:', this.getAvoidedLanguages());
+            console.log('  Preferred Genres:', this.getPreferredGenres());
+            console.log('  Avoided Genres:', this.getAvoidedGenres());
+            console.log('  Avoided Channels:', data.avoidChannels);
+            console.log('  Liked Artists:', data.likedArtists.slice(0, 5));
+            return data;
+        },
+
+        // ═══════════════════════════════════════════════════════════════
+        // 🛡️ TRUST SYSTEM - Rishiyon ki Pehchaan (Channel Authenticity)
+        // "Jaise sadhu ne 2 baar observe kiya, phir trust diya"
+        // ═══════════════════════════════════════════════════════════════
+
+        // 🛡️ TRUST: Pre-trusted channels (Quality music - No borders, just HEART!)
+        // "Koi desh ban nahi hai... bus dil ko ghayal kare..." - Ashish
+        TRUSTED_CHANNELS: [
+            // 🇮🇳 Indian Labels
+            't-series',
+            'zee music company',
+            'tips official',
+            'sony music india',
+            'saregama music',
+            'yrf',
+            'eros now music',
+            'zee music',
+            'shemaroo',
+            'venus',
+            'ultra bollywood',
+            'speed records',
+            'white hill music',
+            'desi music factory',
+            'voilà! digi',
+            'tseries',
+            'aditya music',
+            'lahari music',
+            'mango music',
+            'sun tv',
+            'think music',
+            // 🇵🇰 Pakistan (Music has no borders!)
+            'coke studio pakistan',
+            'coke studio',
+            'patari',
+            'bisconni music',
+            // 🌍 International Quality
+            'vevo',
+            'colors tv',
+            'mtv',
+            'bollywood classics',
+            'filmigaane',
+            'rajshri',
+            'gaana',
+            'jiocinema',
+            'amazon music',
+            'spotify',
+            // 🎤 Artist Channels (Verified quality)
+            'arijit singh',
+            'shreya ghoshal',
+            'sonu nigam',
+            'kumar sanu official',
+            'udit narayan',
+            'alka yagnik',
+            'lata mangeshkar',
+            'kishore kumar',
+            'ar rahman',
+            'amit trivedi',
+            'vishal dadlani',
+            'pritam',
+            'sachin-jigar',
+            'atif aslam',
+            'rahat fateh ali khan',
+            'nusrat fateh ali khan',
+            // 🙏 Bhakti Channels (Baba ki mahima!)
+            'tilak',
+            't-series bhakti sagar',
+            'bhakti sagar',
+            'shemaroo bhakti',
+            'rajshri soul',
+            'iskon',
+            'art of living',
+            'sadhguru',
+            'bhajan',
+            'gulshan kumar',
+            'anuradha paudwal',
+            'anup jalota',
+            'hariharan',
+        ],
+
+        // 🙏 BHAKTI: Keywords to detect devotional content (allow longer duration)
+        BHAKTI_KEYWORDS: [
+            'sunderkand',
+            'hanuman chalisa',
+            'aarti',
+            'bhajan',
+            'kirtan',
+            'path',
+            'geeta',
+            'gita',
+            'ramayan',
+            'mahabharat',
+            'shiv',
+            'krishna',
+            'ram',
+            'sai baba',
+            'shirdi',
+            'ganesh',
+            'durga',
+            'lakshmi',
+            'vishnu',
+            'brahma',
+            'mantra',
+            'jaap',
+            'stuti',
+            'stotra',
+            'chalisa',
+            'satnam',
+            'waheguru',
+            'gurbani',
+            'shabad',
+            'bhakti',
+            'devotional',
+            'spiritual',
+            'meditation',
+        ],
+
+        // 🙏 BHAKTI: Check if content is devotional
+        isBhaktiContent(title, channel) {
+            const text = ((title || '') + ' ' + (channel || '')).toLowerCase();
+            return this.BHAKTI_KEYWORDS.some((keyword) =>
+                text.includes(keyword)
+            );
+        },
+
+        // 🛡️ TRUST: Clickbait patterns to detect (spam indicators)
+        CLICKBAIT_PATTERNS: [
+            /^[A-Z\s]{10,}$/, // ALL CAPS titles (10+ chars)
+            /[😍🔥💕❤️]{3,}/, // Excessive emojis (3+)
+            /\b(leaked|banned|deleted|removed)\b/i, // Misleading words
+            /\b(full\s*hd|4k\s*video|1080p|720p)\b/i, // Quality spam
+            /\b(bass\s*boosted|8d\s*audio|slowed\s*reverb)\b/i, // Audio gimmicks
+            /\[(official|lyrical|lyrics)\s*video\]/i, // Not spam, but low priority
+        ],
+
+        // 🛡️ TRUST: Get channel trust score
+        getChannelTrust(channelTitle) {
+            if (!channelTitle) return 0;
+
+            const data = this.getData();
+            const channelKey = channelTitle.toLowerCase().trim();
+
+            // Pre-trusted channels start with high score
+            if (this.TRUSTED_CHANNELS.some((tc) => channelKey.includes(tc))) {
+                return 100; // Maximum trust for verified channels
+            }
+
+            // Check stored trust
+            if (data.channelTrust && data.channelTrust[channelKey]) {
+                return data.channelTrust[channelKey].score || 0;
+            }
+
+            return 0; // New channel = neutral
+        },
+
+        // 🛡️ TRUST: Update channel trust based on play behavior
+        // 🎯 GINI MODE: Only learn from USER's explicit search/selection, NOT autoplay!
+        updateChannelTrust(
+            channelTitle,
+            action,
+            playDuration = 0,
+            totalDuration = 0,
+            isFromUserSearch = false // 🎯 NEW: Only true when user explicitly selected from search
+        ) {
+            if (!channelTitle) return;
+
+            // 🎯 GINI MODE: Autoplay songs shouldn't affect trust scoring
+            // User's explicit choice matters - "User search matters, not what plays automatically"
+            if (!isFromUserSearch && action === 'play') {
+                console.log(
+                    `[TRUST] ⏭️ Skipping trust update (autoplay): ${channelTitle}`
+                );
+                return;
+            }
+
+            const data = this.getData();
+            const channelKey = channelTitle.toLowerCase().trim();
+
+            // Initialize channel trust if not exists
+            if (!data.channelTrust) data.channelTrust = {};
+            if (!data.channelTrust[channelKey]) {
+                data.channelTrust[channelKey] = {
+                    score: 0,
+                    plays: 0,
+                    skips: 0,
+                    totalListenTime: 0,
+                    firstSeen: Date.now(),
+                };
+            }
+
+            const channel = data.channelTrust[channelKey];
+
+            if (action === 'play') {
+                const engagementRatio =
+                    totalDuration > 0 ? playDuration / totalDuration : 0;
+
+                if (engagementRatio > 0.7) {
+                    // Full play = +3 trust (Sadhu approved!)
+                    channel.score += 3;
+                    channel.plays++;
+                    console.log(
+                        `[TRUST] 🛡️ Full play! ${channelTitle} trust: +3 → ${channel.score}`
+                    );
+                } else if (engagementRatio > 0.3) {
+                    // Partial play = +1 trust
+                    channel.score += 1;
+                    channel.plays++;
+                    console.log(
+                        `[TRUST] 🛡️ Partial play. ${channelTitle} trust: +1 → ${channel.score}`
+                    );
+                }
+
+                channel.totalListenTime += playDuration;
+            } else if (action === 'skip') {
+                // Skip within 30s = -2 trust
+                if (playDuration < 30) {
+                    channel.score -= 2;
+                    channel.skips++;
+                    console.log(
+                        `[TRUST] 🛡️ Quick skip! ${channelTitle} trust: -2 → ${channel.score}`
+                    );
+                }
+            }
+
+            // Clamp score between -10 and 100
+            channel.score = Math.max(-10, Math.min(100, channel.score));
+
+            // Auto-block if trust goes below -5
+            if (
+                channel.score <= -5 &&
+                !data.avoidChannels.includes(channelTitle)
+            ) {
+                data.avoidChannels.push(channelTitle);
+                console.log(
+                    `[TRUST] 🚫 Channel blocked due to low trust: ${channelTitle}`
+                );
+            }
+
+            this.saveData(data);
+        },
+
+        // 🛡️ TRUST: Check if title is clickbait
+        isClickbait(title) {
+            if (!title) return false;
+
+            let clickbaitScore = 0;
+
+            for (const pattern of this.CLICKBAIT_PATTERNS) {
+                if (pattern.test(title)) {
+                    clickbaitScore++;
+                }
+            }
+
+            // Count excessive uppercase words
+            const words = title.split(' ');
+            const capsWords = words.filter(
+                (w) => w.length > 3 && w === w.toUpperCase()
+            ).length;
+            if (capsWords > 2) clickbaitScore++;
+
+            // Count emojis
+            const emojiCount = (
+                title.match(
+                    /[\u{1F600}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu
+                ) || []
+            ).length;
+            if (emojiCount > 3) clickbaitScore++;
+
+            const isClickbait = clickbaitScore >= 2;
+            if (isClickbait) {
+                console.log(
+                    `[TRUST] 🎣 Clickbait detected: "${title.substring(
+                        0,
+                        40
+                    )}..." (score: ${clickbaitScore})`
+                );
+            }
+
+            return isClickbait;
+        },
+
+        // 🛡️ TRUST: Get trust level label
+        getTrustLevel(channelTitle) {
+            const score = this.getChannelTrust(channelTitle);
+
+            // Simple Bootstrap Icons - fast load, clean look (Steve philosophy)
+            if (score >= 50)
+                return {
+                    level: 'verified',
+                    icon: 'bi-patch-check-fill',
+                    label: 'Verified Channel',
+                };
+            if (score >= 20)
+                return {
+                    level: 'trusted',
+                    icon: 'bi-shield-check',
+                    label: 'Trusted',
+                };
+            if (score >= 5)
+                return {
+                    level: 'known',
+                    icon: 'bi-hand-thumbs-up',
+                    label: 'Known',
+                };
+            if (score >= 0) return { level: 'new', icon: '', label: 'New' }; // No icon for new
+            return {
+                level: 'suspect',
+                icon: 'bi-exclamation-triangle',
+                label: 'Suspect',
+            };
+        },
+
+        // 🛡️ TRUST: Should prioritize this channel?
+        shouldPrioritize(channelTitle, title) {
+            // Pre-trusted channels = always prioritize
+            const channelKey = (channelTitle || '').toLowerCase();
+            if (this.TRUSTED_CHANNELS.some((tc) => channelKey.includes(tc))) {
+                return true;
+            }
+
+            // High trust score = prioritize
+            if (this.getChannelTrust(channelTitle) >= 10) {
+                return true;
+            }
+
+            // Clickbait = de-prioritize
+            if (this.isClickbait(title)) {
+                return false;
+            }
+
+            return null; // Neutral
+        },
+    };
+} // End of InvisibleIntelligence fallback if block
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🔵 PIXEL CORE: HEART ALGORITHM - EMOTIONAL ENGINE
+// Classification: PRODUCT-AGNOSTIC | Extractable: Phase 1
+// Dependencies: localStorage, InvisibleIntelligence
+// Purpose: Harmonic Emotional Adaptive Resonance Technology
+// Portable: YES - Mood tracking works for any content type
+// ═══════════════════════════════════════════════════════════════════════════════
 
 // 💓 HEART ALGORITHM - Harmonic Emotional Adaptive Resonance Technology
 // "We are harmonic beings" - Search It, Play It, Feel It!
@@ -1958,6 +2264,7 @@ const HEART = {
         return defaults[period];
     },
 
+    // === HEART: Session Management ===
     // Start new session
     startSession() {
         const data = this.getData();
@@ -1971,6 +2278,7 @@ const HEART = {
         console.log('[HEART] 💓 New session started');
     },
 
+    // === HEART: Session Mood Update ===
     // Update session with song mood
     updateSessionMood(mood) {
         const data = this.getData();
@@ -2045,6 +2353,7 @@ const HEART = {
         return data.currentSession.dominantMood;
     },
 
+    // === HEART: Mood Uplift System ===
     // Check if mood uplift is needed (3+ sad songs)
     shouldUpliftMood() {
         const data = this.getData();
@@ -2182,6 +2491,7 @@ const HEART = {
         }
     },
 
+    // === HEART: Deep Listening Tracking ===
     // 🧘‍♂️ DEEP LISTENING MODE - When user is in the zone
     // "Jab user zone mein ho, disturb mat karo"
     deepListening: {
@@ -2298,6 +2608,7 @@ const HEART = {
         return data;
     },
 
+    // === HEART: Sync Percentage Calculation ===
     // 💕 HEART SYNC PERCENTAGE - NEW BODMAS/BIDMAS Calculation
     // 🎯 Selection Pattern (40%) + Base/Time (30%) + Skip Behavior (20%) + Mood (10%)
     // "21 results mein se 1 selection = 21x learning!" - Ashish Philosophy
@@ -2610,6 +2921,14 @@ const HEART = {
         return { level: 'soulmate', message: 'We are one!' };
     },
 };
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🔵 PIXEL CORE: HEART WHISPER - ORGANIC MESSAGING SYSTEM
+// Classification: PRODUCT-AGNOSTIC | Extractable: Phase 2
+// Dependencies: HEART, InvisibleIntelligence, localStorage
+// Purpose: Subtle messages like "BABA in the jungle" - speaks user's language
+// Portable: YES - Abstract messaging, content-agnostic
+// ═══════════════════════════════════════════════════════════════════════════════
 
 // 💭 HEART WHISPER - Subtle organic messages like BABA in the jungle
 // "Aao beta..." - System whispers to users based on their listening patterns
@@ -3278,6 +3597,14 @@ const HEARTWhisper = {
     `;
     document.head.appendChild(style);
 })();
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🔴 MUSIC-ONLY: VIBE KEYWORD INTELLIGENCE
+// Classification: MUSIC-SPECIFIC | Extractable: No
+// Dependencies: None (static data)
+// Purpose: Hindi/Bollywood action words to vibe/mood mapping
+// Note: Keywords are music-specific (nachu, nachle, romantic, etc.)
+// ═══════════════════════════════════════════════════════════════════════════════
 
 // 🧠 VIBE KEYWORD INTELLIGENCE - Hindi/Bollywood action words to vibe mapping
 const VIBE_KEYWORDS = {
@@ -4122,13 +4449,82 @@ function initializeApp() {
     // Enter key in search input
     const searchInput = document.getElementById('searchInput');
     if (searchInput) {
-        searchInput.addEventListener('keypress', function (e) {
+        // 🎯 KEYBOARD NAVIGATION: Arrow keys to navigate search results
+        searchInput.addEventListener('keydown', function (e) {
+            // Arrow Down - Move selection down
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (youtubeSearchResults.length > 0) {
+                    keyboardSelectedIndex = Math.min(
+                        keyboardSelectedIndex + 1,
+                        Math.min(
+                            displayedResultsCount,
+                            youtubeSearchResults.length
+                        ) - 1
+                    );
+                    highlightSelectedResult();
+                    scrollSelectedIntoView();
+                    console.log('[KeyNav] ⬇️ Selected:', keyboardSelectedIndex);
+                }
+                return;
+            }
+
+            // Arrow Up - Move selection up
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (youtubeSearchResults.length > 0) {
+                    keyboardSelectedIndex = Math.max(
+                        keyboardSelectedIndex - 1,
+                        0
+                    );
+                    highlightSelectedResult();
+                    scrollSelectedIntoView();
+                    console.log('[KeyNav] ⬆️ Selected:', keyboardSelectedIndex);
+                }
+                return;
+            }
+
+            // Enter - Play selected or search
             if (e.key === 'Enter') {
-                console.log('Enter key pressed in search');
-                performSearch();
+                e.preventDefault();
+                if (
+                    keyboardSelectedIndex >= 0 &&
+                    youtubeSearchResults.length > 0
+                ) {
+                    // Play selected song using correct function
+                    console.log(
+                        '[KeyNav] ⏎ Playing selected:',
+                        keyboardSelectedIndex
+                    );
+                    playYouTubeSong(keyboardSelectedIndex);
+                    keyboardSelectedIndex = -1; // Reset after play
+                    highlightSelectedResult();
+                } else {
+                    // No selection, perform search
+                    performSearch();
+                }
+                return;
+            }
+
+            // Escape - Clear selection or search
+            if (e.key === 'Escape') {
+                if (keyboardSelectedIndex >= 0) {
+                    keyboardSelectedIndex = -1;
+                    highlightSelectedResult();
+                } else {
+                    clearSearch();
+                }
+                return;
             }
         });
-        console.log('Search input listener attached');
+
+        // Reset selection when typing
+        searchInput.addEventListener('input', function () {
+            keyboardSelectedIndex = -1;
+            highlightSelectedResult();
+        });
+
+        console.log('Search input listener attached with keyboard navigation');
     } else {
         console.error('searchInput not found!');
     }
@@ -4281,6 +4677,22 @@ function initializeApp() {
                 e.preventDefault();
                 toggleFullscreen();
                 break;
+            // 🎵 Function Keys as Media Controls - Works without fn key!
+            case 'F7':
+                e.preventDefault();
+                console.log('[MediaKey] F7 → Previous');
+                playPrevious();
+                break;
+            case 'F8':
+                e.preventDefault();
+                console.log('[MediaKey] F8 → Play/Pause');
+                togglePlayPause();
+                break;
+            case 'F9':
+                e.preventDefault();
+                console.log('[MediaKey] F9 → Next');
+                playNext();
+                break;
             case 'Escape':
                 // Clear search on ESC or close mobile search
                 if (
@@ -4335,9 +4747,49 @@ function clearSearch() {
         mobileSlideSearchInput.value = '';
     }
 
+    // Reset keyboard navigation
+    keyboardSelectedIndex = -1;
+    highlightSelectedResult();
+
     // Show Quick Picks after clearing search
     if (currentPlatform === 'youtube') {
         displayQuickPicks();
+    }
+}
+
+// 🎯 KEYBOARD NAVIGATION HELPERS
+// Highlight the currently selected search result
+function highlightSelectedResult() {
+    const songList = document.getElementById('songList');
+    if (!songList) return;
+
+    const items = songList.querySelectorAll('.song-item');
+    items.forEach((item, index) => {
+        if (index === keyboardSelectedIndex) {
+            item.classList.add('keyboard-selected');
+            item.style.background = 'rgba(100, 100, 100, 0.9)';
+            item.style.borderColor = 'var(--text-light)';
+            item.style.boxShadow = '0 0 15px rgba(255, 255, 255, 0.2)';
+        } else {
+            item.classList.remove('keyboard-selected');
+            item.style.background = '';
+            item.style.borderColor = '';
+            item.style.boxShadow = '';
+        }
+    });
+}
+
+// Scroll selected item into view
+function scrollSelectedIntoView() {
+    const songList = document.getElementById('songList');
+    if (!songList) return;
+
+    const items = songList.querySelectorAll('.song-item');
+    if (items[keyboardSelectedIndex]) {
+        items[keyboardSelectedIndex].scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+        });
     }
 }
 
@@ -4360,6 +4812,14 @@ function setSearchPlaceholder() {
         shortcutBadge.textContent = shortcut;
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🔴 MUSIC-ONLY: YOUTUBE IFRAME PLAYER API
+// Classification: MUSIC-SPECIFIC | Extractable: No
+// Dependencies: YT global object (YouTube IFrame API), player, isIOS
+// Purpose: Initialize YouTube player, handle events (ready, state, error)
+// Note: YouTube-specific, would need different adapter for other sources
+// ═══════════════════════════════════════════════════════════════════════════════
 
 // YouTube IFrame API Ready
 function onYouTubeIframeAPIReady() {
@@ -4597,27 +5057,30 @@ function onPlayerStateChange(event) {
             );
 
             // 📊 Dynamic max duration based on sync + content
+            // 🚫 FIX v1.18.0: REDUCED MAX DURATION - No more 90min+ loops!
+            // Max 25 min for autoplay (even for synced users)
+            // Bhakti content: Max 33 min (user can manually select longer)
             let maxDuration;
             if (isBhakti && heartSync >= 80) {
-                // Synced user + Bhakti = Allow 3 hours (Sunderkand, Geeta)
-                maxDuration = 180 * 60; // 3 hours
+                // Synced user + Bhakti = Max 33 min (user can select longer manually)
+                maxDuration = 33 * 60; // 33 minutes max
                 console.log(
-                    '[HEART] 🙏 Bhakti mode (80%+ sync) - allowing up to 3 hours'
+                    '[HEART] 🙏 Bhakti mode (80%+ sync) - max 33 min for autoplay'
                 );
             } else if (isBhakti && heartSync >= 50) {
-                // Medium sync + Bhakti = Allow 1 hour
-                maxDuration = 60 * 60; // 1 hour
+                // Medium sync + Bhakti = Max 25 min
+                maxDuration = 25 * 60; // 25 minutes
                 console.log(
-                    '[HEART] 🙏 Bhakti mode (50%+ sync) - allowing up to 1 hour'
+                    '[HEART] 🙏 Bhakti mode (50%+ sync) - max 25 min for autoplay'
                 );
             } else if (heartSync >= 80) {
-                // Highly synced user = Allow longer classics (30 min)
-                maxDuration = 30 * 60; // 30 minutes
+                // Highly synced user = Max 25 min (no more 30 min default)
+                maxDuration = 25 * 60; // 25 minutes
                 console.log(
-                    '[HEART] ❤️ Synced user (80%+) - allowing up to 30 min classics'
+                    '[HEART] ❤️ Synced user (80%+) - max 25 min for autoplay'
                 );
             } else if (heartSync >= 50) {
-                // Medium sync = Allow extended songs (15 min)
+                // Medium sync = Max 15 min
                 maxDuration = 15 * 60; // 15 minutes
             } else {
                 // New users = Standard songs only (8 min)
@@ -4975,6 +5438,13 @@ async function performSearch() {
         return;
     }
 
+    // 💡 SAVE USER'S KEYWORD - This is the HEART of autoplay!
+    // "User jab apne dimag se soch ke gaana type karta hai, woh KEYWORD system ka HEART hai!"
+    userSearchKeyword = query;
+    console.log(
+        `[HEART] 💡 User's keyword saved: "${query}" - This guides autoplay!`
+    );
+
     // Track search event
     if (typeof trackSearch === 'function') {
         trackSearch(query);
@@ -5007,6 +5477,14 @@ async function performSearch() {
             '</p></div>';
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🔴 MUSIC-ONLY: YOUTUBE SEARCH API
+// Classification: MUSIC-SPECIFIC | Extractable: No
+// Dependencies: CONFIG (API keys), localStorage (cache)
+// Purpose: Search YouTube Data API v3 for music videos
+// Note: YouTube-specific with quota management and caching
+// ═══════════════════════════════════════════════════════════════════════════════
 
 async function searchYouTube(query, retryCount = 0) {
     // Check cache first (6 hours cache to save API quota)
@@ -5181,6 +5659,7 @@ function clearAllSearchCaches() {
 
 function displayYouTubeResults(results) {
     youtubeSearchResults = results;
+    keyboardSelectedIndex = -1; // 🎯 Reset keyboard navigation on new results
     const songList = document.getElementById('songList');
 
     if (results.length === 0) {
@@ -5205,7 +5684,7 @@ function displayYouTubeResults(results) {
         addLoadMoreButton();
     }
 
-    syncHeartStates();
+    syncAddButtonStates();
 }
 
 // Append a single song item to the list
@@ -5234,14 +5713,14 @@ function appendSongItem(item, index) {
             <div class="song-item-title">${title}</div>
             <div class="song-item-artist">${trustBadge}${channel}</div>
         </div>
-        <button class="song-heart-btn" onclick="event.stopPropagation(); toggleLibraryHeart('youtube', '${videoId}', '${title.replace(
+        <button class="song-add-btn" onclick="event.stopPropagation(); toggleLibraryAdd('youtube', '${videoId}', '${title.replace(
         /'/g,
         "\\'"
     )}', '${channel.replace(
         /'/g,
         "\\'"
-    )}', '${thumbnail}', this);" title="Add to Records Library">
-            <i class="bi bi-heart"></i>
+    )}', '${thumbnail}', this);" title="Add to Records">
+            <i class="bi bi-plus-lg"></i>
         </button>
     `;
 
@@ -5294,9 +5773,17 @@ function loadMoreResults() {
         addLoadMoreButton();
     }
 
-    syncHeartStates();
+    syncAddButtonStates();
     showStatus(`Loaded ${batchSize} more`, 1500);
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🟡 ADAPTER: YOUTUBE PLAYBACK SYSTEM
+// Classification: MIXED | Extractable: Phase 4
+// Dependencies: player, youtubeSearchResults, currentSongData, HEART, InvisibleIntelligence
+// Purpose: Play songs from YouTube search results
+// Note: Playback LOGIC is reusable, YouTube API calls are specific
+// ═══════════════════════════════════════════════════════════════════════════════
 
 function playYouTubeSong(index, isAutoPlay = false) {
     console.log('[Play] 🎵 playYouTubeSong called with index:', index);
@@ -5328,7 +5815,71 @@ function playYouTubeSong(index, isAutoPlay = false) {
     // ⚡ CRITICAL: Get videoId IMMEDIATELY (minimal operations!)
     const videoId = youtubeSearchResults[index].id.videoId;
 
-    // 🔥🔥🔥 iOS AUTOPLAY FIX v1.7.0 🔥🔥🔥
+    // 🛡️ FINAL GATE CHECK: Block duplicate songs on autoplay!
+    // This is the LAST LINE OF DEFENSE - catches ALL edge cases!
+    if (isAutoPlay && currentVideoId && videoId === currentVideoId) {
+        console.log('[Play] 🚫 GATE BLOCKED: Same videoId as current!');
+        // Try next song in results
+        if (youtubeSearchResults.length > index + 1) {
+            console.log('[Play] ➡️ Trying next song in results...');
+            playYouTubeSong(index + 1, true);
+        } else {
+            console.log('[Play] 🎲 No more results, using fresh search');
+            searchAndPlayFirst('trending hindi songs 2025');
+        }
+        return;
+    }
+
+    // 🛡️ FINAL GATE CHECK 2: Block songs with same title (different channel upload)
+    if (isAutoPlay && currentSongData?.title) {
+        const nextTitle = youtubeSearchResults[index]?.snippet?.title || '';
+        const similarity = calculateTitleSimilarity(
+            currentSongData.title,
+            nextTitle
+        );
+
+        if (similarity >= 0.6) {
+            console.log(
+                `[Play] 🚫 GATE BLOCKED: Title too similar (${Math.round(
+                    similarity * 100
+                )}%)`
+            );
+            console.log(
+                `[Play]    Current: "${currentSongData.title.substring(0, 40)}"`
+            );
+            console.log(`[Play]    Next: "${nextTitle.substring(0, 40)}"`);
+
+            // Try next song in results
+            if (youtubeSearchResults.length > index + 1) {
+                console.log('[Play] ➡️ Trying next song in results...');
+                playYouTubeSong(index + 1, true);
+            } else {
+                console.log('[Play] 🎲 No more results, using fresh search');
+                searchAndPlayFirst('bollywood hits new');
+            }
+            return;
+        }
+    }
+
+    // � FIX: Stop any currently playing video FIRST to prevent overlap!
+    // This fixes the bug where old song keeps playing when new song is selected
+    try {
+        const currentState = player.getPlayerState();
+        if (currentState === 1 || currentState === 3) {
+            // Playing or Buffering
+            console.log(
+                '[Player] 🛑 Stopping current playback before loading new song'
+            );
+            player.stopVideo();
+        }
+    } catch (e) {
+        console.log(
+            '[Player] ⚠️ Could not check/stop current state:',
+            e.message
+        );
+    }
+
+    // �🔥🔥🔥 iOS AUTOPLAY FIX v1.7.0 🔥🔥🔥
     // iOS Safari user gesture EXPIRES in ~50ms!
     // We MUST call loadVideoById IMMEDIATELY after user tap!
     // All other operations (analytics, UI, history) can wait!
@@ -5377,6 +5928,21 @@ function playYouTubeSong(index, isAutoPlay = false) {
             '[Search Protection] 🎯 User selected video protected from auto-repeat:',
             videoId.substring(0, 8)
         );
+
+        // 🚫 FIX v1.18.0: CLEAR SEARCH RESULTS after user selection!
+        // This prevents autoplay from using search results - autoplay should find fresh songs!
+        // User ne apni pasand chuni, ab HEART ko naye gaane dhundne do!
+        console.log(
+            '[Search Fix] 🧹 Clearing search results after user selection - autoplay will find fresh songs!'
+        );
+        youtubeSearchResults = [];
+        currentSongIndex = -1;
+
+        // 🌙 DEEP SESSION: Reset on user search (actively engaged)
+        DeepSessionConfig.reset();
+    } else {
+        // 🌙 DEEP SESSION: Increment song counter on autoplay
+        DeepSessionConfig.incrementSong();
     }
 
     // 🎬 Cancel any ongoing thumbnail reveal (new song = new reveal)
@@ -5625,13 +6191,13 @@ function displayLocalFiles() {
                 <div class="song-item-title">${fileName}</div>
                 <div class="song-item-artist">Local File</div>
             </div>
-            <button class="song-heart-btn" onclick="event.stopPropagation(); toggleLibraryHeart('local', '${
+            <button class="song-add-btn" onclick="event.stopPropagation(); toggleLibraryAdd('local', '${
                 item.url
             }', '${fileName.replace(
             /'/g,
             "\\'"
-        )}', 'Local File', '', this);" title="Add to Records Library">
-                <i class="bi bi-heart"></i>
+        )}', 'Local File', '', this);" title="Add to Records">
+                <i class="bi bi-plus-lg"></i>
             </button>
             <button class="song-item-remove" onclick="event.stopPropagation(); removeLocalFile(${index});">
                 <i class="bi bi-trash"></i>
@@ -5641,7 +6207,7 @@ function displayLocalFiles() {
         localSongList.appendChild(songItem);
     });
 
-    syncHeartStates();
+    syncAddButtonStates();
 }
 
 function playLocalFile(index) {
@@ -5794,10 +6360,10 @@ function playNext() {
                 '[Next] 🔬 QED: Search played, switching to HEART-driven autoplay'
             );
 
-            // Clear search results to prevent loop back
-            // But keep them for Previous button history
-            const searchResultsBackup = [...youtubeSearchResults];
-            youtubeSearchResults = [];
+            // 🐛 FIX: Keep search results as FALLBACK, only clear after artist search succeeds
+            // Don't clear here - playArtistMoreSongs needs them as backup!
+            // Store current results in case artist extraction fails
+            window._searchResultsBackup = [...youtubeSearchResults];
 
             // Use artist songs for natural continuation
             console.log("[Next] 🎤 Fetching artist's more songs...");
@@ -5841,6 +6407,14 @@ function playNext() {
         playLocalFile(nextIndex);
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🟡 ADAPTER: VIBE CACHE - API QUOTA SAVER
+// Classification: MIXED | Extractable: Phase 3
+// Dependencies: localStorage pattern, vibe categories
+// Purpose: Reduces API calls by 80% via intelligent caching
+// Note: Cache logic is generic, content categories are music-specific
+// ═══════════════════════════════════════════════════════════════════════════════
 
 /**
  * 🎵 VIBE CACHE - Reduces API calls by 80%!
@@ -5925,8 +6499,101 @@ setInterval(() => VibeCache.cleanup(), 10 * 60 * 1000);
  * 🔥 API SAVINGS: 1 search per 21 songs (vs 1 search per song in old Vibe Shuffle)
  */
 async function playArtistMoreSongs() {
+    // 🛡️ LOOP BREAKER: Prevent infinite recursion
+    autoplayLoopBreaker++;
+    if (autoplayLoopBreaker > 3) {
+        console.log(
+            '[Artist More] 🛑 Loop breaker triggered! Playing from search results.'
+        );
+        autoplayLoopBreaker = 0;
+
+        // 🐛 FIX: Check both current results AND backup
+        const fallbackResults =
+            youtubeSearchResults && youtubeSearchResults.length > 0
+                ? youtubeSearchResults
+                : window._searchResultsBackup || [];
+
+        if (fallbackResults.length > 0) {
+            if (youtubeSearchResults.length === 0) {
+                youtubeSearchResults = fallbackResults;
+                console.log(
+                    '[Artist More] 🔄 Restored from backup (loop breaker)'
+                );
+            }
+            const nextIdx =
+                (currentSongIndex + 1) % youtubeSearchResults.length;
+            playYouTubeSong(nextIdx, true);
+        } else {
+            // Ultimate fallback: Vibe Shuffle
+            console.log('[Artist More] 🎲 No results, using Vibe Shuffle');
+            playVibeShuffledNext();
+        }
+        return;
+    }
+
     const currentTitle = currentSongData?.title || '';
     const currentChannel = currentSongData?.channelTitle || '';
+
+    // 🛡️ COOLDOWN: Don't trigger Artist More every song (irritates users!)
+    // 🚫 FIX v1.18.0: NEVER use search results for autoplay!
+    // User ne search results clear kar diye - ab sirf fresh songs!
+    artistMoreCooldown++;
+    if (artistMoreCooldown < 3) {
+        console.log(
+            `[Artist More] ⏳ Cooldown ${artistMoreCooldown}/3 - using Vibe Shuffle instead of search results`
+        );
+        autoplayLoopBreaker = 0;
+
+        // 🚫 OLD BUG: Was using youtubeSearchResults here - REMOVED!
+        // Now we skip directly to Vibe Shuffle or fresh artist search
+        console.log(
+            '[Artist More] 🎲 Cooldown active - using Vibe Shuffle for fresh songs!'
+        );
+        playVibeShuffledNext();
+        return;
+    }
+
+    // Reset cooldown after triggering
+    artistMoreCooldown = 0;
+
+    // 🛡️ SHORTS & COMPILATION DETECTOR: Skip artist extraction for garbage titles
+    const garbageTitlePatterns = [
+        /#shorts/i,
+        /top\s*\d+/i, // "Top 10", "Top 5"
+        /best\s+of/i, // "Best of 2025"
+        /trending\s+songs/i, // "Trending songs"
+        /hit\s+songs\s+\d{4}/i, // "Hit songs 2025"
+        /mashup/i, // "Bollywood Mashup"
+        /nonstop/i, // "Nonstop Songs"
+        /jukebox/i, // "Hits Jukebox"
+        /collection/i, // "Song Collection"
+        /playlist/i, // "Playlist"
+        /mix\s*\d*/i, // "Mix", "Mix 2025"
+        /compilation/i,
+        /\d+\s*songs/i, // "50 songs"
+        /all\s+songs/i,
+    ];
+
+    const isGarbageTitle = garbageTitlePatterns.some((pattern) =>
+        pattern.test(currentTitle)
+    );
+
+    if (isGarbageTitle) {
+        console.log(
+            `[Artist More] 🚫 Skipping garbage title (compilation/shorts): "${currentTitle.substring(
+                0,
+                50
+            )}"`
+        );
+        autoplayLoopBreaker = 0;
+
+        // For compilations, switch to Vibe Shuffle (HEART knows better!)
+        console.log(
+            '[Artist More] 🎲 Compilation detected, using Vibe Shuffle'
+        );
+        playVibeShuffledNext();
+        return;
+    }
 
     console.log('[Artist More] 🎤 Finding more songs from artist...');
     console.log(`[Artist More] 📀 Current: "${currentTitle.substring(0, 40)}"`);
@@ -5936,11 +6603,63 @@ async function playArtistMoreSongs() {
     let artistName = extractArtistName(currentTitle, currentChannel);
 
     if (!artistName || artistName.length < 3) {
-        // Fallback to Vibe Shuffle if can't extract artist
+        // Fallback: Can't extract artist, play from existing results
         console.log(
-            '[Artist More] ⚠️ Could not extract artist, using Vibe Shuffle'
+            '[Artist More] ⚠️ Could not extract artist, checking for non-duplicate songs'
         );
-        playVibeShuffledNext();
+        autoplayLoopBreaker = 0;
+
+        // 🐛 FIX: Check both current results AND backup from playNext()
+        const fallbackResults =
+            youtubeSearchResults && youtubeSearchResults.length > 0
+                ? youtubeSearchResults
+                : window._searchResultsBackup || [];
+
+        if (fallbackResults.length > 0) {
+            // Use backup if current is empty
+            if (
+                youtubeSearchResults.length === 0 &&
+                fallbackResults.length > 0
+            ) {
+                youtubeSearchResults = fallbackResults;
+                console.log(
+                    '[Artist More] 🔄 Restored search results from backup'
+                );
+            }
+
+            // 🛡️ FIX: Check if all results are duplicates!
+            const nonDupeIdx = findNonDuplicateSongIndex(
+                youtubeSearchResults,
+                currentTitle
+            );
+            if (nonDupeIdx >= 0) {
+                console.log(
+                    `[Artist More] ✅ Found non-duplicate at index ${nonDupeIdx}`
+                );
+                playYouTubeSong(nonDupeIdx, true);
+            } else {
+                // � FIX: All results are same song! Use user's keyword for RELATED songs!
+                console.log(
+                    '[Artist More] 🚫 All results are duplicates, using Smart Related!'
+                );
+                searchRelatedToUserKeyword();
+            }
+        } else {
+            // 🆕 Ultimate fallback: Fresh search instead of Vibe Shuffle loop!
+            console.log(
+                '[Artist More] 🎲 No results anywhere, searching fresh!'
+            );
+            const fallbackQueries = [
+                'arijit singh songs',
+                'kishore kumar classics',
+                'shreya ghoshal hits',
+            ];
+            searchAndPlayFirst(
+                fallbackQueries[
+                    Math.floor(Math.random() * fallbackQueries.length)
+                ]
+            );
+        }
         return;
     }
 
@@ -6002,14 +6721,38 @@ async function playArtistMoreSongs() {
             }
         }
 
-        // Fallback: If artist search failed, use Vibe Shuffle
+        // Fallback: If artist search failed, check for non-duplicates
         console.log(
-            '[Artist More] ⚠️ Artist search insufficient, using Vibe Shuffle'
+            '[Artist More] ⚠️ Artist search insufficient, checking for non-duplicates'
         );
-        playVibeShuffledNext();
+        autoplayLoopBreaker = 0; // Reset on success path
+        if (youtubeSearchResults && youtubeSearchResults.length > 0) {
+            const nonDupeIdx = findNonDuplicateSongIndex(
+                youtubeSearchResults,
+                currentTitle
+            );
+            if (nonDupeIdx >= 0) {
+                playYouTubeSong(nonDupeIdx, true);
+            } else {
+                console.log('[Artist More] 🚫 All duplicates, fresh search!');
+                searchAndPlayFirst('latest bollywood hits');
+            }
+        }
     } catch (error) {
         console.error('[Artist More] ❌ Error:', error);
-        playVibeShuffledNext();
+        autoplayLoopBreaker = 0;
+        // Don't loop back, check for non-duplicates first
+        if (youtubeSearchResults && youtubeSearchResults.length > 0) {
+            const nonDupeIdx = findNonDuplicateSongIndex(
+                youtubeSearchResults,
+                currentSongData?.title || ''
+            );
+            if (nonDupeIdx >= 0) {
+                playYouTubeSong(nonDupeIdx, true);
+            } else {
+                searchAndPlayFirst('popular hindi songs');
+            }
+        }
     }
 }
 
@@ -6020,6 +6763,41 @@ async function playArtistMoreSongs() {
  */
 function extractArtistName(title, channel) {
     let artist = '';
+
+    // 🛡️ GARBAGE KEYWORD FILTER: Never use these as "artist"
+    const garbageKeywords = [
+        'trending',
+        'top',
+        'best',
+        'hit',
+        'songs',
+        'hits',
+        'latest',
+        'new',
+        'bollywood',
+        'hindi',
+        'punjabi',
+        'tamil',
+        'telugu',
+        '2024',
+        '2025',
+        '2026',
+        'mashup',
+        'nonstop',
+        'jukebox',
+        'collection',
+        'playlist',
+        'mix',
+        'indian',
+        'india',
+        'shorts',
+        'official',
+        'video',
+        'audio',
+        'full',
+        'lyrical',
+        'lyrics',
+    ];
 
     // Try to extract from title first
     if (title) {
@@ -6046,7 +6824,22 @@ function extractArtistName(title, channel) {
             .replace(/official.*$/i, '')
             .replace(/video.*$/i, '')
             .replace(/audio.*$/i, '')
+            .replace(/#\w+/g, '') // Remove hashtags like #shorts
             .trim();
+
+        // 🛡️ Check if extracted "artist" is actually garbage
+        const artistLower = artist.toLowerCase();
+        const isGarbageArtist = garbageKeywords.some(
+            (keyword) =>
+                artistLower.includes(keyword) || artistLower === keyword
+        );
+
+        if (isGarbageArtist || artist.length < 3) {
+            console.log(
+                `[Artist Extract] ⚠️ Garbage artist detected: "${artist}", skipping`
+            );
+            artist = ''; // Reset - will fall through to channel name
+        }
     }
 
     // If no artist from title, use channel name
@@ -6083,6 +6876,230 @@ function extractArtistName(title, channel) {
 
     console.log(`[Artist Extract] 📝 Extracted: "${artist}"`);
     return artist;
+}
+
+/**
+ * � Search and play first result - used to break duplicate loops
+ * Searches for a query and plays the first good result
+ */
+async function searchAndPlayFirst(query) {
+    console.log(`[Fresh Search] 🔍 Searching: "${query}"`);
+
+    try {
+        const results = await searchYouTube(query);
+
+        if (results && results.length > 0) {
+            // Store results and play first one
+            youtubeSearchResults = results;
+            currentSongIndex = 0;
+
+            // Pick a random song from first 5 to add variety
+            const maxIdx = Math.min(4, results.length - 1);
+            const randomIdx = Math.floor(Math.random() * (maxIdx + 1));
+
+            console.log(
+                `[Fresh Search] ✅ Playing result ${randomIdx + 1} of ${
+                    results.length
+                }`
+            );
+            playYouTubeSong(randomIdx, true);
+        } else {
+            console.log('[Fresh Search] ❌ No results, trying fallback');
+            // Ultimate fallback - play something from cached history
+            const recentlyPlayed = JSON.parse(
+                localStorage.getItem('playHistory') || '[]'
+            );
+            if (recentlyPlayed.length > 5) {
+                // Pick a random song from history that's not recent
+                const oldSong =
+                    recentlyPlayed[
+                        Math.floor(
+                            Math.random() * (recentlyPlayed.length - 3)
+                        ) + 3
+                    ];
+                if (oldSong?.videoId) {
+                    console.log(
+                        `[Fresh Search] 🔄 Playing from history: ${oldSong.title}`
+                    );
+                    loadYouTubeVideo(oldSong.videoId, true);
+                }
+            }
+        }
+    } catch (error) {
+        console.error('[Fresh Search] Error:', error);
+    }
+}
+
+/**
+ * 💡 SMART RELATED SEARCH - Uses user's keyword to find RELATED songs!
+ * "User jab apne dimag se soch ke gaana type karta hai, woh KEYWORD system ka HEART hai!"
+ *
+ * If user searched "tum hi ho" → Find related songs like:
+ * - "aashiqui 2 songs" (same movie)
+ * - "arijit singh romantic" (same artist + mood)
+ * - "romantic hindi songs" (same vibe)
+ *
+ * This PREVENTS the "same song different channel" bug!
+ */
+async function searchRelatedToUserKeyword() {
+    if (!userSearchKeyword) {
+        console.log('[Smart Related] ⚠️ No user keyword found, using generic');
+        return searchAndPlayFirst('romantic hindi songs');
+    }
+
+    const keyword = userSearchKeyword.toLowerCase();
+    console.log(`[Smart Related] 💡 User's keyword: "${keyword}"`);
+
+    // 🎯 Extract movie/album name from common patterns
+    const moviePatterns = [
+        // Aashiqui 2, Rockstar, Jannat, etc.
+        {
+            regex: /aashiqui\s*2?/i,
+            related: ['aashiqui 2 all songs', 'arijit singh romantic'],
+        },
+        {
+            regex: /tum hi ho/i,
+            related: [
+                'aashiqui 2 jukebox',
+                'arijit singh best songs',
+                'sunn raha hai aashiqui',
+            ],
+        },
+        {
+            regex: /rockstar/i,
+            related: ['rockstar movie songs', 'ranbir kapoor songs'],
+        },
+        {
+            regex: /jannat/i,
+            related: ['jannat movie songs', 'emraan hashmi songs'],
+        },
+        {
+            regex: /kabir singh/i,
+            related: ['kabir singh all songs', 'shahid kapoor romantic'],
+        },
+        {
+            regex: /arijit/i,
+            related: ['arijit singh top songs', 'arijit romantic collection'],
+        },
+        {
+            regex: /atif/i,
+            related: ['atif aslam hits', 'atif aslam romantic songs'],
+        },
+        {
+            regex: /kumar sanu/i,
+            related: ['kumar sanu 90s hits', 'kumar sanu romantic'],
+        },
+        {
+            regex: /kishore/i,
+            related: ['kishore kumar golden', 'old hindi songs classic'],
+        },
+        {
+            regex: /lata/i,
+            related: ['lata mangeshkar classics', 'old romantic songs'],
+        },
+        {
+            regex: /lag ja gale/i,
+            related: ['lata mangeshkar old songs', 'romantic classics'],
+        },
+    ];
+
+    // Check if keyword matches any movie/artist pattern
+    for (const pattern of moviePatterns) {
+        if (pattern.regex.test(keyword)) {
+            const relatedQuery =
+                pattern.related[
+                    Math.floor(Math.random() * pattern.related.length)
+                ];
+            console.log(
+                `[Smart Related] 🎬 Pattern matched! Searching: "${relatedQuery}"`
+            );
+            return searchAndPlayFirst(relatedQuery);
+        }
+    }
+
+    // 🎵 Smart keyword transformation
+    // "tum hi ho" → "tum hi ho movie songs" or "arijit singh similar"
+    const smartQueries = [
+        `${keyword} movie all songs`, // Same movie
+        `${keyword} singer more songs`, // Same artist
+        `songs like ${keyword}`, // Similar vibes
+        `${keyword} album jukebox`, // Same album
+        'romantic hindi songs 2024', // Genre fallback
+        'arijit singh top songs', // Popular artist fallback
+    ];
+
+    // Try first transformation
+    const smartQuery = smartQueries[Math.floor(Math.random() * 3)]; // First 3 are most relevant
+    console.log(
+        `[Smart Related] 🔄 Transformed: "${keyword}" → "${smartQuery}"`
+    );
+
+    try {
+        const results = await searchYouTube(smartQuery);
+
+        // Filter out duplicates of original search
+        const freshResults = results.filter((song) => {
+            const title = (song.snippet?.title || '').toLowerCase();
+            const similarity = calculateTitleSimilarity(title, keyword);
+            return similarity < 0.5; // Must be less than 50% similar
+        });
+
+        if (freshResults.length > 0) {
+            console.log(
+                `[Smart Related] ✅ Found ${freshResults.length} fresh songs!`
+            );
+            youtubeSearchResults = freshResults;
+            const randomIdx = Math.floor(
+                Math.random() * Math.min(5, freshResults.length)
+            );
+            playYouTubeSong(randomIdx, true);
+            return true;
+        } else {
+            console.log(
+                '[Smart Related] ⚠️ All results similar, trying genre fallback'
+            );
+            return searchAndPlayFirst('romantic hindi songs');
+        }
+    } catch (error) {
+        console.error('[Smart Related] Error:', error);
+        return searchAndPlayFirst('bollywood hits');
+    }
+}
+
+/**
+ * 🛡️ Find a non-duplicate song from search results
+ * Returns index of a different song, or -1 if all are duplicates
+ */
+function findNonDuplicateSongIndex(results, currentTitle) {
+    if (!results || results.length === 0 || !currentTitle) return -1;
+
+    for (let i = 0; i < results.length; i++) {
+        const songTitle = results[i]?.snippet?.title || '';
+        const similarity = calculateTitleSimilarity(currentTitle, songTitle);
+
+        // 🛡️ STRICTER: If less than 40% similar, it's definitely a different song
+        // Changed from 0.5 to 0.4 to catch more duplicates!
+        if (similarity < 0.4) {
+            console.log(
+                `[Duplicate Check] ✅ Found different song at index ${i}: "${songTitle.substring(
+                    0,
+                    40
+                )}"`
+            );
+            return i;
+        } else {
+            console.log(
+                `[Duplicate Check] ❌ Skipped (${Math.round(
+                    similarity * 100
+                )}% similar): "${songTitle.substring(0, 40)}"`
+            );
+        }
+    }
+
+    console.log(
+        `[Duplicate Check] ⚠️ All ${results.length} results are duplicates of current song!`
+    );
+    return -1; // All are duplicates
 }
 
 /**
@@ -6147,18 +7164,134 @@ function extractSongCore(title) {
     return core;
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🟡 ADAPTER: SMART DJ SYSTEM - VIBE SHUFFLE
+// Classification: MIXED | Extractable: Phase 2
+// Dependencies: HEART, InvisibleIntelligence, QED_HEART, VibeCache, vibeHistory
+// Purpose: Intelligent next-song selection based on mood, prevents sad loops
+// Note: Decision LOGIC is core, song fetching is music-specific
+// ═══════════════════════════════════════════════════════════════════════════════
+
 /**
  * Vibe Shuffle - Smart DJ System
  * Plays related songs based on current song's vibe
  * Detects mood and gently lifts user from sad loops
  * 🚀 NOW WITH CACHING - 80% less API calls!
+ * 🌙 DEEP SESSION: After 10 songs, plays long jukeboxes for sleeping users!
  */
 async function playVibeShuffledNext() {
     const startTime = performance.now();
     const currentTitle = currentSongData?.title || '';
+    const currentChannel = currentSongData?.channelTitle || '';
 
     console.log('[Vibe Shuffle] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
     console.log('[Vibe Shuffle] 🎵 Current: ' + currentTitle.substring(0, 50));
+
+    // 🌙 DEEP SESSION CHECK: After 10 songs, play long jukebox content!
+    // "User so gaya hai... ghar saaf kar raha hai... dhyan nahi hai!"
+    if (DeepSessionConfig.isDeepSession()) {
+        console.log(
+            `[DeepSession] 🌙 Session songs: ${sessionSongCounter} | Mode: DEEP`
+        );
+
+        // Check if we should play another long song (streak < 3)
+        if (longSongStreak < DeepSessionConfig.longSongStreakMax) {
+            try {
+                const jukeboxQuery = DeepSessionConfig.buildJukeboxQuery(
+                    currentTitle,
+                    currentChannel
+                );
+                console.log(`[DeepSession] 🎵 Searching: "${jukeboxQuery}"`);
+
+                const results = await searchYouTube(jukeboxQuery);
+
+                if (results && results.length > 0) {
+                    // Filter for long songs (20-45 min) and official channels
+                    const longSongs = results.filter((song) => {
+                        const title = (song.snippet?.title || '').toLowerCase();
+                        const channel = song.snippet?.channelTitle || '';
+
+                        // Skip unofficial content
+                        if (
+                            DeepSessionConfig.isUnofficialContent(
+                                title,
+                                channel
+                            )
+                        ) {
+                            console.log(
+                                `[DeepSession] 🚫 Skipping unofficial: ${title.substring(
+                                    0,
+                                    40
+                                )}`
+                            );
+                            return false;
+                        }
+
+                        // Prioritize official channels
+                        const isOfficial =
+                            DeepSessionConfig.isOfficialChannel(channel);
+
+                        // Check for jukebox/long content keywords
+                        const hasLongKeyword =
+                            DeepSessionConfig.JUKEBOX_KEYWORDS.some((k) =>
+                                title.includes(k)
+                            );
+
+                        return hasLongKeyword || isOfficial;
+                    });
+
+                    // Sort: Official channels first
+                    longSongs.sort((a, b) => {
+                        const aOfficial = DeepSessionConfig.isOfficialChannel(
+                            a.snippet?.channelTitle
+                        )
+                            ? 1
+                            : 0;
+                        const bOfficial = DeepSessionConfig.isOfficialChannel(
+                            b.snippet?.channelTitle
+                        )
+                            ? 1
+                            : 0;
+                        return bOfficial - aOfficial;
+                    });
+
+                    if (longSongs.length > 0) {
+                        // Pick from top 3 random (variety)
+                        const randomIndex = Math.floor(
+                            Math.random() * Math.min(3, longSongs.length)
+                        );
+                        const selectedSong = longSongs[randomIndex];
+
+                        console.log(
+                            `[DeepSession] 🌙 Playing jukebox: ${selectedSong.snippet?.title?.substring(
+                                0,
+                                50
+                            )}`
+                        );
+                        console.log(
+                            `[DeepSession] 📺 Channel: ${selectedSong.snippet?.channelTitle}`
+                        );
+
+                        youtubeSearchResults = longSongs;
+                        playYouTubeSong(randomIndex, true);
+                        return;
+                    }
+                }
+
+                console.log(
+                    '[DeepSession] ⚠️ No suitable jukebox found, using normal shuffle'
+                );
+            } catch (e) {
+                console.log('[DeepSession] ❌ Error:', e.message);
+            }
+        } else {
+            // Streak complete, go back to normal songs for variety
+            console.log(
+                `[DeepSession] 🔄 Long song streak complete (${longSongStreak}), playing normal song`
+            );
+            longSongStreak = 0;
+        }
+    }
 
     // 🧘‍♂️ DEEP LISTENING: Check if user is in the zone
     if (HEART.isInDeepListening()) {
@@ -6252,10 +7385,26 @@ async function playVibeShuffledNext() {
 
         if (!relatedVideos || relatedVideos.length === 0) {
             console.log(
-                '[Vibe Shuffle] No related videos, fetching artist songs...'
+                '[Vibe Shuffle] No related videos found, doing fresh search...'
             );
-            // 🐛 FIX: Don't loop back! Get fresh songs instead
-            playArtistMoreSongs();
+            // 🔧 FIX: Don't call playArtistMoreSongs - causes infinite loop!
+            // Instead do a fresh search with random popular query
+            const vibeSearchQueries = [
+                'arijit singh romantic songs',
+                'latest bollywood 2024 hits',
+                'old hindi classics kumar sanu',
+                'atif aslam top songs',
+                'shreya ghoshal melodious songs',
+                'kishore kumar evergreen',
+                'sonu nigam best songs',
+                'lata mangeshkar old songs',
+            ];
+            const randomQuery =
+                vibeSearchQueries[
+                    Math.floor(Math.random() * vibeSearchQueries.length)
+                ];
+            console.log(`[Vibe Shuffle] 🔄 Fresh search: "${randomQuery}"`);
+            searchAndPlayFirst(randomQuery);
             return;
         }
 
@@ -6296,6 +7445,16 @@ async function playVibeShuffledNext() {
                 return false;
             if (title.includes('review') || title.includes('explained'))
                 return false;
+
+            // 🚫 UNOFFICIAL CONTENT FILTER - Block voice recorded/cover versions
+            // "Kabhi kabhi system logo ke voice recorded gane bhej raha hai" - FIXED!
+            if (DeepSessionConfig.isUnofficialContent(title, channelTitle)) {
+                console.log(
+                    '[Vibe Shuffle] 🚫 Skipping unofficial content:',
+                    title.substring(0, 40)
+                );
+                return false;
+            }
 
             // ✅ Jukebox, Nonstop, Top Lists - NOW ALLOWED
             // User wants these: "Sundar Kand", "Ramayan", "Romantic Jukebox" are valid content!
@@ -6345,59 +7504,92 @@ async function playVibeShuffledNext() {
                 return false;
             }
 
-            // IMPORTANT: Skip same song different versions
-            // Get current song's main identifying words
+            // 🎯 DUPLICATE DETECTION v2 - More Aggressive!
+            // Problem: "Pyar Dilon Ka Mela Hai" from different channels plays again
+            // Solution: Extract actual song name and compare similarity
             const currentTitle = (currentSongData?.title || '').toLowerCase();
 
-            // Extract meaningful words (remove common words)
-            const commonWords = [
-                'the',
-                'song',
-                'video',
-                'full',
-                'hd',
-                'lyrical',
-                'lyrics',
-                'audio',
-                'official',
-                'from',
-                'movie',
-                'film',
-            ];
-            const getMainWords = (str) => {
-                return str
+            // 🎯 Smart Song Name Extraction
+            // "Pyar Dilon Ka Mela Hai | Salman Khan | Karisma Kapoor" → "pyar dilon ka mela hai"
+            const extractSongName = (str) => {
+                // Take first part before | or - or : (usually song name)
+                let songPart = str
+                    .split(/[|\-:]/)[0]
+                    .trim()
+                    .toLowerCase();
+
+                // Remove common noise words
+                const noiseWords = [
+                    'full',
+                    'song',
+                    'video',
+                    'hd',
+                    '4k',
+                    'lyrical',
+                    'lyrics',
+                    'audio',
+                    'official',
+                    'music',
+                    'new',
+                    '2024',
+                    '2025',
+                    '2026',
+                    'movie',
+                    'film',
+                    'hindi',
+                    'bollywood',
+                    'romantic',
+                ];
+
+                // Remove parentheses content
+                songPart = songPart
                     .replace(/\(.*?\)/g, '')
-                    .replace(/\[.*?\]/g, '')
-                    .split(/[\s\-\|:,]+/)
-                    .filter((w) => w.length > 2 && !commonWords.includes(w))
-                    .slice(0, 5); // Take first 5 meaningful words
+                    .replace(/\[.*?\]/g, '');
+
+                // Split and filter
+                const words = songPart
+                    .split(/\s+/)
+                    .filter((w) => w.length > 2 && !noiseWords.includes(w));
+
+                return words.join(' ');
             };
 
-            const currentWords = getMainWords(currentTitle);
-            const nextWords = getMainWords(title);
+            const currentSongName = extractSongName(currentTitle);
+            const nextSongName = extractSongName(title);
 
-            // Check for matching words
-            let matchCount = 0;
-            for (const word of currentWords) {
-                if (
-                    nextWords.some(
-                        (nw) => nw.includes(word) || word.includes(nw)
-                    )
-                ) {
-                    matchCount++;
+            // 🎯 Similarity Check: If 60%+ words match, it's same song
+            const currentWords = currentSongName.split(/\s+/);
+            const nextWords = nextSongName.split(/\s+/);
+
+            if (currentWords.length >= 2 && nextWords.length >= 2) {
+                let matchCount = 0;
+                for (const word of currentWords) {
+                    if (
+                        nextWords.some(
+                            (nw) =>
+                                nw === word || // Exact match
+                                (word.length > 4 && nw.includes(word)) || // Word contains
+                                (nw.length > 4 && word.includes(nw))
+                        )
+                    ) {
+                        matchCount++;
+                    }
                 }
-            }
 
-            // If 1 or more main words match, it's probably same song
-            // Being more strict now - even 1 unique word match = same song
-            if (matchCount >= 1 && currentWords.length >= 1) {
-                console.log(
-                    '[Vibe Shuffle] Skipping same song (' +
-                        matchCount +
-                        ' matches):',
-                    video.snippet.title.substring(0, 50)
-                );
-                return false;
+                // Calculate match percentage
+                const matchPercent =
+                    matchCount /
+                    Math.max(currentWords.length, nextWords.length);
+
+                // If 50%+ words match = SAME SONG, skip it!
+                if (matchPercent >= 0.5) {
+                    console.log(
+                        `[Vibe Shuffle] 🔴 DUPLICATE BLOCKED (${Math.round(
+                            matchPercent * 100
+                        )}% match): "${nextSongName}" ≈ "${currentSongName}"`
+                    );
+                    return false;
+                }
             }
 
             // Skip covers, karaoke, remakes
@@ -6428,15 +7620,34 @@ async function playVibeShuffledNext() {
             return true;
         });
 
-        // 🛡️ TRUST: Sort by channel trust score (prioritize trusted channels)
+        // 🛡️ TRUST: Sort by channel trust + official status (prioritize verified channels!)
+        // "Official channels first, then trusted, then rest"
         musicVideos.sort((a, b) => {
-            const trustA = InvisibleIntelligence.getChannelTrust(
+            // Check if official channel (VEVO, Topic, T-Series, etc.)
+            const aOfficial = DeepSessionConfig.isOfficialChannel(
                 a.snippet.channelTitle
-            );
-            const trustB = InvisibleIntelligence.getChannelTrust(
+            )
+                ? 100
+                : 0;
+            const bOfficial = DeepSessionConfig.isOfficialChannel(
                 b.snippet.channelTitle
-            );
-            return trustB - trustA; // Higher trust first
+            )
+                ? 100
+                : 0;
+
+            // Get learned trust score
+            const trustA =
+                InvisibleIntelligence.getChannelTrust(a.snippet.channelTitle) ||
+                0;
+            const trustB =
+                InvisibleIntelligence.getChannelTrust(b.snippet.channelTitle) ||
+                0;
+
+            // Combined score: Official + Trust
+            const scoreA = aOfficial + trustA;
+            const scoreB = bOfficial + trustB;
+
+            return scoreB - scoreA; // Higher score first
         });
 
         const filterTime = (performance.now() - filterStart).toFixed(0);
@@ -6446,10 +7657,10 @@ async function playVibeShuffledNext() {
 
         if (musicVideos.length === 0) {
             console.log(
-                '[Vibe Shuffle] No suitable music found, fetching artist songs...'
+                '[Vibe Shuffle] No suitable music found, doing fresh search...'
             );
-            // 🐛 FIX: Don't loop back! Get fresh songs instead
-            playArtistMoreSongs();
+            // 🔧 FIX: Don't loop back! Fresh search instead
+            searchAndPlayFirst('popular hindi songs 2024');
             return;
         }
 
@@ -6484,9 +7695,9 @@ async function playVibeShuffledNext() {
     } catch (error) {
         const totalTime = (performance.now() - startTime).toFixed(0);
         console.error(`[Vibe Shuffle] ❌ Error after ${totalTime}ms:`, error);
-        // 🐛 FIX: Don't loop back! Get fresh songs instead
-        console.log('[Vibe Shuffle] Error occurred, fetching artist songs...');
-        playArtistMoreSongs();
+        // � FIX: Don't loop back! Fresh search instead
+        console.log('[Vibe Shuffle] Error occurred, doing fresh search...');
+        searchAndPlayFirst('melodious hindi songs');
     }
 }
 
@@ -6953,7 +8164,7 @@ function updateSongInfo(title, artist, thumbnail) {
     }
 
     // Update controls heart button state
-    updateControlsHeartButton();
+    updateControlsAddButton();
 }
 
 function updateActiveItem(listId, activeIndex) {
@@ -7018,6 +8229,14 @@ function resetTelescopicTonearm() {
     if (segment3) segment3.style.width = '50%';
     if (tonearmHead) tonearmHead.style.left = '-13px';
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🔴 MUSIC-ONLY: TURNTABLE UI SYSTEM - VINYL & TONEARM
+// Classification: MUSIC-SPECIFIC | Extractable: No
+// Dependencies: DOM elements (vinylDisc, tonearm, platter), DeviceDetector
+// Purpose: Retro vinyl animation, tonearm positioning, visual feedback
+// Note: Unique to Pixel Play's retro aesthetic - not portable
+// ═══════════════════════════════════════════════════════════════════════════════
 
 // 🎵 PIXEL PERFECT TONEARM SYSTEM v2.0
 // The NEW approach:
@@ -7806,6 +9025,14 @@ function toggleMute() {
         muteBtn.classList.add('muted');
     }
 }
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🔴 MUSIC-ONLY: SHARE SYSTEM - SOCIAL SHARING
+// Classification: MUSIC-SPECIFIC | Extractable: No
+// Dependencies: currentVideoId, currentSongData, SHARE_BANNER_CONFIG
+// Purpose: Generate share links, story images, platform selection
+// Note: Song-specific sharing with vinyl image generation
+// ═══════════════════════════════════════════════════════════════════════════════
 
 // Share Function - Enhanced for Mobile with Platform Selection
 function shareSong() {
@@ -8845,11 +10072,37 @@ function initDiscTapToPlay() {
         /iPad|iPhone|iPod/.test(navigator.userAgent) ||
         (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-    // Tap on disc = play/pause toggle
+    // Tap on disc = play/pause toggle OR hard refresh if idle
     const handleDiscTap = function (e) {
         e.stopPropagation();
 
         console.log('[Disc Tap] 🎵 User tapped disc!');
+
+        // 🔄 HARD REFRESH WHEN IDLE - Auto update user's code!
+        // Check if player is truly idle (no song loaded or vinyl not visible)
+        const vinylVisible = vinylDisc.classList.contains('loaded');
+        const hasSong =
+            currentSongTitle && currentSongTitle !== 'Select a song to play';
+
+        if (!vinylVisible || !hasSong) {
+            console.log(
+                '[Disc Tap] 🔄 Player is IDLE - Hard refreshing for updates!'
+            );
+            showStatus('Updating Pixel Play...', 2000);
+
+            // Hard refresh after brief delay for status to show
+            setTimeout(() => {
+                // Clear service worker cache for fresh load
+                if ('caches' in window) {
+                    caches.keys().then((names) => {
+                        names.forEach((name) => caches.delete(name));
+                    });
+                }
+                // Hard reload - bypass cache
+                location.reload(true);
+            }, 500);
+            return;
+        }
 
         if (!player || !player.getPlayerState) {
             console.log('[Disc Tap] ❌ Player not ready');
@@ -9275,6 +10528,14 @@ function seekRelative(seconds) {
     }
 }
 
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🟡 ADAPTER: LIBRARY MANAGER - FAVORITES SYSTEM
+// Classification: MIXED | Extractable: Phase 3
+// Dependencies: localStorage
+// Purpose: Save/remove favorites, localStorage CRUD operations
+// Note: Storage pattern is generic, item structure is music-specific
+// ═══════════════════════════════════════════════════════════════════════════════
+
 // ===== RECORDS LIBRARY SYSTEM =====
 
 // Library Manager - localStorage operations
@@ -9348,16 +10609,16 @@ const libraryManager = {
     },
 };
 
-// Toggle heart icon and add/remove from library
-function toggleLibraryHeart(source, id, title, artist, thumbnail, btnElement) {
+// Toggle add button and add/remove from library
+function toggleLibraryAdd(source, id, title, artist, thumbnail, btnElement) {
     const isInLibrary = libraryManager.isInLibrary(id);
 
     if (isInLibrary) {
         // Remove from library
         if (libraryManager.remove(id)) {
             btnElement.classList.remove('active');
-            btnElement.querySelector('i').className = 'bi bi-heart';
-            showStatus('Removed from Library', 2000);
+            btnElement.querySelector('i').className = 'bi bi-plus-lg';
+            showStatus('Removed from Records', 2000);
 
             // Track remove from library
             if (typeof trackRemoveFromLibrary === 'function') {
@@ -9384,8 +10645,8 @@ function toggleLibraryHeart(source, id, title, artist, thumbnail, btnElement) {
 
         if (libraryManager.save(item)) {
             btnElement.classList.add('active');
-            btnElement.querySelector('i').className = 'bi bi-heart-fill';
-            showStatus('Added to Library ♡', 2000);
+            btnElement.querySelector('i').className = 'bi bi-dash-lg';
+            showStatus('Added to Records ✓', 2000);
 
             // Track add to library
             if (typeof trackAddToLibrary === 'function') {
@@ -9395,25 +10656,25 @@ function toggleLibraryHeart(source, id, title, artist, thumbnail, btnElement) {
     }
 
     updateLibraryCount();
-    updateControlsHeartButton();
+    updateControlsAddButton();
 }
 
-// Toggle current playing song in library (from controls heart button)
+// Toggle current playing song in library (from controls add button)
 function toggleCurrentSongInLibrary() {
     if (!currentSongData || !currentVideoId) {
         showStatus('Play a song first', 2000);
         return;
     }
 
-    const controlsHeartBtn = document.getElementById('controlsHeartBtn');
+    const controlsAddBtn = document.getElementById('controlsAddBtn');
     const isInLibrary = libraryManager.isInLibrary(currentVideoId);
 
     if (isInLibrary) {
         // Remove from library
         if (libraryManager.remove(currentVideoId)) {
-            controlsHeartBtn.classList.remove('active');
-            controlsHeartBtn.querySelector('i').className = 'bi bi-heart';
-            showStatus('Removed from Library', 2000);
+            controlsAddBtn.classList.remove('active');
+            controlsAddBtn.querySelector('i').className = 'bi bi-plus-lg';
+            showStatus('Removed from Records', 2000);
 
             if (typeof trackRemoveFromLibrary === 'function') {
                 trackRemoveFromLibrary(
@@ -9433,9 +10694,9 @@ function toggleCurrentSongInLibrary() {
         };
 
         if (libraryManager.save(item)) {
-            controlsHeartBtn.classList.add('active');
-            controlsHeartBtn.querySelector('i').className = 'bi bi-heart-fill';
-            showStatus('Added to Library ♡', 2000);
+            controlsAddBtn.classList.add('active');
+            controlsAddBtn.querySelector('i').className = 'bi bi-dash-lg';
+            showStatus('Added to Records ✓', 2000);
 
             if (typeof trackAddToLibrary === 'function') {
                 trackAddToLibrary(
@@ -9447,20 +10708,20 @@ function toggleCurrentSongInLibrary() {
     }
 
     updateLibraryCount();
-    syncHeartStates();
+    syncAddButtonStates();
 }
 
-// Update controls heart button state based on current song
-function updateControlsHeartButton() {
-    const controlsHeartBtn = document.getElementById('controlsHeartBtn');
-    if (!controlsHeartBtn) return;
+// Update controls add button state based on current song
+function updateControlsAddButton() {
+    const controlsAddBtn = document.getElementById('controlsAddBtn');
+    if (!controlsAddBtn) return;
 
     if (currentVideoId && libraryManager.isInLibrary(currentVideoId)) {
-        controlsHeartBtn.classList.add('active');
-        controlsHeartBtn.querySelector('i').className = 'bi bi-heart-fill';
+        controlsAddBtn.classList.add('active');
+        controlsAddBtn.querySelector('i').className = 'bi bi-dash-lg';
     } else {
-        controlsHeartBtn.classList.remove('active');
-        controlsHeartBtn.querySelector('i').className = 'bi bi-heart';
+        controlsAddBtn.classList.remove('active');
+        controlsAddBtn.querySelector('i').className = 'bi bi-plus-lg';
     }
 }
 
@@ -9518,8 +10779,8 @@ function displayLibrarySongs() {
                 <div class="song-item-title">${item.title}</div>
                 <div class="song-item-artist">${item.artist}</div>
             </div>
-            <button class="song-heart-btn active" onclick="event.stopPropagation(); removeFromLibrary('${item.id}', this);" title="Remove from Records Library">
-                <i class="bi bi-heart-fill"></i>
+            <button class="song-add-btn active" onclick="event.stopPropagation(); removeFromLibrary('${item.id}', this);" title="Remove from Records">
+                <i class="bi bi-dash-lg"></i>
             </button>
         `;
 
@@ -9533,7 +10794,7 @@ function removeFromLibrary(id, btnElement) {
         showStatus('Removed from Library', 2000);
         displayLibrarySongs();
         updateLibraryCount();
-        syncHeartStates();
+        syncAddButtonStates();
     }
 }
 
@@ -9606,7 +10867,7 @@ function clearLibrary() {
         if (libraryManager.clearAll()) {
             displayLibrarySongs();
             updateLibraryCount();
-            syncHeartStates();
+            syncAddButtonStates();
             showStatus('Library cleared', 2000);
         }
     }
@@ -9623,26 +10884,26 @@ function updateLibraryCount() {
     }
 }
 
-// Sync heart states across all displayed songs
-function syncHeartStates() {
-    const allHeartButtons = document.querySelectorAll('.song-heart-btn');
+// Sync add button states across all displayed songs
+function syncAddButtonStates() {
+    const allAddButtons = document.querySelectorAll('.song-add-btn');
 
-    allHeartButtons.forEach((btn) => {
+    allAddButtons.forEach((btn) => {
         const onclick = btn.getAttribute('onclick');
         if (!onclick) return;
 
         // Extract ID from onclick attribute
-        const match = onclick.match(/toggleLibraryHeart\([^,]+,\s*'([^']+)'/);
+        const match = onclick.match(/toggleLibraryAdd\([^,]+,\s*'([^']+)'/);
         if (match && match[1]) {
             const songId = match[1];
             const isInLibrary = libraryManager.isInLibrary(songId);
 
             if (isInLibrary) {
                 btn.classList.add('active');
-                btn.querySelector('i').className = 'bi bi-heart-fill';
+                btn.querySelector('i').className = 'bi bi-dash-lg';
             } else {
                 btn.classList.remove('active');
-                btn.querySelector('i').className = 'bi bi-heart';
+                btn.querySelector('i').className = 'bi bi-plus-lg';
             }
         }
     });
@@ -9854,22 +11115,22 @@ function displayQuickPicks() {
                         song.channel
                     } · ${timeAgo}</div>
                 </div>
-                <button class="song-heart-btn" onclick="event.stopPropagation(); toggleLibraryHeart('youtube', '${
+                <button class="song-add-btn" onclick="event.stopPropagation(); toggleLibraryAdd('youtube', '${
                     song.videoId
                 }', '${song.title.replace(
             /'/g,
             "\\'"
         )}', '${song.channel.replace(/'/g, "\\'")}', '${
             song.thumbnail
-        }', this);" title="Add to Records Library">
-                    <i class="bi bi-heart"></i>
+        }', this);" title="Add to Records">
+                    <i class="bi bi-plus-lg"></i>
                 </button>
             </div>
         `;
     });
 
     songList.innerHTML = html;
-    syncHeartStates();
+    syncAddButtonStates();
 
     console.log(
         '[QuickPicks] 🎯 Displayed',
@@ -9914,20 +11175,20 @@ function displayPlayHistory() {
                 <div class="song-item-title">${song.title}</div>
                 <div class="song-item-artist">${song.channel} · ${timeAgo}</div>
             </div>
-            <button class="song-heart-btn" onclick="event.stopPropagation(); toggleLibraryHeart('youtube', '${
+            <button class="song-add-btn" onclick="event.stopPropagation(); toggleLibraryAdd('youtube', '${
                 song.videoId
             }', '${song.title.replace(/'/g, "\\'")}', '${song.channel.replace(
             /'/g,
             "\\'"
-        )}', '${song.thumbnail}', this);" title="Add to Records Library">
-                <i class="bi bi-heart"></i>
+        )}', '${song.thumbnail}', this);" title="Add to Records">
+                <i class="bi bi-plus-lg"></i>
             </button>
         `;
 
         songList.appendChild(songItem);
     });
 
-    syncHeartStates();
+    syncAddButtonStates();
 }
 
 function playFromHistory(song) {
@@ -10486,6 +11747,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // When disc is tapped, trigger playVideo (user gesture = Safari happy!)
     initDiscTapToPlay();
 });
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// 🔵 PIXEL CORE: HEART FEEDBACK SYSTEM - USER SATISFACTION LOOP
+// Classification: PRODUCT-AGNOSTIC | Extractable: Phase 2
+// Dependencies: HEART (sync level), localStorage, user login status
+// Purpose: Collect feedback when HEART is fully synced (Day 4+)
+// Portable: YES - Generic satisfaction feedback, any product
+// ═══════════════════════════════════════════════════════════════════════════════
 
 // ===== 💕 HEART FEEDBACK SYSTEM =====
 // Collect user feedback when HEART is fully synced (Day 4+)
